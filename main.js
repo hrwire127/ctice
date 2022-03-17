@@ -13,7 +13,6 @@ const mongoose = require('mongoose');
 
 const path = require('path');
 const cors = require('cors');
-const fileupload = require("express-fileupload");
 
 mongoose.connect(NEXT_PUBLIC_DB_HOST, {
     useNewUrlParser: true
