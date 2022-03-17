@@ -44,13 +44,8 @@ const func = tryAsync(async (req, res, next) =>
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
-    //can be detected by server
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    // if (!declaration)
-    // {
-    //     throw next(new ServerError("Not Found", 404))
-    // } //if cannot be detected by the server (next error handling), handle manually
     app.render(req, res, "/view", { declaration })
 }))
 
