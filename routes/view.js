@@ -56,7 +56,7 @@ router.get("/:id", tryAsync(async (req, res, next) =>
 
 router.put("/:id", upload.single('file'), func)
 
-router.put("/:id/raw", func)
+// router.put("/:id/raw", func)
 
 router.delete("/:id", tryAsync(async (req, res, next) =>
 {

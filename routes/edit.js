@@ -12,4 +12,4 @@ router.get("/:id", tryAsync(async (req, res, next) =>
     app.render(req, res, "/edit", { declaration })
 }))
 
-module.exports = router;
+module.exports = router; 
