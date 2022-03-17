@@ -42,6 +42,7 @@ const func = tryAsync(async (req, res, next) =>
     res.send("/")
 })
 
+//////////////////as
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
