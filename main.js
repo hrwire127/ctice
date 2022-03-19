@@ -35,6 +35,7 @@ const edit = require("./routes/edit")
 const ServerError = require("./utils/ServerError");
 const { handleError } = require('./utils/middlewares');
 const upload = require('./cloud/storage');
+const fileupload = require("express-fileupload");
 
 app.prepare().then(() =>
 {
@@ -43,7 +44,8 @@ app.prepare().then(() =>
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
     server.use(express.json());
-    server.use(cors());
+    server.use(cors())
+    server.use(fileupload())
 
     server.use('/', index)
     server.use('/view', view)
@@ -53,7 +55,7 @@ app.prepare().then(() =>
     {
         console.log("AA")
         const error = new ServerError(err.message, err.status)
-        res.status(error.status).send(error.message)
+        // res.status(error.status).send(error.message)
         app.render(req, res, "/error", { error }) //?????
     }) //move to middleware
 

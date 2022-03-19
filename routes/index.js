@@ -4,7 +4,7 @@ const Declaration = require("../models/declaration")
 const { app } = require("../main");
 const tryAsync = require('../utils/tryAsync');
 const { validateDbData } = require('../utils/middlewares');
-const { upload, cloudDelete } = require('../cloud/storage');
+const { upload, cloud } = require('../cloud/storage');
 
 router.get('/', tryAsync(async (req, res, next) =>
 {

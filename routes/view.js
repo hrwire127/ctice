@@ -4,45 +4,50 @@ const Declaration = require("../models/declaration")
 const { app } = require("../main")
 const ServerError = require('../utils/ServerError');
 const tryAsync = require('../utils/tryAsync');
-const { validateDbData } = require('../utils/middlewares')
-const { upload, cloudDelete } = require('../cloud/storage');
+const { validateDbData, StorageUpload } = require('../utils/middlewares');
 
 const func = tryAsync(async (req, res, next) =>
 {
     console.log(req.body)
-    console.log(req.file)
-    const { id } = req.params;
-    const declaration = await Declaration.findById(id)
-    const declrObj = {
-        ...req.body
-    }
-    const valFile = declaration.hasOwnProperty('file');
-    if (req.file)
-    { //- +
-        declrObj.file = {
-            name: req.file.originalname,
-            url: req.file.path,
-            location: req.file.filename
-        }
-        if (valFile)
-        {
-            cloudDelete.destroy(
-                declaration.file.location,
-            );
-        }
-    }
-    if (req.body.file && valFile)
+    console.log(req.files.file)
+    if(req.files.file)
     {
-        cloudDelete.destroy(
-            declaration.file.location,
-        );
+        const res = StorageUpload(req.files.file) 
+        console.log(res)
     }
-    await Declaration.findByIdAndUpdate(id, declrObj)
+    // console.log(url, location)
+    // const { id } = req.params;
+    // const declaration = await Declaration.findById(id)
+    // const declrObj = {
+    //     ...req.body
+    // }
+    // const valFile = declaration.hasOwnProperty('file');
+    // if (req.files.file)
+    // { //- +
+    //     declrObj.file = {
+    //         name: req.files.file.name,
+    //         url: url,
+    //         location: location
+    //     }
+    //     if (valFile)
+    //     {
+    //         await cloud.destroy(
+    //             declaration.file.location,
+    //         );
+    //     }
+    // }
+    // if (req.body.file && valFile)
+    // {
+    //     await cloud.destroy(
+    //         declaration.file.location,
+    //     );
+    // }
+    // console.log(declrObj)
+    // await Declaration.findByIdAndUpdate(id, declrObj)
 
     res.send("/")
 })
 
-//////////////////as
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
@@ -50,7 +55,9 @@ router.get("/:id", tryAsync(async (req, res, next) =>
     app.render(req, res, "/view", { declaration })
 }))
 
-router.put("/:id", upload.single('file'), func)
+router.put("/:id", validateDbData, func)
+
+// router.post('/validate', validateDbData)
 
 // router.put("/:id/raw", func)
 
@@ -60,7 +67,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
     const declaration = await Declaration.findById(id);
     if (declaration.file.location)
     {
-        cloudDelete.destroy(
+        await cloud.destroy(
             declaration.file.location,
         );
     }

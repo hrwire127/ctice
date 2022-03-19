@@ -26,6 +26,7 @@ const deleteFile = (changeState) =>
     changeState()
 }
 
+
 module.exports = {
     CropData, uploadFile, deleteFile
 }

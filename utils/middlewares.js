@@ -1,13 +1,15 @@
 const ServerError = require('../utils/ServerError');
 const Joi = require("joi");
+const { cloud } = require('../cloud/storage');
+let streamifier = require('streamifier');
 
 async function validateDbData(req, res, next) 
 {
-    console.log(`validate \n${req.body} \n`)
+    console.log(`validate \n${req.body}\n`)
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.string().required(),
-        file: Joi.object()
+        file: Joi.string()
     })
 
     // const title = req.body.get("title")
@@ -33,7 +35,7 @@ async function validateDbData(req, res, next)
 
     // res.status(400).send("Invalid Data");
     // throw new ServerError("Invalid Data", 400)
-    console.log(error)
+    console.log(`${error}\n`)
 
     if (error)
     {
@@ -55,7 +57,7 @@ async function validateDbData(req, res, next)
         //     console.log("next")
         //     next()
         // }
-        res.status(200).send("Valid Data")
+        next()
     }
 }
 
@@ -69,5 +71,26 @@ function handleError(app)
     }
 }
 
-module.exports = { validateDbData, handleError }
+
+const StorageUpload = (file) =>
+{
+    let objs;
+    let cld_upload_stream = cloud.upload_stream(
+        {
+            folder: "ctice"
+        },
+        function (error, result)
+        {
+            const obj = {
+                url: result.url,
+                location: result.public_id
+            }
+            objs = obj
+        }
+    );
+    streamifier.createReadStream(file.data).pipe(cld_upload_stream);
+    return objs
+}
+
+module.exports = { validateDbData, handleError, StorageUpload }
 
