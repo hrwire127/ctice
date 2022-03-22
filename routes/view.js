@@ -5,48 +5,8 @@ const { app } = require("../main")
 const ServerError = require('../utils/ServerError');
 const tryAsync = require('../utils/tryAsync');
 const { validateDbData, StorageUpload } = require('../utils/middlewares');
-
-const func = tryAsync(async (req, res, next) =>
-{
-    console.log(req.body)
-    console.log(req.files.file)
-    if(req.files.file)
-    {
-        const res = StorageUpload(req.files.file) 
-        console.log(res)
-    }
-    // console.log(url, location)
-    // const { id } = req.params;
-    // const declaration = await Declaration.findById(id)
-    // const declrObj = {
-    //     ...req.body
-    // }
-    // const valFile = declaration.hasOwnProperty('file');
-    // if (req.files.file)
-    // { //- +
-    //     declrObj.file = {
-    //         name: req.files.file.name,
-    //         url: url,
-    //         location: location
-    //     }
-    //     if (valFile)
-    //     {
-    //         await cloud.destroy(
-    //             declaration.file.location,
-    //         );
-    //     }
-    // }
-    // if (req.body.file && valFile)
-    // {
-    //     await cloud.destroy(
-    //         declaration.file.location,
-    //     );
-    // }
-    // console.log(declrObj)
-    // await Declaration.findByIdAndUpdate(id, declrObj)
-
-    res.send("/")
-})
+const { cloud } = require('../cloud/storage');
+const _ = require('lodash')
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
@@ -55,7 +15,46 @@ router.get("/:id", tryAsync(async (req, res, next) =>
     app.render(req, res, "/view", { declaration })
 }))
 
-router.put("/:id", validateDbData, func)
+router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
+{
+    const { id } = req.params;
+    const file = req.files ? await StorageUpload(req.files.file) : null
+    const declaration = await Declaration.findById(id)
+    console.log(file)
+    console.log(declaration)
+    const declrObj = {
+        ...req.body
+    }
+    const valFile = declaration['file']['url'] !== undefined;
+    console.log(req.body)
+    if (file)
+    {
+        declrObj.file = {
+            name: req.files.file.name,
+            url: file.url,
+            location: file.location
+        }
+        if (valFile)
+        {
+            await cloud.destroy(
+                declaration.file.location,
+            );
+        }
+    }
+    if (!req.body.file && valFile)
+    {
+        await cloud.destroy(
+            declaration.file.location,
+        );
+    }
+    if (!file && valFile)
+    {
+        delete declrObj.file
+    }
+    console.log(declrObj)
+    await Declaration.findByIdAndUpdate(id, declrObj)
+    res.send("/")
+}))
 
 // router.post('/validate', validateDbData)
 
@@ -65,6 +64,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
+    console.log(declaration)
     if (declaration.file.location)
     {
         await cloud.destroy(

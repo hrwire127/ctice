@@ -56,9 +56,9 @@ function EditForm(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
-        // data.append("file", JSON.stringify(file))
         if (file)
         {
+            // file === declaration.file ? {} : 
             data.append("file", file)
         }
         else
@@ -75,7 +75,6 @@ function EditForm(props)
         const valBody = JSON.stringify({
             title: title_,
             description: JSON.stringify(editorState),
-            // file: declaration.file
         })
 
         if (titleValid(title_) && descValid(description_)) //add editor state
@@ -83,14 +82,6 @@ function EditForm(props)
             setTitleTrue()
             setDescTrue()
             handleSubmit(valBody, data)
-            // if (file === declaration.file)
-            // {
-            //     handleSubmit(valBody, null)
-            // }
-            // else
-            // {
-            //     handleSubmit(valBody, data)
-            // }
         }
         else
         {

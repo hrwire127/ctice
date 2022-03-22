@@ -43,8 +43,8 @@ app.prepare().then(() =>
 
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
-    server.use(express.json());
-    server.use(cors())
+    // server.use(express.json());
+    // server.use(cors());
     server.use(fileupload())
 
     server.use('/', index)
@@ -57,9 +57,7 @@ app.prepare().then(() =>
         const error = new ServerError(err.message, err.status)
         // res.status(error.status).send(error.message)
         app.render(req, res, "/error", { error }) //?????
-    }) //move to middleware
-
-    // server.use(handleError(app))
+    })
 
     server.get("*", (req, res, next) =>
     {

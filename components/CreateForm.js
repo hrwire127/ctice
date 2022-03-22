@@ -56,8 +56,11 @@ export default function CreateForm(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
-        // data.append("file", JSON.stringify(file))
-        // data.append("file", file)
+        if (file)
+        {
+            data.append("file", file)
+        }
+        
         data.append("description", JSON.stringify(editorState))
 
         const title_ = data.get("title")

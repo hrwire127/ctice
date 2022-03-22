@@ -5,58 +5,24 @@ let streamifier = require('streamifier');
 
 async function validateDbData(req, res, next) 
 {
-    console.log(`validate \n${req.body}\n`)
+    console.log(`{validate \n${req.body}\n`)
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.string().required(),
         file: Joi.string()
     })
 
-    // const title = req.body.get("title")
-    // const description = req.body.get("description");
-    // const file = req.body.get("file");
+    const { error } = declarationSchema.validate(req.body)
 
-
-    const { error } = declarationSchema.validate(
-        // {
-        //     title: req.body.title,
-        //     description: JSON.parse(req.body.description),
-        //     file: JSON.parse(req.body.file),
-        // }
-        // {
-        //     title,
-        //     description,
-        //     file
-        // }
-        req.body
-    )
-
-
-
-    // res.status(400).send("Invalid Data");
-    // throw new ServerError("Invalid Data", 400)
-    console.log(`${error}\n`)
+    console.log(`${error}}\n `)
 
     if (error)
     {
-        const msg = error.details.map(e => e.message).join(',') //
-        // if (req.files.file) 
-        // res.status(400).send("Invalid Data")
+        const msg = error.details.map(e => e.message).join(',')
         next(new ServerError("Invalid Data", 400))
-        // throw new ServerError("Invalid Data", 400)
     }
     else
     {
-        // if (req.body.file) 
-        // {
-        //     console.log("valid")
-        //     res.status(200).send("Valid Data")
-        // }
-        // else
-        // {
-        //     console.log("next")
-        //     next()
-        // }
         next()
     }
 }
@@ -72,24 +38,32 @@ function handleError(app)
 }
 
 
-const StorageUpload = (file) =>
+const StorageUpload = async (file) =>
 {
-    let objs;
-    let cld_upload_stream = cloud.upload_stream(
-        {
-            folder: "ctice"
-        },
-        function (error, result)
-        {
-            const obj = {
-                url: result.url,
-                location: result.public_id
+    const res = await new Promise((resolve, reject) =>
+    {
+        let cld_upload_stream = cloud.upload_stream(
+            {
+                folder: process.env.CLOUD_FOLDER
+            },
+            function (err, res)
+            {
+                if (res)
+                {
+                    resolve(res);
+                } else
+                {
+                    reject(err);
+                }
             }
-            objs = obj
-        }
-    );
-    streamifier.createReadStream(file.data).pipe(cld_upload_stream);
-    return objs
+        );
+
+        streamifier.createReadStream(file.data).pipe(cld_upload_stream);
+    });
+    return {
+        url: res.url,
+        location: res.public_id
+    }
 }
 
 module.exports = { validateDbData, handleError, StorageUpload }

@@ -3,8 +3,7 @@ const router = express.Router();
 const Declaration = require("../models/declaration")
 const { app } = require("../main");
 const tryAsync = require('../utils/tryAsync');
-const { validateDbData } = require('../utils/middlewares');
-const { upload, cloud } = require('../cloud/storage');
+const { validateDbData, StorageUpload } = require('../utils/middlewares');
 
 router.get('/', tryAsync(async (req, res, next) =>
 {
@@ -12,32 +11,36 @@ router.get('/', tryAsync(async (req, res, next) =>
     app.render(req, res, "/", { declarations })
 }))
 
-router.post('/', upload.single('file'), tryAsync(async (req, res, next) =>
+router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
-    console.log(req.body)
-    console.log(req.file)
-
+    console.log("11")
+    // console.log(req.body)
+    // console.log(req.files.file)
+    console.log("22")
+    const file = req.files ? await StorageUpload(req.files.file) : null
     const declrObj = {
         ...req.body,
     }
-    if (req.file)
+    console.log("33")
+    console.log(file)
+    if (file)
     {
+        console.log("44")
         declrObj.file = {
-            name: req.file.originalname,
-            url: req.file.path,
-            location: req.file.filename
+            name: req.files.file.name,
+            url: file.url,
+            location: file.location
         }
     }
     else
     {
         declrObj.file = null
     }
+
     const declaration = new Declaration(declrObj)
     await declaration.save();
     res.send("/")
 }))
-
-router.post('/validate', validateDbData)
 
 router.get("/create", (req, res) =>
 {
@@ -47,6 +50,6 @@ router.get("/create", (req, res) =>
 module.exports = router;
 
 
-//create file \/, - file  \/
-//edit file => file \/ , (new \/ | modfified) -file => file \/, -file => -file  , file => -file  \/
+//create file , - file 
+//edit file => file  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/
 //delete file, -file

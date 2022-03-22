@@ -8,23 +8,13 @@ function create()
 {
 
     const handleSubmit = async (valBody, body) =>
-    {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/validate`, {
+    {   
+        await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
             method: 'POST',
-            body: valBody,
-            headers: { 'Content-Type': 'application/json' }
-        }).then(res =>
+            body: body,
+        }).then(async (res) =>
         {
-            if (res.status === 200)
-            {
-                fetch(process.env.NEXT_PUBLIC_DR_HOST, {
-                    method: 'POST',
-                    body: body,
-                }).then(async (res) =>
-                {
-                    window.location = await res.text()
-                })
-            }
+            window.location = await res.text()
         })
     };
     return (

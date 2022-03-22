@@ -11,23 +11,6 @@ function edit({ declaration })
 
     const handleSubmit = async (valBody, body) =>
     {
-        // await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/validate`, {
-        //     method: 'POST',
-        //     body: valBody,
-        //     headers: { 'Content-Type': 'application/json' }
-        // }).then(res =>
-        // {
-        //     if (res.status === 200)
-        //     {
-        //         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
-        //             method: 'PUT',
-        //             body: body,
-        //         }).then(async (res) =>
-        //         {
-        //             window.location = await res.text()
-        //         })
-        //     }
-        // })
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
             method: 'PUT',
             body: body,
