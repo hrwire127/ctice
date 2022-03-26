@@ -18,7 +18,7 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const file = req.files ? await StorageUpload(req.files.file) : null
-    const declaration = await Declaration.findById(id)
+    let declaration = await Declaration.findById(id)
     console.log(req.body)
     console.log(file)
     console.log(declaration)
@@ -49,9 +49,11 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     if (!file && valFile)
     {
         delete declrObj.file
+        declaration.file = undefined
+        await declaration.save();
     }
-    console.log(declrObj)
     await Declaration.findByIdAndUpdate(id, declrObj)
+    console.log(declrObj)
     res.redirect("/")
 }))
 

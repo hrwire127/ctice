@@ -1,55 +1,83 @@
-import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Article, Clear } from '@mui/icons-material';
-import useFormError from './hooks/useFormError';
-import { makeStyles } from '@mui/styles';
-import TextArea from './TextArea'
-import Link from 'next/link';
-import { uploadFile, deleteFile } from '../utils/commonFunc';
-
+import React, { useState } from "react";
+import
+    {
+        Avatar,
+        Button,
+        CssBaseline,
+        TextField,
+        FormControlLabel,
+        Checkbox,
+        Grid,
+        Box,
+        Typography,
+        Container,
+        FormHelperText,
+        IconButton,
+    } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Article, Clear } from "@mui/icons-material";
+import useFormError from "./hooks/useFormError";
+import { makeStyles } from "@mui/styles";
+import TextArea from "./TextArea";
+import Link from "next/link";
+import { uploadFile, deleteFile } from "../utils/commonFunc";
 
 const useStyles = makeStyles({
     Container: {
         marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
     Form: {
         width: "100%",
-        marginTop: 8
+        marginTop: 8,
     },
     UploadBtn: {
         borderColor: "rgb(175, 175, 175)",
         color: "rgb(30, 30, 30)",
         flex: 1,
-        "&:hover":
-        {
+        "&:hover": {
             borderColor: "black",
         },
     },
     Upload: {
         display: "flex",
         marginTop: 8,
-    }
+    },
 });
 
 const theme = createTheme();
 
 export default function CreateForm(props)
 {
-    const [TitleError, setTitleError, helperTitleText, setHelperTitleText, checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
-    const [DescError, setDescError, helperDescText, setHelperDescText, checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
+    const [
+        TitleError,
+        setTitleError,
+        helperTitleText,
+        setHelperTitleText,
+        checkTitleKey,
+        setTitleTrue,
+        setTitleFalse,
+        titleValid,
+    ] = useFormError(false);
+    const [
+        DescError,
+        setDescError,
+        helperDescText,
+        setHelperDescText,
+        checkDescKey,
+        setDescTrue,
+        setDescFalse,
+        descValid,
+    ] = useFormError(false);
 
     const [file, changeFile] = useState();
     const [editorState, setEditorState] = useState();
 
-
     const { handleSubmit } = props;
 
     const classes = useStyles();
-
 
     const errCheck = async (e) =>
     {
@@ -58,43 +86,54 @@ export default function CreateForm(props)
 
         if (file)
         {
-            data.append("file", file)
+            data.append("file", file);
         }
-        
-        data.append("description", JSON.stringify(editorState))
 
-        const title_ = data.get("title")
+        data.append("description", JSON.stringify(editorState));
+
+        const title_ = data.get("title");
         const description_ = editorState.blocks[0].text;
 
-        if (titleValid(title_) && descValid(description_)) //add editor state
+        if (titleValid(title_) && descValid(description_))
         {
-            setTitleTrue()
-            setDescTrue()
-            handleSubmit(data)
-        }
-        else
+            //add editor state
+            setTitleTrue();
+            setDescTrue();
+            handleSubmit(data);
+        } else
         {
-            if (!titleValid(title_)) { setTitleFalse() }
-            if (!descValid(description_)) { setDescFalse() }
+            if (!titleValid(title_))
+            {
+                setTitleFalse();
+            }
+            if (!descValid(description_))
+            {
+                setDescFalse();
+            }
         }
-    }
-
+    };
 
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box className={classes.Container}>
-                    <Avatar sx={{ m: 1, bgcolor: 'primary' }}>
+                    <Avatar sx={{ m: 1, bgcolor: "primary" }}>
                         <Article />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Create Declaration
                     </Typography>
-                    <Box component="form" enctype="multipart/form-data" onSubmit={errCheck} noValidate className={classes.Form}>
+                    <Box
+                        component="form"
+                        enctype="multipart/form-data"
+                        onSubmit={errCheck}
+                        noValidate
+                        className={classes.Form}
+                    >
                         <TextField
                             margin="normal"
-                            inputProps={{ maxLength: 12 }}
+                            inputProps={{ maxLength: 10 }}
                             required
                             error={TitleError}
                             fullWidth
@@ -106,7 +145,9 @@ export default function CreateForm(props)
                             autoFocus
                         />
 
-                        <FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>
+                        <FormHelperText error={TitleError}>
+                            {helperTitleText}
+                        </FormHelperText>
                         <TextArea
                             setData={setEditorState}
                             error={DescError}
@@ -119,17 +160,16 @@ export default function CreateForm(props)
                             <Button
                                 variant="outlined"
                                 className={classes.UploadBtn}
-                                component="label" //{ : ? " "} prop 
+                                component="label" //{ : ? " "} prop
                             >
-                                {file //{ : ? <> <>} component inside component 
+                                {file //{ : ? <> <>} component inside component
                                     ? file.name //prop component
-                                    : "Upload Pdf"
-                                }
+                                    : "Upload Pdf"}
                                 <input
                                     type="file"
                                     id="file"
                                     name="file"
-                                    onChange={e => uploadFile(e, changeFile)}
+                                    onChange={(e) => uploadFile(e, changeFile)}
                                     hidden
                                     accept="application/pdf"
                                 />
@@ -138,10 +178,11 @@ export default function CreateForm(props)
                             <IconButton
                                 onClick={() =>
                                 {
-                                    deleteFile(changeFile)
-                                }}>
+                                    deleteFile(changeFile);
+                                }}
+                            >
                                 <Clear />
-                            </IconButton >
+                            </IconButton>
                         </Box>
 
                         <Button
@@ -152,17 +193,10 @@ export default function CreateForm(props)
                         >
                             Create
                         </Button>
-                        <Link href="/">
-                            Back
-                        </Link>   
-
+                        <Link href="/">Back</Link>
                     </Box>
                 </Box>
             </Container>
         </ThemeProvider>
     );
 }
-
-
-
-

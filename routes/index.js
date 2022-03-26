@@ -14,12 +14,13 @@ router.get('/', tryAsync(async (req, res, next) =>
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
     const file = req.files ? await StorageUpload(req.files.file) : null
+    console.log(req.body)
+    console.log(req.files)
     const declrObj = {
         ...req.body,
     }
     if (file)
     {
-        console.log("44")
         declrObj.file = {
             name: req.files.file.name,
             url: file.url,
@@ -33,7 +34,6 @@ router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 
     const declaration = new Declaration(declrObj)
     await declaration.save();
-    res.send("/")
     res.redirect("/")
 }))
 

@@ -4,12 +4,15 @@ const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
 const rules = require('./rules');
 
-function validateBody(title, description, file = { size: 0 })
+function validateBody(title, description, file = null)
 {
     return (
         title.length > rules.title_max_char ||
             description.blocks.length > rules.desc_max_blocks ||
-            file.size > rules.file_max_size ? true : false
+            file ? (
+            file.size > rules.file_max_size ||
+            file.mimetype !== rules.file_format) : false
+            ? true : false
     )
 }
 
