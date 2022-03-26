@@ -6,7 +6,6 @@ const ServerError = require('../utils/ServerError');
 const tryAsync = require('../utils/tryAsync');
 const { validateDbData, StorageUpload } = require('../utils/middlewares');
 const { cloud } = require('../cloud/storage');
-const _ = require('lodash')
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
@@ -20,12 +19,14 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     const { id } = req.params;
     const file = req.files ? await StorageUpload(req.files.file) : null
     const declaration = await Declaration.findById(id)
+    console.log(req.body)
     console.log(file)
     console.log(declaration)
     const declrObj = {
         ...req.body
     }
     const valFile = declaration['file']['url'] !== undefined;
+    console.log(declaration['file'].hasOwnProperty("url"))
     console.log(req.body)
     if (file)
     {

@@ -72,16 +72,11 @@ function EditForm(props)
 
         console.log(file)
 
-        const valBody = JSON.stringify({
-            title: title_,
-            description: JSON.stringify(editorState),
-        })
-
         if (titleValid(title_) && descValid(description_)) //add editor state
         {
             setTitleTrue()
             setDescTrue()
-            handleSubmit(valBody, data)
+            handleSubmit(data)
         }
         else
         {
@@ -104,6 +99,7 @@ function EditForm(props)
                     <Box component="form" error={TitleError} onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"
+                            maxLength="10"
                             required
                             error={TitleError}
                             fullWidth

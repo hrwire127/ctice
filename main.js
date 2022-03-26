@@ -43,9 +43,9 @@ app.prepare().then(() =>
 
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
-    // server.use(express.json());
-    // server.use(cors());
     server.use(fileupload())
+    server.use(express.json());
+    server.use(cors());
 
     server.use('/', index)
     server.use('/view', view)

@@ -9,7 +9,7 @@ function edit({ declaration })
 
     const { _id } = declaration;
 
-    const handleSubmit = async (valBody, body) =>
+    const handleSubmit = async (body) =>
     {
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
             method: 'PUT',

@@ -7,7 +7,7 @@ import axios from "axios"
 function create()
 {
 
-    const handleSubmit = async (valBody, body) =>
+    const handleSubmit = async (body) =>
     {   
         await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
             method: 'POST',

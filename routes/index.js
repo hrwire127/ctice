@@ -13,33 +13,31 @@ router.get('/', tryAsync(async (req, res, next) =>
 
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
-    console.log("11")
-    // console.log(req.body)
-    // console.log(req.files.file)
-    console.log("22")
-    const file = req.files ? await StorageUpload(req.files.file) : null
-    const declrObj = {
-        ...req.body,
-    }
-    console.log("33")
-    console.log(file)
-    if (file)
-    {
-        console.log("44")
-        declrObj.file = {
-            name: req.files.file.name,
-            url: file.url,
-            location: file.location
-        }
-    }
-    else
-    {
-        declrObj.file = null
-    }
+    console.log(req.body)
+    console.log(req.files.file)
+    // const file = req.files ? await StorageUpload(req.files.file) : null
+    // const declrObj = {
+    //     ...req.body,
+    // }
+    // console.log("33")
+    // console.log(file)
+    // if (file)
+    // {
+    //     console.log("44")
+    //     declrObj.file = {
+    //         name: req.files.file.name,
+    //         url: file.url,
+    //         location: file.location
+    //     }
+    // }
+    // else
+    // {
+    //     declrObj.file = null
+    // }
 
-    const declaration = new Declaration(declrObj)
-    await declaration.save();
-    res.send("/")
+    // const declaration = new Declaration(declrObj)
+    // await declaration.save();
+    // res.send("/")
 }))
 
 router.get("/create", (req, res) =>

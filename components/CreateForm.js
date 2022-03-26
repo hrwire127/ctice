@@ -56,6 +56,7 @@ export default function CreateForm(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
+        console.log(file)
         if (file)
         {
             data.append("file", file)
@@ -66,16 +67,11 @@ export default function CreateForm(props)
         const title_ = data.get("title")
         const description_ = editorState.blocks[0].text;
 
-        const valBody = JSON.stringify({
-            title: title_,
-            description: JSON.stringify(editorState),
-        })
-
         if (titleValid(title_) && descValid(description_)) //add editor state
         {
             setTitleTrue()
             setDescTrue()
-            handleSubmit(valBody, data)
+            handleSubmit(data)
         }
         else
         {
@@ -99,6 +95,7 @@ export default function CreateForm(props)
                     <Box component="form" enctype="multipart/form-data" onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"
+                            maxLength="10"
                             required
                             error={TitleError}
                             fullWidth
