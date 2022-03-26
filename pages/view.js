@@ -14,9 +14,9 @@ function view({ declaration })
             headers: {
                 'Content-Type': 'application/json',
             },
-        }).then(async (res) =>
+        }).then(res =>
         {
-            window.location = await res.text()
+            window.location = res.url
         })
     }
 

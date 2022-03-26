@@ -56,7 +56,6 @@ export default function CreateForm(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
-        console.log(file)
         if (file)
         {
             data.append("file", file)
@@ -95,7 +94,7 @@ export default function CreateForm(props)
                     <Box component="form" enctype="multipart/form-data" onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"
-                            maxLength="10"
+                            inputProps={{ maxLength: 12 }}
                             required
                             error={TitleError}
                             fullWidth

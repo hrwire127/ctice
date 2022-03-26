@@ -4,7 +4,7 @@ const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
 const rules = require('./rules');
 
-function validateBody(title, description, file)
+function validateBody(title, description, file = { size: 0 })
 {
     return (
         title.length > rules.title_max_char ||
@@ -17,7 +17,6 @@ async function validateDbData(req, res, next)
 {
     console.log(req.body)
     const { title, description } = req.body
-    console.log(req.files.file)
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.string().required(),
@@ -25,12 +24,13 @@ async function validateDbData(req, res, next)
     })
 
     const { error } = declarationSchema.validate(req.body)
-    const bodyError = validateBody(title, JSON.parse(description), req.files.file)
-    console.log(bodyError)
+    const bodyError = req.files
+        ? validateBody(title, JSON.parse(description), req.files.file)
+        : validateBody(title, JSON.parse(description))
 
     if (error || bodyError)
     {
-        const msg = error.details.map(e => e.message).join(',')
+        // const msg = error.details.map(e => e.message).join(',')
         next(new ServerError("Invalid Data", 400))
     }
     else

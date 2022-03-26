@@ -99,7 +99,7 @@ function EditForm(props)
                     <Box component="form" error={TitleError} onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"
-                            maxLength="10"
+                            inputProps={{ maxLength: 12 }}
                             required
                             error={TitleError}
                             fullWidth

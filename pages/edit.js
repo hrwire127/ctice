@@ -14,9 +14,9 @@ function edit({ declaration })
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
             method: 'PUT',
             body: body,
-        }).then(async (res) =>
+        }).then(res =>
         {
-            window.location = await res.text()
+            window.location = res.url
         })
     };
 

@@ -14,7 +14,7 @@ function create()
             body: body,
         }).then(async (res) =>
         {
-            window.location = await res.text()
+            window.location = res.url
         })
     };
     return (

@@ -47,12 +47,12 @@ function DocumentView(props)
             <Box className={classes.ToolBar}>
                 <Typography variant="h4" >Page {pageNumber} of {numPages}</Typography>
                 <ButtonGroup aria-label="button group" >
-                    <Button onClick={() => setPageNumber(pageNumber - 1)} variant="outlined"><Remove></Remove></Button>
-                    <Button onClick={() => setPageNumber(pageNumber + 1)} variant="outlined"><Add></Add></Button>
-                </ButtonGroup>
-            </Box>
-            <Page pageNumber={pageNumber} className={classes.Content} />
-        </Document>
+                    <Button onClick={() => setPageNumber(pageNumber > 1 ? pageNumber - 1 : pageNumber)} variant="outlined"><Remove></Remove></Button>
+                <Button onClick={() => setPageNumber(pageNumber < 1 ? pageNumber + 1 : pageNumber)} variant="outlined"><Add></Add></Button>
+        </ButtonGroup>
+            </Box >
+        <Page pageNumber={pageNumber} className={classes.Content} />
+        </Document >
     )
 }
 

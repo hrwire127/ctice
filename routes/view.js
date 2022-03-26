@@ -26,8 +26,6 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
         ...req.body
     }
     const valFile = declaration['file']['url'] !== undefined;
-    console.log(declaration['file'].hasOwnProperty("url"))
-    console.log(req.body)
     if (file)
     {
         declrObj.file = {
@@ -54,12 +52,8 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     }
     console.log(declrObj)
     await Declaration.findByIdAndUpdate(id, declrObj)
-    res.send("/")
+    res.redirect("/")
 }))
-
-// router.post('/validate', validateDbData)
-
-// router.put("/:id/raw", func)
 
 router.delete("/:id", tryAsync(async (req, res, next) =>
 {
@@ -73,7 +67,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
         );
     }
     await Declaration.findByIdAndDelete(id)
-    res.send("/")
+    res.redirect("/")
 }))
 
 module.exports = router;
