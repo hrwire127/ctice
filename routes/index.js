@@ -34,7 +34,7 @@ router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 
     const declaration = new Declaration(declrObj)
     await declaration.save();
-    res.redirect("/")
+    res.json({ status: "Success", redirect: '/' });
 }))
 
 router.get("/create", (req, res) =>
@@ -45,6 +45,6 @@ router.get("/create", (req, res) =>
 module.exports = router;
 
 
-//create file , - file 
+//create file , - file
 //edit file => file  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/
 //delete file, -file

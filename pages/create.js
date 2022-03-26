@@ -8,14 +8,19 @@ function create()
 {
 
     const handleSubmit = async (body) =>
-    {   
+    {
         await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
             method: 'POST',
             body: body,
-        }).then(async (res) =>
-        {
-            window.location = res.url
-        })
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+                if (res.status === "Success")
+                {
+                    window.location = res.redirect
+                }
+            })
     };
     return (
         <CreateForm handleSubmit={handleSubmit} />

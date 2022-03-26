@@ -54,7 +54,7 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     }
     await Declaration.findByIdAndUpdate(id, declrObj)
     console.log(declrObj)
-    res.redirect("/")
+    res.json({status: "Success", redirect: '/'});
 }))
 
 router.delete("/:id", tryAsync(async (req, res, next) =>
@@ -69,7 +69,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
         );
     }
     await Declaration.findByIdAndDelete(id)
-    res.redirect("/")
+    res.json({status: "Success", redirect: '/'});
 }))
 
 module.exports = router;

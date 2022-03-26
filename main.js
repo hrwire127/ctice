@@ -64,7 +64,7 @@ app.prepare().then(() =>
     server.get("/error", (req, res, next) =>
     {
         const error = req.session.error;
-        res.status(error.status)
+        res.status(error.status).end()
         app.render(req, res, "/error", { error })
     })
 
