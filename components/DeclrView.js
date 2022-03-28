@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, ButtonGroup, Button, Card, Typography } from '@mui/material';
+import { Box, ButtonGroup, Button, Card, Typography, CardContent } from '@mui/material';
 import { Construction, ArrowBack, Delete } from '@mui/icons-material';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { CropData } from '../utils/commonFunc';
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     },
     Document: {
     },
-    Paragraph: { 
+    Paragraph: {
         padding: "30px",
         width: "30%",
         display: "flex",
@@ -65,6 +65,13 @@ function DeclrView(props)
                         mt: 5,
                     }}
                 >
+                    <Card sx={{ minWidth: 275 }}>
+                        <CardContent>
+                            <Typography sx={{ fontSize: 30}} color="text.secondary" align="center" gutterBottom>
+                                {file.name}
+                            </Typography>
+                        </CardContent>
+                    </Card>
                     <ButtonGroup
                         variant="outlined"
                         aria-label="outlined button group"
