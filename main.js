@@ -36,7 +36,7 @@ const ServerError = require("./utils/ServerError");
 const { handleError } = require('./utils/middlewares');
 const upload = require('./cloud/storage');
 const fileupload = require("express-fileupload");
-const  session = require('express-session');
+const session = require('express-session');
 
 app.prepare().then(() =>
 {
@@ -44,7 +44,7 @@ app.prepare().then(() =>
 
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
-    server.use(session({secret: 'mySecret', resave: false, saveUninitialized: false}));
+    server.use(session({ secret: 'mySecret', resave: false, saveUninitialized: false }));
     server.use(fileupload())
     server.use(express.json());
     server.use(cors());
@@ -58,13 +58,13 @@ app.prepare().then(() =>
         console.log("AA")
         const error = new ServerError(err.message, err.status)
         req.session.error = error; //or whatever
-        res.redirect("/error") //, error)
+        res.json({ status: "Success", redirect: '/error' });//, error)
     })
 
     server.get("/error", (req, res, next) =>
     {
         const error = req.session.error;
-        res.status(error.status).end()
+        res.status(error.status)
         app.render(req, res, "/error", { error })
     })
 

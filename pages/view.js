@@ -17,7 +17,6 @@ function view({ declaration })
         }).then(response => response.json())
             .then(async res =>
             {
-                console.log(res)
                 if (res.status === "Success")
                 {
                     window.location = res.redirect

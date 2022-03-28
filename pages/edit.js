@@ -10,14 +10,13 @@ function edit({ declaration })
     const { _id } = declaration;
 
     const handleSubmit = async (body) =>
-    {   //fetch req | server(XMLHttpRequest) req; res.send/redirect === terminated res.end()
+    {   
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
             method: 'PUT',
             body: body,
         }).then(response => response.json())
             .then(async res =>
             {
-                console.log(res)
                 if (res.status === "Success")
                 {
                     window.location = res.redirect
