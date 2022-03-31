@@ -20,7 +20,11 @@ const useStyles = makeStyles({
     },
     Content: {
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        "& .annotationLayer":
+        {
+            position: "absolute"
+        }
     }
 });
 
@@ -48,10 +52,10 @@ function DocumentView(props)
                 <Typography variant="h4" >Page {pageNumber} of {numPages}</Typography>
                 <ButtonGroup aria-label="button group" >
                     <Button onClick={() => setPageNumber(pageNumber > 1 ? pageNumber - 1 : pageNumber)} variant="outlined"><Remove></Remove></Button>
-                <Button onClick={() => setPageNumber(pageNumber < 1 ? pageNumber + 1 : pageNumber)} variant="outlined"><Add></Add></Button>
-        </ButtonGroup>
+                    <Button onClick={() => setPageNumber(pageNumber < 1 ? pageNumber + 1 : pageNumber)} variant="outlined"><Add></Add></Button>
+                </ButtonGroup>
             </Box >
-        <Page pageNumber={pageNumber} className={classes.Content} />
+            <Page pageNumber={pageNumber} className={classes.Content} />
         </Document >
     )
 }
