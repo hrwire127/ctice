@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import EditForm from '../components/EditForm';
-import axios from "axios"
-
 
 function edit({ declaration })
 {

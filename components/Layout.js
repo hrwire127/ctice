@@ -1,11 +1,8 @@
-import { Box } from '@mui/material';
-import Navbar from "./Navbar"
+import { useEffect, useState } from 'react'
+import { Box } from '@mui/material'
 import Footer from './Footer'
 import Loading from './Loading'
 import Header from './Header'
-
-import { useEffect, useState } from 'react'
-
 
 const sections = [
     { title: 'Home', url: '/' },
@@ -24,10 +21,9 @@ export default function Layout(props)
             {PageLoaded
                 ?
                 <main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    {/* <Navbar /> */}
                     <Header sections={sections} title="Ctice" />
                     <Box sx={{ mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
-                    <Footer />
+                    {/* <Footer /> */}
                 </main>
                 :
                 <Loading />

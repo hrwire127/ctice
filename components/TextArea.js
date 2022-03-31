@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-
-
+import { Box, Button } from '@mui/material';
 
 class TextArea extends React.Component
 {

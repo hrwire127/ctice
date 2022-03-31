@@ -1,25 +1,12 @@
 import React from 'react'
-import { CardActions, Box, Card, CardContent, Button, Typography } from '@mui/material'
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+import { CardActions, Box, Card, CardContent, Button, Typography } from '@mui/material'
+import useStyles from "../assets/styles/_DeclrCard"
+import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
-import { makeStyles } from '@mui/styles';
-import { CropData } from '../utils/commonFunc';
 
-const useStyles = makeStyles({
-    Card: {
-        width: "220px",
-        height: "262px",
-        position: 'relative'
-    },
-    Actions: {
-        background: "rgb(2, 0, 36)",
-        background: "linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 18%)",
-        position: "absolute",
-        width: "100%",
-        height: "60px",
-    },
-});
+
 
 function DeclrCard(props) 
 {

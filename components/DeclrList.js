@@ -1,34 +1,9 @@
 import React from 'react';
-import Link from 'next/link'
-import DeclrCard from './DeclrCard';
-
-import { makeStyles } from '@mui/styles';
 import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
 import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
-
-const useStyles = makeStyles({
-    Bar: {
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "20px",
-        width: "90vw",
-        margin: "auto",
-    },
-    Grid: {
-        margin: "auto!important",
-        width: "90vw!important",
-    },
-    List: {
-        margin: "auto",
-        width: "90vw",
-        paddingBottom: "50px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, 220px)",
-        justifyContent: "center",
-        gridGap: "20px",
-    },
-});
-
+import DeclrCard from './DeclrCard';
+import Link from 'next/link'
+import useStyles from '../assets/styles/_DeclrList';
 
 function DeclrList(props)
 {

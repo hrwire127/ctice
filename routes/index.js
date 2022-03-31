@@ -1,9 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Declaration = require("../models/declaration")
+const router = require('express').Router();
 const { app } = require("../main");
-const tryAsync = require('../utils/tryAsync');
-const { validateDbData, StorageUpload } = require('../utils/middlewares');
+const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
+const Declaration = require("../models/declaration");
 
 router.get('/', tryAsync(async (req, res, next) =>
 {

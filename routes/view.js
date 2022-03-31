@@ -1,10 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const Declaration = require("../models/declaration")
+const router = require('express').Router();
 const { app } = require("../main")
+const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
+const Declaration = require("../models/declaration")
 const ServerError = require('../utils/ServerError');
-const tryAsync = require('../utils/tryAsync');
-const { validateDbData, StorageUpload } = require('../utils/middlewares');
 const { cloud } = require('../cloud/storage');
 
 router.get("/:id", tryAsync(async (req, res, next) =>

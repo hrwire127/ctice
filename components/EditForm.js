@@ -2,38 +2,14 @@ import React, { useState } from 'react';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Article, Clear } from '@mui/icons-material';
-import Link from 'next/link';
 import useFormError from './hooks/useFormError';
+import { uploadFile, deleteFile } from '../utils/clientFunc';
+import useStyles from "..assets/styles/_EditForm"
 import TextArea from './TextArea'
-import { makeStyles } from '@mui/styles';
-import { uploadFile, deleteFile } from '../utils/commonFunc';
+import Link from 'next/link';
 
 
-const useStyles = makeStyles({
-    Container: {
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    Form: {
-        mt: 1,
-        width: "100%"
-    },
-    UploadBtn: {
-        borderColor: "rgb(175, 175, 175)",
-        color: "rgb(30, 30, 30)",
-        flex: 1,
-        "&:hover":
-        {
-            borderColor: "black",
-        },
-    },
-    Upload: {
-        display: "flex",
-        marginTop: 8
-    }
-})
+
 
 const theme = createTheme();
 

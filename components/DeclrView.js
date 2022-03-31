@@ -1,38 +1,12 @@
 import React from 'react';
+import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { Box, ButtonGroup, Button, Card, Typography, CardContent } from '@mui/material';
 import { Construction, ArrowBack, Delete } from '@mui/icons-material';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
-import { CropData } from '../utils/commonFunc';
-import { makeStyles } from '@mui/styles';
 import DocumentView from '../components/DocumentView';
+import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
+import useStyles from '../assets/styles/_DeclrView';
 
-
-
-const useStyles = makeStyles({
-    BtnGroup: {
-        margin: "auto",
-        display: "flex",
-        justifyContent: "space-between",
-        width: "200px",
-    },
-    FlexFill: {
-        flex: "1 1 auto !important",
-    },
-    Document: {
-    },
-    Paragraph: {
-        padding: "30px",
-        width: "30%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-    },
-    Content: {
-        display: "flex",
-        justifyContent: "space-evenly",
-    }
-});
 
 
 function DeclrView(props)

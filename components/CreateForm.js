@@ -1,51 +1,27 @@
 import React, { useState } from "react";
 import
-    {
-        Avatar,
-        Button,
-        CssBaseline,
-        TextField,
-        FormControlLabel,
-        Checkbox,
-        Grid,
-        Box,
-        Typography,
-        Container,
-        FormHelperText,
-        IconButton,
-    } from "@mui/material";
+{
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    FormHelperText,
+    IconButton,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import useFormError from "./hooks/useFormError";
-import { makeStyles } from "@mui/styles";
+import { uploadFile, deleteFile } from "../utils/clientFunc";
 import TextArea from "./TextArea";
 import Link from "next/link";
-import { uploadFile, deleteFile } from "../utils/commonFunc";
+import useStyles from "../assets/styles/_CreateForm";
 
-const useStyles = makeStyles({
-    Container: {
-        marginTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    Form: {
-        width: "100%",
-        marginTop: 8,
-    },
-    UploadBtn: {
-        borderColor: "rgb(175, 175, 175)",
-        color: "rgb(30, 30, 30)",
-        flex: 1,
-        "&:hover": {
-            borderColor: "black",
-        },
-    },
-    Upload: {
-        display: "flex",
-        marginTop: 8,
-    },
-});
 
 const theme = createTheme();
 
@@ -76,9 +52,9 @@ export default function CreateForm(props)
     const [editorState, setEditorState] = useState();
 
     const { handleSubmit } = props;
+    const classes = useStyles()
 
-    const classes = useStyles();
-
+    
     const errCheck = async (e) =>
     {
         e.preventDefault();
