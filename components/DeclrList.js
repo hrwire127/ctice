@@ -3,7 +3,7 @@ import Link from 'next/link'
 import DeclrCard from './DeclrCard';
 
 import { makeStyles } from '@mui/styles';
-import { Box, Typography, ButtonGroup, Button, Grid } from '@mui/material';
+import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
 import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
 
 const useStyles = makeStyles({
@@ -19,19 +19,6 @@ const useStyles = makeStyles({
         width: "90vw!important",
     },
     List: {
-        // display: "flex",
-        // flexFlow: "row wrap",
-        // justifyContent: "center",
-        // gap: "20px",
-        // flexWrap: "wrap",
-        // margin: "auto",
-        // width: "90vw",
-        // paddingBottom: "50px",
-        // "&::after": {
-        //     content: "",
-        //     flex: "auto",
-        //     width: "200px"
-        // }
         margin: "auto",
         width: "90vw",
         paddingBottom: "50px",
@@ -55,7 +42,7 @@ function DeclrList(props)
                     Announcements
                 </Typography>
                 <ButtonGroup aria-label="button group">
-                    <Link href="/create"><Button variant="outlined"><Add></Add></Button></Link> {/* todo add more */}
+                    <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link> {/* todo add more */}
                 </ButtonGroup>
             </Box>
             <Box className={classes.List}>

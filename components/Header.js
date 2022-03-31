@@ -19,13 +19,19 @@ const useStyles = makeStyles({
     overflowX: 'auto'
   },
   Profile: {
-    transition: "width 0.4s",
-    transition: "height 0.4s",
+    transition: "transform 0.4s",
     "&:hover":
     {
-      width: 30,
-      height: 30
+      transform: "scale(1.2)",
+      cursor: "pointer",
     }
+  },
+  Auth: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    height: 40
   }
 })
 
@@ -114,7 +120,7 @@ function Header(props)
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-        <Link sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 30, height: 30 }} href="#">
+        <Link className={classes.Auth}>
           <AccountCircleIcon color="action" className={classes.Profile} />
         </Link>
       </Toolbar>
