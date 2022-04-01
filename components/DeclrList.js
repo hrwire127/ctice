@@ -9,7 +9,6 @@ function DeclrList(props)
 {
     const { declarations } = props;
     const classes = useStyles();
-
     return (
         <Box>
             <Box className={classes.Bar}>

@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Article, Clear } from '@mui/icons-material';
 import useFormError from './hooks/useFormError';
 import { uploadFile, deleteFile } from '../utils/clientFunc';
-import useStyles from "..assets/styles/_EditForm"
+import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
 import Link from 'next/link';
 

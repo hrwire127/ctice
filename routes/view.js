@@ -5,11 +5,11 @@ const Declaration = require("../models/declaration")
 const ServerError = require('../utils/ServerError');
 const { cloud } = require('../cloud/storage');
 
-router.get("/:id", tryAsync(async (req, res, next) =>
+router.post("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    app.render(req, res, "/view", { declaration })
+    res.json( declaration );
 }))
 
 router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>

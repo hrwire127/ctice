@@ -3,11 +3,19 @@ const { app } = require("../main");
 const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
 
-router.get('/', tryAsync(async (req, res, next) =>
+// router.get('/', tryAsync(async (req, res, next) =>
+// {
+//     const declarations = await Declaration.find({})
+//     app.render(req, res, "/", { declarations })
+// }))
+
+
+router.post('/', tryAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
-    app.render(req, res, "/", { declarations })
+    res.json( declarations );
 }))
+
 
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {

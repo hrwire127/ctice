@@ -58,7 +58,7 @@ app.prepare().then(() =>
     {
         console.log("AA")
         const error = new ServerError(err.message, err.status)
-        req.session.error = error; 
+        req.session.error = error;
         res.json({ status: "Success", redirect: '/error' });
     })
 
