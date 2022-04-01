@@ -2,7 +2,9 @@ const ServerError = require('./ServerError');
 const Joi = require("joi");
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
-const rules = require('./rules');
+const rules = require('./clientRules');
+const { tableBodyClasses } = require('@mui/material');
+const { FileRule } = require('./serverRules');
 
 function validateBody(title, description, file = null)
 {
@@ -89,5 +91,10 @@ function tryAsync(func)
     }
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync }
+function processFile(body, file, declaration)
+{
+    const Rule = new FileRule(body, file, declaration);
+    console.log(Rule.getRule())
+}
+module.exports = { validateDbData, handleError, StorageUpload, tryAsync, processFile }
 

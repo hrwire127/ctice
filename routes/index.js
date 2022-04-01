@@ -11,8 +11,14 @@ router.get('/', tryAsync(async (req, res, next) =>
 
 router.post('/', tryAsync(async (req, res, next) =>
 {
-    const declarations = await Declaration.find({})
-    res.json( declarations );
+    await Declaration.find({})
+        .then(declarations =>
+        {
+            res.json(declarations);
+        }).catch(err =>
+        {
+            res.json("Error")
+        })
 }))
 
 

@@ -6,9 +6,20 @@ const ServerError = require('../utils/ServerError');
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
+    app.render(req, res, `/edit/${req.params.id}`)
+}))
+
+router.post("/:id", tryAsync(async (req, res, next) =>
+{
     const { id } = req.params;
-    const declaration = await Declaration.findById(id)
-    app.render(req, res, "/edit", { declaration })
+    await Declaration.findById(id)
+        .then(declaration =>
+        {
+            res.json(declaration);
+        }).catch(err =>
+        {
+            res.json("Error")
+        })
 }))
 
 module.exports = router; 

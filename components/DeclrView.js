@@ -42,7 +42,7 @@ function DeclrView(props)
                     <Card sx={{ minWidth: 275 }}>
                         <CardContent>
                             <Typography sx={{ fontSize: 30}} color="text.secondary" align="center" gutterBottom>
-                                {file.name}
+                                {file && file.name}
                             </Typography>
                         </CardContent>
                     </Card>

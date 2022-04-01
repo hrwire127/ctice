@@ -21,8 +21,6 @@ function EditForm(props)
 
     const [file, changeFile] = useState(declaration.file);
 
-    console.log(file)
-
     const classes = useStyles();
 
     const errCheck = (e) =>

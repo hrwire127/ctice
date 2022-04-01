@@ -5,11 +5,13 @@ import DeclrView from '../../components/DeclrView';
 function view(props)                                                                           
 {
     const { declaration } = props;
+    const { _id } = declaration;
+
     const onDelete = async (e) =>                                                                           
     {
         e.preventDefault();
 
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +41,6 @@ view.getInitialProps = async ({ query }) =>
         {
             return res;
         })
-    console.log(declaration)
     return { declaration }
 }
 
