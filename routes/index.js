@@ -3,11 +3,10 @@ const { app } = require("../main");
 const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
 
-// router.get('/', tryAsync(async (req, res, next) =>
-// {
-//     const declarations = await Declaration.find({})
-//     app.render(req, res, "/", { declarations })
-// }))
+router.get('/', tryAsync(async (req, res, next) =>
+{
+    app.render(req, res, "/")
+}))
 
 
 router.post('/', tryAsync(async (req, res, next) =>

@@ -5,11 +5,17 @@ const Declaration = require("../models/declaration")
 const ServerError = require('../utils/ServerError');
 const { cloud } = require('../cloud/storage');
 
+router.get("/:id", tryAsync(async (req, res, next) =>
+{
+    console.log("#@")
+    app.render(req, res, "/view/[id]");
+}))
+
 router.post("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    res.json( declaration );
+    res.json(declaration);
 }))
 
 router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
@@ -52,7 +58,7 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     }
     await Declaration.findByIdAndUpdate(id, declrObj)
     console.log(declrObj)
-    res.json({status: "Success", redirect: '/'});
+    res.json({ status: "Success", redirect: '/' });
 }))
 
 router.delete("/:id", tryAsync(async (req, res, next) =>
@@ -67,7 +73,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
         );
     }
     await Declaration.findByIdAndDelete(id)
-    res.json({status: "Success", redirect: '/'});
+    res.json({ status: "Success", redirect: '/' });
 }))
 
 module.exports = router;

@@ -9,8 +9,6 @@ import TextArea from './TextArea'
 import Link from 'next/link';
 
 
-
-
 const theme = createTheme();
 
 function EditForm(props)
