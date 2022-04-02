@@ -9,7 +9,7 @@ router.get("/:id", tryAsync(async (req, res, next) =>
     app.render(req, res, `/edit/${req.params.id}`)
 }))
 
-router.post("/:id", tryAsync(async (req, res, next) =>
+router.post("/:id/get", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     await Declaration.findById(id)

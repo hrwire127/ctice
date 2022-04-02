@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
+const { FileRule } = require('../utils/serverRules');
 
 router.get('/', tryAsync(async (req, res, next) =>
 {
@@ -9,7 +10,7 @@ router.get('/', tryAsync(async (req, res, next) =>
 }))
 
 
-router.post('/', tryAsync(async (req, res, next) =>
+router.post('/get', tryAsync(async (req, res, next) =>
 {
     await Declaration.find({})
         .then(declarations =>
@@ -24,26 +25,26 @@ router.post('/', tryAsync(async (req, res, next) =>
 
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
-    const file = req.files ? await StorageUpload(req.files.file) : null
-    console.log(req.body)
-    console.log(req.files)
-    const declrObj = {
-        ...req.body,
-    }
-    if (file)
-    {
-        declrObj.file = {
-            name: req.files.file.name,
-            url: file.url,
-            location: file.location
-        }
-    }
-    else
-    {
-        declrObj.file = null
-    }
+    const Obj = await new FileRule(req.body, req.files).processObj(StorageUpload);
+    console.log(Obj)
+    // const file = req.files ? await StorageUpload(req.files.file) : null
+    // const declrObj = {
+    //     ...req.body,
+    // }
+    // if (file)
+    // {
+    //     declrObj.file = {
+    //         name: req.files.file.name,
+    //         url: file.url,
+    //         location: file.location
+    //     }
+    // }
+    // else
+    // {
+    //     declrObj.file = null
+    // }
 
-    const declaration = new Declaration(declrObj)
+    const declaration = new Declaration(Obj)
     await declaration.save();
     res.json({ status: "Success", redirect: '/' });
 }))
@@ -55,7 +56,3 @@ router.get("/create", (req, res) =>
 
 module.exports = router;
 
-
-//create file , - file
-//edit file => file  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/
-//delete file, -file

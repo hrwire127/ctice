@@ -11,7 +11,7 @@ function index(props)
 
 index.getInitialProps = async ({ query }) =>
 {
-    const declarations = await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
+    const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/get`, {
         method: 'POST',
     }).then(response => response.json())
         .then(async res =>

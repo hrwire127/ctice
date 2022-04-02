@@ -10,7 +10,7 @@ router.get("/:id", tryAsync(async (req, res, next) =>
     app.render(req, res, `/view/${req.params.id}`)
 }))
 
-router.post("/:id", tryAsync(async (req, res, next) =>
+router.post("/:id/get", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     await Declaration.findById(id)
@@ -28,7 +28,6 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
     const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud);
-    console.log(Obj)
     await Declaration.findByIdAndUpdate(id, Obj)
     res.json({ status: "Success", redirect: '/' });
 }))
@@ -37,7 +36,6 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    console.log(declaration)
     if (declaration.file.location)
     {
         await cloud.destroy(

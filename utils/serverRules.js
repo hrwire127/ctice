@@ -8,8 +8,11 @@ class FileRule
     }
     getRule()
     {
+        //create file , - file
+        //edit file => file  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/
+        //delete file, -file
         const { body, files, declaration } = this;
-        const hadFile = declaration['file']['url'] !== undefined;
+        const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
         if (body.file && files && hadFile) return 1;
         if (body.file && files && !hadFile) return 2;
         if (!body.file && !files && !hadFile) return 3;
