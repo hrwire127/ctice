@@ -29,7 +29,8 @@ const createDeclaration = async () =>
                 name: "A.pdf",
                 url: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice/A_rrpiog.pdf",
                 location: "ctice/A_rrpiog"
-            }
+            },
+            date: "22.02.2022"
         })
         await declaration.save();
     }

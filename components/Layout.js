@@ -5,10 +5,6 @@ import Loading from './Loading'
 import Header from './Header'
 
 const sections = [
-    { title: 'Home', url: '/' },
-    { title: 'Create', url: '/create' },
-    { title: 'News', url: '#' },
-    { title: 'More', url: '#' },
 ];
 
 export default function Layout(props)

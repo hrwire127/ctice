@@ -27,23 +27,6 @@ router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
     const Obj = await new FileRule(req.body, req.files).processObj(StorageUpload);
     console.log(Obj)
-    // const file = req.files ? await StorageUpload(req.files.file) : null
-    // const declrObj = {
-    //     ...req.body,
-    // }
-    // if (file)
-    // {
-    //     declrObj.file = {
-    //         name: req.files.file.name,
-    //         url: file.url,
-    //         location: file.location
-    //     }
-    // }
-    // else
-    // {
-    //     declrObj.file = null
-    // }
-
     const declaration = new Declaration(Obj)
     await declaration.save();
     res.json({ status: "Success", redirect: '/' });

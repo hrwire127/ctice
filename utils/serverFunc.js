@@ -23,7 +23,8 @@ async function validateDbData(req, res, next)
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.string().required(),
-        file: Joi.string()
+        file: Joi.string(),
+        date: Joi.string().required()
     })
 
     const { error } = declarationSchema.validate(req.body)

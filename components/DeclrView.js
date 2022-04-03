@@ -13,7 +13,7 @@ function DeclrView(props)
 {
 
     const { declaration, onDelete } = props;
-    const { title, description, file } = declaration;
+    const { title, description, file, date } = declaration;
     const { _id } = declaration;
     const classes = useStyles();
 
@@ -28,6 +28,9 @@ function DeclrView(props)
                         {title}
                     </Typography>
                     <Editor readOnly={true} editorState={editorState} />
+                    <Typography variant="h9" color="text.secondary">
+                        {date}
+                    </Typography>
                     <Link href="/" sx={{ p: 5 }}>
                         Back
                     </Link>

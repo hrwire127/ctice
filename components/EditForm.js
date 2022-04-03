@@ -38,7 +38,8 @@ function EditForm(props)
             data.delete("file")
         }
         data.append("description", JSON.stringify(editorState))
-
+        data.append("date", getCurrentDate("."))
+        
         const title_ = data.get('title');
         const description_ = editorState.blocks[0].text;
 

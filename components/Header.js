@@ -84,14 +84,14 @@ function Header(props)
   return (
     <React.Fragment>
       <Toolbar className={classes.Toolbar}>
-        <Typography
-          component="h2"
+        <Link
+          href="/"
+          underline="none"
           variant="h5"
           color="inherit"
-          noWrap
         >
           {title}
-        </Typography>
+        </Link>
         <Toolbar
           component="nav"
           variant="dense"

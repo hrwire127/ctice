@@ -17,7 +17,7 @@ import
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import useFormError from "./hooks/useFormError";
-import { uploadFile, deleteFile } from "../utils/clientFunc";
+import { uploadFile, deleteFile, getCurrentDate } from "../utils/clientFunc";
 import TextArea from "./TextArea";
 import Link from "next/link";
 import useStyles from "../assets/styles/_CreateForm";
@@ -66,6 +66,7 @@ export default function CreateForm(props)
         }
 
         data.append("description", JSON.stringify(editorState));
+        data.append("date", getCurrentDate("."))
 
         const title_ = data.get("title");
         const description_ = editorState.blocks[0].text;

@@ -22,6 +22,10 @@ const DeclarationSchema = new Schema({
         location: {
             type: String
         }
+    },
+    date: {
+        type: String,
+        required: true
     }
 
 });
