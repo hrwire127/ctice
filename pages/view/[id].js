@@ -31,7 +31,7 @@ function view(props)
     )
 }
 
-view.getInitialProps = async ({ query }) =>
+view.getInitialProps = async (context) =>
 {
     const { id } = context.query;
     const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/get`, {

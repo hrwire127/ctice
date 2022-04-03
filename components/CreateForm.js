@@ -60,10 +60,7 @@ export default function CreateForm(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
-        if (file)
-        {
-            data.append("file", file);
-        }
+        if (file) data.append("file", file);
 
         data.append("description", JSON.stringify(editorState));
         data.append("date", getCurrentDate("."))
@@ -137,10 +134,10 @@ export default function CreateForm(props)
                             <Button
                                 variant="outlined"
                                 className={classes.UploadBtn}
-                                component="label" //{ : ? " "} prop
+                                component="label" 
                             >
-                                {file //{ : ? <> <>} component inside component
-                                    ? file.name //prop component
+                                {file 
+                                    ? file.name 
                                     : "Upload Pdf"}
                                 <input
                                     type="file"

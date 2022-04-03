@@ -18,9 +18,9 @@ class FileRule
         if (!body.file && !files && !hadFile) return 3;
         if (!body.file && !files && hadFile) return 4;
     }
-    async processObj(upload, destroy)
+    async processObj(upload, destroy, rule = undefined)
     {
-        const rule = this.getRule()
+        rule = rule ? this.getRule() : rule
         const { body, files, declaration } = this;
         let Obj = {
             ...body
@@ -55,6 +55,14 @@ class FileRule
                 )
                 declaration.file = undefined
                 await declaration.save();
+                break;
+            case 5:
+                if (declaration.file.location)
+                {
+                    await destroy.destroy(
+                        declaration.file.location,
+                    )
+                }
                 break;
         }
         return Obj;

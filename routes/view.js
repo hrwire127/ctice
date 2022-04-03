@@ -31,21 +31,16 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     let declaration = await Declaration.findById(id)
     const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud);
     await Declaration.findByIdAndUpdate(id, Obj)
-    res.json({ status: "Success", redirect: '/' });
+    res.json({ confirm: "Success", redirect: '/' });
 }))
 
 router.delete("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    if (declaration.file.location)
-    {
-        await cloud.destroy(
-            declaration.file.location,
-        );
-    }
+    const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud, 5);
     await Declaration.findByIdAndDelete(id)
-    res.json({ status: "Success", redirect: '/' });
+    res.json({ confirm: "Success", redirect: '/' });
 }))
 
 module.exports = router;

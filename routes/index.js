@@ -28,10 +28,9 @@ router.post('/get', tryAsync(async (req, res, next) =>
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
     const Obj = await new FileRule(req.body, req.files).processObj(StorageUpload);
-    console.log(Obj)
     const declaration = new Declaration(Obj)
     await declaration.save();
-    res.json({ status: "Success", redirect: '/' });
+    res.json({ confirm: "Success", redirect: '/' });
 }))
 
 router.get("/create", (req, res) =>
