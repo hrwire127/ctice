@@ -3,8 +3,6 @@ import EditForm from '../../components/EditForm';
 
 function edit({ declaration })
 {
-    const [editorState, setEditorState] = useState();
-
     const { _id } = declaration;
 
     const handleSubmit = async (body) =>
@@ -23,7 +21,7 @@ function edit({ declaration })
     };
 
     return (
-        <EditForm handleSubmit={handleSubmit} declaration={declaration} setData={setEditorState} editorState={editorState} />
+        <EditForm handleSubmit={handleSubmit} declaration={declaration}/>
     )
 }
 
@@ -32,7 +30,12 @@ edit.getInitialProps = async (context) =>
     const { id } = context.query;
     const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/edit/${id}/get`, {
         method: 'POST',
-        body: process.env.NEXT_PUBLIC_SECRET
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
     }).then(response => response.json())
         .then(async res =>
         {

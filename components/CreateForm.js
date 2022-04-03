@@ -17,10 +17,11 @@ import
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import useFormError from "./hooks/useFormError";
-import { uploadFile, deleteFile, getCurrentDate } from "../utils/clientFunc";
+import { getCurrentDate, handleFormData } from "../utils/clientFunc";
 import TextArea from "./TextArea";
 import Link from "next/link";
 import useStyles from "../assets/styles/_CreateForm";
+import UploadBtn from "./UploadBtn";
 
 
 const theme = createTheme();
@@ -54,33 +55,25 @@ export default function CreateForm(props)
     const { handleSubmit } = props;
     const classes = useStyles()
 
-    
+
     const errCheck = async (e) =>
     {
         e.preventDefault();
-        const data = new FormData(e.currentTarget);
 
-        if (file) data.append("file", file);
+        const { data, title, description } = handleFormData(e.currentTarget, file, editorState)
 
-        data.append("description", JSON.stringify(editorState));
-        data.append("date", getCurrentDate("."))
-
-        const title_ = data.get("title");
-        const description_ = editorState.blocks[0].text;
-
-        if (titleValid(title_) && descValid(description_))
+        if (titleValid(title) && descValid(description))
         {
-            //add editor state
             setTitleTrue();
             setDescTrue();
             handleSubmit(data);
         } else
         {
-            if (!titleValid(title_))
+            if (!titleValid(title))
             {
                 setTitleFalse();
             }
-            if (!descValid(description_))
+            if (!descValid(description))
             {
                 setDescFalse();
             }
@@ -130,34 +123,7 @@ export default function CreateForm(props)
 
                         <FormHelperText error={DescError}>{helperDescText}</FormHelperText>
 
-                        <Box className={classes.Upload}>
-                            <Button
-                                variant="outlined"
-                                className={classes.UploadBtn}
-                                component="label" 
-                            >
-                                {file 
-                                    ? file.name 
-                                    : "Upload Pdf"}
-                                <input
-                                    type="file"
-                                    id="file"
-                                    name="file"
-                                    onChange={(e) => uploadFile(e, changeFile)}
-                                    hidden
-                                    accept="application/pdf"
-                                />
-                            </Button>
-
-                            <IconButton
-                                onClick={() =>
-                                {
-                                    deleteFile(changeFile);
-                                }}
-                            >
-                                <Clear />
-                            </IconButton>
-                        </Box>
+                        <UploadBtn changeFile={changeFile} file={file} />
 
                         <Button
                             type="submit"

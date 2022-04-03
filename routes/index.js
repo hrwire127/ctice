@@ -14,13 +14,13 @@ router.get('/', tryAsync(async (req, res, next) =>
 router.post('/get', tryAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
-    if (req.body === process.env.NEXT_PUBLIC_SECRET)
+    if (req.body.secret === process.env.NEXT_PUBLIC_SECRET)
     {
         res.json(declarations);
     }
     else
     {   
-        throw new ServerError("Not Authorized", 403)
+        throw new ServerError("Not Authorized", 401)
     }
 }))
 

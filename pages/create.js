@@ -13,7 +13,7 @@ function create()
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.status === "Success")
+                if (res.confirm === "Success")
                 {
                     window.location = res.redirect
                 }

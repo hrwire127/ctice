@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Article, Clear } from '@mui/icons-material';
+import { getCurrentDate, handleFormData } from "../utils/clientFunc";
 import useFormError from './hooks/useFormError';
-import { uploadFile, deleteFile } from '../utils/clientFunc';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
 import Link from 'next/link';
@@ -16,36 +16,31 @@ function EditForm(props)
     const [TitleError, setTitleError, helperTitleText, setHelperTitleText, checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, setDescError, helperDescText, setHelperDescText, checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration, handleSubmit, setData, editorState } = props;
+    const { declaration, handleSubmit } = props;
     const { title, description, _id } = declaration;
 
     const [file, changeFile] = useState(declaration.file);
+    const [editorState, setEditorState] = useState();
 
     const classes = useStyles();
 
     const errCheck = (e) =>
     {
         e.preventDefault();
-        const data = new FormData(e.currentTarget);
+        // const data = new FormData(e.currentTarget);
 
-        if (file)
-        {
-            // file === declaration.file ? {} : 
-            data.append("file", file)
-        }
-        else
-        {
-            data.delete("file")
-        }
-        data.append("description", JSON.stringify(editorState))
-        data.append("date", getCurrentDate("."))
+        // if (file) data.append("file", file)
+        // else data.delete("file")
         
-        const title_ = data.get('title');
-        const description_ = editorState.blocks[0].text;
+        // data.append("description", JSON.stringify(editorState))
+        // data.append("date", getCurrentDate("."))
+        
+        // const title_ = data.get('title');
+        // const description_ = editorState.blocks[0].text;
 
-        console.log(file)
+        const { data, title, description } = handleFormData(e.currentTarget, file, editorState)
 
-        if (titleValid(title_) && descValid(description_)) //add editor state
+        if (titleValid(title) && descValid(description)) //add editor state
         {
             setTitleTrue()
             setDescTrue()
@@ -54,8 +49,8 @@ function EditForm(props)
         else
         {
 
-            if (!titleValid(title_)) { setTitleFalse() }
-            if (!descValid(description_)) { setDescFalse() }
+            if (!titleValid(title)) { setTitleFalse() }
+            if (!descValid(description)) { setDescFalse() }
         }
     }
     return (
@@ -87,41 +82,15 @@ function EditForm(props)
                         <FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>
 
                         <TextArea
-                            setData={setData}
+                            setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}
                             data={JSON.parse(description)}
                         />
                         <FormHelperText error={DescError}>{helperDescText}</FormHelperText>
 
-                        <Box className={classes.Upload}>
-                            <Button
-                                variant="outlined"
-                                className={classes.UploadBtn}
-                                component="label" //{ : ? " "} prop 
-                            >
-                                {file //{ : ? <> <>} component inside component 
-                                    ? file.name //prop component
-                                    : "Upload Pdf"
-                                }
-                                <input
-                                    type="file"
-                                    id="file"
-                                    name="file"
-                                    onChange={e => uploadFile(e, changeFile)}
-                                    hidden
-                                    accept="application/pdf"
-                                />
-                            </Button>
-
-                            <IconButton
-                                onClick={() =>
-                                {
-                                    deleteFile(changeFile)
-                                }}>
-                                <Clear />
-                            </IconButton >
-                        </Box>
+                        <UploadBtn changeFile={changeFile} file={file} />
+                        
                         <Button
                             type="submit"
                             fullWidth

@@ -26,16 +26,33 @@ const deleteFile = (changeState) =>
     changeState()
 }
 
-function getCurrentDate(separator=''){
+function getCurrentDate(separator = '')
+{
 
     let newDate = new Date()
     let date = newDate.getDate();
     let month = newDate.getMonth() + 1;
     let year = newDate.getFullYear();
 
-    return `${date<10?`0${date}`:`${date}`}${separator}${month<10?`0${month}`:`${month}`}${separator}${year}`
-    }
+    return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
+}
+
+function handleFormData(evtTarget, file = undefined, description)
+{
+    const data = new FormData(evtTarget);
+
+    if (file) data.append("file", file)
+    else data.delete("file")
+
+    data.append("description", JSON.stringify(description));
+    data.append("date", getCurrentDate("."))
+
+    const title_ = data.get("title");
+    const description_ = description.blocks[0].text;
+
+    return { data, title: title_, description: description_ }
+}
 
 module.exports = {
-    CropData, uploadFile, deleteFile, getCurrentDate
+    CropData, uploadFile, deleteFile, getCurrentDate, handleFormData
 }

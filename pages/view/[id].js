@@ -36,7 +36,12 @@ view.getInitialProps = async (context) =>
     const { id } = context.query;
     const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/get`, {
         method: 'POST',
-        body: process.env.NEXT_PUBLIC_SECRET
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
     }).then(response => response.json())
         .then(async res =>
         {

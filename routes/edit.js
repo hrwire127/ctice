@@ -13,7 +13,7 @@ router.post("/:id/get", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    if (req.body === process.env.NEXT_PUBLIC_SECRET)
+    if (req.body.secret === process.env.NEXT_PUBLIC_SECRET)
     {
         res.json(declaration);
     }
