@@ -4,6 +4,7 @@ const { validateDbData, tryAsync, StorageUpload } = require('../utils/serverFunc
 const Declaration = require("../models/declaration")
 const { cloud } = require('../cloud/storage');
 const { FileRule } = require('../utils/serverRules');
+const ServerError = require('../utils/ServerError');
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
@@ -13,14 +14,15 @@ router.get("/:id", tryAsync(async (req, res, next) =>
 router.post("/:id/get", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
-    await Declaration.findById(id)
-        .then(declaration =>
-        {
-            res.json(declaration);
-        }).catch(err =>
-        {
-            res.json("Error")
-        })
+    const declaration = await Declaration.findById(id)
+    if (req.body === process.env.NEXT_PUBLIC_SECRET)
+    {
+        res.json(declaration);
+    }
+    else
+    {
+        throw new ServerError("Not Authorized", 403)
+    }
 }))
 
 router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>

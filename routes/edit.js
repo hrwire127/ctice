@@ -12,14 +12,15 @@ router.get("/:id", tryAsync(async (req, res, next) =>
 router.post("/:id/get", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
-    await Declaration.findById(id)
-        .then(declaration =>
-        {
-            res.json(declaration);
-        }).catch(err =>
-        {
-            res.json("Error")
-        })
+    const declaration = await Declaration.findById(id)
+    if (req.body === process.env.NEXT_PUBLIC_SECRET)
+    {
+        res.json(declaration);
+    }
+    else
+    {
+        throw new ServerError("Not Authorized", 403)
+    }
 }))
 
 module.exports = router; 

@@ -19,7 +19,7 @@ function view(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.status === "Success")
+                if (res.confirm === "Success")
                 {
                     window.location = res.redirect
                 }
@@ -33,13 +33,22 @@ function view(props)
 
 view.getInitialProps = async ({ query }) =>
 {
-    const { id } = query;
+    const { id } = context.query;
     const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/get`, {
         method: 'POST',
+        body: process.env.NEXT_PUBLIC_SECRET
     }).then(response => response.json())
         .then(async res =>
         {
-            return res;
+            if (res.confirm === "Success")
+            {
+                context.req.session.error = res.error;
+                context.res.redirect(res.redirect)
+            }
+            else
+            {
+                return res;
+            }
         })
     return { declaration }
 }

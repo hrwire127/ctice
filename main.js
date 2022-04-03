@@ -45,7 +45,7 @@ app.prepare().then(() =>
 
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
-    server.use(session({ secret: process.env.secret, resave: false, saveUninitialized: false }));
+    server.use(session({ secret: process.env.NEXT_PUBLIC_SECRET, resave: false, saveUninitialized: false }));
     server.use(fileupload())
     server.use(express.json());
     server.use(cors());
@@ -59,14 +59,14 @@ app.prepare().then(() =>
         console.log("AA")
         const error = new ServerError(err.message, err.status)
         req.session.error = error;
-        res.json({ status: "Success", redirect: '/error' });
+        res.json({ error, confirm: "Success", redirect: '/error' });
     })
 
     server.get("/error", (req, res, next) =>
     {
-        const error = req.session.error
+        let error = req.session.error 
+        if(!error) error = new ServerError();    
         res.status(error.status)
-        req.session.error = undefined;
         app.render(req, res, "/error", { error })
     })
 
