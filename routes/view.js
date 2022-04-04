@@ -38,7 +38,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud, 5);
+    const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud, 6);
     await Declaration.findByIdAndDelete(id)
     res.json({ confirm: "Success", redirect: '/' });
 }))

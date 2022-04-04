@@ -9,18 +9,24 @@ class FileRule
     getRule()
     {
         //create file , - file
-        //edit file => file  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/
+        //edit file => file (changed)  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/,  file => file (not changed)
         //delete file, -file
         const { body, files, declaration } = this;
+        console.log(body)
+        console.log(files)
+        console.log(declaration)
         const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
+        console.log(hadFile)
         if (body.file && files && hadFile) return 1;
         if (body.file && files && !hadFile) return 2;
         if (!body.file && !files && !hadFile) return 3;
         if (!body.file && !files && hadFile) return 4;
+        if (body.file && !files && hadFile) return 5;
+        return 3;
     }
     async processObj(upload, destroy, rule = undefined)
     {
-        rule = rule ? this.getRule() : rule
+        rule = rule ? rule : this.getRule()
         const { body, files, declaration } = this;
         let Obj = {
             ...body
@@ -57,6 +63,9 @@ class FileRule
                 await declaration.save();
                 break;
             case 5:
+                Obj.file = declaration.file;
+                break;
+            case 6:
                 if (declaration.file.location)
                 {
                     await destroy.destroy(

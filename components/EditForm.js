@@ -7,7 +7,7 @@ import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
 import Link from 'next/link';
-
+import UploadBtn from "./UploadBtn";
 
 const theme = createTheme();
 
@@ -27,16 +27,6 @@ function EditForm(props)
     const errCheck = (e) =>
     {
         e.preventDefault();
-        // const data = new FormData(e.currentTarget);
-
-        // if (file) data.append("file", file)
-        // else data.delete("file")
-        
-        // data.append("description", JSON.stringify(editorState))
-        // data.append("date", getCurrentDate("."))
-        
-        // const title_ = data.get('title');
-        // const description_ = editorState.blocks[0].text;
 
         const { data, title, description } = handleFormData(e.currentTarget, file, editorState)
 

@@ -18,7 +18,6 @@ function validateBody(title, description, file = null)
 
 async function validateDbData(req, res, next) 
 {
-    console.log(req.body)
     const { title, description } = req.body
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
