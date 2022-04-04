@@ -12,11 +12,7 @@ class FileRule
         //edit file => file (changed)  \/, (new | modfified) -file => file \/, -file => -file \/, file => -file \/,  file => file (not changed)
         //delete file, -file
         const { body, files, declaration } = this;
-        console.log(body)
-        console.log(files)
-        console.log(declaration)
         const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
-        console.log(hadFile)
         if (body.file && files && hadFile) return 1;
         if (body.file && files && !hadFile) return 2;
         if (!body.file && !files && !hadFile) return 3;
@@ -31,7 +27,6 @@ class FileRule
         let Obj = {
             ...body
         }
-        console.log(rule)
         switch (rule)
         {
             case 1:

@@ -1,45 +1,59 @@
 const ServerError = require('./ServerError');
-const Joi = require("joi");
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
-const rules = require('./clientRules');
+const ClientRule = require('./clientRules');
+const Joi = require("joi");
 
-function validateBody(title, description, file = null)
-{
-    return (
-        title.length > rules.title_max_char ||
-            description.blocks.length > rules.desc_max_blocks ||
-            file ? (
-            file.size > rules.file_max_size ||
-            file.mimetype !== rules.file_format) : false
-            ? true : false
-    )
-}
 
 async function validateDbData(req, res, next) 
 {
-    const { title, description } = req.body
+    let { title, description, date, file } = req.body
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
-        description: Joi.string().required(),
+        description: Joi.object({
+            blocks: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required(),
+                text: Joi.string().required(),
+                type: Joi.string().required(),
+                depth: Joi.number().required(),
+                inlineStyleRanges: Joi.array().required(),
+                entityRanges: Joi.array().required(),
+                data:  Joi.object().required()
+              })),
+              entityMap: Joi.object().required()
+        }).required(),
         file: Joi.string(),
         date: Joi.string().required()
     })
 
-    const { error } = declarationSchema.validate(req.body)
-    const bodyError = req.files
-        ? validateBody(title, JSON.parse(description), req.files.file)
-        : validateBody(title, JSON.parse(description))
+    const preparedBody = 
+    {
+        title, description: JSON.parse(description), file, date
+    }
 
-    if (error || bodyError)
+    const { error } = declarationSchema.validate(preparedBody)
+
+    if (error) 
     {
-        // const msg = error.details.map(e => e.message).join(',')
-        next(new ServerError("Invalid Data", 400))
+        const msg = error.details.map(e => e.message).join(',')
+        next(new ServerError(msg, 400))
     }
-    else
-    {
-        next()
-    }
+
+    file = req.files ? req.files.file : undefined;
+
+    console.log(error)
+    console.log(req.body)
+    console.log(title)
+    console.log(description)
+    console.log(file)
+    console.log(date)
+
+    const bodyError = new ClientRule(title, JSON.parse(description), file, date).validateContent()
+
+    if (bodyError) next(new ServerError("Invalid Data", 400))
+
+    next()
+
 }
 
 function handleError(app)
@@ -89,5 +103,17 @@ function tryAsync(func)
     }
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync }
+function ValidateSecret(key, callback)
+{
+    if (key === process.env.NEXT_PUBLIC_SECRET)
+    {
+        callback()
+    }
+    else
+    {
+        throw new ServerError("UnAuthorized", 401)
+    }
+}
+
+module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret }
 

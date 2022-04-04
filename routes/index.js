@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync } = require('../utils/serverFunc');
+const { validateDbData, StorageUpload, tryAsync, ValidateSecret } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
 const { FileRule } = require('../utils/serverRules');
 const ServerError = require('../utils/ServerError');
@@ -14,14 +14,7 @@ router.get('/', tryAsync(async (req, res, next) =>
 router.post('/get', tryAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
-    if (req.body.secret === process.env.NEXT_PUBLIC_SECRET)
-    {
-        res.json(declarations);
-    }
-    else
-    {   
-        throw new ServerError("Not Authorized", 401)
-    }
+    ValidateSecret(req.body.secret, () => res.json(declarations))
 }))
 
 
