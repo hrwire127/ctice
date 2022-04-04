@@ -4,6 +4,35 @@ let streamifier = require('streamifier');
 const ClientRule = require('./clientRules');
 const Joi = require("joi");
 
+function modifyDesc(description)
+{
+    let newDesc = description;
+    for (var i = newDesc.blocks.length - 1; i > 0; i--)
+    {
+        if(newDesc.blocks[i].text === "")
+        {
+            newDesc.blocks = newDesc.blocks.slice(0, i);
+        }
+        else 
+        {
+            break;
+        }
+    }
+    let last = newDesc.blocks.length - 1;
+    for (var i = newDesc.blocks[last].text.length - 1; i > 0; i--)
+    {
+        console.log("a")
+        if(!!newDesc.blocks[last].text[i])
+        {
+            newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i - 1);
+        }
+        else 
+        {
+            break;
+        }
+    }
+    return newDesc
+}
 
 async function validateDbData(req, res, next) 
 {
@@ -13,20 +42,20 @@ async function validateDbData(req, res, next)
         description: Joi.object({
             blocks: Joi.array().items(Joi.object().keys({
                 key: Joi.string().required(),
-                text: Joi.string().required(),
+                text: Joi.string().required().allow(''),
                 type: Joi.string().required(),
                 depth: Joi.number().required(),
                 inlineStyleRanges: Joi.array().required(),
                 entityRanges: Joi.array().required(),
-                data:  Joi.object().required()
-              })),
-              entityMap: Joi.object().required()
+                data: Joi.object().required()
+            })),
+            entityMap: Joi.object().required()
         }).required(),
         file: Joi.string(),
         date: Joi.string().required()
     })
 
-    const preparedBody = 
+    const preparedBody =
     {
         title, description: JSON.parse(description), file, date
     }
@@ -39,20 +68,15 @@ async function validateDbData(req, res, next)
         next(new ServerError(msg, 400))
     }
 
-    file = req.files ? req.files.file : undefined;
+    newFile = req.files ? req.files.file : undefined;
 
-    console.log(error)
-    console.log(req.body)
-    console.log(title)
-    console.log(description)
-    console.log(file)
-    console.log(date)
-
-    const bodyError = new ClientRule(title, JSON.parse(description), file, date).validateContent()
+    const bodyError = new ClientRule(title, JSON.parse(description), newFile, date).validateContent()
 
     if (bodyError) next(new ServerError("Invalid Data", 400))
 
-    next()
+    req.body.title = title.trim()
+    console.log(modifyDesc(JSON.parse(description)))
+    // next()
 
 }
 
