@@ -1,7 +1,7 @@
 import React from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
-import { Box, ButtonGroup, Button, Card, Typography, CardContent } from '@mui/material';
-import { Construction, ArrowBack, Delete } from '@mui/icons-material';
+import { Box, ButtonGroup, Button, Card, Typography, CardContent, IconButton } from '@mui/material';
+import { Construction, ArrowBack, Delete, Build } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
@@ -24,9 +24,16 @@ function DeclrView(props)
         <Box className='h-75'>
             <Box className={classes.Content}>
                 <Box className={classes.Paragraph}>
-                    <Typography variant="h3">
-                        {title}
-                    </Typography>
+                    <Box sx={{ display: "flex", justifyContent: "left" }}>
+                        <Typography variant="h3">
+                            {title}
+                        </Typography>
+                        <Box sx={{display: "flex", alignItems: "center", marginLeft: "10%"}}>
+                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build  /></IconButton></Link>
+                            <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
+                        </Box>
+                    </Box>
+
                     <Editor readOnly={true} editorState={editorState} />
                     <Typography variant="h9" color="text.secondary">
                         {date}
@@ -42,22 +49,13 @@ function DeclrView(props)
                         mt: 5,
                     }}
                 >
-                    <Card sx={{ minWidth: 275 }}>
+                    <Card sx={{ minWidth: 275, marginBottom: 10 }}>
                         <CardContent>
-                            <Typography sx={{ fontSize: 30}} color="text.secondary" align="center" gutterBottom>
+                            <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
                                 {file && file.name}
                             </Typography>
                         </CardContent>
                     </Card>
-                    <ButtonGroup
-                        variant="outlined"
-                        aria-label="outlined button group"
-                        className={classes.BtnGroup}
-                        sx={{ p: 2 }}
-                    >
-                        <Link href={`/edit/${_id}`}><Button className={classes.FlexFill}><Construction /></Button></Link>
-                        <Button onClick={onDelete} className={classes.FlexFill} ><Delete /></Button>
-                    </ButtonGroup >
                     <DocumentView pdf={file ? file.url : ""} {...declaration} />
                 </Card >
             </Box>
