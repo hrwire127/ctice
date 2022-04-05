@@ -23,7 +23,6 @@ function modifyDesc(description)
     {
         if(newDesc.blocks[last].text[i] === " ")
         {
-            console.log("as")
             newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i);
         }
         else 
