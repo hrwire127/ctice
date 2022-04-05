@@ -21,10 +21,10 @@ function modifyDesc(description)
     let last = newDesc.blocks.length - 1;
     for (var i = newDesc.blocks[last].text.length - 1; i > 0; i--)
     {
-        console.log("a")
-        if(!!newDesc.blocks[last].text[i])
+        if(newDesc.blocks[last].text[i] === " ")
         {
-            newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i - 1);
+            console.log("as")
+            newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i);
         }
         else 
         {
@@ -75,8 +75,8 @@ async function validateDbData(req, res, next)
     if (bodyError) next(new ServerError("Invalid Data", 400))
 
     req.body.title = title.trim()
-    console.log(modifyDesc(JSON.parse(description)))
-    // next()
+    req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
+    next()
 
 }
 
