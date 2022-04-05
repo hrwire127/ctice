@@ -35,7 +35,7 @@ function DeclrCard(props)
                     </Link>
                 </Box>
                 <Typography sx={{margin: 0}} variant="h9" color="text.secondary" gutterBottom>
-                    {date}
+                    {date[date.length - 1]}
                 </Typography>
             </CardActions>
         </Card>

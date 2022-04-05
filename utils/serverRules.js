@@ -27,6 +27,16 @@ class FileRule
         let Obj = {
             ...body
         }
+        if(declaration)
+        {
+            Obj.date = declaration.date
+            Obj.date.push(body.date)
+        }
+        else
+        {
+            Obj.date = []
+            Obj.date.push(body.date)
+        }
         switch (rule)
         {
             case 1:

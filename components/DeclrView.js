@@ -36,7 +36,7 @@ function DeclrView(props)
 
                     <Editor readOnly={true} editorState={editorState} />
                     <Typography variant="h9" color="text.secondary">
-                        {date}
+                        {date[date.length - 1]}
                     </Typography>
                     <Link href="/" sx={{ p: 5 }}>
                         Back

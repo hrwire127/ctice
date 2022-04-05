@@ -18,10 +18,14 @@ class ClientRule
     validateContent()
     {
         const { title, description, file, date, rules } = this;
-        if (title.length > rules.title_max_char ||
-            description.blocks.length > rules.desc_max_blocks ||
-            file ? (file.size > rules.file_max_size || file.mimetype !== rules.file_format) : false ||
-        date.length !== rules.date_length)
+        const titleRule = title.length > rules.title_max_char
+        const descRule = description.blocks.length > rules.desc_max_blocks
+        const fileRule = file ? (file.size > rules.file_max_size || file.mimetype !== rules.file_format) : false
+        const dateRule = date.length !== rules.date_length
+        if (titleRule ||
+            descRule ||
+            fileRule ||
+            dateRule)
         {
             return true
         }
