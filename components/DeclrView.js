@@ -28,8 +28,8 @@ function DeclrView(props)
                         <Typography variant="h3">
                             {title}
                         </Typography>
-                        <Box sx={{display: "flex", alignItems: "center", marginLeft: "10%"}}>
-                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build  /></IconButton></Link>
+                        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
+                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
                             <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
                         </Box>
                     </Box>
@@ -42,22 +42,31 @@ function DeclrView(props)
                         Back
                     </Link>
                 </Box>
-                <Card
-                    className={classes.Document}
-                    sx={{
-                        mb: 5,
-                        mt: 5,
-                    }}
-                >
-                    <Card sx={{ minWidth: 275, marginBottom: 10 }}>
-                        <CardContent>
-                            <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
-                                {file && file.name}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                    <DocumentView pdf={file ? file.url : ""} {...declaration} />
-                </Card >
+                {
+                    file ?
+                        (
+                            <Card
+                                sx={{
+                                    mb: 5,
+                                    mt: 5,
+                                }}
+                            >
+                                <Card sx={{ minWidth: 275, marginBottom: 10 }}>
+                                    <CardContent>
+                                        <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
+                                            {file.name}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <DocumentView pdf={file.url} {...declaration} />
+                            </Card >
+                        )
+                        :
+                        (<Typography variant="h4" component="h5" color="text.secondary" sx={{marginTop: 10}}>
+                            No Upload...
+                        </Typography>)
+                }
+
             </Box>
         </Box >
     )

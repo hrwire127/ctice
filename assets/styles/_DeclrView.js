@@ -10,8 +10,6 @@ const useStyles = makeStyles({
     FlexFill: {
         flex: "1 1 auto !important",
     },
-    Document: {
-    },
     Paragraph: {
         padding: "30px",
         width: "30%",

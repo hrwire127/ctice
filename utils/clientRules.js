@@ -1,35 +1,43 @@
 class ClientRule
 {
-    constructor(title, description, file = undefined, date)
+    constructor(value, expected, rule)
     {
-        this.title = title;
-        this.description = description;
-        this.file = file;
-        this.date = date;
-        this.rules = {
-            title_max_char: 20,
-            desc_max_blocks: 30,
-            file_max_size: 1000000,
-            file_format: 'application/pdf',
-            date_length: 10
+        this.value = value;
+        this.expected = expected;
+        this.rule = rule;
+    }
+    getVal()
+    {
+        const { value, expected, rule } = this;
+        switch (rule)
+        {
+            case 0:
+                return value > expected;
+            case 1:
+                return value < expected
+            case 2:
+                return value === expected
+            case 3:
+                return value !== expected
         }
     }
-
-    validateContent()
+    processMsg()
     {
-        const { title, description, file, date, rules } = this;
-        const titleRule = title.length > rules.title_max_char
-        const descRule = description.blocks.length > rules.desc_max_blocks
-        const fileRule = file ? (file.size > rules.file_max_size || file.mimetype !== rules.file_format) : false
-        const dateRule = date.length !== rules.date_length
-        if (titleRule ||
-            descRule ||
-            fileRule ||
-            dateRule)
-        {
-            return true
-        }
+        let sign;
+        if (this.rule === 0) sign = "greater"
+        if (this.rule === 1) sign = "smaller"
+        if (this.rule === 2) sign = "equal"
+        if (this.rule === 3) sign = "different"
+        return `The value ${this.value} is ${sign} than ${this.expected} expected value`
     }
 }
 
-module.exports = ClientRule;
+const Rules = {
+    title_max_char: 20,
+    desc_max_blocks: 30,
+    file_max_size: 1000000,
+    file_format: 'application/pdf',
+    date_length: 10
+}
+
+module.exports = { ClientRule, Rules };

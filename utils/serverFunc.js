@@ -1,7 +1,7 @@
 const ServerError = require('./ServerError');
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
-const ClientRule = require('./clientRules');
+const { ClientRule, Rules } = require('./clientRules');
 const Joi = require("joi");
 
 function modifyDesc(description)
@@ -9,7 +9,7 @@ function modifyDesc(description)
     let newDesc = description;
     for (var i = newDesc.blocks.length - 1; i > 0; i--)
     {
-        if(newDesc.blocks[i].text === "")
+        if (newDesc.blocks[i].text === "")
         {
             newDesc.blocks = newDesc.blocks.slice(0, i);
         }
@@ -21,7 +21,7 @@ function modifyDesc(description)
     let last = newDesc.blocks.length - 1;
     for (var i = newDesc.blocks[last].text.length - 1; i > 0; i--)
     {
-        if(newDesc.blocks[last].text[i] === " ")
+        if (newDesc.blocks[last].text[i] === " ")
         {
             newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i);
         }
@@ -31,6 +31,27 @@ function modifyDesc(description)
         }
     }
     return newDesc
+}
+function validateBody(title, description, newFile, date)
+{
+    const titleRule = new ClientRule(title.length, Rules.title_max_char, 0)
+    if (titleRule.getVal()) return titleRule.processMsg()
+
+    const descRule = new ClientRule(description.blocks.length, Rules.desc_max_blocks, 0)
+    if (descRule.getVal()) return descRule.processMsg()
+
+    if (newFile)
+    {
+        const fileRule = new ClientRule(newFile.size, Rules.file_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+
+        const fileFormat =  new ClientRule(newFile.mimetype, Rules.file_format, 3)
+        if (fileFormat.getVal()) return fileFormat.processMsg()
+
+    }
+
+    const dateRule = new ClientRule(date.length, Rules.date_length, 0) //3
+    if (dateRule.getVal()) return dateRule.processMsg()
 }
 
 async function validateDbData(req, res, next) 
@@ -69,9 +90,9 @@ async function validateDbData(req, res, next)
 
     newFile = req.files ? req.files.file : undefined;
 
-    const bodyError = new ClientRule(title, JSON.parse(description), newFile, date).validateContent()
+    const bodyError = validateBody(title, JSON.parse(description), newFile, date)
 
-    if (bodyError) next(new ServerError("Invalid Data", 400))
+    if (bodyError) next(new ServerError(bodyError, 400))
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
