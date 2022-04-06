@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Box, IconButton } from "@mui/material";
 import { Clear } from "@mui/icons-material";
-import { uploadFile, deleteFile } from "../utils/clientFunc";
+import { uploadFile } from "../utils/clientFunc";
 import useStyles from "../assets/styles/_UploadBtn"
 
 function UploadBtn(props)
@@ -30,10 +30,7 @@ function UploadBtn(props)
             </Button>
 
             <IconButton
-                onClick={() =>
-                {
-                    deleteFile(changeFile);
-                }}
+                onClick={() =>changeFile()}
             >
                 <Clear />
             </IconButton>

@@ -7,7 +7,6 @@ const CropData = (data, length) =>
 
 const uploadFile = (e, changeState) =>
 {
-    // changeFile(e.target.files[0]) //change element event target
     const file = e.target.files[0];
     file.arrayBuffer().then(data => changeState(
         {
@@ -21,14 +20,8 @@ const uploadFile = (e, changeState) =>
     ));
 }
 
-const deleteFile = (changeState) =>
-{
-    changeState()
-}
-
 function getCurrentDate(separator = '')
 {
-
     let newDate = new Date()
     let date = newDate.getDate();
     let month = newDate.getMonth() + 1;
@@ -54,5 +47,5 @@ function handleFormData(evtTarget, file = undefined, description)
 }
 
 module.exports = {
-    CropData, uploadFile, deleteFile, getCurrentDate, handleFormData
+    CropData, uploadFile, getCurrentDate, handleFormData
 }
