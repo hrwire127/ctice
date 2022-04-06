@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main")
-const { validateDbData, tryAsync, StorageUpload, ValidateSecret } = require('../utils/serverFunc');
+const { validateDbData, tryAsync, StorageUpload, ValidateSecret, processData } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration")
 const { cloud } = require('../cloud/storage');
-const { FileRule } = require('../utils/serverRules');
+const { ProcessRule } = require('../utils/processRules');
 
 router.get("/:id", tryAsync(async (req, res, next) =>
 {
@@ -21,7 +21,7 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    const Obj = await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud);
+    const Obj = await processData(req.body, req.files, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     res.json({ confirm: "Success", redirect: '/' });
 }))
@@ -30,7 +30,7 @@ router.delete("/:id", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    await new FileRule(req.body, req.files, declaration).processObj(StorageUpload, cloud, 6);
+    await processData(req.body, req.files, declaration, true)
     await Declaration.findByIdAndDelete(id)
     res.json({ confirm: "Success", redirect: '/' });
 }))

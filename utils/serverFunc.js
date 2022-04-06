@@ -1,7 +1,8 @@
 const ServerError = require('./ServerError');
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
-const { ClientRule, Rules } = require('./clientRules');
+const { BodyRule, Rules } = require('./validationRules');
+const { ProcessRule } = require('../utils/processRules');
 const Joi = require("joi");
 
 function modifyDesc(description)
@@ -34,23 +35,23 @@ function modifyDesc(description)
 }
 function validateBody(title, description, newFile, date)
 {
-    const titleRule = new ClientRule(title.length, Rules.title_max_char, 0)
+    const titleRule = new BodyRule(title.length, Rules.title_max_char, 0)
     if (titleRule.getVal()) return titleRule.processMsg()
 
-    const descRule = new ClientRule(description.blocks.length, Rules.desc_max_blocks, 0)
+    const descRule = new BodyRule(description.blocks.length, Rules.desc_max_blocks, 0)
     if (descRule.getVal()) return descRule.processMsg()
 
     if (newFile)
     {
-        const fileRule = new ClientRule(newFile.size, Rules.file_max_size, 0)
+        const fileRule = new BodyRule(newFile.size, Rules.file_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat =  new ClientRule(newFile.mimetype, Rules.file_format, 3)
+        const fileFormat = new BodyRule(newFile.mimetype, Rules.file_format, 3)
         if (fileFormat.getVal()) return fileFormat.processMsg()
 
     }
 
-    const dateRule = new ClientRule(date.length, Rules.date_length, 0) //3
+    const dateRule = new BodyRule(date.length, Rules.date_length, 0)
     if (dateRule.getVal()) return dateRule.processMsg()
 }
 
@@ -159,5 +160,93 @@ function ValidateSecret(key, callback)
     }
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret }
+async function processData(body = undefined, files = undefined, declaration = undefined, optional = false)
+{
+    const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
+
+    let Obj = {
+        ...body
+    }
+
+    console.log(optional)
+
+    if (optional)
+    {
+        await new ProcessRule([], [], async () =>
+        {
+            console.log("66")
+            if (declaration.file.location)
+            {
+                await cloud.destroy(
+                    declaration.file.location,
+                )
+            }
+        }, true).Try();
+        return;
+    }
+
+
+    Obj.date = declaration ? declaration.date : []
+    Obj.date.push(body.date)
+
+    let q = await new ProcessRule([body.file, files, hadFile], [], async () =>
+    {
+        console.log("11")
+        let file = await StorageUpload(files.file)
+        await cloud.destroy(
+            declaration.file.location,
+        )
+        Obj.file = {
+            name: files.file.name,
+            url: file.url,
+            location: file.location
+        }
+    }).Try();
+    console.log(q)
+    if (q) return Obj;
+
+    let w = await new ProcessRule([body.file, files], [hadFile], async () =>
+    {
+        console.log("22")
+        let file = await StorageUpload(files.file)
+        Obj.file = {
+            name: files.file.name,
+            url: file.url,
+            location: file.location
+        }
+    }).Try();
+    console.log(w)
+    if (w) return Obj;
+
+    let e = await new ProcessRule([], [body.file, files, hadFile], async () =>
+    {
+        console.log("33")
+
+    }).Try();
+    console.log(e)
+    if (e) return Obj;
+
+    let r = await new ProcessRule([hadFile], [body.file, files,], async () =>
+    {
+        console.log("44")
+        await cloud.destroy(
+            declaration.file.location,
+        )
+        declaration.file = undefined
+        await declaration.save();
+    }).Try();
+    console.log(r)
+    if (r) return Obj;
+
+    let t = await new ProcessRule([body.file, hadFile], [files], async () =>
+    {
+        console.log("55")
+        Obj.file = declaration.file;
+    }).Try()
+    console.log(t)
+    if (t) return Obj;
+
+}
+
+module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData }
 

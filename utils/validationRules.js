@@ -1,4 +1,4 @@
-class ClientRule
+class BodyRule
 {
     constructor(value, expected, rule)
     {
@@ -40,4 +40,4 @@ const Rules = {
     date_length: 10
 }
 
-module.exports = { ClientRule, Rules };
+module.exports = { BodyRule, Rules };

@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync, ValidateSecret } = require('../utils/serverFunc');
+const { validateDbData, StorageUpload, tryAsync, ValidateSecret, processData } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
-const { FileRule } = require('../utils/serverRules');
-const ServerError = require('../utils/ServerError');
 
 router.get('/', tryAsync(async (req, res, next) =>
 {
@@ -20,7 +18,7 @@ router.post('/get', tryAsync(async (req, res, next) =>
 
 router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 {
-    const Obj = await new FileRule(req.body, req.files).processObj(StorageUpload);
+    const Obj = await processData(req.body, req.files);
     const declaration = new Declaration(Obj)
     await declaration.save();
     res.json({ confirm: "Success", redirect: '/' });
