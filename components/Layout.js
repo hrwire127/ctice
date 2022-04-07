@@ -19,7 +19,9 @@ export default function Layout(props)
                     {/* <Footer /> */}
                 </main>
                 :
-                <Loading />
+                <Box sx={{ position: "absolute", top: "50%", left: "50%" }} >
+                    <Loading />
+                </Box>
             }
         </>
     )

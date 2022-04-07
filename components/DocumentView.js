@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ButtonGroup, Button, Box, Typography, IconButton } from '@mui/material';
+import { Box, ButtonGroup, Button, Card, Typography, CardContent, IconButton } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 import useStyles from '../assets/styles/_DocumentView';
+import Loading from './Loading'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -10,30 +11,58 @@ function DocumentView(props)
 {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
-    const { title, _id, description } = props;
+
     const classes = useStyles();
 
-    function onDocumentLoadSuccess({ numPages })
+    function onDocumentLoadSuccess()
     {
-        setNumPages(numPages);
+        setNumPages(1);
     }
 
-    const { pdf } = props;
+    const { file } = props;
+
+    const Failed = (
+        <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
+            Failed To Load...
+        </Typography>)
+
+    const Content = (
+        <>
+            <CardContent>
+                <Box className={classes.ToolBar}>
+                    <Typography variant="h4" >{pageNumber} of {numPages}</Typography>
+                    <ButtonGroup aria-label="button group" >
+                        <IconButton onClick={() => setPageNumber(pageNumber > 1 ? pageNumber - 1 : pageNumber)}><Remove></Remove></IconButton>
+                        <IconButton onClick={() => setPageNumber(pageNumber < 1 ? pageNumber + 1 : pageNumber)}><Add></Add></IconButton>
+                    </ButtonGroup>
+                </Box >
+            </CardContent>
+            <Page pageNumber={pageNumber} className={classes.Content} />
+        </>
+    )
 
     return (
+
         <Document
-            file={pdf} //todo source
+            file={file.url} //todo source
             onLoadSuccess={onDocumentLoadSuccess}
+            error={Failed}
+            loading={Loading}
             className={classes.Document}
         >
-            <Box className={classes.ToolBar}>
-                <Typography variant="h4" >{pageNumber} of {numPages}</Typography>
-                <ButtonGroup aria-label="button group" >
-                    <IconButton onClick={() => setPageNumber(pageNumber > 1 ? pageNumber - 1 : pageNumber)}><Remove></Remove></IconButton>
-                    <IconButton onClick={() => setPageNumber(pageNumber < 1 ? pageNumber + 1 : pageNumber)}><Add></Add></IconButton>
-                </ButtonGroup>
-            </Box >
-            <Page pageNumber={pageNumber} className={classes.Content} />
+            <Card
+                sx={{
+                    mb: 5,
+                    mt: 5,
+                }}>
+
+                <Card sx={{ width: "100%" }}>
+                    <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
+                        {file.name}
+                    </Typography>
+                </Card>
+                {Content}
+            </Card>
         </Document >
     )
 }

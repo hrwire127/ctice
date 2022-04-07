@@ -55,6 +55,21 @@ function validateBody(title, description, newFile, date)
     if (dateRule.getVal()) return dateRule.processMsg()
 }
 
+function validateUploadedFile(file)
+{
+    const maxWidth = new BodyRule(file.width, Rules.file_max_width, 0)
+    if (maxWidth.getVal()) return maxWidth.processMsg()
+
+    const minWidth = new BodyRule(file.width, Rules.file_min_width, 1)
+    if (minWidth.getVal()) return minWidth.processMsg()
+
+    const maxHeight = new BodyRule(file.height, Rules.file_max_height, 0)
+    if (maxHeight.getVal()) return maxHeight.processMsg()
+
+    const minHeight = new BodyRule(file.height, Rules.file_min_height, 1)
+    if (minHeight.getVal()) return minHeight.processMsg()
+}
+
 async function validateDbData(req, res, next) 
 {
     let { title, description, date, file } = req.body
@@ -118,7 +133,7 @@ const StorageUpload = async (file) =>
     {
         let cld_upload_stream = cloud.upload_stream(
             {
-                folder: process.env.CLOUD_FOLDER
+                folder: process.env.CLOUD_FOLDER,
             },
             function (err, res)
             {
@@ -134,6 +149,15 @@ const StorageUpload = async (file) =>
 
         streamifier.createReadStream(file.data).pipe(cld_upload_stream);
     });
+    const invalid = await validateUploadedFile(res);
+    if (invalid)
+    {
+        await cloud.destroy(
+            res.public_id,
+        )
+        throw new ServerError(invalid, 400)
+    }
+
     return {
         url: res.url,
         location: res.public_id
@@ -214,7 +238,7 @@ async function processData(body = undefined, files = undefined, declaration = un
     if (w) return Obj;
 
     let e = await new ProcessRule([], [body.file, files, hadFile], async () =>
-    {}).Try();
+    { }).Try();
     if (e) return Obj;
 
     let r = await new ProcessRule([hadFile], [body.file, files,], async () =>

@@ -39,6 +39,8 @@ const Rules = {
     file_format: 'application/pdf',
     file_max_width: 1000,
     file_max_height: 1000,
+    file_min_width: 200,
+    file_min_height: 200,
     date_length: 10,
 }
 

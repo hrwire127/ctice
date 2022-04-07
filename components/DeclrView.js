@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { Box, ButtonGroup, Button, Card, Typography, CardContent, IconButton } from '@mui/material';
 import { Construction, ArrowBack, Delete, Build } from '@mui/icons-material';
@@ -6,7 +6,6 @@ import DocumentView from '../components/DocumentView';
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
-
 
 
 function DeclrView(props)
@@ -19,6 +18,11 @@ function DeclrView(props)
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
+
+    const Placeholder = (
+        <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
+            No Upload...
+        </Typography>)
 
     return (
         <Box className='h-75'>
@@ -42,34 +46,9 @@ function DeclrView(props)
                         Back
                     </Link>
                 </Box>
-                {
-                    file ?
-                        (
-                            <Card
-                                sx={{
-                                    mb: 5,
-                                    mt: 5,
-                                }}
-                            >
-                                <Card sx={{ minWidth: 275, marginBottom: 10 }}>
-                                    <CardContent>
-                                        <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
-                                            {file.name}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                                <DocumentView pdf={file.url} {...declaration} />
-                            </Card >
-                        )
-                        :
-                        (<Typography variant="h4" component="h5" color="text.secondary" sx={{marginTop: 10}}>
-                            No Upload...
-                        </Typography>)
-                }
-
+                {file.url ? (<DocumentView file={file} />) : Placeholder}
             </Box>
         </Box >
     )
 }
-
 export default DeclrView;
