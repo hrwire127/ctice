@@ -160,7 +160,7 @@ function ValidateSecret(key, callback)
     }
 }
 
-async function processData(body = undefined, files = undefined, declaration = undefined, optional = false)
+async function processData(body = undefined, files = undefined, declaration = undefined, del = false)
 {
     const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
 
@@ -168,13 +168,12 @@ async function processData(body = undefined, files = undefined, declaration = un
         ...body
     }
 
-    console.log(optional)
+    console.log(del)
 
-    if (optional)
+    if (del)
     {
         await new ProcessRule([], [], async () =>
         {
-            console.log("66")
             if (declaration.file.location)
             {
                 await cloud.destroy(
@@ -191,7 +190,6 @@ async function processData(body = undefined, files = undefined, declaration = un
 
     let q = await new ProcessRule([body.file, files, hadFile], [], async () =>
     {
-        console.log("11")
         let file = await StorageUpload(files.file)
         await cloud.destroy(
             declaration.file.location,
@@ -202,12 +200,10 @@ async function processData(body = undefined, files = undefined, declaration = un
             location: file.location
         }
     }).Try();
-    console.log(q)
     if (q) return Obj;
 
     let w = await new ProcessRule([body.file, files], [hadFile], async () =>
     {
-        console.log("22")
         let file = await StorageUpload(files.file)
         Obj.file = {
             name: files.file.name,
@@ -215,35 +211,26 @@ async function processData(body = undefined, files = undefined, declaration = un
             location: file.location
         }
     }).Try();
-    console.log(w)
     if (w) return Obj;
 
     let e = await new ProcessRule([], [body.file, files, hadFile], async () =>
-    {
-        console.log("33")
-
-    }).Try();
-    console.log(e)
+    {}).Try();
     if (e) return Obj;
 
     let r = await new ProcessRule([hadFile], [body.file, files,], async () =>
     {
-        console.log("44")
         await cloud.destroy(
             declaration.file.location,
         )
         declaration.file = undefined
         await declaration.save();
     }).Try();
-    console.log(r)
     if (r) return Obj;
 
     let t = await new ProcessRule([body.file, hadFile], [files], async () =>
     {
-        console.log("55")
         Obj.file = declaration.file;
     }).Try()
-    console.log(t)
     if (t) return Obj;
 
 }

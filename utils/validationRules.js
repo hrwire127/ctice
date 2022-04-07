@@ -37,7 +37,9 @@ const Rules = {
     desc_max_blocks: 30,
     file_max_size: 1000000,
     file_format: 'application/pdf',
-    date_length: 10
+    file_max_width: 1000,
+    file_max_height: 1000,
+    date_length: 10,
 }
 
 module.exports = { BodyRule, Rules };
