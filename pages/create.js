@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
-
+import {UserContext} from '../components/context/currentUser'
 
 function create()
 {
@@ -23,7 +23,6 @@ function create()
         <CreateForm handleSubmit={handleSubmit} />
     )
 }
-
 
 export default create
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import EditForm from '../../components/EditForm';
+import {UserContext} from '../components/context/currentUser'
 
 function edit({ declaration })
 {
@@ -51,6 +52,7 @@ edit.getInitialProps = async (context) =>
         })
     return { declaration }
 }
+
 
 export default edit
 

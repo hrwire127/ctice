@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, Button, IconButton, Typography, Link, InputBase } from '@mui/material';
+import { Toolbar, Button, IconButton, Typography, InputBase, Box } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { makeStyles } from '@mui/styles';
+import Link from 'next/link';
 
 const useStyles = makeStyles({
   Toolbar: {
@@ -84,14 +85,17 @@ function Header(props)
   return (
     <React.Fragment>
       <Toolbar className={classes.Toolbar}>
-        <Link
+        <a
           href="/"
-          underline="none"
-          variant="h5"
-          color="inherit"
+          style={{
+            textDecoration: "none",
+            fontSize: 26,
+            fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+            color: "rgb(0 0 0 / 60%)"
+          }}
         >
           {title}
-        </Link>
+        </a>
         <Toolbar
           component="nav"
           variant="dense"
@@ -120,11 +124,30 @@ function Header(props)
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-        <Link className={classes.Auth}>
-          <AccountCircleIcon color="action" className={classes.Profile} />
-        </Link>
+        <Box sx={{ display: "flex", justifyContent: "space-between", width: "5%" }}>
+          <Link href="/user/register" className={classes.Auth}>
+            <a style={{
+              textDecoration: "none",
+              fontSize: 16,
+              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+              color: "rgb(0 0 0 / 60%)"
+            }}>
+              Reg
+            </a>
+          </Link>
+          <Link href="/user/login" className={classes.Auth}>
+            <a style={{
+              textDecoration: "none",
+              fontSize: 16,
+              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+              color: "rgb(0 0 0 / 60%)"
+            }}>
+              Log
+            </a>
+          </Link>
+        </Box>
       </Toolbar>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
 

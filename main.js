@@ -31,13 +31,29 @@ module.exports = {
 const index = require("./routes/index")
 const view = require("./routes/view")
 const edit = require("./routes/edit")
+const user = require("./routes/user")
 
+const User = require('./models/user');
 const ServerError = require("./utils/ServerError");
 const { handleError } = require('./utils/serverFunc');
 const upload = require('./cloud/storage');
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
+const passport = require("passport")
+const flash = require("flash")
+const LocalStrategy = require("passport-local")
+
+const sessionConfig = {
+    secret: process.env.NEXT_PUBLIC_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+
+}
 
 app.prepare().then(() =>
 {
@@ -45,14 +61,28 @@ app.prepare().then(() =>
 
     server.use(express.urlencoded({ extended: true }));
     server.use(express.static(path.join(__dirname, 'assets')));
-    server.use(session({ secret: process.env.NEXT_PUBLIC_SECRET, resave: false, saveUninitialized: false }));
+    server.use(session(sessionConfig));
+    server.use(flash())
     server.use(fileupload())
     server.use(express.json());
     server.use(cors());
 
+    server.use(passport.initialize())
+    server.use(passport.session())
+    passport.use(new LocalStrategy(User.authenticate()))
+    passport.serializeUser(User.serializeUser());
+    passport.deserializeUser(User.deserializeUser());
+
     server.use('/', index)
     server.use('/view', view)
     server.use('/edit', edit)
+    server.use('/user', user)
+
+    server.get('/*', function (req, res, next)
+    {
+        req.session.flash = [];
+        next();
+    });
 
     server.use((err, req, res, next) =>
     {
@@ -64,8 +94,8 @@ app.prepare().then(() =>
 
     server.get("/error", (req, res, next) =>
     {
-        let error = req.session.error 
-        if(!error) error = new ServerError();    
+        let error = req.session.error
+        if (!error) error = new ServerError();
         res.status(error.status)
         app.render(req, res, "/error", { error })
     })

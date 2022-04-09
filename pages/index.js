@@ -1,16 +1,41 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
+import { UserContext } from '../components/context/currentUser'
 
 function index(props)
 {
-    const { declarations } = props;
+    const { declarations, flash, user, changeUser } = props;
+
+    console.log(user)
+
+    useEffect(() =>
+    {
+        console.log("NNN")
+        changeUser(user)
+    }, [user])
+
     return (
-        <DeclrList declarations={declarations} />
+        <UserContext.Consumer >
+            {value => (
+                    <DeclrList declarations={declarations} flash={flash} value={value} />
+                ) 
+            }
+        </UserContext.Consumer>
     )
 }
 
 index.getInitialProps = async (context) =>
 {
+    const flash = context.res ? context.res.locals.flash[0] : undefined
+    let user = true;
+    if (context.res)
+    {
+        user = context.req.isAuthenticated()
+    }
+    if (context.res) 
+    {
+        context.res.locals.flash = []
+    }
     const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/get`, {
         method: 'POST',
         headers: {
@@ -32,6 +57,9 @@ index.getInitialProps = async (context) =>
                 return res;
             }
         })
-    return { declarations }
+
+    return { declarations, flash, user }
 }
+
+
 export default index

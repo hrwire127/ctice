@@ -5,6 +5,12 @@ const Declaration = require("../models/declaration");
 
 router.get('/', tryAsync(async (req, res, next) =>
 {
+    // if (!req.isAuthenticated())
+    // {
+    //     // req.flash('error', 'You need to be signed In');
+    //     // res.redirect("/")
+    // }
+    console.log(req.isAuthenticated())
     app.render(req, res, "/")
 }))
 
