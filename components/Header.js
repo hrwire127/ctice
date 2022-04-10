@@ -78,10 +78,28 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
+
 function Header(props)
 {
-  const { sections, title } = props;
+  const { sections, title, user, changeUser } = props;
   const classes = useStyles();
+
+  const LogOut = () =>
+  {
+    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+      { method: 'POST' }
+    )
+      .then(response => response.json())
+      .then(async res =>
+      {
+        if (res.confirm === "Success")
+        {
+          window.location = res.redirect;
+          changeUser(false)
+        }
+      })
+  }
+
   return (
     <React.Fragment>
       <Toolbar className={classes.Toolbar}>
@@ -124,17 +142,28 @@ function Header(props)
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-        <Box sx={{ display: "flex", justifyContent: "space-between", width: "5%" }}>
-          <Link href="/user/register" className={classes.Auth}>
-            <a style={{
+        <Box sx={{ display: "flex", justifyContent: "space-between", width: "10%" }}>
+
+          {user
+            ? (<button onClick={LogOut} style={{
               textDecoration: "none",
               fontSize: 16,
               fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
               color: "rgb(0 0 0 / 60%)"
             }}>
-              Reg
+              Log Out
+            </button>)
+            : (<Link href="/user/register" className={classes.Auth}><a style={{
+              textDecoration: "none",
+              fontSize: 16,
+              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+              color: "rgb(0 0 0 / 60%)"
+            }}>
+              Register
             </a>
-          </Link>
+            </Link>)
+          }
+
           <Link href="/user/login" className={classes.Auth}>
             <a style={{
               textDecoration: "none",
@@ -142,7 +171,7 @@ function Header(props)
               fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
               color: "rgb(0 0 0 / 60%)"
             }}>
-              Log
+              Log In
             </a>
           </Link>
         </Box>

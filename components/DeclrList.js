@@ -7,21 +7,21 @@ import useStyles from '../assets/styles/_DeclrList';
 
 function DeclrList(props)
 {
-    const { declarations, flash, value } = props;
+    const { declarations, flash, user } = props;
     const classes = useStyles();
     return (
         <>
             {
                 flash && (<Alert severity={flash.type}>{flash.message}</Alert>)
             }
-            {value && (<Typography>AAAAAAAAAAAAA</Typography>)}
+            {user && (<Typography>User Logged In</Typography>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                <ButtonGroup aria-label="button group">
+                {user && (<ButtonGroup aria-label="button group">
                     <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link> {/* todo add more */}
-                </ButtonGroup>
+                </ButtonGroup>)}
             </Box>
             <Box className={classes.List}>
                 {declarations.map(d => (

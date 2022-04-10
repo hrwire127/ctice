@@ -5,12 +5,6 @@ const Declaration = require("../models/declaration");
 
 router.get('/', tryAsync(async (req, res, next) =>
 {
-    // if (!req.isAuthenticated())
-    // {
-    //     // req.flash('error', 'You need to be signed In');
-    //     // res.redirect("/")
-    // }
-    console.log(req.isAuthenticated())
     app.render(req, res, "/")
 }))
 
@@ -32,6 +26,10 @@ router.post('/', validateDbData, tryAsync(async (req, res, next) =>
 
 router.get("/create", (req, res) =>
 {
+    if(!req.isAuthenticated())
+    {
+        res.redirect("/user/login")
+    }
     app.render(req, res, "/create")
 })
 

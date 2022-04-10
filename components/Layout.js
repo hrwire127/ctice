@@ -16,7 +16,7 @@ export default function Layout(props)
     {
         if (React.isValidElement(child))
         {
-            return React.cloneElement(child, {changeUser});
+            return React.cloneElement(child, { changeUser, user });
         }
         return child;
     });
@@ -27,7 +27,11 @@ export default function Layout(props)
                 {PageLoaded
                     ?
                     <main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                        <Header sections={[]} title="Ctice" />
+                        <UserContext.Consumer>
+                            {
+                                value => <Header sections={[]} title="Ctice" user={value} changeUser={changeUser} />
+                            }
+                        </UserContext.Consumer>
                         <Box sx={{ mt: 3, mb: 3, flex: 1 }} >{childrenWithProps}</Box>
                         {/* <Footer /> */}
                     </main>

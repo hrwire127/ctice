@@ -1,10 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
-import {UserContext} from '../components/context/currentUser'
+import { UserContext } from '../components/context/currentUser'
+import { Typography } from '@mui/material'
 
-function create()
+function create(props)
 {
+    const { user } = props;
+
+    useEffect(() =>
+    {
+        if(!user) {
+            window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
+        }
+    }, [])
+
     const handleSubmit = async (body) =>
     {
         await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
@@ -20,7 +30,12 @@ function create()
             })
     };
     return (
-        <CreateForm handleSubmit={handleSubmit} />
+
+        <UserContext.Consumer >
+            {value => value ? (
+                <CreateForm handleSubmit={handleSubmit} user={value} />
+            ) : <Typography >Cannot Use</Typography>}
+        </UserContext.Consumer>
     )
 }
 

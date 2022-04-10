@@ -39,7 +39,7 @@ router.post('/login', tryAsync(async (req, res, next) =>
         console.log(user)
         console.log(info)
         if (err)
-        {
+        { 
             res.json({ err })
         }
         else if (!user) 
@@ -59,4 +59,9 @@ router.post('/login', tryAsync(async (req, res, next) =>
     })(req, res, next);
 }))
 
+router.post('/logout', tryAsync(async (req, res, next) =>
+{
+    req.logout()
+    res.json({ confirm: "Success", redirect: '/' });
+}))
 module.exports = router;

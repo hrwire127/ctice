@@ -4,20 +4,20 @@ import { UserContext } from '../components/context/currentUser'
 
 function index(props)
 {
-    const { declarations, flash, user, changeUser } = props;
+    const { declarations, flash, user, changeUser, newUser } = props;
 
     console.log(user)
 
     useEffect(() =>
     {
         console.log("NNN")
-        changeUser(user)
-    }, [user])
+        changeUser(newUser)
+    }, [newUser])
 
     return (
         <UserContext.Consumer >
             {value => (
-                    <DeclrList declarations={declarations} flash={flash} value={value} />
+                    <DeclrList declarations={declarations} flash={flash} user={value} />
                 ) 
             }
         </UserContext.Consumer>
@@ -27,10 +27,10 @@ function index(props)
 index.getInitialProps = async (context) =>
 {
     const flash = context.res ? context.res.locals.flash[0] : undefined
-    let user = true;
+    let newUser = true;
     if (context.res)
     {
-        user = context.req.isAuthenticated()
+        newUser = context.req.isAuthenticated()
     }
     if (context.res) 
     {
@@ -58,7 +58,7 @@ index.getInitialProps = async (context) =>
             }
         })
 
-    return { declarations, flash, user }
+    return { declarations, flash, newUser }
 }
 
 
