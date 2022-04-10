@@ -37,5 +37,5 @@ function register(props)
     <Register handleSubmit={handleSubmit} alert={alert} />
   )
 }
-
+ 
 export default register

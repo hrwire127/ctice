@@ -1,42 +1,37 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
-import { UserContext } from '../components/context/currentUser'
+// import { UserContext } from '../components/context/currentUser'
 
 function index(props)
 {
-    const { declarations, flash, user, changeUser, newUser } = props;
+    const { declarations, flash, changeUser, isUser } = props;
 
-    console.log(user)
-
-    useEffect(() =>
+    if (isUser)
     {
-        console.log("NNN")
-        changeUser(newUser)
-    }, [newUser])
+        useEffect(() =>
+        {
+            changeUser(isUser)
+        }, [isUser])
+    }
 
     return (
-        <UserContext.Consumer >
-            {value => (
-                    <DeclrList declarations={declarations} flash={flash} user={value} />
-                ) 
-            }
-        </UserContext.Consumer>
+        <DeclrList declarations={declarations} flash={flash} />
     )
 }
 
 index.getInitialProps = async (context) =>
 {
     const flash = context.res ? context.res.locals.flash[0] : undefined
-    let newUser = true;
+    let isUser;
     if (context.res)
     {
-        newUser = context.req.isAuthenticated()
+        isUser = context.req.isAuthenticated()
     }
     if (context.res) 
     {
         context.res.locals.flash = []
     }
-    const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/get`, {
+    const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -52,13 +47,19 @@ index.getInitialProps = async (context) =>
                 context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
             }
+            else if (res.confirm === "Error")
+            {
+                window.location = res.redirect
+            }
             else
             {
                 return res;
             }
         })
-
-    return { declarations, flash, newUser }
+    if (declarations)
+    {
+        return { declarations, flash, isUser }
+    }
 }
 
 

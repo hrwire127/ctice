@@ -19,7 +19,7 @@ export default function Layout(props)
             return React.cloneElement(child, { changeUser, user });
         }
         return child;
-    });
+    }); 
 
     return (
         <>

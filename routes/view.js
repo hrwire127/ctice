@@ -1,23 +1,23 @@
 const router = require('express').Router();
 const { app } = require("../main")
-const { validateDbData, tryAsync, StorageUpload, ValidateSecret, processData } = require('../utils/serverFunc');
+const { validateDbData, tryAsync, StorageUpload, ValidateSecret, processData, isLoggedin, isClientLoggedin } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration")
 const { cloud } = require('../cloud/storage');
 const { ProcessRule } = require('../utils/processRules');
 
-router.get("/:id", tryAsync(async (req, res, next) =>
+router.get("/:id",  (req, res, next) =>
 {
     app.render(req, res, `/view/${req.params.id}`)
-}))
+})
 
-router.post("/:id/get", tryAsync(async (req, res, next) =>
+router.post("/:id/api", tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
     ValidateSecret(req.body.secret, () => res.json(declaration))
 }))
 
-router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
+router.put("/:id", isClientLoggedin, validateDbData, tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
@@ -26,7 +26,7 @@ router.put("/:id", validateDbData, tryAsync(async (req, res, next) =>
     res.json({ confirm: "Success", redirect: '/' });
 }))
 
-router.delete("/:id", tryAsync(async (req, res, next) =>
+router.delete("/:id", isClientLoggedin, tryAsync(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);

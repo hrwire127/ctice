@@ -1,10 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
-import {UserContext} from '../components/context/currentUser'
+import {UserContext} from '../../components/context/currentUser'
 
-function edit({ declaration })
+function edit(props)
 {
+    const { user, declaration } = props;
     const { _id } = declaration;
+
+    useEffect(() =>
+    {
+        if (!user)
+        {
+            window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
+        }
+    }, [])
 
     const handleSubmit = async (body) =>
     {
@@ -14,7 +23,7 @@ function edit({ declaration })
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success")
+                if (res.confirm === "Success" || res.confirm === "Error")
                 {
                     window.location = res.redirect
                 }
@@ -22,14 +31,19 @@ function edit({ declaration })
     };
 
     return (
-        <EditForm handleSubmit={handleSubmit} declaration={declaration}/>
+        <UserContext.Consumer >
+            {value => value && (
+                <EditForm handleSubmit={handleSubmit} declaration={declaration}/>
+            )}
+        </UserContext.Consumer>
     )
 }
 
 edit.getInitialProps = async (context) =>
 {
     const { id } = context.query;
-    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/edit/${id}/get`, {
+
+    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/edit/${id}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -42,15 +56,22 @@ edit.getInitialProps = async (context) =>
         {
             if (res.confirm === "Success")
             {
-                context.req.session.error = res.error;
+                if (context.req) context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
+            }
+            else if (res.confirm === "Error")
+            {
+                window.location = res.redirect
             }
             else
             {
                 return res;
             }
         })
-    return { declaration }
+    if (declaration)
+    {
+        return { declaration }
+    }
 }
 
 

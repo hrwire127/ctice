@@ -6,7 +6,7 @@ import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
-
+import { UserContext } from '../components/context/currentUser'
 
 
 function DeclrCard(props) 
@@ -27,14 +27,18 @@ function DeclrCard(props)
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Box>
-                    <Link href={`/edit/${_id}`}>
-                        <IconButton size="small"><Build className={classes.Icon} /></IconButton>
-                    </Link>
+                    <UserContext.Consumer>
+                        {value => value &&
+                            (<Link href={`/edit/${_id}`}>
+                                <IconButton size="small"><Build className={classes.Icon} /></IconButton>
+                            </Link>)
+                        }
+                    </UserContext.Consumer>
                     <Link href={`/view/${_id}`}>
                         <IconButton size="small"><Visibility className={classes.Icon} /></IconButton>
                     </Link>
                 </Box>
-                <Typography sx={{margin: 0}} variant="h9" color="text.secondary" gutterBottom>
+                <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
                     {date[date.length - 1]}
                 </Typography>
             </CardActions>

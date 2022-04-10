@@ -4,24 +4,30 @@ import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
 import DeclrCard from './DeclrCard';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrList';
+import { UserContext } from '../components/context/currentUser'
 
 function DeclrList(props)
 {
-    const { declarations, flash, user } = props;
+    const { declarations, flash } = props;
     const classes = useStyles();
     return (
         <>
-            {
-                flash && (<Alert severity={flash.type}>{flash.message}</Alert>)
-            }
-            {user && (<Typography>User Logged In</Typography>)}
+            {flash && (<Alert severity={flash.type}>{flash.message}</Alert>)}
+            <UserContext.Consumer>
+                {value => value && (<Typography>User Logged In</Typography>)}
+            </UserContext.Consumer>
+
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                {user && (<ButtonGroup aria-label="button group">
-                    <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link> {/* todo add more */}
-                </ButtonGroup>)}
+                <UserContext.Consumer>
+                    {value => value &&
+                        (<ButtonGroup aria-label="button group">
+                            <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link> 
+                        </ButtonGroup>)}
+                </UserContext.Consumer>
+
             </Box>
             <Box className={classes.List}>
                 {declarations.map(d => (

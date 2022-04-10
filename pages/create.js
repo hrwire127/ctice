@@ -23,18 +23,17 @@ function create(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success")
+                if (res.confirm === "Success" || res.confirm === "Error")
                 {
                     window.location = res.redirect
                 }
             })
     };
-    return (
-
+    return ( 
         <UserContext.Consumer >
-            {value => value ? (
-                <CreateForm handleSubmit={handleSubmit} user={value} />
-            ) : <Typography >Cannot Use</Typography>}
+            {value => value && (
+                <CreateForm handleSubmit={handleSubmit} /> 
+            )}
         </UserContext.Consumer>
     )
 }

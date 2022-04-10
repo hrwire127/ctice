@@ -1,22 +1,22 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync, ValidateSecret, processData } = require('../utils/serverFunc');
+const { validateDbData, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, isClientLoggedin } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
 
-router.get('/', tryAsync(async (req, res, next) =>
+router.get('/', (req, res, next) =>
 {
     app.render(req, res, "/")
-}))
+})
 
 
-router.post('/get', tryAsync(async (req, res, next) =>
+router.post('/api', tryAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
     ValidateSecret(req.body.secret, () => res.json(declarations))
 }))
 
 
-router.post('/', validateDbData, tryAsync(async (req, res, next) =>
+router.post('/', isClientLoggedin, validateDbData, tryAsync(async (req, res, next) =>
 {
     const Obj = await processData(req.body, req.files);
     const declaration = new Declaration(Obj)
@@ -24,12 +24,8 @@ router.post('/', validateDbData, tryAsync(async (req, res, next) =>
     res.json({ confirm: "Success", redirect: '/' });
 }))
 
-router.get("/create", (req, res) =>
+router.get("/create", isLoggedin, (req, res) =>
 {
-    if(!req.isAuthenticated())
-    {
-        res.redirect("/user/login")
-    }
     app.render(req, res, "/create")
 })
 

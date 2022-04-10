@@ -1,7 +1,6 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
-import {UserContext} from '../components/context/currentUser'
-
+import { UserContext } from '../../components/context/currentUser'
 
 function view(props)                                                                           
 {
@@ -20,7 +19,7 @@ function view(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success")
+                if (res.confirm === "Success" || res.confirm === "Error")
                 {
                     window.location = res.redirect
                 }
@@ -35,7 +34,7 @@ function view(props)
 view.getInitialProps = async (context) =>
 {
     const { id } = context.query;
-    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/get`, {
+    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

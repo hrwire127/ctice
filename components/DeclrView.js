@@ -6,7 +6,7 @@ import DocumentView from '../components/DocumentView';
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
-
+import { UserContext } from '../components/context/currentUser'
 
 function DeclrView(props)
 {
@@ -33,8 +33,14 @@ function DeclrView(props)
                             {title}
                         </Typography>
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
-                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
-                            <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
+                            <UserContext.Consumer>
+                                {value => value && (
+                                    <>
+                                        <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
+                                        <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
+                                    </>
+                                )}
+                            </UserContext.Consumer>
                         </Box>
                     </Box>
 
@@ -46,7 +52,7 @@ function DeclrView(props)
                         Back
                     </Link>
                 </Box>
-                {file.url ? (<DocumentView file={file} />) : Placeholder}
+                {file ? (<DocumentView file={file} />) : Placeholder}
             </Box>
         </Box >
     )

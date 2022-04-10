@@ -16,4 +16,4 @@ error.getInitialProps = (props) =>
     return { error }
 }
 
-export default error
+export default error 

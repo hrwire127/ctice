@@ -4,6 +4,7 @@ let streamifier = require('streamifier');
 const { BodyRule, Rules } = require('./validationRules');
 const { ProcessRule } = require('../utils/processRules');
 const Joi = require("joi");
+const passport = require('passport');
 
 function modifyDesc(description)
 {
@@ -259,5 +260,67 @@ async function processData(body = undefined, files = undefined, declaration = un
 
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData }
+function isLoggedin(req, res, next)
+{
+    if (!req.isAuthenticated())
+    {
+        res.redirect("/user/login")
+    }
+    else
+    {
+        next()
+    }
+}
+
+function isClientLoggedin(req, res, next)
+{
+    console.log(req.isAuthenticated())
+    if (!req.isAuthenticated())
+    {
+        res.json({ confirm: "Error", redirect: '/user/login' });
+    }
+    else
+    {
+        next()
+    }
+}
+
+async function tryRegister(func)
+{
+    return function (req, res)
+    {
+        try
+        {
+            func()
+        }
+        catch (err)
+        {
+            res.json({ err })
+        }
+    }
+}
+
+async function tryLogin(req, res, next, func)
+{
+    passport.authenticate('local', function (err, user, info)
+    {
+        console.log(err)
+        console.log(user)
+        console.log(info)
+        if (err)
+        {
+            res.json({ err })
+        }
+        else if (!user) 
+        {
+            res.json({ err: { message: info.message } })
+        }
+        else
+        {
+            func(user)
+        }
+    })(req, res, next);
+}
+
+module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, tryRegister, tryLogin, tryLogin, isClientLoggedin }
 
