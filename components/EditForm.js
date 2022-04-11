@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
 import { getCurrentDate, handleFormData } from "../utils/clientFunc";
 import useFormError from './hooks/useFormError';
@@ -54,9 +55,7 @@ function EditForm(props)
                     <Typography component="h1" variant="h5">
                         Edit {title}
                     </Typography>
-                    {alert && (
-                        <Alert severity="error">{alert}</Alert>
-                    )}
+                    {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
                     <Box component="form" error={TitleError} onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"

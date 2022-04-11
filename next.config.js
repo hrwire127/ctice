@@ -6,5 +6,7 @@ module.exports = {
             type: 'asset/source'
         })
         return config
-    },
+    }, devIndicators: {
+        buildActivity: false
+    }
 }

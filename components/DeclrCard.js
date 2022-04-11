@@ -19,7 +19,7 @@ function DeclrCard(props)
 
     return (
         <Card className={classes.Card}>
-            <CardContent sx={{ height: 163 }}>
+            <CardContent sx={{ height: 160 }}>
                 <Typography className={classes.Title} color="text.secondary" gutterBottom>
                     {title}
                 </Typography>

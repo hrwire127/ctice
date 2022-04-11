@@ -17,6 +17,7 @@ import
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
+import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import { getCurrentDate, handleFormData } from "../utils/clientFunc";
 import TextArea from "./TextArea";
@@ -92,9 +93,7 @@ export default function CreateForm(props)
                     <Typography component="h1" variant="h5">
                         Create Declaration
                     </Typography>
-                    {alert && (
-                        <Alert severity="error">{alert}</Alert>
-                    )}
+                    {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
                     <Box
                         component="form"
                         enctype="multipart/form-data"

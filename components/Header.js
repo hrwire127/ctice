@@ -142,7 +142,7 @@ function Header(props)
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-        <Box sx={{ display: "flex", justifyContent: "space-between", width: "10%" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2}}>
 
           {user
             ? (<button onClick={LogOut} style={{

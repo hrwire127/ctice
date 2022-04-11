@@ -1,9 +1,10 @@
 import React from 'react';
-import { Alert, Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
+import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
 import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
 import DeclrCard from './DeclrCard';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrList';
+import TransitionAlerts from './TransitionAlerts'
 import { UserContext } from '../components/context/currentUser'
 
 function DeclrList(props)
@@ -12,7 +13,7 @@ function DeclrList(props)
     const classes = useStyles();
     return (
         <>
-            {flash && (<Alert severity={flash.type}>{flash.message}</Alert>)}
+            {flash && (<TransitionAlerts type={flash.type}>{flash.type}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
                     Announcements
