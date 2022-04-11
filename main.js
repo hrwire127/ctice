@@ -37,6 +37,7 @@ const User = require('./models/user');
 const ServerError = require("./utils/ServerError");
 const { handleError } = require('./utils/serverFunc');
 const upload = require('./cloud/storage');
+const Redirects = require('./utils/ResRedirect');
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
@@ -89,7 +90,7 @@ app.prepare().then(() =>
         console.log("AA")
         const error = new ServerError(err.message, err.status)
         req.session.error = error;
-        res.json({ error, confirm: "Success", redirect: '/error' });
+        Redirects.Error.sendRes(res)
     })
 
     server.get("/error", (req, res, next) =>

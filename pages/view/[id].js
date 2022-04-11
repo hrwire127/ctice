@@ -19,7 +19,7 @@ function view(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success" || res.confirm === "Error")
+                if (res.type === "Client" || res.type === "Error" || res.type === "Auth")
                 {
                     window.location = res.redirect
                 }
@@ -45,14 +45,14 @@ view.getInitialProps = async (context) =>
     }).then(response => response.json())
         .then(async res =>
         {
-            if (res.confirm === "Success")
+            if (res.type === "Error")
             {
                 context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
             }
-            else
+            else 
             {
-                return res;
+                return res.obj;
             }
         })
     return { declaration }

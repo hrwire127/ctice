@@ -5,6 +5,7 @@ const { BodyRule, Rules } = require('./validationRules');
 const { ProcessRule } = require('../utils/processRules');
 const Joi = require("joi");
 const passport = require('passport');
+const Redirects = require('./ResRedirect');
 
 function modifyDesc(description)
 {
@@ -34,6 +35,7 @@ function modifyDesc(description)
     }
     return newDesc
 }
+
 function validateBody(title, description, newFile, date)
 {
     const titleRule = new BodyRule(title.length, Rules.title_max_char, 0)
@@ -101,16 +103,21 @@ async function validateDbData(req, res, next)
 
     if (error) 
     {
+        console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        next(new ServerError(msg, 400))
+        return Redirects.Api.send(res, { err: { message: msg } })
+        // next(new ServerError(msg, 400))
     }
 
     newFile = req.files ? req.files.file : undefined;
 
     const bodyError = validateBody(title, JSON.parse(description), newFile, date)
 
-    if (bodyError) next(new ServerError(bodyError, 400))
-
+    if (bodyError) 
+    {
+        return Redirects.Api.send(res, { err: { message: bodyError } })
+        // next(new ServerError(bodyError, 400))
+    }
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
     next()
@@ -193,8 +200,6 @@ async function processData(body = undefined, files = undefined, declaration = un
         ...body
     }
 
-    console.log(del)
-
     if (del)
     {
         await new ProcessRule([], [], async () =>
@@ -264,7 +269,7 @@ function isLoggedin(req, res, next)
 {
     if (!req.isAuthenticated())
     {
-        res.redirect("/user/login")
+        Redirects.Auth.serverRes(res)
     }
     else
     {
@@ -274,10 +279,9 @@ function isLoggedin(req, res, next)
 
 function isClientLoggedin(req, res, next)
 {
-    console.log(req.isAuthenticated())
     if (!req.isAuthenticated())
     {
-        res.json({ confirm: "Error", redirect: '/user/login' });
+        Redirects.Auth.sendRes(res)
     }
     else
     {
@@ -285,18 +289,15 @@ function isClientLoggedin(req, res, next)
     }
 }
 
-async function tryRegister(func)
+async function tryRegister(req, res, func)
 {
-    return function (req, res)
+    try
     {
-        try
-        {
-            func()
-        }
-        catch (err)
-        {
-            res.json({ err })
-        }
+        func()
+    }
+    catch (err)
+    {
+        Redirects.Api.send(res, { err })
     }
 }
 
@@ -304,16 +305,13 @@ async function tryLogin(req, res, next, func)
 {
     passport.authenticate('local', function (err, user, info)
     {
-        console.log(err)
-        console.log(user)
-        console.log(info)
         if (err)
         {
-            res.json({ err })
+            Redirects.Api.send(res, { err })
         }
         else if (!user) 
         {
-            res.json({ err: { message: info.message } })
+            Redirects.Api.send(res, { err: { message: info.message } })
         }
         else
         {
@@ -322,5 +320,46 @@ async function tryLogin(req, res, next, func)
     })(req, res, next);
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, tryRegister, tryLogin, tryLogin, isClientLoggedin }
+function validateUser(username, password)
+{
+    const usernameRule = new BodyRule(username.length, Rules.username_max_char, 0)
+    if (usernameRule.getVal()) return usernameRule.processMsg()
+
+    const passwordRule = new BodyRule(password.length, Rules.password_max_char, 0)
+    if (passwordRule.getVal()) return passwordRule.processMsg()
+}
+
+async function validateAuthData(req, res, next) 
+{
+    const { username, password } = req.body;
+
+    const userSchema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required()
+    })
+
+    const { error } = userSchema.validate(req.body)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return Redirects.Api.send(res, { err: { message: msg } })
+        // next(new ServerError(msg, 400))
+    }
+
+    const bodyError = validateUser(username, password)
+
+    if (bodyError) 
+    {
+        return Redirects.Api.send(res, { err: { message: bodyError } })
+        // next(new ServerError(bodyError, 400))
+    }
+    req.body.username = username.trim()
+    req.body.password = password.trim()
+    next()
+
+}
+
+module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, tryRegister, tryLogin, tryLogin, isClientLoggedin, validateAuthData }
 

@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import Login from '../../components/Login'
-import { UserContext } from '../../components/context/currentUser'
+// import { UserContext } from '../../components/context/currentUser'
 
 function login(props)
 {
     const [alert, setAlert] = useState()
-    const { changeUser } = props;
 
     const setError = (msg) => 
     {
@@ -15,7 +14,7 @@ function login(props)
             setAlert()
         }, 9000);
     }
- 
+
     const handleSubmit = async (body) =>
     {
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, {
@@ -24,14 +23,13 @@ function login(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success")
+                if (res.type === "Client" || res.type === "Error")
                 {
                     window.location = res.redirect
                 }
-                else if (res.err)
+                else if (res.type === "Api")
                 {
-                    setError(res.err.message)
-                    console.log(res)
+                    setError(res.obj.err.message)
                 }
             })
     };

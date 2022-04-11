@@ -42,6 +42,8 @@ const Rules = {
     file_min_width: 200,
     file_min_height: 200,
     date_length: 10,
+    username_max_char: 10, 
+    password_max_char: 10,
 }
 
 module.exports = { BodyRule, Rules };

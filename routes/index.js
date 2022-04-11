@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const { validateDbData, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, isClientLoggedin } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
+const Redirects = require('../utils/ResRedirect');
 
 router.get('/', (req, res, next) =>
 {
@@ -12,7 +13,7 @@ router.get('/', (req, res, next) =>
 router.post('/api', tryAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
-    ValidateSecret(req.body.secret, () => res.json(declarations))
+    ValidateSecret(req.body.secret, () => Redirects.Api.send(res, declarations))
 }))
 
 
@@ -21,7 +22,8 @@ router.post('/', isClientLoggedin, validateDbData, tryAsync(async (req, res, nex
     const Obj = await processData(req.body, req.files);
     const declaration = new Declaration(Obj)
     await declaration.save();
-    res.json({ confirm: "Success", redirect: '/' });
+    req.flash('success', 'Created Successfuly');
+    Redirects.Client.sendRes(res)
 }))
 
 router.get("/create", isLoggedin, (req, res) =>

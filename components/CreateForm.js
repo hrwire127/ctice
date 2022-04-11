@@ -13,6 +13,7 @@ import
     Container,
     FormHelperText,
     IconButton,
+    Alert
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
@@ -52,7 +53,7 @@ export default function CreateForm(props)
     const [file, changeFile] = useState();
     const [editorState, setEditorState] = useState();
 
-    const { handleSubmit } = props;
+    const { handleSubmit, alert } = props;
     const classes = useStyles()
 
 
@@ -91,6 +92,9 @@ export default function CreateForm(props)
                     <Typography component="h1" variant="h5">
                         Create Declaration
                     </Typography>
+                    {alert && (
+                        <Alert severity="error">{alert}</Alert>
+                    )}
                     <Box
                         component="form"
                         enctype="multipart/form-data"
@@ -111,17 +115,24 @@ export default function CreateForm(props)
                             onKeyPress={checkTitleKey}
                             autoFocus
                         />
+                        {alert
+                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                            : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
+                        }
 
-                        <FormHelperText error={TitleError}>
-                            {helperTitleText}
-                        </FormHelperText>
+
                         <TextArea
                             setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}
                         />
 
-                        <FormHelperText error={DescError}>{helperDescText}</FormHelperText>
+                        {alert
+                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                            : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
+                        }
+
+
 
                         <UploadBtn changeFile={changeFile} file={file} />
 

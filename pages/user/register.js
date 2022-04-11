@@ -22,14 +22,13 @@ function register(props)
     }).then(response => response.json())
       .then(async res =>
       {
-        console.log(res)
-        if (res.confirm === "Success")
+        if (res.type === "Client" || res.type === "Error")
         {
           window.location = res.redirect
         }
-        else if (res.err)
+        else if (res.type === "Api")
         {
-          setError(res.err.message)
+          setError(res.obj.err.message)
         }
       })
   };
@@ -37,5 +36,5 @@ function register(props)
     <Register handleSubmit={handleSubmit} alert={alert} />
   )
 }
- 
+
 export default register

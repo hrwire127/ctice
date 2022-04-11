@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
+import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Article, Clear } from '@mui/icons-material';
 import { getCurrentDate, handleFormData } from "../utils/clientFunc";
@@ -16,7 +16,7 @@ function EditForm(props)
     const [TitleError, setTitleError, helperTitleText, setHelperTitleText, checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, setDescError, helperDescText, setHelperDescText, checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration, handleSubmit } = props;
+    const { declaration, handleSubmit, alert } = props;
     const { title, description, _id } = declaration;
 
     const [file, changeFile] = useState(declaration.file);
@@ -54,6 +54,9 @@ function EditForm(props)
                     <Typography component="h1" variant="h5">
                         Edit {title}
                     </Typography>
+                    {alert && (
+                        <Alert severity="error">{alert}</Alert>
+                    )}
                     <Box component="form" error={TitleError} onSubmit={errCheck} noValidate className={classes.Form}>
                         <TextField
                             margin="normal"
@@ -69,7 +72,13 @@ function EditForm(props)
                             autoFocus
                             defaultValue={title}
                         />
-                        <FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>
+
+                        {alert
+                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                            : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
+                        }
+
+
 
                         <TextArea
                             setData={setEditorState}
@@ -77,10 +86,14 @@ function EditForm(props)
                             checkDescKey={checkDescKey}
                             data={JSON.parse(description)}
                         />
-                        <FormHelperText error={DescError}>{helperDescText}</FormHelperText>
+
+                        {alert
+                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                            : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
+                        }
 
                         <UploadBtn changeFile={changeFile} file={file} />
-                        
+
                         <Button
                             type="submit"
                             fullWidth

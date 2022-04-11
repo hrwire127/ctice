@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
-import {UserContext} from '../../components/context/currentUser'
+import { UserContext } from '../../components/context/currentUser'
 
 function edit(props)
 {
     const { user, declaration } = props;
     const { _id } = declaration;
+
+    const [alert, setAlert] = useState()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, 9000);
+    }
 
     useEffect(() =>
     {
@@ -23,9 +34,13 @@ function edit(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.confirm === "Success" || res.confirm === "Error")
+                if (res.type === "Client" || res.type === "Error" || res.type === "Auth")
                 {
                     window.location = res.redirect
+                }
+                else if (res.type === "Api")
+                {
+                    setError(res.obj.err.message)
                 }
             })
     };
@@ -33,7 +48,7 @@ function edit(props)
     return (
         <UserContext.Consumer >
             {value => value && (
-                <EditForm handleSubmit={handleSubmit} declaration={declaration}/>
+                <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />
             )}
         </UserContext.Consumer>
     )
@@ -54,18 +69,18 @@ edit.getInitialProps = async (context) =>
     }).then(response => response.json())
         .then(async res =>
         {
-            if (res.confirm === "Success")
+            if (res.type === "Error")
             {
                 if (context.req) context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
             }
-            else if (res.confirm === "Error")
+            else if (res.type === "Auth")
             {
                 window.location = res.redirect
             }
-            else
+            else 
             {
-                return res;
+                return res.obj;
             }
         })
     if (declaration)

@@ -92,7 +92,7 @@ function Header(props)
       .then(response => response.json())
       .then(async res =>
       {
-        if (res.confirm === "Success")
+        if (res.type === "Client" || res.type === "Error")
         {
           window.location = res.redirect;
           changeUser(false)

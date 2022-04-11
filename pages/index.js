@@ -42,18 +42,18 @@ index.getInitialProps = async (context) =>
     }).then(response => response.json())
         .then(async res =>
         {
-            if (res.confirm === "Success")
+            if (res.type === "Error")
             {
                 context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
             }
-            else if (res.confirm === "Error")
+            else if (res.type === "Auth")
             {
                 window.location = res.redirect
             }
-            else
+            else 
             {
-                return res;
+                return res.obj;
             }
         })
     if (declarations)

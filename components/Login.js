@@ -1,20 +1,61 @@
 import React from 'react';
-import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container } from '@mui/material';
+import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import Link from 'next/link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import useFormError from "./hooks/useFormError";
 
 const theme = createTheme();
 
 function Login(props)
 {
     const { handleSubmit, alert } = props;
+    const [
+        UsernameError,
+        setUsernameError,
+        helperUsernameText,
+        setHelperUsernameText,
+        checkUsernameKey,
+        setUsernameTrue,
+        setUsernameFalse,
+        usernameValid,
+    ] = useFormError(false);
+    const [
+        PasswordError,
+        setPasswordError,
+        helperPasswordText,
+        setHelperPasswordText,
+        checkPasswordKey,
+        setPasswordTrue,
+        setPasswordFalse,
+        passwordValid,
+    ] = useFormError(false);
 
     const errCheck = (e) =>
     {
         e.preventDefault();
+
         const data = new FormData(e.currentTarget);
-        handleSubmit(data)
+
+        const username = data.get("username");
+        const password = data.get("password");
+
+        if (usernameValid(username) && passwordValid(password))
+        {
+            setUsernameTrue();
+            setPasswordTrue();
+            handleSubmit(data);
+        } else
+        {
+            if (!usernameValid(username))
+            {
+                setUsernameFalse();
+            }
+            if (!passwordValid(password))
+            {
+                setPasswordFalse();
+            }
+        }
     };
 
     return (
@@ -34,31 +75,56 @@ function Login(props)
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Login
-                    </Typography>    
-                     {alert && (
+                    </Typography>
+                    {alert && (
                         <Alert severity="error">{alert}</Alert>
                     )}
-                    <Box component="form" onSubmit={errCheck} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+                    <Box
+                        component="form"
+                        onSubmit={errCheck}
+                        noValidate
+                        sx={{ mt: 1 }}
+                    >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="normal"
+                                    inputProps={{ maxLength: 10 }}
+                                    required
+                                    error={UsernameError}
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    autoComplete="username"
+                                    onKeyPress={checkUsernameKey}
+                                    autoFocus
+                                />
+                                {alert
+                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                    : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="normal"
+                                    inputProps={{ maxLength: 10 }}
+                                    required
+                                    error={PasswordError}
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onKeyPress={checkPasswordKey}
+                                />
+                                {alert
+                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                    : (<FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>)
+                                }
+                            </Grid>
+                        </Grid>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
@@ -69,7 +135,7 @@ function Login(props)
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign 
+                            Login
                         </Button>
                         <Link href="/">
                             {"Back"}

@@ -13,10 +13,6 @@ function DeclrList(props)
     return (
         <>
             {flash && (<Alert severity={flash.type}>{flash.message}</Alert>)}
-            <UserContext.Consumer>
-                {value => value && (<Typography>User Logged In</Typography>)}
-            </UserContext.Consumer>
-
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
                     Announcements
