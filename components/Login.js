@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import Link from 'next/link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -31,14 +31,18 @@ function Login(props)
         passwordValid,
     ] = useFormError(false);
 
+    const [remember, setRemember] = useState(false)
+
     const errCheck = (e) =>
     {
         e.preventDefault();
 
         const data = new FormData(e.currentTarget);
+        data.append("remember", remember)
 
         const username = data.get("username");
         const password = data.get("password");
+
 
         if (usernameValid(username) && passwordValid(password))
         {
@@ -126,7 +130,7 @@ function Login(props)
                             </Grid>
                         </Grid>
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" color="primary" onChange={() => setRemember(!remember)} />}
                             label="Remember me"
                         />
                         <Button

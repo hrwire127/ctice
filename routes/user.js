@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync, tryRegister, tryLogin, isLoggedin, validateAuthData, ValidateSecret } = require('../utils/serverFunc');
+const { validateDbData, StorageUpload, tryAsync, tryRegister, tryLogin, isLoggedin, validateAuthData, rememberMe } = require('../utils/serverFunc');
 const User = require("../models/user");
 const Redirects = require('../utils/ResRedirect');
 
@@ -29,12 +29,17 @@ router.post('/register', validateAuthData, tryAsync(async (req, res, next) =>
 
 router.post('/login', validateAuthData, tryAsync(async (req, res, next) =>
 {
-    tryLogin(req, res, next, async (user) =>
+    const remember = JSON.parse(req.body.remember)
+    tryLogin(req, res, next, async () =>
     {
-        req.login(user, function (error)
+        if (remember)
         {
-            if (error) res.json({ error });
-        });
+            req.session.cookie.expires = false
+        } 
+        else
+        {
+            req.session.cookie.originalMaxAge = 24 * 60 * 60 * 1000 // Expires in 1 day
+        }
         req.flash('success', 'Welcome Back');
         Redirects.Client.sendRes(res)
     })

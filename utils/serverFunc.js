@@ -315,7 +315,11 @@ async function tryLogin(req, res, next, func)
         }
         else
         {
-            func(user)
+            req.login(user, function (error)
+            {
+                if (error) res.json({ error });
+            });
+            func()
         }
     })(req, res, next);
 }
@@ -338,7 +342,7 @@ async function validateAuthData(req, res, next)
         password: Joi.string().required()
     })
 
-    const { error } = userSchema.validate(req.body)
+    const { error } = userSchema.validate({ username, password })
 
     if (error) 
     {
@@ -361,5 +365,21 @@ async function validateAuthData(req, res, next)
 
 }
 
-module.exports = { validateDbData, handleError, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, tryRegister, tryLogin, tryLogin, isClientLoggedin, validateAuthData }
+function rememberMe(req, res, next)
+{
+    if (req.body.rememberme)
+    {
+        req.session.cookie.maxAge = 1000 * 60 * 3;
+    } else
+    {
+        req.session.cookie.expires = false;
+    }
+    next();
+}
+
+module.exports = {
+    validateDbData, handleError, StorageUpload, tryAsync,
+    ValidateSecret, processData, isLoggedin, tryRegister, tryLogin, tryLogin,
+    isClientLoggedin, validateAuthData, rememberMe
+}
 

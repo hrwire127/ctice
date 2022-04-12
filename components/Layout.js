@@ -33,8 +33,6 @@ export default function Layout(props)
 
     const [user, setUser] = useState(false)
 
-    console.log(user)
-    
     useEffect(() =>
     {
         if (props.children.props.isUser)

@@ -35,7 +35,7 @@ const user = require("./routes/user")
 
 const User = require('./models/user');
 const ServerError = require("./utils/ServerError");
-const { handleError } = require('./utils/serverFunc');
+const { } = require('./utils/serverFunc');
 const upload = require('./cloud/storage');
 const Redirects = require('./utils/ResRedirect');
 
@@ -43,7 +43,7 @@ const fileupload = require("express-fileupload");
 const session = require('express-session');
 const passport = require("passport")
 const flash = require("flash")
-const LocalStrategy = require("passport-local")
+const LocalStrategy = require("passport-local");
 
 const sessionConfig = {
     secret: process.env.NEXT_PUBLIC_SECRET,
@@ -53,7 +53,6 @@ const sessionConfig = {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
-
 }
 
 app.prepare().then(() =>
@@ -70,7 +69,9 @@ app.prepare().then(() =>
 
     server.use(passport.initialize())
     server.use(passport.session())
+
     passport.use(new LocalStrategy(User.authenticate()))
+
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
@@ -88,6 +89,7 @@ app.prepare().then(() =>
     server.use((err, req, res, next) =>
     {
         console.log("AA")
+        console.log(err)
         const error = new ServerError(err.message, err.status)
         req.session.error = error;
         Redirects.Error.sendRes(res)
