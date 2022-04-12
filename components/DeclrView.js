@@ -44,7 +44,7 @@ function DeclrView(props)
                         </Box>
                     </Box>
 
-                    <Editor readOnly={true} editorState={editorState} />
+                    <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                     <Typography variant="h9" color="text.secondary">
                         {date[date.length - 1]}
                     </Typography>

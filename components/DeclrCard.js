@@ -23,7 +23,7 @@ function DeclrCard(props)
                 <Typography className={classes.Title} color="text.secondary" gutterBottom>
                     {title}
                 </Typography>
-                <Editor readOnly={true} editorState={editorState} />
+                <Editor editorKey="editor" readOnly={true} editorState={editorState} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Box>

@@ -87,7 +87,7 @@ class TextArea extends React.Component
         }
 
         return (
-            <Box className="RichEditor-root" sx={this.props.error ? { width: "100%", borderColor: "red!important" } : { width: "100%"}}>
+            <Box className="RichEditor-root" sx={this.props.error ? { width: "100%", borderColor: "red!important" } : { width: "100%" }}>
                 <BlockStyleControls
                     editorState={editorState}
                     onToggle={this.toggleBlockType}
@@ -98,6 +98,7 @@ class TextArea extends React.Component
                 />
                 <div className={className} onClick={this.focus}>
                     <Editor
+                        editorKey="editor"
                         blockStyleFn={getBlockStyle}
                         customStyleMap={styleMap}
                         editorState={editorState}
@@ -106,7 +107,7 @@ class TextArea extends React.Component
                         placeholder="Description"
                         ref="editor"
                         spellCheck={true}
-                        keyBindingFn={(e) => {this.props.checkDescKey(e, false); return getDefaultKeyBinding(e);}}
+                        keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}
                     />
                 </div>
             </Box>

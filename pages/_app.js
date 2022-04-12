@@ -33,19 +33,18 @@ export default function MyApp({ Component, pageProps })
 
     return (
         <>
-            {loading ? (
-                <div style={{ position: "absolute", top: "50%", left: "50%" }}>
-                    <Loading />
-                </div>
-            ) : (
-                <Layout>
-                    <Head>
-                        <title>Ctice</title>
-                        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                    </Head>
-                    <Component {...pageProps} />
-                </Layout>
-            )}
+            <Head>
+                <title>Ctice</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
+            <Layout>
+                {loading
+                    ? (<div style={{ position: "absolute", top: "50%", left: "50%" }}>
+                        <Loading />
+                    </div>)
+                    : (<Component {...pageProps} />)
+                }
+            </Layout>
         </>
     )
 }
