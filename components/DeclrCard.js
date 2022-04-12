@@ -6,7 +6,7 @@ import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
-import { UserContext } from '../components/context/currentUser'
+import UserContext from '../components/context/currentUser'
 
 
 function DeclrCard(props) 
@@ -14,6 +14,7 @@ function DeclrCard(props)
     const { title, _id, description, date } = props;
     const classes = useStyles();
 
+    const user = React.useContext(UserContext);
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 
@@ -27,13 +28,11 @@ function DeclrCard(props)
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Box>
-                    <UserContext.Consumer>
-                        {value => value &&
-                            (<Link href={`/edit/${_id}`}>
-                                <IconButton size="small"><Build className={classes.Icon} /></IconButton>
-                            </Link>)
-                        }
-                    </UserContext.Consumer>
+                    {user &&
+                        (<Link href={`/edit/${_id}`}>
+                            <IconButton size="small"><Build className={classes.Icon} /></IconButton>
+                        </Link>)
+                    }
                     <Link href={`/view/${_id}`}>
                         <IconButton size="small"><Visibility className={classes.Icon} /></IconButton>
                     </Link>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Register from '../../components/Register'
 
+
 function register(props)
 {
   const [alert, setAlert] = useState()

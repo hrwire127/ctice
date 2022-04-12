@@ -5,12 +5,13 @@ import DeclrCard from './DeclrCard';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
-import { UserContext } from '../components/context/currentUser'
+import UserContext from '../components/context/currentUser'
 
 function DeclrList(props)
 {
     const { declarations, flash } = props;
     const classes = useStyles();
+    const user = React.useContext(UserContext); 
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type}>{flash.type}</TransitionAlerts>)}
@@ -18,13 +19,10 @@ function DeclrList(props)
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                <UserContext.Consumer>
-                    {value => value &&
-                        (<ButtonGroup aria-label="button group">
-                            <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link> 
-                        </ButtonGroup>)}
-                </UserContext.Consumer>
-
+                {user &&
+                    (<ButtonGroup aria-label="button group">
+                        <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link>
+                    </ButtonGroup>)}
             </Box>
             <Box className={classes.List}>
                 {declarations.map(d => (

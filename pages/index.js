@@ -4,15 +4,15 @@ import DeclrList from '../components/DeclrList';
 
 function index(props)
 {
-    const { declarations, flash, changeUser, isUser } = props;
+    const { declarations, flash, isUser } = props;
 
-    if (isUser)
-    {
-        useEffect(() =>
-        {
-            changeUser(isUser)
-        }, [isUser])
-    }
+    // if (isUser)
+    // {
+    //     useEffect(() =>
+    //     {
+    //         // changeUser(isUser)
+    //     }, [isUser])
+    // }
 
     return (
         <DeclrList declarations={declarations} flash={flash} />

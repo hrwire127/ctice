@@ -3,10 +3,12 @@ import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
 import { UserContext } from '../components/context/currentUser'
 import { Typography } from '@mui/material'
+import UserContext from './context/currentUser'
+
 
 function create(props)
 {
-    const { user } = props;
+    const user = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
 
@@ -22,7 +24,8 @@ function create(props)
 
     useEffect(() =>
     {
-        if(!user) {
+        if (!user)
+        {
             window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
         }
     }, [])
@@ -45,14 +48,11 @@ function create(props)
                 }
             })
     };
-    return ( 
-        <UserContext.Consumer >
-            {value => value && (
-                <CreateForm handleSubmit={handleSubmit} alert={alert}/> 
-            )}
-        </UserContext.Consumer>
-    )
+    return (<>
+        {user && (
+            <CreateForm handleSubmit={handleSubmit} alert={alert} />
+        )}
+    </>)
 }
 
 export default create
-

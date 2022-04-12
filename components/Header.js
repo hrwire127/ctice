@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
+import UserContext from './context/currentUser'
 
 const useStyles = makeStyles({
   Toolbar: {
@@ -81,7 +82,8 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 function Header(props)
 {
-  const { sections, title, user, changeUser } = props;
+  const user = React.useContext(UserContext); 
+  const { sections, title } = props;
   const classes = useStyles();
 
   const LogOut = () =>
@@ -95,7 +97,7 @@ function Header(props)
         if (res.type === "Client" || res.type === "Error")
         {
           window.location = res.redirect;
-          changeUser(false)
+          // changeUser(false)
         }
       })
   }

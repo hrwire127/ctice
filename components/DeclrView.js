@@ -6,7 +6,7 @@ import DocumentView from '../components/DocumentView';
 import { CropData } from '../utils/clientFunc';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
-import { UserContext } from '../components/context/currentUser'
+import UserContext from '../components/context/currentUser'
 
 function DeclrView(props)
 {
@@ -14,6 +14,8 @@ function DeclrView(props)
     const { declaration, onDelete } = props;
     const { title, description, file, date } = declaration;
     const { _id } = declaration;
+    const user = React.useContext(UserContext);
+
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
@@ -33,14 +35,12 @@ function DeclrView(props)
                             {title}
                         </Typography>
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
-                            <UserContext.Consumer>
-                                {value => value && (
-                                    <>
-                                        <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
-                                        <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
-                                    </>
-                                )}
-                            </UserContext.Consumer>
+                            {user && (
+                                <>
+                                    <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
+                                    <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
+                                </>
+                            )}
                         </Box>
                     </Box>
 

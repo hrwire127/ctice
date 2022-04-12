@@ -2,6 +2,7 @@ import React from 'react'
 import DeclrView from '../../components/DeclrView';
 import { UserContext } from '../../components/context/currentUser'
 
+
 function view(props)                                                                           
 {
     const { declaration } = props;
@@ -34,6 +35,7 @@ function view(props)
 view.getInitialProps = async (context) =>
 {
     const { id } = context.query;
+
     const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
         method: 'POST',
         headers: {

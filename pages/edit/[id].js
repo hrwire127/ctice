@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
-import { UserContext } from '../../components/context/currentUser'
+import UserContext from '../../components/context/currentUser'
+
 
 function edit(props)
 {
-    const { user, declaration } = props;
+    const { declaration } = props;
     const { _id } = declaration;
+
+
+    const user = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
 
@@ -46,11 +50,11 @@ function edit(props)
     };
 
     return (
-        <UserContext.Consumer >
-            {value => value && (
+        <>
+            {user && (
                 <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />
             )}
-        </UserContext.Consumer>
+        </>
     )
 }
 

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync, tryRegister, tryLogin, isLoggedin, validateAuthData } = require('../utils/serverFunc');
+const { validateDbData, StorageUpload, tryAsync, tryRegister, tryLogin, isLoggedin, validateAuthData, ValidateSecret } = require('../utils/serverFunc');
 const User = require("../models/user");
 const Redirects = require('../utils/ResRedirect');
 

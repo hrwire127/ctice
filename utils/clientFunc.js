@@ -46,6 +46,7 @@ function handleFormData(evtTarget, file = undefined, description)
     return { data, title: title_, description: description_ }
 }
 
+
 module.exports = {
     CropData, uploadFile, getCurrentDate, handleFormData
 }
