@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Toolbar, Button, IconButton, Typography, InputBase, Box } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
@@ -82,7 +83,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 function Header(props)
 {
-  const user = React.useContext(UserContext); 
+  const user = React.useContext(UserContext);
   const { sections, title } = props;
   const classes = useStyles();
 
@@ -144,38 +145,34 @@ function Header(props)
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2}}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
 
           {user
-            ? (<button onClick={LogOut} style={{
-              textDecoration: "none",
-              fontSize: 16,
-              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-              color: "rgb(0 0 0 / 60%)"
-            }}>
-              Log Out
-            </button>)
-            : (<Link href="/user/register" className={classes.Auth}><a style={{
-              textDecoration: "none",
-              fontSize: 16,
-              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-              color: "rgb(0 0 0 / 60%)"
-            }}>
-              Register
-            </a>
-            </Link>)
+            ? (<IconButton onClick={LogOut}><LogoutIcon /></IconButton>)
+            : (<>
+              <Link href="/user/register" className={classes.Auth}><a style={{
+                textDecoration: "none",
+                fontSize: 16,
+                fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+                color: "rgb(0 0 0 / 60%)"
+              }}>
+                Register
+              </a>
+              </Link>
+              <Link href="/user/login" className={classes.Auth}>
+                <a style={{
+                  textDecoration: "none",
+                  fontSize: 16,
+                  fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+                  color: "rgb(0 0 0 / 60%)"
+                }}>
+                  Login
+                </a>
+              </Link>
+            </>)
           }
 
-          <Link href="/user/login" className={classes.Auth}>
-            <a style={{
-              textDecoration: "none",
-              fontSize: 16,
-              fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-              color: "rgb(0 0 0 / 60%)"
-            }}>
-              Log In
-            </a>
-          </Link>
+
         </Box>
       </Toolbar>
     </React.Fragment >

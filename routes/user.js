@@ -22,7 +22,7 @@ router.post('/register', validateAuthData, tryAsync(async (req, res, next) =>
     {
         const user = new User({ username })
         const registeredUser = await User.register(user, password)
-        req.flash('success', 'Registered');
+        req.flash('success', 'Successfuly Registered');
         Redirects.Client.sendRes(res)
     })
 }))
@@ -48,7 +48,7 @@ router.post('/login', validateAuthData, tryAsync(async (req, res, next) =>
 router.post('/logout', isLoggedin, tryAsync(async (req, res, next) =>
 {
     req.logout()
-    req.flash('success', 'Logged Out');
+    req.flash('info', 'Logged Out');
     Redirects.Client.sendRes(res)
 }))
 module.exports = router;

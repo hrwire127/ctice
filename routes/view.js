@@ -32,7 +32,7 @@ router.delete("/:id", isClientLoggedin, tryAsync(async (req, res, next) =>
     const declaration = await Declaration.findById(id);
     await processData(req.body, req.files, declaration, true)
     await Declaration.findByIdAndDelete(id)
-    req.flash('success', 'Deleted Successfuly');
+    req.flash('info', 'Deleted Successfuly');
     Redirects.Client.sendRes(res)
 }))
 
