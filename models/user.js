@@ -4,6 +4,23 @@ const Schema = mongoose.Schema;
 
 
 const UserSchema = new Schema({
+    
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['Disabled', 'Active'],
+        default: 'Disabled'
+    },
+    confirmationCode: {
+        type: String,
+        required: true,
+        unique: true
+    },
     // name: {
     //     type: String,
     //     required: true,
