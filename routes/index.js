@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { validateDbData, StorageUpload, tryAsync, ValidateSecret, processData, isLoggedin, isClientLoggedin } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration");
 const Redirects = require('../utils/ResRedirect');
+const { validateDbData, isLoggedin, isClientLoggedin, tryAsync, ValidateSecret, } = require('../utils/primFunc')
+const { processData} = require('../utils/thirdFunc')
 
 router.get('/', (req, res, next) =>
 {

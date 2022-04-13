@@ -35,8 +35,6 @@ const user = require("./routes/user")
 
 const User = require('./models/user');
 const ServerError = require("./utils/ServerError");
-const { } = require('./utils/serverFunc');
-const upload = require('./cloud/storage');
 const Redirects = require('./utils/ResRedirect');
 
 const fileupload = require("express-fileupload");

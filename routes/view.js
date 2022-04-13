@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const { app } = require("../main")
-const { validateDbData, tryAsync, StorageUpload, ValidateSecret, processData, isLoggedin, isClientLoggedin } = require('../utils/serverFunc');
 const Declaration = require("../models/declaration")
 const Redirects = require('../utils/ResRedirect');
+const { validateDbData, isClientLoggedin, tryAsync, ValidateSecret} = require('../utils/primFunc')
+const { processData} = require('../utils/thirdFunc')
 
 router.get("/:id", (req, res, next) =>
 {
-    app.render(req, res, `/view/${req.params.id}`)
+    app.render(req, res, `/view/${req.params.id}`) 
 })
 
 router.post("/:id/api", tryAsync(async (req, res, next) =>
