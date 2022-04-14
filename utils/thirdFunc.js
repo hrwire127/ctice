@@ -1,6 +1,6 @@
 const { BodyRule, Rules } = require('./validationRules');
 const { ProcessRule } = require('./processRules');
-const ServerError = require('./ServerError');
+const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
 
@@ -121,7 +121,7 @@ const StorageUpload = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new ServerError(invalid, 400)
+        throw new userError(invalid, 400)
     }
 
     return {
@@ -138,7 +138,7 @@ function handleError(app)
 {
     return function (err, req, res, next)
     {
-        const error = new ServerError(err.message, err.status)
+        const error = new userError(err.message, err.status)
         res.status(error.status)
         app.render(req, res, "/error", { error })
     }

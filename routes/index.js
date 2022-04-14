@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const Redirects = require('../utils/ResRedirect');
-const { validateDbData, isLoggedin, isClientLoggedin, tryAsync, ValidateSecret, } = require('../utils/primFunc')
+const { validateDbData, isLoggedin, isClientLoggedin, tryClientAsync, ValidateSecret, } = require('../utils/primFunc')
 const { processData} = require('../utils/thirdFunc')
 
 router.get('/', (req, res, next) =>
@@ -11,14 +11,14 @@ router.get('/', (req, res, next) =>
 })
 
 
-router.post('/api', tryAsync(async (req, res, next) =>
+router.post('/api', tryClientAsync(async (req, res, next) =>
 {
     const declarations = await Declaration.find({})
     ValidateSecret(req.body.secret, () => Redirects.Api.send(res, declarations))
 }))
 
 
-router.post('/', isClientLoggedin, validateDbData, tryAsync(async (req, res, next) =>
+router.post('/', isClientLoggedin, validateDbData, tryClientAsync(async (req, res, next) =>
 {
     const Obj = await processData(req.body, req.files);
     const declaration = new Declaration(Obj)

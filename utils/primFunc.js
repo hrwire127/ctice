@@ -1,6 +1,6 @@
 const Redirects = require('./ResRedirect');
 const Joi = require("joi");
-const ServerError = require('./ServerError');
+const userError = require('./userError');
 const passport = require('passport');
 const User = require("../models/user");
 const nodemailer = require('../config/nodemailer')
@@ -40,7 +40,7 @@ async function validateDbData(req, res, next)
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
         return Redirects.Api.send(res, { err: { message: msg } })
-        // next(new ServerError(msg, 400))
+        // next(new userError(msg, 400))
     }
 
     newFile = req.files ? req.files.file : undefined;
@@ -50,7 +50,7 @@ async function validateDbData(req, res, next)
     if (bodyError) 
     {
         return Redirects.Api.send(res, { err: { message: bodyError } })
-        // next(new ServerError(bodyError, 400))
+        // next(new userError(bodyError, 400))
     }
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
@@ -76,7 +76,7 @@ async function validateRegisterData(req, res, next)
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
         return Redirects.Api.send(res, { err: { message: msg } })
-        // next(new ServerError(msg, 400))
+        // next(new userError(msg, 400))
     }
 
     const bodyError = validateUser(username, password, email)
@@ -84,7 +84,7 @@ async function validateRegisterData(req, res, next)
     if (bodyError) 
     {
         return Redirects.Api.send(res, { err: { message: bodyError } })
-        // next(new ServerError(bodyError, 400))
+        // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
     req.body.password = password.trim()
@@ -109,7 +109,7 @@ async function validateLoginData(req, res, next)
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
         return Redirects.Api.send(res, { err: { message: msg } })
-        // next(new ServerError(msg, 400))
+        // next(new userError(msg, 400))
     }
 
     const bodyError = validateUser(username, password)
@@ -117,7 +117,7 @@ async function validateLoginData(req, res, next)
     if (bodyError) 
     {
         return Redirects.Api.send(res, { err: { message: bodyError } })
-        // next(new ServerError(bodyError, 400))
+        // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
     req.body.password = password.trim()
@@ -150,11 +150,21 @@ function isClientLoggedin(req, res, next)
     }
 }
 
-function tryAsync(func)
+function tryClientAsync(func)
 {
     return function (req, res, next)
     {
-        func(req, res, next).catch(e => next(e))
+        func(req, res, next).catch(err => next(err))
+    }
+}
+
+function tryServerAsync(func)
+{
+    return function (req, res, next)
+    {
+        func(req, res, next).catch(err => { 
+            new userError(err.message, err.status).throwServer(req, res)
+        })
     }
 }
 
@@ -166,7 +176,7 @@ function ValidateSecret(key, callback)
     }
     else
     {
-        throw new ServerError("UnAuthorized", 401)
+        throw new userError("UnAuthorized", 401)
     }
 }
 
@@ -240,8 +250,7 @@ function verifyUser(req, res, next)
         {
             if (!user)
             {
-                req.session.error = new ServerError("User Not found.", 404)
-                Redirects.Error.serverRes(res)
+                new userError("User Not found.", 404).throwServer(req, res)
             }
 
             if (user.status === "Disabled")
@@ -252,11 +261,10 @@ function verifyUser(req, res, next)
             }
             else
             {
-                req.session.error = new ServerError("User Allready Confirmed.", 401)
-                Redirects.Error.serverRes(res)
+                new userError("User Allready Confirmed", 401).throwServer(req, res)
             }
         })
         .catch((e) => console.log("error", e));
 };
 
-module.exports = { validateDbData, validateRegisterData, validateLoginData, isLoggedin, isClientLoggedin, tryAsync, ValidateSecret, tryRegister, tryLogin, verifyUser }
+module.exports = { validateDbData, validateRegisterData, validateLoginData, isLoggedin, isClientLoggedin, tryClientAsync, tryServerAsync, ValidateSecret, tryRegister, tryLogin, verifyUser }

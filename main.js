@@ -34,7 +34,7 @@ const edit = require("./routes/edit")
 const user = require("./routes/user")
 
 const User = require('./models/user');
-const ServerError = require("./utils/ServerError");
+const userError = require("./utils/userError");
 const Redirects = require('./utils/ResRedirect');
 
 const fileupload = require("express-fileupload");
@@ -88,7 +88,7 @@ app.prepare().then(() =>
     {
         console.log("AA")
         console.log(err)
-        const error = new ServerError(err.message, err.status)
+        const error = new userError(err.message, err.status)
         req.session.error = error;
         Redirects.Error.sendRes(res)
     })
@@ -96,7 +96,7 @@ app.prepare().then(() =>
     server.get("/error", (req, res, next) =>
     {
         let error = req.session.error
-        if (!error) error = new ServerError();
+        if (!error) error = new userError();
         res.status(error.status)
         app.render(req, res, "/error", { error })
     })

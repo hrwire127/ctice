@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Redirects = require('../utils/ResRedirect');
-const { validateRegisterData, validateLoginData, isLoggedin, tryAsync, tryRegister, tryLogin, verifyUser } = require('../utils/primFunc')
+const { validateRegisterData, validateLoginData, isClientLoggedin, tryClientAsync, tryServerAsync, tryRegister, tryLogin, verifyUser } = require('../utils/primFunc')
 
 router.get('/register', async (req, res, next) =>
 {
@@ -13,7 +13,7 @@ router.get('/login', async (req, res, next) =>
     app.render(req, res, "/user/login")
 })
 
-router.post('/register', validateRegisterData, tryAsync(async (req, res, next) =>
+router.post('/register', validateRegisterData, tryClientAsync(async (req, res, next) =>
 {
     tryRegister(req, res, async () =>
     {
@@ -22,7 +22,7 @@ router.post('/register', validateRegisterData, tryAsync(async (req, res, next) =
     })
 }))
 
-router.post('/login', validateLoginData, tryAsync(async (req, res, next) =>
+router.post('/login', validateLoginData, tryClientAsync(async (req, res, next) =>
 {
     tryLogin(req, res, next, async () =>
     {
@@ -31,14 +31,14 @@ router.post('/login', validateLoginData, tryAsync(async (req, res, next) =>
     })
 }))
 
-router.post('/logout', isLoggedin, tryAsync(async (req, res, next) =>
+router.post('/logout', isClientLoggedin, tryClientAsync(async (req, res, next) =>
 {
     req.logout()
     req.flash('info', 'Logged Out');
     Redirects.Client.sendRes(res)
 }))
 
-router.get("/confirm/:confirmationCode", verifyUser, tryAsync(async (req, res, next) =>
+router.get("/confirm/:confirmationCode", verifyUser, tryServerAsync(async (req, res, next) =>
 {
     app.render(req, res, "/welcome")
 }))
