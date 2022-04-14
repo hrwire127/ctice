@@ -1,4 +1,4 @@
-class ResSend
+class Redirect
 {
     constructor(type, redirect)
     {
@@ -20,10 +20,10 @@ class ResSend
 }
 
 const Redircets = { 
-    Client: new ResSend("Client", "/"), 
-    Error: new ResSend("Error", "/error"),
-    Auth: new ResSend("Auth", "/user/login"),
-    Api: new ResSend("Api"),
+    Client: new Redirect("Client", "/"), 
+    Error: new Redirect("Error", "/error"),
+    Auth: new Redirect("Auth", "/user/login"),
+    Api: new Redirect("Api"),
 }
 
 module.exports = Redircets;

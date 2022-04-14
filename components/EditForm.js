@@ -3,7 +3,7 @@ import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkb
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
-import { getCurrentDate, handleFormData } from "../utils/clientFunc";
+import { getCurrentDate, handleFormData } from "../utils/client";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'

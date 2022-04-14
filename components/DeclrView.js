@@ -3,7 +3,7 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 import { Box, ButtonGroup, Button, Card, Typography, CardContent, IconButton } from '@mui/material';
 import { Construction, ArrowBack, Delete, Build } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
-import { CropData } from '../utils/clientFunc';
+import { CropData } from '../utils/client';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from '../components/context/currentUser'

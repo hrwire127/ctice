@@ -1,10 +1,10 @@
-const Redirects = require('./ResRedirect');
+const Redirects = require('./Redirects');
 const Joi = require("joi");
 const userError = require('./userError');
 const passport = require('passport');
 const User = require("../models/user");
 const nodemailer = require('../config/nodemailer')
-const { validateBody, validateUser, modifyDesc, getToken } = require('./secFunc')
+const { validateBody, validateUser, modifyDesc, getToken } = require('./_secondary')
 
 
 async function validateDbData(req, res, next) 

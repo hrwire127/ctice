@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main")
 const Declaration = require("../models/declaration")
-const Redirects = require('../utils/ResRedirect');
-const { validateDbData, isClientLoggedin, tryClientAsync, ValidateSecret} = require('../utils/primFunc')
-const { processData} = require('../utils/thirdFunc')
+const Redirects = require('../utils/Redirects');
+const { validateDbData, isClientLoggedin, tryClientAsync, ValidateSecret} = require('../utils/_primary')
+const { processData} = require('../utils/_tertiary')
 
 router.get("/:id", (req, res, next) =>
 {

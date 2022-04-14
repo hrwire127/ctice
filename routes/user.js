@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const Redirects = require('../utils/ResRedirect');
-const { validateRegisterData, validateLoginData, isClientLoggedin, tryClientAsync, tryServerAsync, tryRegister, tryLogin, verifyUser } = require('../utils/primFunc')
+const Redirects = require('../utils/Redirects');
+const { validateRegisterData, validateLoginData, isClientLoggedin, tryClientAsync, tryServerAsync, tryRegister, tryLogin, verifyUser } = require('../utils/_primary')
 
 router.get('/register', async (req, res, next) =>
 {

@@ -1,43 +1,43 @@
-const { BodyRule, Rules } = require('./validationRules');
+const { valRule, Rules } = require('./val-Rule');
 
 function validateBody(title, description, newFile, date) //
 {
-    const titleRule = new BodyRule(title.length, Rules.title_max_char, 0)
+    const titleRule = new valRule(title.length, Rules.title_max_char, 0)
     if (titleRule.getVal()) return titleRule.processMsg()
 
-    const descRule = new BodyRule(description.blocks.length, Rules.desc_max_blocks, 0)
+    const descRule = new valRule(description.blocks.length, Rules.desc_max_blocks, 0)
     if (descRule.getVal()) return descRule.processMsg()
 
     if (newFile)
     {
-        const fileRule = new BodyRule(newFile.size, Rules.file_max_size, 0)
+        const fileRule = new valRule(newFile.size, Rules.file_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat = new BodyRule(newFile.mimetype, Rules.file_format, 3)
+        const fileFormat = new valRule(newFile.mimetype, Rules.file_format, 3)
         if (fileFormat.getVal()) return fileFormat.processMsg()
 
     }
 
-    const dateRule = new BodyRule(date.length, Rules.date_length, 0)
+    const dateRule = new valRule(date.length, Rules.date_length, 0)
     if (dateRule.getVal()) return dateRule.processMsg()
 }
 
 
 function validateUser(username, password, email)//
 {
-    const usernameRule = new BodyRule(username.length, Rules.username_max_char, 0)
+    const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
     if (usernameRule.getVal()) return usernameRule.processMsg()
 
-    const passwordRule = new BodyRule(password.length, Rules.password_max_char, 0)
+    const passwordRule = new valRule(password.length, Rules.password_max_char, 0)
     if (passwordRule.getVal()) return passwordRule.processMsg()
 
     if (email)
     {
 
-        const emailRule = new BodyRule(email.length, Rules.email_max_char, 0)
+        const emailRule = new valRule(email.length, Rules.email_max_char, 0)
         if (emailRule.getVal()) return emailRule.processMsg()
 
-        const includesRule = new BodyRule(email, Rules.email_includes, 4)
+        const includesRule = new valRule(email, Rules.email_includes, 4)
         if (includesRule.getVal()) return includesRule.processMsg()
     }
 }

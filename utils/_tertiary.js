@@ -1,21 +1,21 @@
-const { BodyRule, Rules } = require('./validationRules');
-const { ProcessRule } = require('./processRules');
+const { valRule, Rules } = require('./val-Rule');
+const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
 
 function validateUploadedFile(file)
 {
-    const maxWidth = new BodyRule(file.width, Rules.file_max_width, 0)
+    const maxWidth = new valRule(file.width, Rules.file_max_width, 0)
     if (maxWidth.getVal()) return maxWidth.processMsg()
 
-    const minWidth = new BodyRule(file.width, Rules.file_min_width, 1)
+    const minWidth = new valRule(file.width, Rules.file_min_width, 1)
     if (minWidth.getVal()) return minWidth.processMsg()
 
-    const maxHeight = new BodyRule(file.height, Rules.file_max_height, 0)
+    const maxHeight = new valRule(file.height, Rules.file_max_height, 0)
     if (maxHeight.getVal()) return maxHeight.processMsg()
 
-    const minHeight = new BodyRule(file.height, Rules.file_min_height, 1)
+    const minHeight = new valRule(file.height, Rules.file_min_height, 1)
     if (minHeight.getVal()) return minHeight.processMsg()
 }
 
@@ -29,7 +29,7 @@ async function processData(body = undefined, files = undefined, declaration = un
 
     if (del)
     {
-        await new ProcessRule([], [], async () =>
+        await new excRule([], [], async () =>
         {
             if (declaration.file.location)
             {
@@ -45,7 +45,7 @@ async function processData(body = undefined, files = undefined, declaration = un
     Obj.date = declaration ? declaration.date : []
     Obj.date.push(body.date)
 
-    let q = await new ProcessRule([body.file, files, hadFile], [], async () =>
+    let q = await new excRule([body.file, files, hadFile], [], async () =>
     {
         let file = await StorageUpload(files.file)
         await cloud.destroy(
@@ -59,7 +59,7 @@ async function processData(body = undefined, files = undefined, declaration = un
     }).Try();
     if (q) return Obj;
 
-    let w = await new ProcessRule([body.file, files], [hadFile], async () =>
+    let w = await new excRule([body.file, files], [hadFile], async () =>
     {
         let file = await StorageUpload(files.file)
         Obj.file = {
@@ -70,11 +70,11 @@ async function processData(body = undefined, files = undefined, declaration = un
     }).Try();
     if (w) return Obj;
 
-    let e = await new ProcessRule([], [body.file, files, hadFile], async () =>
+    let e = await new excRule([], [body.file, files, hadFile], async () =>
     { }).Try();
     if (e) return Obj;
 
-    let r = await new ProcessRule([hadFile], [body.file, files,], async () =>
+    let r = await new excRule([hadFile], [body.file, files,], async () =>
     {
         await cloud.destroy(
             declaration.file.location,
@@ -84,7 +84,7 @@ async function processData(body = undefined, files = undefined, declaration = un
     }).Try();
     if (r) return Obj;
 
-    let t = await new ProcessRule([body.file, hadFile], [files], async () =>
+    let t = await new excRule([body.file, hadFile], [files], async () =>
     {
         Obj.file = declaration.file;
     }).Try()

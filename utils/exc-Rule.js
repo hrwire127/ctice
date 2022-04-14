@@ -1,4 +1,4 @@
-class ProcessRule
+class excRule
 {
     constructor(regulars, irregulars, func, optional = false)
     {
@@ -44,5 +44,5 @@ class ProcessRule
 }
 
 module.exports = {
-    ProcessRule
+    excRule
 }

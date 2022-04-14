@@ -1,4 +1,4 @@
-class BodyRule
+class valRule
 {
     constructor(value, expected, rule)
     {
@@ -51,4 +51,4 @@ const Rules = {
     email_includes: "@",
 }
 
-module.exports = { BodyRule, Rules };
+module.exports = { valRule, Rules };

@@ -35,7 +35,8 @@ const user = require("./routes/user")
 
 const User = require('./models/user');
 const userError = require("./utils/userError");
-const Redirects = require('./utils/ResRedirect');
+const Redirects = require('./utils/Redirects');
+const sessionConfig = require('./config/session.config')
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
@@ -43,15 +44,7 @@ const passport = require("passport")
 const flash = require("flash")
 const LocalStrategy = require("passport-local");
 
-const sessionConfig = {
-    secret: process.env.NEXT_PUBLIC_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
-}
+
 
 app.prepare().then(() =>
 {
