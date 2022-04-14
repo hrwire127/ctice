@@ -1,18 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
-// import { UserContext } from '../components/context/currentUser'
 
 function index(props)
 {
     const { declarations, flash, isUser } = props;
-
-    // if (isUser)
-    // {
-    //     useEffect(() =>
-    //     {
-    //         // changeUser(isUser)
-    //     }, [isUser])
-    // }
 
     return (
         <DeclrList declarations={declarations} flash={flash} />

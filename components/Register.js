@@ -30,6 +30,16 @@ function Register(props)
         setPasswordFalse,
         passwordValid,
     ] = useFormError(false);
+    const [
+        EmailError,
+        setEmailError,
+        helperEmailText,
+        setHelperEmailText,
+        checkEmailKey,
+        setEmailTrue,
+        setEmailFalse,
+        emailValid,
+    ] = useFormError(false);
 
     const errCheck = (e) =>
     {
@@ -38,13 +48,16 @@ function Register(props)
 
         const username = data.get("username");
         const password = data.get("password");
+        const email = data.get("email");
 
-        if (usernameValid(username) && passwordValid(password))
+        if (usernameValid(username) && passwordValid(password) && emailValid(email))
         {
             setUsernameTrue();
             setPasswordTrue();
+            setEmailTrue();
             handleSubmit(data);
-        } else
+        }
+        else
         {
             if (!usernameValid(username))
             {
@@ -53,6 +66,10 @@ function Register(props)
             if (!passwordValid(password))
             {
                 setPasswordFalse();
+            }
+            if (!emailValid(password))
+            {
+                setEmailFalse();
             }
         }
     }
@@ -87,6 +104,24 @@ function Register(props)
                             <Grid item xs={12}>
                                 <TextField
                                     margin="normal"
+                                    inputProps={{ maxLength: 40 }}
+                                    required
+                                    error={EmailError}
+                                    fullWidth
+                                    id="email"
+                                    label="Email"
+                                    name="email"
+                                    onKeyPress={checkEmailKey}
+                                    autoFocus
+                                />
+                                {alert
+                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                    : (<FormHelperText error={EmailError}>{helperEmailText}</FormHelperText>)
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="normal"
                                     inputProps={{ maxLength: 10 }}
                                     required
                                     error={UsernameError}
@@ -95,7 +130,6 @@ function Register(props)
                                     label="Username"
                                     name="username"
                                     onKeyPress={checkUsernameKey}
-                                    autoFocus
                                 />
                                 {alert
                                     ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)

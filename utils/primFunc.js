@@ -3,7 +3,8 @@ const Joi = require("joi");
 const ServerError = require('./ServerError');
 const passport = require('passport');
 const User = require("../models/user");
-const {validateBody, validateUser, modifyDesc} = require('./secFunc')
+const nodemailer = require('../config/nodemailer')
+const { validateBody, validateUser, modifyDesc, getToken } = require('./secFunc')
 
 
 async function validateDbData(req, res, next) 
@@ -58,13 +59,47 @@ async function validateDbData(req, res, next)
 }
 
 
-async function validateAuthData(req, res, next) 
+async function validateRegisterData(req, res, next) 
+{
+    const { username, password, email } = req.body;
+
+    const userSchema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        email: Joi.string().required()
+    })
+
+    const { error } = userSchema.validate({ username, password, email })
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return Redirects.Api.send(res, { err: { message: msg } })
+        // next(new ServerError(msg, 400))
+    }
+
+    const bodyError = validateUser(username, password, email)
+
+    if (bodyError) 
+    {
+        return Redirects.Api.send(res, { err: { message: bodyError } })
+        // next(new ServerError(bodyError, 400))
+    }
+    req.body.username = username.trim()
+    req.body.password = password.trim()
+    req.body.email = email.trim()
+    next()
+
+}
+
+async function validateLoginData(req, res, next) 
 {
     const { username, password } = req.body;
 
     const userSchema = Joi.object({
         username: Joi.string().required(),
-        password: Joi.string().required()
+        password: Joi.string().required(),
     })
 
     const { error } = userSchema.validate({ username, password })
@@ -139,8 +174,18 @@ async function tryRegister(req, res, func)
 {
     try
     {
-        const { username, password } = req.body;
-        const user = new User({ username })
+        const { username, password, email } = req.body;
+        const token = getToken()
+        const user = new User({
+            username,
+            status: "Disabled",
+            email: email,
+            confirmationCode: token
+        })
+        nodemailer.sendConfirmationEmail(
+            user.username,
+            user.email,
+            user.confirmationCode)
         await User.register(user, password)
         func()
     }
@@ -164,6 +209,10 @@ async function tryLogin(req, res, next, func)
         }
         else
         {
+            if (user.status != "Active")
+            {
+                Redirects.Api.send(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
+            }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
             {
@@ -182,5 +231,32 @@ async function tryLogin(req, res, next, func)
     })(req, res, next);
 }
 
+function verifyUser(req, res, next) 
+{
+    User.findOne({
+        confirmationCode: req.params.confirmationCode,
+    })
+        .then((user) =>
+        {
+            if (!user)
+            {
+                req.session.error = new ServerError("User Not found.", 404)
+                Redirects.Error.serverRes(res)
+            }
 
-module.exports = { validateDbData, validateAuthData, isLoggedin, isClientLoggedin, tryAsync, ValidateSecret, tryRegister, tryLogin }
+            if (user.status === "Disabled")
+            {
+                user.status = "Active";
+                user.save();
+                next()
+            }
+            else
+            {
+                req.session.error = new ServerError("User Allready Confirmed.", 401)
+                Redirects.Error.serverRes(res)
+            }
+        })
+        .catch((e) => console.log("error", e));
+};
+
+module.exports = { validateDbData, validateRegisterData, validateLoginData, isLoggedin, isClientLoggedin, tryAsync, ValidateSecret, tryRegister, tryLogin, verifyUser }

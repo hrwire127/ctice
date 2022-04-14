@@ -19,6 +19,8 @@ class BodyRule
                 return value === expected
             case 3:
                 return value !== expected
+            case 4:
+                return !value.toString().includes(expected)
         }
     }
     processMsg()
@@ -28,6 +30,7 @@ class BodyRule
         if (this.rule === 1) sign = "smaller"
         if (this.rule === 2) sign = "equal"
         if (this.rule === 3) sign = "different"
+        if (this.rule === 4) sign = "unmatched"
         return `The value ${this.value} is ${sign} than ${this.expected} expected value`
     }
 }
@@ -42,8 +45,10 @@ const Rules = {
     file_min_width: 200,
     file_min_height: 200,
     date_length: 10,
-    username_max_char: 10, 
+    username_max_char: 10,
     password_max_char: 10,
+    email_max_char: 40,
+    email_includes: "@",
 }
 
 module.exports = { BodyRule, Rules };

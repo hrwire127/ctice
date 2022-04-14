@@ -23,13 +23,23 @@ function validateBody(title, description, newFile, date) //
 }
 
 
-function validateUser(username, password)//
+function validateUser(username, password, email)//
 {
     const usernameRule = new BodyRule(username.length, Rules.username_max_char, 0)
     if (usernameRule.getVal()) return usernameRule.processMsg()
 
     const passwordRule = new BodyRule(password.length, Rules.password_max_char, 0)
     if (passwordRule.getVal()) return passwordRule.processMsg()
+
+    if (email)
+    {
+
+        const emailRule = new BodyRule(email.length, Rules.email_max_char, 0)
+        if (emailRule.getVal()) return emailRule.processMsg()
+
+        const includesRule = new BodyRule(email, Rules.email_includes, 4)
+        if (includesRule.getVal()) return includesRule.processMsg()
+    }
 }
 
 function modifyDesc(description)//
@@ -61,5 +71,15 @@ function modifyDesc(description)//
     return newDesc
 }
 
+function getToken()
+{
+    const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let token = '';
+    for (let i = 0; i < 25; i++)
+    {
+        token += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return token;
+}
 
-module.exports = {validateBody, validateUser, modifyDesc}
+module.exports = { validateBody, validateUser, modifyDesc, getToken }
