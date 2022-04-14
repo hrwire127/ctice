@@ -28,7 +28,7 @@ index.getInitialProps = async (context) =>
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { secret: "12" }
+            { secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
