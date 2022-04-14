@@ -4,7 +4,7 @@ const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
 
-function validateUploadedFile(file)
+function inspectFile(file)
 {
     const maxWidth = new valRule(file.width, Rules.file_max_width, 0)
     if (maxWidth.getVal()) return maxWidth.processMsg()
@@ -19,7 +19,7 @@ function validateUploadedFile(file)
     if (minHeight.getVal()) return minHeight.processMsg()
 }
 
-async function processData(body = undefined, files = undefined, declaration = undefined, del = false)
+async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
 {
     const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
 
@@ -47,7 +47,7 @@ async function processData(body = undefined, files = undefined, declaration = un
 
     let q = await new excRule([body.file, files, hadFile], [], async () =>
     {
-        let file = await StorageUpload(files.file)
+        let file = await upload(files.file)
         await cloud.destroy(
             declaration.file.location,
         )
@@ -61,7 +61,7 @@ async function processData(body = undefined, files = undefined, declaration = un
 
     let w = await new excRule([body.file, files], [hadFile], async () =>
     {
-        let file = await StorageUpload(files.file)
+        let file = await upload(files.file)
         Obj.file = {
             name: files.file.name,
             url: file.url,
@@ -93,7 +93,7 @@ async function processData(body = undefined, files = undefined, declaration = un
 }
 
 
-const StorageUpload = async (file) =>
+const upload = async (file) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -115,7 +115,7 @@ const StorageUpload = async (file) =>
 
         streamifier.createReadStream(file.data).pipe(cld_upload_stream);
     });
-    const invalid = await validateUploadedFile(res);
+    const invalid = await inspectFile(res);
     if (invalid)
     {
         await cloud.destroy(
@@ -130,27 +130,13 @@ const StorageUpload = async (file) =>
     }
 }
 
-
-
-
-
-function handleError(app)
+function doRemember(req, res, next)
 {
-    return function (err, req, res, next)
-    {
-        const error = new userError(err.message, err.status)
-        res.status(error.status)
-        app.render(req, res, "/error", { error })
-    }
-}
-
-
-function rememberMe(req, res, next)
-{
-    if (req.body.rememberme)
+    if (req.body.doRemember)
     {
         req.session.cookie.maxAge = 1000 * 60 * 3;
-    } else
+    } 
+    else
     {
         req.session.cookie.expires = false;
     }
@@ -158,6 +144,6 @@ function rememberMe(req, res, next)
 }
 
 module.exports = {
-    handleError, StorageUpload, rememberMe, processData, validateUploadedFile
+    upload, doRemember, ProcessDeclr, inspectFile
 }
 

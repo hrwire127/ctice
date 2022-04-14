@@ -1,6 +1,6 @@
 const { valRule, Rules } = require('./val-Rule');
 
-function validateBody(title, description, newFile, date) //
+function inspectDecrl(title, description, newFile, date) //
 {
     const titleRule = new valRule(title.length, Rules.title_max_char, 0)
     if (titleRule.getVal()) return titleRule.processMsg()
@@ -23,7 +23,7 @@ function validateBody(title, description, newFile, date) //
 }
 
 
-function validateUser(username, password, email)//
+function inspectUser(username, password, email)//
 {
     const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
     if (usernameRule.getVal()) return usernameRule.processMsg()
@@ -71,7 +71,7 @@ function modifyDesc(description)//
     return newDesc
 }
 
-function getToken()
+function genToken()
 {
     const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let token = '';
@@ -82,4 +82,4 @@ function getToken()
     return token;
 }
 
-module.exports = { validateBody, validateUser, modifyDesc, getToken }
+module.exports = { inspectDecrl, inspectUser, modifyDesc, genToken }

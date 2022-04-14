@@ -5,24 +5,24 @@ class Redirect
         this.type = type;
         this.redirect = redirect;
     }
-    send(res, obj)
+    sendObj(res, obj)
     {
         res.json({ type: this.type, obj })
     }
-    sendRes(res)
+    CS(res)
     {
         res.json({ type: this.type, redirect: this.redirect })
     }
-    serverRes(res)
+    SR(res)
     {
         res.redirect(this.redirect)
     }
 }
 
 const Redircets = { 
-    Client: new Redirect("Client", "/"), 
+    Home: new Redirect("Home", "/"), 
     Error: new Redirect("Error", "/error"),
-    Auth: new Redirect("Auth", "/user/login"),
+    Login: new Redirect("Login", "/user/login"),
     Api: new Redirect("Api"),
 }
 

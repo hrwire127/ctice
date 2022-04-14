@@ -4,10 +4,10 @@ const userError = require('./userError');
 const passport = require('passport');
 const User = require("../models/user");
 const nodemailer = require('../config/nodemailer')
-const { validateBody, validateUser, modifyDesc, getToken } = require('./_secondary')
+const { inspectDecrl, inspectUser, modifyDesc, genToken } = require('./_secondary')
 
 
-async function validateDbData(req, res, next) 
+async function validateDeclr(req, res, next) 
 {
     let { title, description, date, file } = req.body
     const declarationSchema = Joi.object({
@@ -39,17 +39,17 @@ async function validateDbData(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.send(res, { err: { message: msg } })
+        return Redirects.Api.sendObj(res, { err: { message: msg } })
         // next(new userError(msg, 400))
     }
 
     newFile = req.files ? req.files.file : undefined;
 
-    const bodyError = validateBody(title, JSON.parse(description), newFile, date)
+    const bodyError = inspectDecrl(title, JSON.parse(description), newFile, date)
 
     if (bodyError) 
     {
-        return Redirects.Api.send(res, { err: { message: bodyError } })
+        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
     req.body.title = title.trim()
@@ -59,7 +59,7 @@ async function validateDbData(req, res, next)
 }
 
 
-async function validateRegisterData(req, res, next) 
+async function validateRegUser(req, res, next) 
 {
     const { username, password, email } = req.body;
 
@@ -75,15 +75,15 @@ async function validateRegisterData(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.send(res, { err: { message: msg } })
+        return Redirects.Api.sendObj(res, { err: { message: msg } })
         // next(new userError(msg, 400))
     }
 
-    const bodyError = validateUser(username, password, email)
+    const bodyError = inspectUser(username, password, email)
 
     if (bodyError) 
     {
-        return Redirects.Api.send(res, { err: { message: bodyError } })
+        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
@@ -93,7 +93,7 @@ async function validateRegisterData(req, res, next)
 
 }
 
-async function validateLoginData(req, res, next) 
+async function validateLogUser(req, res, next) 
 {
     const { username, password } = req.body;
 
@@ -108,15 +108,15 @@ async function validateLoginData(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.send(res, { err: { message: msg } })
+        return Redirects.Api.sendObj(res, { err: { message: msg } })
         // next(new userError(msg, 400))
     }
 
-    const bodyError = validateUser(username, password)
+    const bodyError = validateRegUser(username, password)
 
     if (bodyError) 
     {
-        return Redirects.Api.send(res, { err: { message: bodyError } })
+        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
@@ -126,11 +126,11 @@ async function validateLoginData(req, res, next)
 }
 
 
-function isLoggedin(req, res, next)
+function isLogged_SR(req, res, next)
 {
     if (!req.isAuthenticated())
     {
-        Redirects.Auth.serverRes(res)
+        Redirects.Login.SR(res)
     }
     else
     {
@@ -138,11 +138,11 @@ function isLoggedin(req, res, next)
     }
 }
 
-function isClientLoggedin(req, res, next)
+function isLogged_CS(req, res, next)
 {
     if (!req.isAuthenticated())
     {
-        Redirects.Auth.sendRes(res)
+        Redirects.Login.CS(res)
     }
     else
     {
@@ -150,7 +150,18 @@ function isClientLoggedin(req, res, next)
     }
 }
 
-function tryClientAsync(func)
+function tryAsync_SR(func)
+{
+    return function (req, res, next)
+    {
+        func(req, res, next).catch(err =>
+        {
+            new userError(err.message, err.status).throwServer(req, res)
+        })
+    }
+}
+
+function tryAsync_CS(func)
 {
     return function (req, res, next)
     {
@@ -158,34 +169,20 @@ function tryClientAsync(func)
     }
 }
 
-function tryServerAsync(func)
+function apiSecret(req, res, next)
 {
-    return function (req, res, next)
+    if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
-        func(req, res, next).catch(err => { 
-            new userError(err.message, err.status).throwServer(req, res)
-        })
+        next(new userError("UnAuthorized", 401))
     }
 }
 
-function ValidateSecret(key, callback)
-{
-    if (key === process.env.NEXT_PUBLIC_SECRET)
-    {
-        callback()
-    }
-    else
-    {
-        throw new userError("UnAuthorized", 401)
-    }
-}
-
-async function tryRegister(req, res, func)
+async function doRegister(req, res, func)
 {
     try
     {
         const { username, password, email } = req.body;
-        const token = getToken()
+        const token = genToken()
         const user = new User({
             username,
             status: "Disabled",
@@ -201,27 +198,27 @@ async function tryRegister(req, res, func)
     }
     catch (err)
     {
-        Redirects.Api.send(res, { err })
+        Redirects.Api.sendObj(res, { err })
     }
 }
 
-async function tryLogin(req, res, next, func)
+async function doLogin(req, res, next, func)
 {
     passport.authenticate('local', function (err, user, info)
     {
         if (err)
         {
-            Redirects.Api.send(res, { err })
+            Redirects.Api.sendObj(res, { err })
         }
         else if (!user) 
         {
-            Redirects.Api.send(res, { err: { message: info.message } })
+            Redirects.Api.sendObj(res, { err: { message: info.message } })
         }
         else
         {
-            if (user.status != "Active")
+            if (user.status !== "Active")
             {
-                Redirects.Api.send(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
+                Redirects.Api.sendObj(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
             }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
@@ -267,4 +264,10 @@ function verifyUser(req, res, next)
         .catch((e) => console.log("error", e));
 };
 
-module.exports = { validateDbData, validateRegisterData, validateLoginData, isLoggedin, isClientLoggedin, tryClientAsync, tryServerAsync, ValidateSecret, tryRegister, tryLogin, verifyUser }
+module.exports = {
+    validateDeclr: validateDeclr, validateRegUser,
+    validateLogUser, isLogged_SR: isLogged_SR,
+    isLogged_CS, tryAsync_CS, tryAsync_SR,
+    apiSecret, doRegister, doLogin,
+    verifyUser
+}

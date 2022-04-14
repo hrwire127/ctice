@@ -83,7 +83,7 @@ app.prepare().then(() =>
         console.log(err)
         const error = new userError(err.message, err.status)
         req.session.error = error;
-        Redirects.Error.sendRes(res)
+        Redirects.Error.CS(res)
     })
 
     server.get("/error", (req, res, next) =>

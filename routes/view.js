@@ -2,39 +2,39 @@ const router = require('express').Router();
 const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const Redirects = require('../utils/Redirects');
-const { validateDbData, isClientLoggedin, tryClientAsync, ValidateSecret} = require('../utils/_primary')
-const { processData} = require('../utils/_tertiary')
+const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret } = require('../utils/_primary')
+const { ProcessDeclr } = require('../utils/_tertiary')
 
 router.get("/:id", (req, res, next) =>
 {
-    app.render(req, res, `/view/${req.params.id}`) 
+    app.render(req, res, `/view/${req.params.id}`)
 })
 
-router.post("/:id/api", tryClientAsync(async (req, res, next) =>
+router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    ValidateSecret(req.body.secret, () => Redirects.Api.send(res, declaration))
+    Redirects.Api.sendObj(res, declaration)
 }))
 
-router.put("/:id", isClientLoggedin, validateDbData, tryClientAsync(async (req, res, next) =>
+router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    const Obj = await processData(req.body, req.files, declaration);
+    const Obj = await ProcessDeclr(req.body, req.files, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     req.flash('success', 'Edited Successfuly');
-    Redirects.Client.sendRes(res)
+    Redirects.Home.CS(res)
 }))
 
-router.delete("/:id", isClientLoggedin, tryClientAsync(async (req, res, next) =>
+router.delete("/:id", isLogged_CS, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    await processData(req.body, req.files, declaration, true)
+    await ProcessDeclr(req.body, req.files, declaration, true)
     await Declaration.findByIdAndDelete(id)
     req.flash('info', 'Deleted Successfuly');
-    Redirects.Client.sendRes(res)
+    Redirects.Home.CS(res)
 }))
 
 module.exports = router;
