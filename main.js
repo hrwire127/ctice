@@ -85,7 +85,7 @@ app.prepare().then(() =>
         req.session.error = error;
         Redirects.Error.CS(res)
     })
-
+ 
     server.get("/error", (req, res, next) =>
     {
         let error = req.session.error
@@ -96,7 +96,7 @@ app.prepare().then(() =>
 
     server.get("*", (req, res, next) =>
     {
-        return handle(req, res)
+        return handle(req, res) 
     })
 
     server.listen(NEXT_PUBLIC_DR_PORT, e =>

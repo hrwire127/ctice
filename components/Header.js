@@ -95,7 +95,8 @@ function Header(props)
       .then(response => response.json())
       .then(async res =>
       {
-        if (res.type === "Client" || res.type === "Error")
+        console.log(res)
+        if (res.type === "Home" || res.type === "Error")
         {
           window.location = res.redirect;
           // changeUser(false)
@@ -150,14 +151,15 @@ function Header(props)
           {user
             ? (<IconButton onClick={LogOut}><LogoutIcon /></IconButton>)
             : (<>
-              <Link href="/user/register" className={classes.Auth}><a style={{
-                textDecoration: "none",
-                fontSize: 16,
-                fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-                color: "rgb(0 0 0 / 60%)"
-              }}>
-                Register
-              </a>
+              <Link href="/user/register" className={classes.Auth}>
+                <a style={{
+                  textDecoration: "none",
+                  fontSize: 16,
+                  fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+                  color: "rgb(0 0 0 / 60%)"
+                }}>
+                  Register
+                </a>
               </Link>
               <Link href="/user/login" className={classes.Auth}>
                 <a style={{

@@ -28,9 +28,9 @@ function login(props)
                 {
                     window.location = res.redirect
                 }
-                else if (res.type === "Api")
+                else 
                 {
-                    setError(res.obj.err.message)
+                    setError(res.err.message)
                 }
             })
     };

@@ -28,7 +28,7 @@ router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
     {
         req.flash('success', 'Welcome Back');
         Redirects.Home.CS(res)
-    })
+    }) 
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -41,7 +41,7 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
 router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/welcome", { confirmationCode })
+    app.render(req, res, "/welcome", { confirmationCode }) 
 }))
 
 module.exports = router;

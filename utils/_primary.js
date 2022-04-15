@@ -198,13 +198,16 @@ async function doRegister(req, res, func)
         nodemailer.sendConfirmationEmail(
             user.username,
             user.email,
-            user.confirmationCode)
-        await User.register(user, password)
+            user.confirmationCode).then(async res =>
+            {
+                await User.register(user, password)
+            })
         func()
     }
     catch (err)
     {
-        Redirects.Api.sendObj(res, { err })
+        new userError("Did not work").throw_CS(res)
+        // Redirects.Error.CS(res)
     }
 }
 

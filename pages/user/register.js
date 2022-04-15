@@ -23,13 +23,13 @@ function register(props)
     }).then(response => response.json())
       .then(async res =>
       {
-        if (res.type === "Client" || res.type === "Error")
+        if (res.type === "Home" || res.type === "Error")
         {
           window.location = res.redirect
         }
-        else if (res.type === "Api")
+        else 
         {
-          setError(res.obj.err.message)
+          setError(res.err.message)
         }
       })
   };
