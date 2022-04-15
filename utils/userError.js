@@ -6,10 +6,20 @@ class userError extends Error
         this.message = message;
         this.status = status;
     }
-    throwServer(req, res)
+    throw_SR(req, res)
     {
         req.session.error = { message: this.message, status: this.status };
         res.redirect('/error')
+    }
+    throw_CS(res) 
+    {
+        res.json(
+            {
+                err: {
+                    message: this.message,
+                    status: this.status
+                }
+            })
     }
 }
 

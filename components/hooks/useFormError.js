@@ -12,7 +12,6 @@ function useFormError(initialValue = false)
         
         if (value && e.key === 'Enter') 
         {
-            console.log("A")
             e.preventDefault()
         }
     }

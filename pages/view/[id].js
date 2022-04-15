@@ -20,7 +20,7 @@ function view(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Client" || res.type === "Error" || res.type === "Auth")
+                if (res.type === "Home" || res.type === "Error" || res.type === "Login")
                 {
                     window.location = res.redirect
                 }

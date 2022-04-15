@@ -30,7 +30,6 @@ class excRule
                 return;
             }
         });
-        console.log(v)
         if(v)
         {
             await this.func()

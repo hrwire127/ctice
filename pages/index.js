@@ -38,7 +38,7 @@ index.getInitialProps = async (context) =>
                 context.req.session.error = res.error;
                 context.res.redirect(res.redirect)
             }
-            else if (res.type === "Auth")
+            else if (res.type === "Login")
             {
                 window.location = res.redirect
             }

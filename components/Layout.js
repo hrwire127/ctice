@@ -41,6 +41,8 @@ export default function Layout(props)
         }
     }, [user]);
 
+    console.log(user)
+
     return (
         <UserContext.Provider value={user}>
             {loading

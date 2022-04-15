@@ -6,7 +6,6 @@ const User = require("../models/user");
 const nodemailer = require('../config/nodemailer')
 const { inspectDecrl, inspectUser, modifyDesc, genToken } = require('./_secondary')
 
-
 async function validateDeclr(req, res, next) 
 {
     let { title, description, date, file } = req.body
@@ -39,7 +38,8 @@ async function validateDeclr(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.sendObj(res, { err: { message: msg } })
+        // return Redirects.Api.sendObj(res, { err: { message: msg } })
+        return new userError(msg, 401).throw_CS() //stop
         // next(new userError(msg, 400))
     }
 
@@ -49,13 +49,14 @@ async function validateDeclr(req, res, next)
 
     if (bodyError) 
     {
-        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
+        return new userError(bodyError, 401).throw_CS()
+        // return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
+
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
     next()
-
 }
 
 
@@ -75,7 +76,8 @@ async function validateRegUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.sendObj(res, { err: { message: msg } })
+        return new userError(msg, 401).throw_CS()
+        // return Redirects.Api.sendObj(res, { err: { message: msg } })
         // next(new userError(msg, 400))
     }
 
@@ -83,7 +85,8 @@ async function validateRegUser(req, res, next)
 
     if (bodyError) 
     {
-        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
+        return new userError(bodyError, 401).throw_CS()
+        // return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
@@ -108,15 +111,17 @@ async function validateLogUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return Redirects.Api.sendObj(res, { err: { message: msg } })
+        return new userError(msg, 401).throw_CS()
+        // return Redirects.Api.sendObj(res, { err: { message: msg } })
         // next(new userError(msg, 400))
     }
 
-    const bodyError = validateRegUser(username, password)
+    const bodyError = inspectUser(username, password)
 
     if (bodyError) 
     {
-        return Redirects.Api.sendObj(res, { err: { message: bodyError } })
+        return new userError(bodyError, 401).throw_CS()
+        // return Redirects.Api.sendObj(res, { err: { message: bodyError } })
         // next(new userError(bodyError, 400))
     }
     req.body.username = username.trim()
@@ -156,7 +161,7 @@ function tryAsync_SR(func)
     {
         func(req, res, next).catch(err =>
         {
-            new userError(err.message, err.status).throwServer(req, res)
+            new userError(err.message, err.status).throw_SR(req, res)
         })
     }
 }
@@ -175,6 +180,7 @@ function apiSecret(req, res, next)
     {
         next(new userError("UnAuthorized", 401))
     }
+    next()
 }
 
 async function doRegister(req, res, func)
@@ -208,17 +214,18 @@ async function doLogin(req, res, next, func)
     {
         if (err)
         {
-            Redirects.Api.sendObj(res, { err })
+            new userError(err.message, err.status).throw_CS();
         }
         else if (!user) 
         {
-            Redirects.Api.sendObj(res, { err: { message: info.message } })
+            new userError(info.message, 400).throw_CS();
         }
         else
         {
             if (user.status !== "Active")
             {
-                Redirects.Api.sendObj(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
+                new userError("Pending Account. Please Verify Your Email!", 401).throw_CS();
+                // Redirects.Api.sendObj(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
             }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
@@ -247,7 +254,7 @@ function verifyUser(req, res, next)
         {
             if (!user)
             {
-                new userError("User Not found.", 404).throwServer(req, res)
+                new userError("User Not found.", 404).throw_SR(req, res)
             }
 
             if (user.status === "Disabled")
@@ -258,7 +265,7 @@ function verifyUser(req, res, next)
             }
             else
             {
-                new userError("User Allready Confirmed", 401).throwServer(req, res)
+                new userError("User Allready Confirmed", 403).throw_SR(req, res)
             }
         })
         .catch((e) => console.log("error", e));

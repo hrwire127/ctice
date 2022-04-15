@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
-import { UserContext } from '../components/context/currentUser'
+import UserContext from '../components/context/currentUser'
 import { Typography } from '@mui/material'
-import UserContext from './context/currentUser'
 
 
 function create(props)
@@ -38,7 +37,7 @@ function create(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Client" || res.type === "Error" || res.type === "ClientAuth")
+                if (res.type === "Home" || res.type === "Error" || res.type === "Login")
                 {
                     window.location = res.redirect
                 }

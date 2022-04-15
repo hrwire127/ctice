@@ -9,9 +9,9 @@ function welcome()
     )
 }
 
-welcome.getInitialProps = async (ctx) =>
+welcome.getInitialProps = async (props) =>
 {
-    if (ctx.req)
+    if (props.query.confirmationCode)
     {
         return { none: 0 }
     }

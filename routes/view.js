@@ -5,19 +5,19 @@ const Redirects = require('../utils/Redirects');
 const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret } = require('../utils/_primary')
 const { ProcessDeclr } = require('../utils/_tertiary')
 
-router.get("/:id", (req, res, next) =>
+router.get("/:id", (req, res) =>
 {
     app.render(req, res, `/view/${req.params.id}`)
 })
 
-router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
+router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
     Redirects.Api.sendObj(res, declaration)
 }))
 
-router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res, next) =>
+router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
@@ -27,7 +27,7 @@ router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res, next
     Redirects.Home.CS(res)
 }))
 
-router.delete("/:id", isLogged_CS, tryAsync_CS(async (req, res, next) =>
+router.delete("/:id", isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);

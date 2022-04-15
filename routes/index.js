@@ -5,20 +5,20 @@ const Redirects = require('../utils/Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, } = require('../utils/_primary')
 const { ProcessDeclr} = require('../utils/_tertiary')
 
-router.get('/', (req, res, next) =>
+router.get('/', (req, res) =>
 {
     app.render(req, res, "/")
 })
 
 
-router.post('/api', apiSecret, tryAsync_CS(async (req, res, next) =>
+router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
     Redirects.Api.sendObj(res, declarations)
 }))
 
 
-router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res, next) =>
+router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const Obj = await ProcessDeclr(req.body, req.files);
     const declaration = new Declaration(Obj)
