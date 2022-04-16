@@ -21,16 +21,6 @@ function Register(props)
         usernameValid,
     ] = useFormError(false);
     const [
-        PasswordError,
-        setPasswordError,
-        helperPasswordText,
-        setHelperPasswordText,
-        checkPasswordKey,
-        setPasswordTrue,
-        setPasswordFalse,
-        passwordValid,
-    ] = useFormError(false);
-    const [
         EmailError,
         setEmailError,
         helperEmailText,
@@ -47,13 +37,11 @@ function Register(props)
         const data = new FormData(e.currentTarget);
 
         const username = data.get("username");
-        const password = data.get("password");
         const email = data.get("email");
 
-        if (usernameValid(username) && passwordValid(password) && emailValid(email))
+        if (usernameValid(username)  && emailValid(email))
         {
             setUsernameTrue();
-            setPasswordTrue();
             setEmailTrue();
             handleSubmit(data);
         }
@@ -63,11 +51,7 @@ function Register(props)
             {
                 setUsernameFalse();
             }
-            if (!passwordValid(password))
-            {
-                setPasswordFalse();
-            }
-            if (!emailValid(password))
+            if (!emailValid(email))
             {
                 setEmailFalse();
             }
@@ -134,25 +118,6 @@ function Register(props)
                                 {alert
                                     ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
                                     : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
-                                }
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    margin="normal"
-                                    inputProps={{ maxLength: 10 }}
-                                    required
-                                    error={PasswordError}
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                    onKeyPress={checkPasswordKey}
-                                />
-                                {alert
-                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                                    : (<FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>)
                                 }
                             </Grid>
                         </Grid>

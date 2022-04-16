@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Redirects = require('../utils/Redirects');
-const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, doRegister, doLogin, verifyUser } = require('../utils/_primary')
+const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, doPending, doLogin, doRegister, verifyUser } = require('../utils/_primary')
 
 router.get('/register', async (req, res) =>
 {
@@ -15,9 +15,9 @@ router.get('/login', async (req, res) =>
 
 router.post('/register', validateRegUser, tryAsync_CS(async (req, res) =>
 {
-    doRegister(req, res, async () =>
+    doPending(req, res, async () =>
     {
-        req.flash('success', 'Successfuly Registered');
+        req.flash('info', 'Checkout your email, pending exires in 5 min');
         Redirects.Home.CS(res)
     })
 }))
@@ -28,7 +28,7 @@ router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
     {
         req.flash('success', 'Welcome Back');
         Redirects.Home.CS(res)
-    }) 
+    })
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -41,7 +41,16 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
 router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/welcome", { confirmationCode }) 
+    app.render(req, res, "/welcome", { confirmationCode })
+}))
+
+router.post("/confirm", tryAsync_SR(async (req, res) =>
+{
+    doRegister(req, res, () =>
+    {
+        req.flash('success', 'Successfuly Registered');
+        Redirects.Home.CS(res)
+    })
 }))
 
 module.exports = router;

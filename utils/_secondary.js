@@ -28,9 +28,12 @@ function inspectUser(username, password, email)//
     const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
     if (usernameRule.getVal()) return usernameRule.processMsg()
 
-    const passwordRule = new valRule(password.length, Rules.password_max_char, 0)
-    if (passwordRule.getVal()) return passwordRule.processMsg()
-
+    if (password)
+    {
+        const passwordRule = new valRule(password.length, Rules.password_max_char, 0)
+        if (passwordRule.getVal()) return passwordRule.processMsg()
+    }
+    
     if (email)
     {
 

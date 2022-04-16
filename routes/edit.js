@@ -14,7 +14,6 @@ router.post("/:id/api", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
-    // return new userError(msg, 401).throw_CS()
     Redirects.Api.sendObj(res, declaration)
 }))
 
