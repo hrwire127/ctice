@@ -129,6 +129,7 @@ async function doRegister(req, res, func)
             const user = new User({
                 username: pending.username,
                 password,
+                date: pending.date,
                 email: pending.email,
                 confirmationCode: confirmationCode,
                 status: "Active",
@@ -154,11 +155,12 @@ async function doPending(req, res, func)
 {
     try
     {
-        const { username, email } = req.body;
+        const { username, email, date } = req.body;
         const token = genToken()
         const pending = new Pending({
             username,
             email,
+            date,
             confirmationCode: token
         })
         let exists = await Pending.findOne({ email })

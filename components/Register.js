@@ -4,6 +4,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Link from 'next/link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
+import { getCurrentDate } from '../utils/_client';
+
 
 const theme = createTheme();
 
@@ -38,6 +40,7 @@ function Register(props)
 
         const username = data.get("username");
         const email = data.get("email");
+        data.append("date", getCurrentDate("."))
 
         if (usernameValid(username)  && emailValid(email))
         {

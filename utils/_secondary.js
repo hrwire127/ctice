@@ -85,4 +85,5 @@ function genToken()
     return token;
 }
 
+
 module.exports = { inspectDecrl, inspectUser, modifyDesc, genToken }

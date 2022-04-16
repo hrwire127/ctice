@@ -22,7 +22,13 @@ const PendingSchema = new Schema({
         type: Date,
         default: Date.now,
         index: { expires: '20m' },
+        required: true
     },
+    date:
+    {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Pending', PendingSchema)

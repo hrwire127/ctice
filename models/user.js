@@ -20,15 +20,11 @@ const UserSchema = new Schema({
         type: String,
         unique: true
     },
-    // name: {
-    //     type: String,
-    //     required: true,
-    //     unique: true
-    // },
-    // passport: {
-    //     type: String,
-    //     required: true
-    // }
+    date:
+    {
+        type: String,
+        required: true
+    }
 });
 
 UserSchema.plugin(passportLocalMongoose);
