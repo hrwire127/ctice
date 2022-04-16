@@ -39,9 +39,7 @@ async function validateDeclr(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        // return Redirects.Api.sendObj(res, { err: { message: msg } })
-        return new userError(msg, 401).throw_CS(res) //stop
-        // next(new userError(msg, 400))
+        return new userError(msg, 401).throw_CS(res)
     }
 
     newFile = req.files ? req.files.file : undefined;
@@ -51,8 +49,6 @@ async function validateDeclr(req, res, next)
     if (bodyError) 
     {
         return new userError(bodyError, 401).throw_CS(res)
-        // return Redirects.Api.sendObj(res, { err: { message: bodyError } })
-        // next(new userError(bodyError, 400))
     }
 
     req.body.title = title.trim()
@@ -237,7 +233,6 @@ async function doRegister(req, res, func)
     }
     catch (err)
     {
-        console.log(err)
         req.session.error = new userError("Did not work", 403);
         Redirects.Error.CS(res)
     }
@@ -260,7 +255,6 @@ async function doLogin(req, res, next, func)
             if (user.status !== "Active")
             {
                 new userError("Accound Disabled", 401).throw_CS(res);
-                // Redirects.Api.sendObj(res, { err: { message: "Pending Account. Please Verify Your Email!" } })
             }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
@@ -293,13 +287,35 @@ function verifyUser(req, res, next)
             }
             next()
         })
-        .catch((e) => console.log("error", e));
+        .catch((err) => 
+        {
+            console.log("error", err)
+            req.session.error = new userError(err.message, err.status);
+            Redirects.Error.CS(res)
+        });
 };
+
+function isAdmin(req, res, next)
+{
+    const session = req.session.passport
+    if (session) 
+    {
+        if(session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
+        {
+            next()
+        }
+    }
+    else
+    { 
+        req.session.error = new userError("Page Not Found", 404);
+        Redirects.Error.SR(res)
+    }
+}
 
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR: isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, doPending, doLogin,
-    verifyUser, doRegister
+    verifyUser, doRegister, isAdmin
 }

@@ -41,6 +41,7 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
 router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
+    //restrict client-sde nav 
     app.render(req, res, "/welcome", { confirmationCode })
 }))
 

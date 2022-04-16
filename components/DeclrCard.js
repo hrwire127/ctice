@@ -14,7 +14,7 @@ function DeclrCard(props)
     const { title, _id, description, date } = props;
     const classes = useStyles();
 
-    const user = React.useContext(UserContext);
+    const {user} = React.useContext(UserContext);
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 

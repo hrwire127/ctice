@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import Footer from './Footer'
 import Header from './Header'
-// import { UserProvider, UserConsumer } from './context/currentUser'
 import UserContext from './context/currentUser'
+import AdminContext from './context/isAdmin'
 import Loading from "../components/Loading"
 import Router from "next/router";
 
@@ -32,6 +32,7 @@ export default function Layout(props)
     }, []);
 
     const [user, setUser] = useState(false)
+    const [admin, setAdmin] = useState(false)
 
     useEffect(() =>
     {
@@ -39,21 +40,29 @@ export default function Layout(props)
         {
             setUser(props.children.props.isUser)
         }
-    }, [user]);
+        if (props.children.props.admin)
+        {
+            setAdmin(props.children.props.admin)
+        }
+    }, [user, admin]);
+
+    console.log(admin)
 
     return (
         <UserContext.Provider value={user}>
-            {loading
-                ?
-                (<div style={{ position: "absolute", top: "50%", left: "50%" }}>
-                    <Loading />
-                </div>)
-                :
-                (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Header sections={[]} title="Ctice" />
-                    <Box sx={{ mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
-                </main>)
-            }
+            <AdminContext.Provider value={admin}>
+                {loading
+                    ?
+                    (<div style={{ position: "absolute", top: "50%", left: "50%" }}>
+                        <Loading />
+                    </div>)
+                    :
+                    (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                        <Header sections={[]} title="Ctice" />
+                        <Box sx={{ mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
+                    </main>)
+                }
+            </AdminContext.Provider>
         </UserContext.Provider>
     )
 } 

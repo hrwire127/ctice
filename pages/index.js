@@ -14,9 +14,14 @@ index.getInitialProps = async (context) =>
 {
     const flash = context.res ? context.res.locals.flash[0] : undefined
     let isUser;
+    let admin = false;
     if (context.res)
     {
         isUser = context.req.isAuthenticated()
+        if(context.req.session.passport)
+        {
+            admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
+        }
     }
     if (context.res) 
     {
@@ -49,7 +54,7 @@ index.getInitialProps = async (context) =>
         })
     if (declarations)
     {
-        return { declarations, flash, isUser }
+        return { declarations, flash, isUser, admin }
     }
 }
 
