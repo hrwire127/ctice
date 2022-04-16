@@ -5,7 +5,7 @@ import DeclrCard from './DeclrCard';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
-import UserContext from '../components/context/currentUser'
+import UserContext from './context/userContext'
 
 function DeclrList(props)
 {

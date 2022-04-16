@@ -6,7 +6,7 @@ import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
 import { CropData } from '../utils/client';
 import Link from 'next/link'
-import UserContext from '../components/context/currentUser'
+import UserContext from './context/userContext'
 
 
 function DeclrCard(props) 

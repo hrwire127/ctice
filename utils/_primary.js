@@ -1,209 +1,121 @@
-const Redirects = require('./Redirects');
-const Joi = require("joi");
+const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
+const { cloud } = require('../cloud/storage');
+const Redirects = require('./Redirects');
 const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
-const { inspectDecrl, inspectUser, modifyDesc, genToken } = require('./_secondary')
+const { genToken } = require('./_secondary')
 
-async function validateDeclr(req, res, next) 
+
+async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
 {
-    let { title, description, date, file } = req.body
-    const declarationSchema = Joi.object({
-        title: Joi.string().required(),
-        description: Joi.object({
-            blocks: Joi.array().items(Joi.object().keys({
-                key: Joi.string().required(),
-                text: Joi.string().required().allow(''),
-                type: Joi.string().required(),
-                depth: Joi.number().required(),
-                inlineStyleRanges: Joi.array().required(),
-                entityRanges: Joi.array().required(),
-                data: Joi.object().required()
-            })),
-            entityMap: Joi.object().required()
-        }).required(),
-        file: Joi.string(),
-        date: Joi.string().required()
-    })
+    const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
 
-    const preparedBody =
-    {
-        title, description: JSON.parse(description), file, date
+    let Obj = {
+        ...body
     }
 
-    const { error } = declarationSchema.validate(preparedBody)
-
-    if (error) 
+    if (del)
     {
-        console.log(error)
-        const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
-    }
-
-    newFile = req.files ? req.files.file : undefined;
-
-    const bodyError = inspectDecrl(title, JSON.parse(description), newFile, date)
-
-    if (bodyError) 
-    {
-        return new userError(bodyError, 401).throw_CS(res)
-    }
-
-    req.body.title = title.trim()
-    req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
-    next()
-}
-
-
-async function validateRegUser(req, res, next) 
-{
-    const { username, email } = req.body;
-
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        email: Joi.string().required()
-    })
-
-    const { error } = userSchema.validate({ username, email })
-
-    if (error) 
-    {
-        console.log(error)
-        const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
-    }
-
-    const bodyError = inspectUser(username, undefined, email)
-
-    if (bodyError) 
-    {
-        return new userError(bodyError, 401).throw_CS(res)
-    }
-    req.body.username = username.trim()
-    req.body.email = email.trim()
-    next()
-
-}
-
-async function validateLogUser(req, res, next) 
-{
-    const { username, password } = req.body;
-
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        password: Joi.string().required(),
-    })
-
-    const { error } = userSchema.validate({ username, password })
-
-    if (error) 
-    {
-        console.log(error)
-        const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
-    }
-
-    const bodyError = inspectUser(username, password)
-
-    if (bodyError) 
-    {
-        return new userError(bodyError, 401).throw_CS(res)
-    }
-    req.body.username = username.trim()
-    req.body.password = password.trim()
-    next()
-
-}
-
-
-function isLogged_SR(req, res, next)
-{
-    if (!req.isAuthenticated())
-    {
-        Redirects.Login.SR(res)
-    }
-    else
-    {
-        next()
-    }
-}
-
-function isLogged_CS(req, res, next)
-{
-    if (!req.isAuthenticated())
-    {
-        Redirects.Login.CS(res)
-    }
-    else
-    {
-        next()
-    }
-}
-
-function tryAsync_SR(func)
-{
-    return function (req, res, next)
-    {
-        func(req, res, next).catch(err =>
+        await new excRule([], [], async () =>
         {
-            new userError(err.message, err.status).throw_SR(req, res)
-        })
+            if (declaration.file.location)
+            {
+                await cloud.destroy(
+                    declaration.file.location,
+                )
+            }
+        }, true).Try();
+        return;
     }
+
+
+    Obj.date = declaration ? declaration.date : []
+    Obj.date.push(body.date)
+
+    let q = await new excRule([body.file, files, hadFile], [], async () =>
+    {
+        let file = await upload(files.file)
+        await cloud.destroy(
+            declaration.file.location,
+        )
+        Obj.file = {
+            name: files.file.name,
+            url: file.url,
+            location: file.location
+        }
+    }).Try();
+    if (q) return Obj;
+
+    let w = await new excRule([body.file, files], [hadFile], async () =>
+    {
+        let file = await upload(files.file)
+        Obj.file = {
+            name: files.file.name,
+            url: file.url,
+            location: file.location
+        }
+    }).Try();
+    if (w) return Obj;
+
+    let e = await new excRule([], [body.file, files, hadFile], async () =>
+    { }).Try();
+    if (e) return Obj;
+
+    let r = await new excRule([hadFile], [body.file, files,], async () =>
+    {
+        await cloud.destroy(
+            declaration.file.location,
+        )
+        declaration.file = undefined
+        await declaration.save();
+    }).Try();
+    if (r) return Obj;
+
+    let t = await new excRule([body.file, hadFile], [files], async () =>
+    {
+        Obj.file = declaration.file;
+    }).Try()
+    if (t) return Obj;
+
 }
 
-function tryAsync_CS(func)
+async function doLogin(req, res, next, func)
 {
-    return function (req, res, next)
+    passport.authenticate('local', function (err, user, info)
     {
-        func(req, res, next).catch(err => next(err))
-    }
-}
-
-function apiSecret(req, res, next)
-{
-    if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
-    {
-        next(new userError("UnAuthorized", 401))
-    }
-    next()
-}
-
-async function doPending(req, res, func)
-{
-    try
-    {
-        const { username, email } = req.body;
-        const token = genToken()
-        const pending = new Pending({
-            username,
-            email,
-            confirmationCode: token
-        })
-        let exists = await Pending.findOne({ email })
-        if (exists)
+        if (err)
         {
-            new userError("User pending, check your email!").throw_CS(res)
+            new userError(err.message, err.status).throw_CS(res);
+        }
+        else if (!user) 
+        {
+            new userError(info.message, 404).throw_CS(res);
         }
         else
         {
-            nodemailer.sendConfirmationEmail(
-                pending.username,
-                pending.email,
-                pending.confirmationCode
-            ).then(async () =>
+            if (user.status !== "Active")
             {
-                await pending.save()
-                func()
-            })
+                new userError(errorMessages.disabledUser).throw_CS(res);
+            }
+            const remember = JSON.parse(req.body.remember)
+            req.login(user, function (error)
+            {
+                if (error) res.json({ error });
+            });
+            if (remember)
+            {
+                req.session.cookie.expires = false
+            }
+            else
+            {
+                req.session.cookie.originalMaxAge = 24 * 60 * 60 * 1000 // Expires in 1 day
+            }
+            func()
         }
-    }
-    catch (err)
-    {
-        console.log(err)
-        new userError("Did not work").throw_CS(res)
-    }
+    })(req, res, next);
 }
 
 async function doRegister(req, res, func)
@@ -227,95 +139,55 @@ async function doRegister(req, res, func)
         }
         else
         {
-            req.session.error = new userError("No such pending", 403);
+            new userError(errorMessages.noPending).setup(req, res);
             Redirects.Error.CS(res)
         }
     }
     catch (err)
     {
-        req.session.error = new userError("Did not work", 403);
+        new userError(errorMessages.didNotWork).setup(req, res);
         Redirects.Error.CS(res)
     }
 }
 
-async function doLogin(req, res, next, func)
+async function doPending(req, res, func)
 {
-    passport.authenticate('local', function (err, user, info)
+    try
     {
-        if (err)
+        const { username, email } = req.body;
+        const token = genToken()
+        const pending = new Pending({
+            username,
+            email,
+            confirmationCode: token
+        })
+        let exists = await Pending.findOne({ email })
+        if (exists)
         {
-            new userError(err.message, err.status).throw_CS(res);
-        }
-        else if (!user) 
-        {
-            new userError(info.message, 404).throw_CS(res);
+            new userError(errorMessages.userIsPending).throw_CS(res)
         }
         else
         {
-            if (user.status !== "Active")
+            nodemailer.sendConfirmationEmail(
+                pending.username,
+                pending.email,
+                pending.confirmationCode
+            ).then(async () =>
             {
-                new userError("Accound Disabled", 401).throw_CS(res);
-            }
-            const remember = JSON.parse(req.body.remember)
-            req.login(user, function (error)
-            {
-                if (error) res.json({ error });
-            });
-            if (remember)
-            {
-                req.session.cookie.expires = false
-            }
-            else
-            {
-                req.session.cookie.originalMaxAge = 24 * 60 * 60 * 1000 // Expires in 1 day
-            }
-            func()
+                await pending.save()
+                func()
+            })
         }
-    })(req, res, next);
-}
-
-function verifyUser(req, res, next) 
-{
-    Pending.findOne({
-        confirmationCode: req.params.confirmationCode,
-    })
-        .then(async (pending) =>
-        {
-            if (!pending)
-            {
-                new userError("Pending User Expired", 404).throw_SR(req, res)
-            }
-            next()
-        })
-        .catch((err) => 
-        {
-            console.log("error", err)
-            req.session.error = new userError(err.message, err.status);
-            Redirects.Error.CS(res)
-        });
-};
-
-function isAdmin(req, res, next)
-{
-    const session = req.session.passport
-    if (session) 
+    }
+    catch (err)
     {
-        if(session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
-        {
-            next()
-        }
-    }
-    else
-    { 
-        req.session.error = new userError("Page Not Found", 404);
-        Redirects.Error.SR(res)
+        console.log(err)
+        new userError(errorMessages.didNotWork).setup(req, res);
+        Redirects.Error.CS(res)
     }
 }
 
-module.exports = {
-    validateDeclr: validateDeclr, validateRegUser,
-    validateLogUser, isLogged_SR: isLogged_SR,
-    isLogged_CS, tryAsync_CS, tryAsync_SR,
-    apiSecret, doPending, doLogin,
-    verifyUser, doRegister, isAdmin
+module.exports =
+{
+    doPending, doLogin, doRegister, ProcessDeclr
 }

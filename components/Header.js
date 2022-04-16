@@ -7,7 +7,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
-import UserContext from './context/currentUser'
+import UserContext from './context/userContext'
 
 const useStyles = makeStyles({
   Toolbar: {

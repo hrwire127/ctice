@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import Footer from './Footer'
 import Header from './Header'
-import UserContext from './context/currentUser'
-import AdminContext from './context/isAdmin'
+import UserContext from './context/userContext'
+import AdminContext from './context/adminContext'
 import Loading from "../components/Loading"
 import Router from "next/router";
 
@@ -45,8 +45,6 @@ export default function Layout(props)
             setAdmin(props.children.props.admin)
         }
     }, [user, admin]);
-
-    console.log(admin)
 
     return (
         <UserContext.Provider value={user}>

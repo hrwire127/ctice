@@ -14,7 +14,7 @@ function welcome(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Home" || res.type === "Error")
+                if (res.type === "Home" || res.type === "Error" )
                 {
                     window.location = res.redirect
                 }

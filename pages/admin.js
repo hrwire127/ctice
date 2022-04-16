@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import AdminContext from '../components/context/isAdmin'
+import AdminContext from '../components/context/adminContext'
 
 function admin()
 {

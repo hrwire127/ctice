@@ -1,8 +1,10 @@
 class userError extends Error
 {
-    constructor(message = "Something went wrong", status = 500)
+    constructor(message = "Something went wrong", status = 500, obj)
     {
         super()
+        this.message = obj.message;
+        this.status = obj.status;
         this.message = message;
         this.status = status;
     }
@@ -20,6 +22,10 @@ class userError extends Error
                     status: this.status
                 }
             })
+    }
+    setup(req)
+    {
+        req.session.error = { message: this.message, status: this.status}
     }
 }
 
