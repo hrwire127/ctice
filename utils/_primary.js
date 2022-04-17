@@ -7,6 +7,7 @@ const User = require("../models/user");
 const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
 const { genToken } = require('./_secondary')
+const { upload } = require('./_tertiary')
 
 
 async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)

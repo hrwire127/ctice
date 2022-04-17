@@ -27,11 +27,6 @@ router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
     Redirects.Home.CS(res)
 }))
 
-router.get("/admin", isAdmin, (req, res) =>
-{
-    app.render(req, res, "/admin", { admin: true })
-})
-
 router.get("/create", isLogged_SR, (req, res) =>
 {
     app.render(req, res, "/create", { user: true })

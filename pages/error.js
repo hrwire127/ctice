@@ -6,17 +6,18 @@ function error(props)
 {
     const { status, message } = props.error;
     return (
-        <ErrorPage status={status} message={message}  />
+        <ErrorPage status={status} message={message} />
     )
 }
 
 error.getInitialProps = (props) =>
 {
-    const { error } = props.query    
+    const { error } = props.query
+    const { context } = props;
     let admin = false;
-    if (context.res)
+    if (context)
     {
-        if(context.req.session.passport)
+        if (props.context.req.session.passport)
         {
             admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
         }

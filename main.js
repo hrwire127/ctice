@@ -32,6 +32,7 @@ const index = require("./routes/index")
 const view = require("./routes/view")
 const edit = require("./routes/edit")
 const user = require("./routes/user")
+const admin = require("./routes/admin")
 
 const User = require('./models/user');
 const userError = require("./utils/userError");
@@ -70,6 +71,7 @@ app.prepare().then(() =>
     server.use('/view', view)
     server.use('/edit', edit)
     server.use('/user', user)
+    server.use('/admin', admin)
 
     server.get('/*', function (req, res, next)
     {
