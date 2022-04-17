@@ -164,10 +164,13 @@ async function doPending(req, res, func)
             date,
             confirmationCode: token
         })
-        let exists = await Pending.findOne({ email })
-        if (exists)
+        if (await Pending.findOne({ email }) || await User.findOne({ email }))
         {
-            new userError(errorMessages.userIsPending.message, errorMessages.userIsPending.status).throw_CS(res)
+            new userError(errorMessages.emailAllreadyUsed.message, emailAllreadyUsed.userIsPending.status).throw_CS(res)
+        }
+        else if (await Pending.findOne({ username }) || await User.findOne({ username }))
+        {
+            new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.usernameAllreadyUsed.status).throw_CS(res)
         }
         else
         {
