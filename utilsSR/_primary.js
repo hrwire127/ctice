@@ -100,7 +100,7 @@ async function doLogin(req, res, next, func)
         {
             if (user.status !== "Active")
             {
-                new userError(errorMessages.disabledUser.message, errorMessages.disabledUser.status).throw_CS(res);
+                new userError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
             }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
@@ -140,7 +140,7 @@ async function doRegister(req, res, func)
     }
     else
     {
-        new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
+        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
         Redirects.Error.CS(res)
     }
 }
@@ -157,11 +157,11 @@ async function doPending(req, res, func)
     })
     if (await Pending.findOne({ email }) || await User.findOne({ email }))
     {
-        new userError(errorMessages.emailAllreadyUsed.message, errorMessages.emailAllreadyUsed.status).throw_CS(res)
+        new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
     }
     else if (await Pending.findOne({ username }) || await User.findOne({ username }))
     {
-        new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.usernameAllreadyUsed.status).throw_CS(res)
+        new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
     else
     {

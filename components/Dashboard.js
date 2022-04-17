@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Drawer, Box, AppBar, Toolbar, List, Typography, Divider, IconButton, Badge, Container, Grid, Paper } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import LoginIcon from '@mui/icons-material/Login';
-import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { Menu, ChevronLeft, Close, Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Declrs from './Declrs';
@@ -103,7 +97,7 @@ function Dashboard(props)
                                 ...(open && { display: 'none' }),
                             }}
                         >
-                            <MenuIcon />
+                            <Menu />
                         </IconButton>
                         <Typography
                             component="h1"
@@ -117,7 +111,7 @@ function Dashboard(props)
                         <Link href="/">
                             <IconButton color="inherit">
                                 <Badge color="secondary">
-                                    <CloseIcon />
+                                    <Close />
                                 </Badge>
                             </IconButton>
                         </Link>
@@ -133,7 +127,7 @@ function Dashboard(props)
                         }}
                     >
                         <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
+                            <ChevronLeft />
                         </IconButton>
                     </Toolbar>
                     <Divider />
@@ -191,7 +185,7 @@ function Dashboard(props)
                                                     justifyContent: "center"
                                                 }}
                                             >
-                                                <Link href="/create"><IconButton><AddIcon /></IconButton></Link>
+                                                <Link href="/create"><IconButton><Add /></IconButton></Link>
                                             </Paper>
                                         </Grid>
                                         <Grid item xs={10} md={4} lg={6}>
@@ -203,7 +197,7 @@ function Dashboard(props)
                                                     justifyContent: "center"
                                                 }}
                                             >
-                                                <IconButton onClick={LogOut}><ExitToAppIcon /></IconButton>
+                                                <IconButton onClick={LogOut}><ExitToApp /></IconButton>
                                             </Paper>
                                         </Grid>
                                         <Grid item xs={10} md={4} lg={6}>
@@ -215,7 +209,7 @@ function Dashboard(props)
                                                     justifyContent: "center"
                                                 }}
                                             >
-                                                <Link href="/user/login"><IconButton><LoginIcon /></IconButton></Link>
+                                                <Link href="/user/login"><IconButton><Login /></IconButton></Link>
                                             </Paper>
                                         </Grid>
                                         <Grid item xs={10} md={4} lg={6}>
@@ -227,7 +221,7 @@ function Dashboard(props)
                                                     justifyContent: "center"
                                                 }}
                                             >
-                                                <Link href="/user/register"><IconButton><AppRegistrationIcon /></IconButton></Link>
+                                                <Link href="/user/register"><IconButton><AppRegistration /></IconButton></Link>
                                             </Paper>
                                         </Grid>
                                     </Grid>

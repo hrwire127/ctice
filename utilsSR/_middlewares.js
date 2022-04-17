@@ -163,7 +163,8 @@ function apiSecret(req, res, next)
 {
     if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
-        next(new userError(errorMessages.unauthorized.message, errorMessages.unauthorized.status))
+        Redirects.Error.CS(res)
+        // next(new userError(...Object.values(errorMessages.unauthorized)))
     }
     next()
 }
@@ -177,7 +178,7 @@ function verifyUser(req, res, next)
         {
             if (!pending)
             {
-                new userError(errorMessages.pendingExpired.message, errorMessages.pendingExpired.status).throw_SR(req, res)
+                new userError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
             }
             next()
         })
@@ -200,7 +201,7 @@ function isAdmin(req, res, next)
     }
     else
     { 
-        new userError(errorMessages.PageNotFound.message, errorMessages.PageNotFound.status).throw_SR(req, res)
+        new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
     }
 }
 

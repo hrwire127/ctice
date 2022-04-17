@@ -14,6 +14,8 @@ function DeclrList(props)
     const user = React.useContext(UserContext);
     return (
         <>
+            <Link href="/admin">admin</Link>
+            <Link href="/welcome">123</Link>
             {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
@@ -21,7 +23,7 @@ function DeclrList(props)
                 </Typography>
                 {user &&
                     (<ButtonGroup aria-label="button group">
-                        <Link href="/create"><IconButton variant="outlined"><Add></Add></IconButton></Link>
+                        <Link href="/create"><IconButton variant="outlined"><Add/></IconButton></Link>
                     </ButtonGroup>)}
             </Box>
             {

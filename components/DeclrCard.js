@@ -4,7 +4,7 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
 import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
-import { CropData } from '../utils/_client';
+import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
 import UserContext from './context/contextUser'
 

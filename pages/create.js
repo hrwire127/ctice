@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
 import UserContext from '../components/context/contextUser'
-import { Typography } from '@mui/material'
+import { determRendering, getGlobals } from '../utilsCS/_client'
 
 
 function create(props)
 {
     let user = React.useContext(UserContext);
-    if (props.user)
-    {
-        user = props.user
-    }
 
     const [alert, setAlert] = useState()
 
@@ -60,8 +56,13 @@ function create(props)
 
 create.getInitialProps = (props) =>
 {
-    const user = props.query.user
-    return { user }
+    return determRendering(props, () =>
+    {
+        return {}
+    }, () =>
+    {
+        return { ...Object.values(getGlobals()) }
+    })
 }
 
 export default create

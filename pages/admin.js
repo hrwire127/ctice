@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import AdminContext from '../components/context/contextAdmin'
 import Dashboard from '../components/Dashboard';
+import { getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function admin(props)
 {
@@ -10,7 +11,6 @@ function admin(props)
     {
         admin = props.admin
     }
-    console.log(admin)
 
     useEffect(() =>
     {
@@ -28,35 +28,28 @@ function admin(props)
 }
 admin.getInitialProps = async (props) =>
 {
-    const admin = props.query.admin
-    const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-            { secret: process.env.NEXT_PUBLIC_SECRET }
-        )
-    }).then(response => response.json())
-        .then(async res =>
-        {
-            if (res.type === "Error")
-            {
-                context.req.session.error = res.error;
-                context.res.redirect(res.redirect)
-            }
-            else if (res.type === "Login")
-            {
-                window.location = res.redirect
-            }
-            else 
-            {
-                return res.obj;
-            }
-        })
-    if (declarations)
+    const res = await getDeclrs();
+    return determRendering(props, () =>
     {
-        return { admin, noHeader: true, declarations }
-    }
+        if (res.type === "Error")
+        {
+            window.location = res.redirect
+        }
+        else
+        {
+            return { declarations: res.obj }
+        }
+    }, () =>
+    {
+        if (res.type === "Error")
+        {
+            props.req.session.error = res.error;
+            props.res.redirect(res.redirect)
+        }
+        else 
+        {
+            return { declarations: res.obj, ...getGlobals(props) }
+        }
+    })
 }
 export default admin

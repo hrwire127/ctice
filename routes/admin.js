@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { isAdmin } = require('../utils/_middlewares')
+const { isAdmin } = require('../utilsSR/_middlewares')
 
 router.get("/", isAdmin, (req, res) =>
 {
-    app.render(req, res, "/admin", { admin: true })
+    app.render(req, res, "/admin")
 })
 
 module.exports = router;

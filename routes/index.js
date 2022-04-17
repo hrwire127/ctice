@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
-const Redirects = require('../utils/Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin } = require('../utils/_middlewares')
-const { ProcessDeclr } = require('../utils/_primary')
+const Redirects = require('../utilsSR/Redirects');
+const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utilsSR/_middlewares')
+const { ProcessDeclr } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
 {
@@ -29,7 +29,7 @@ router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 
 router.get("/create", isLogged_SR, (req, res) =>
 {
-    app.render(req, res, "/create", { user: true })
+    app.render(req, res, "/create")
 })
 
 

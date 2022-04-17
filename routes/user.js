@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const Redirects = require('../utils/Redirects');
-const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser } = require('../utils/_middlewares')
-const { doPending, doLogin, doRegister } = require('../utils/_primary')
+const Redirects = require('../utilsSR/Redirects');
+const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser } = require('../utilsSR/_middlewares')
+const { doPending, doLogin, doRegister } = require('../utilsSR/_primary')
 
 router.get('/register', async (req, res) =>
 {
@@ -42,7 +42,6 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
 router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
-    //restrict client-sde nav 
     app.render(req, res, "/welcome", { confirmationCode })
 }))
 

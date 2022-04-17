@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Box, IconButton } from "@mui/material";
 import { Clear } from "@mui/icons-material";
-import { uploadFile } from "../utils/_client";
+import { uploadFile } from "../utilsCS/_client";
 import useStyles from "../assets/styles/_UploadBtn"
 
 function UploadBtn(props)
