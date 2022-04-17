@@ -163,7 +163,7 @@ function apiSecret(req, res, next)
 {
     if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
-        next(new userError(errorMessages.unauthorized))
+        next(new userError(errorMessages.unauthorized.message, errorMessages.unauthorized.status))
     }
     next()
 }
@@ -177,7 +177,7 @@ function verifyUser(req, res, next)
         {
             if (!pending)
             {
-                new userError(errorMessages.pendingExpired).throw_SR(req, res)
+                new userError(errorMessages.pendingExpired.message, errorMessages.pendingExpired.status).throw_SR(req, res)
             }
             next()
         })
@@ -193,14 +193,14 @@ function isAdmin(req, res, next)
     const session = req.session.passport
     if (session) 
     {
-        if(session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
+        if(session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
         {
             next()
         }
     }
     else
     { 
-        new userError(errorMessages.PageNotFound).throw_SR(req, res)
+        new userError(errorMessages.PageNotFound.message, errorMessages.PageNotFound.status).throw_SR(req, res)
     }
 }
 

@@ -4,10 +4,12 @@ import { Toolbar, Button, IconButton, Typography, InputBase, Box } from '@mui/ma
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
-import UserContext from './context/userContext'
+import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 
 const useStyles = makeStyles({
   Toolbar: {
@@ -84,6 +86,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 function Header(props)
 {
   const user = React.useContext(UserContext);
+  const admin = React.useContext(AdminContext);
   const { sections, title } = props;
   const classes = useStyles();
 
@@ -147,7 +150,7 @@ function Header(props)
           />
         </Search>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-
+            {admin && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
           {user
             ? (<IconButton onClick={LogOut}><LogoutIcon /></IconButton>)
             : (<>

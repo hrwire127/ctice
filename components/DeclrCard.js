@@ -4,9 +4,9 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
 import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
-import { CropData } from '../utils/client';
+import { CropData } from '../utils/_client';
 import Link from 'next/link'
-import UserContext from './context/userContext'
+import UserContext from './context/contextUser'
 
 
 function DeclrCard(props) 
@@ -14,7 +14,7 @@ function DeclrCard(props)
     const { title, _id, description, date } = props;
     const classes = useStyles();
 
-    const {user} = React.useContext(UserContext);
+    const user = React.useContext(UserContext);
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 

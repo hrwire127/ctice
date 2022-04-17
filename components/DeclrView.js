@@ -6,7 +6,7 @@ import DocumentView from '../components/DocumentView';
 import { CropData } from '../utils/_client';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
-import UserContext from './context/userContext'
+import UserContext from './context/contextUser'
 
 function DeclrView(props)
 {

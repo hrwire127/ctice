@@ -98,7 +98,7 @@ async function doLogin(req, res, next, func)
         {
             if (user.status !== "Active")
             {
-                new userError(errorMessages.disabledUser).throw_CS(res);
+                new userError(errorMessages.disabledUser.message, errorMessages.disabledUser.status).throw_CS(res);
             }
             const remember = JSON.parse(req.body.remember)
             req.login(user, function (error)
@@ -140,13 +140,13 @@ async function doRegister(req, res, func)
         }
         else
         {
-            new userError(errorMessages.noPending).setup(req, res);
+            new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
             Redirects.Error.CS(res)
         }
     }
     catch (err)
     {
-        new userError(errorMessages.didNotWork).setup(req, res);
+        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
         Redirects.Error.CS(res)
     }
 }
@@ -166,7 +166,7 @@ async function doPending(req, res, func)
         let exists = await Pending.findOne({ email })
         if (exists)
         {
-            new userError(errorMessages.userIsPending).throw_CS(res)
+            new userError(errorMessages.userIsPending.message, errorMessages.userIsPending.status).throw_CS(res)
         }
         else
         {
@@ -183,8 +183,7 @@ async function doPending(req, res, func)
     }
     catch (err)
     {
-        console.log(err)
-        new userError(errorMessages.didNotWork).setup(req, res);
+        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
         Redirects.Error.CS(res)
     }
 }

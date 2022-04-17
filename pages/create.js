@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
-import UserContext from '../components/context/currentUser'
+import UserContext from '../components/context/contextUser'
 import { Typography } from '@mui/material'
 
 
 function create(props)
 {
-    const user = React.useContext(UserContext);
+    let user = React.useContext(UserContext);
+    if (props.user)
+    {
+        user = props.user
+    }
 
     const [alert, setAlert] = useState()
 
@@ -52,6 +56,12 @@ function create(props)
             <CreateForm handleSubmit={handleSubmit} alert={alert} />
         )}
     </>)
+}
+
+create.getInitialProps = (props) =>
+{
+    const user = props.query.user
+    return { user }
 }
 
 export default create

@@ -1,16 +1,18 @@
 class userError extends Error
 {
-    constructor(message = "Something went wrong", status = 500, obj)
+    constructor(message = "Something went wrong", status = 500)
     {
         super()
-        this.message = obj.message;
-        this.status = obj.status;
         this.message = message;
         this.status = status;
     }
+    setup(req)
+    {
+        req.session.error = { message: this.message, status: this.status }
+    }
     throw_SR(req, res)
     {
-        req.session.error = { message: this.message, status: this.status };
+        this.setup(req)
         res.redirect('/error')
     }
     throw_CS(res) 
@@ -22,10 +24,6 @@ class userError extends Error
                     status: this.status
                 }
             })
-    }
-    setup(req)
-    {
-        req.session.error = { message: this.message, status: this.status}
     }
 }
 

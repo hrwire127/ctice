@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import Footer from './Footer'
 import Header from './Header'
-import UserContext from './context/userContext'
-import AdminContext from './context/adminContext'
+import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 import Loading from "../components/Loading"
 import Router from "next/router";
 
@@ -46,6 +46,7 @@ export default function Layout(props)
         }
     }, [user, admin]);
 
+
     return (
         <UserContext.Provider value={user}>
             <AdminContext.Provider value={admin}>
@@ -56,8 +57,9 @@ export default function Layout(props)
                     </div>)
                     :
                     (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                        <Header sections={[]} title="Ctice" />
-                        <Box sx={{ mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
+                        {props.children.props.noHeader ? (<></>) : (<Header sections={[]} title="Ctice" />)}
+                        {/* <Header sections={[]} title="Ctice" /> */}
+                        <Box sx={props.children.props.noHeader ? { margin: "0", flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
                     </main>)
                 }
             </AdminContext.Provider>

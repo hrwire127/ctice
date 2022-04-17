@@ -1,6 +1,6 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
-import { UserContext } from '../../components/context/currentUser'
+// import { UserContext } from '../../components/context/contextUser'
 
 
 function view(props)                                                                           

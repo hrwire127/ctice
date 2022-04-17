@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react'
-import AdminContext from '../components/context/adminContext'
+import AdminContext from '../components/context/contextAdmin'
+import Dashboard from '../components/Dashboard';
 
-function admin()
+function admin(props)
 {
-    const admin = React.useContext(AdminContext);
+    let admin = React.useContext(AdminContext);
+    if(props.admin)
+    {
+        admin = props.admin
+    }
+    console.log(admin)
+
     useEffect(() =>
     {
         if (!admin)
@@ -14,9 +21,13 @@ function admin()
 
     return (<>
         {admin && (
-            <div>admin!</div>
+            <Dashboard />
         )}
     </>)
 }
-
+admin.getInitialProps = (props) =>
+{
+    const admin = props.query.admin
+    return { admin, noHeader: true }
+}
 export default admin
