@@ -12,8 +12,16 @@ function error(props)
 
 error.getInitialProps = (props) =>
 {
-    const { error } = props.query
-    return { error }
+    const { error } = props.query    
+    let admin = false;
+    if (context.res)
+    {
+        if(context.req.session.passport)
+        {
+            admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
+        }
+    }
+    return { error, admin }
 }
 
 export default error 

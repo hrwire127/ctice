@@ -61,8 +61,9 @@ const Drawer_ = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
 
 const mdTheme = createTheme();
 
-function Dashboard()
+function Dashboard(props)
 {
+    const { declarations } = props;
     const LogOut = () =>
     {
         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
@@ -236,7 +237,7 @@ function Dashboard()
                             {/* Recent Orders */}
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                    <Declrs />
+                                    <Declrs declarations={declarations.splice(0, 2)} />
                                 </Paper>
                             </Grid>
                         </Grid>
