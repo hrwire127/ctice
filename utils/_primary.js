@@ -8,6 +8,7 @@ const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
 const { genToken } = require('./_secondary')
 const { upload } = require('./_tertiary')
+const errorMessages = require('./errorMessages')
 
 
 async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
@@ -119,77 +120,62 @@ async function doLogin(req, res, next, func)
     })(req, res, next);
 }
 
-async function doRegister(req, res, func)
+async function doRegister(confirmationCode, password, res)
 {
-    const { confirmationCode, password } = req.body
-    try
+    const pending = await Pending.findOne({ confirmationCode })
+    if (pending)
     {
-        const pending = await Pending.findOne({ confirmationCode })
-        if (pending)
-        {
-            const user = new User({
-                username: pending.username,
-                password,
-                date: pending.date,
-                email: pending.email,
-                confirmationCode: confirmationCode,
-                status: "Active",
-            })
-            await User.register(user, password)
-            await Pending.findByIdAndDelete(pending._id)
-            func()
-        }
-        else
-        {
-            new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
-            Redirects.Error.CS(res)
-        }
+        const user = new User({
+            username: pending.username,
+            password,
+            date: pending.date,
+            email: pending.email,
+            confirmationCode: confirmationCode,
+            status: "Active",
+        })
+        await User.register(user, password)
+        await Pending.findByIdAndDelete(pending._id)
     }
-    catch (err)
+    else
     {
-        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
+        new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
         Redirects.Error.CS(res)
     }
 }
 
-async function doPending(req, res, func)
+async function doPending(username, email, date, res)
 {
-    try
+    const token = genToken()
+    const pending = new Pending({
+        username,
+        email,
+        date,
+        confirmationCode: token
+    })
+    if (await Pending.findOne({ email }) || await User.findOne({ email }))
     {
-        const { username, email, date } = req.body;
-        const token = genToken()
-        const pending = new Pending({
-            username,
-            email,
-            date,
-            confirmationCode: token
-        })
-        let exists = await Pending.findOne({ email })
-        if (exists)
-        {
-            new userError(errorMessages.userIsPending.message, errorMessages.userIsPending.status).throw_CS(res)
-        }
-        else
-        {
-            nodemailer.sendConfirmationEmail(
-                pending.username,
-                pending.email,
-                pending.confirmationCode
-            ).then(async () =>
-            {
-                await pending.save()
-                func()
-            })
-        }
+        throw new userError(errorMessages.emailAllreadyUsed.message, errorMessages.userIsPending.status).throw_CS(res)
     }
-    catch (err)
+    else if(await Pending.findOne({ username }) || await User.findOne({ username }))
     {
-        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
-        Redirects.Error.CS(res)
+        throw new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.userIsPending.status).throw_CS(res)
     }
+    else
+    {
+        return pending;
+    }
+}
+
+async function sendEmail(pending)
+{
+    await nodemailer.sendConfirmationEmail(
+        pending.username,
+        pending.email,
+        pending.confirmationCode
+    )
 }
 
 module.exports =
 {
-    doPending, doLogin, doRegister, ProcessDeclr
+    doPending, doLogin, doRegister, ProcessDeclr, sendEmail
 }

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const Redirects = require('../utils/Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin } = require('../utils/_middlewares')
+const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utils/_middlewares')
 const { ProcessDeclr } = require('../utils/_primary')
 
 router.get('/', (req, res) =>
