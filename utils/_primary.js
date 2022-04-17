@@ -6,6 +6,7 @@ const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
+const errorMessages = require("./errorMessages")
 const { genToken } = require('./_secondary')
 const { upload } = require('./_tertiary')
 
@@ -122,73 +123,57 @@ async function doLogin(req, res, next, func)
 async function doRegister(req, res, func)
 {
     const { confirmationCode, password } = req.body
-    try
+    const pending = await Pending.findOne({ confirmationCode })
+    if (pending)
     {
-        const pending = await Pending.findOne({ confirmationCode })
-        if (pending)
-        {
-            const user = new User({
-                username: pending.username,
-                password,
-                date: pending.date,
-                email: pending.email,
-                confirmationCode: confirmationCode,
-                status: "Active",
-            })
-            await User.register(user, password)
-            await Pending.findByIdAndDelete(pending._id)
-            func()
-        }
-        else
-        {
-            new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
-            Redirects.Error.CS(res)
-        }
+        const user = new User({
+            username: pending.username,
+            password,
+            date: pending.date,
+            email: pending.email,
+            confirmationCode: confirmationCode,
+            status: "Active",
+        })
+        await User.register(user, password)
+        await Pending.findByIdAndDelete(pending._id)
+        func()
     }
-    catch (err)
+    else
     {
-        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
+        new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
         Redirects.Error.CS(res)
     }
 }
 
 async function doPending(req, res, func)
 {
-    try
+    const { username, email, date } = req.body;
+    const token = genToken()
+    const pending = new Pending({
+        username,
+        email,
+        date,
+        confirmationCode: token
+    })
+    if (await Pending.findOne({ email }) || await User.findOne({ email }))
     {
-        const { username, email, date } = req.body;
-        const token = genToken()
-        const pending = new Pending({
-            username,
-            email,
-            date,
-            confirmationCode: token
-        })
-        if (await Pending.findOne({ email }) || await User.findOne({ email }))
-        {
-            new userError(errorMessages.emailAllreadyUsed.message, emailAllreadyUsed.userIsPending.status).throw_CS(res)
-        }
-        else if (await Pending.findOne({ username }) || await User.findOne({ username }))
-        {
-            new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.usernameAllreadyUsed.status).throw_CS(res)
-        }
-        else
-        {
-            nodemailer.sendConfirmationEmail(
-                pending.username,
-                pending.email,
-                pending.confirmationCode
-            ).then(async () =>
-            {
-                await pending.save()
-                func()
-            })
-        }
+        new userError(errorMessages.emailAllreadyUsed.message, errorMessages.emailAllreadyUsed.status).throw_CS(res)
     }
-    catch (err)
+    else if (await Pending.findOne({ username }) || await User.findOne({ username }))
     {
-        new userError(errorMessages.didNotWork.message, errorMessages.didNotWork.status).setup(req, res);
-        Redirects.Error.CS(res)
+        new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.usernameAllreadyUsed.status).throw_CS(res)
+    }
+    else
+    {
+        nodemailer.sendConfirmationEmail(
+            pending.username,
+            pending.email,
+            pending.confirmationCode
+        ).then(async () =>
+        {
+            await pending.save()
+            func()
+        })
     }
 }
 
