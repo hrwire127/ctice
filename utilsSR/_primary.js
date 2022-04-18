@@ -123,10 +123,8 @@ async function doLogin(req, res, next, func)
 
 async function doRegister(confirmationCode, password, res)
 {
-<<<<<<< HEAD:utilsSR/_primary.js
     const { confirmationCode, password } = req.body
-=======
->>>>>>> 3a6d6164f1a207ed8e5c2b711b029497d99e147b:utils/_primary.js
+
     const pending = await Pending.findOne({ confirmationCode })
     if (pending)
     {
@@ -140,28 +138,19 @@ async function doRegister(confirmationCode, password, res)
         })
         await User.register(user, password)
         await Pending.findByIdAndDelete(pending._id)
-<<<<<<< HEAD:utilsSR/_primary.js
         func()
     }
     else
     {
         new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-=======
-    }
-    else
-    {
-        new userError(errorMessages.noPending.message, errorMessages.noPending.status).setup(req, res);
->>>>>>> 3a6d6164f1a207ed8e5c2b711b029497d99e147b:utils/_primary.js
         Redirects.Error.CS(res)
     }
 }
 
 async function doPending(username, email, date, res)
 {
-<<<<<<< HEAD:utilsSR/_primary.js
     const { username, email, date } = req.body;
-=======
->>>>>>> 3a6d6164f1a207ed8e5c2b711b029497d99e147b:utils/_primary.js
+
     const token = genToken()
     const pending = new Pending({
         username,
@@ -171,7 +160,6 @@ async function doPending(username, email, date, res)
     })
     if (await Pending.findOne({ email }) || await User.findOne({ email }))
     {
-<<<<<<< HEAD:utilsSR/_primary.js
         new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
     }
     else if (await Pending.findOne({ username }) || await User.findOne({ username }))
@@ -189,13 +177,6 @@ async function doPending(username, email, date, res)
             await pending.save()
             func()
         })
-=======
-        throw new userError(errorMessages.emailAllreadyUsed.message, errorMessages.userIsPending.status).throw_CS(res)
-    }
-    else if(await Pending.findOne({ username }) || await User.findOne({ username }))
-    {
-        throw new userError(errorMessages.usernameAllreadyUsed.message, errorMessages.userIsPending.status).throw_CS(res)
->>>>>>> 3a6d6164f1a207ed8e5c2b711b029497d99e147b:utils/_primary.js
     }
     else
     {

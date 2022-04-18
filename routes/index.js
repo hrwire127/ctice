@@ -1,15 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
-<<<<<<< HEAD
 const Redirects = require('../utilsSR/Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utilsSR/_middlewares')
 const { ProcessDeclr } = require('../utilsSR/_primary')
-=======
-const Redirects = require('../utils/Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utils/_middlewares')
-const { ProcessDeclr } = require('../utils/_primary')
->>>>>>> 3a6d6164f1a207ed8e5c2b711b029497d99e147b
 
 router.get('/', (req, res) =>
 {
