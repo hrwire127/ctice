@@ -123,8 +123,19 @@ async function getDeclrs()
         })
 }
 
+function strfyDeclrs(declr)
+{
+    return JSON.stringify(declr)
+}
+
+function parseDeclrs(declr)
+{
+    return JSON.parse(declr)
+}
+
 module.exports = {
     CropData, uploadFile, getCurrentDate,
     handleFormData, isToken, withUser,
-    determRendering, getGlobals, handleRes, getDeclrs
+    determRendering, getGlobals, handleRes, getDeclrs,
+    strfyDeclrs, parseDeclrs
 }
