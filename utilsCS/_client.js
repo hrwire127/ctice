@@ -83,7 +83,6 @@ function getGlobals(context)
     isUser = context.req.isAuthenticated()
     if (context.req.session.passport)
     {
-        console.log(admin)
         admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
         console.log(admin)
     }

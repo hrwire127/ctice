@@ -3,9 +3,9 @@ import "../assets/styles/body.css"
 import "../assets/styles/TextArea.css"
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import App from 'next/app';
 
-
-export default function MyApp({ Component, pageProps })
+function MyApp({ Component, pageProps })
 {
     return (
         <>
@@ -19,3 +19,10 @@ export default function MyApp({ Component, pageProps })
         </>
     )
 }
+MyApp.getInitialProps = async (appContext) => {
+    const appProps = await App.getInitialProps(appContext);
+
+    return { ...appProps };
+};
+
+export default  MyApp;

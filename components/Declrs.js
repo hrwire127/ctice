@@ -14,10 +14,6 @@ function createData(id, date, title, file, by, views)
 }
 
 
-function preventDefault(event)
-{
-  event.preventDefault();
-}
 
 export default function Declrs(props)
 {
@@ -33,7 +29,6 @@ export default function Declrs(props)
       2,
     )
   })
-  console.log(rows)
 
   return (
     <React.Fragment>
@@ -49,18 +44,19 @@ export default function Declrs(props)
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map(row => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.title}</TableCell>
-              <TableCell>{row.file}</TableCell>
-              <TableCell>{row.by}</TableCell>
-              <TableCell align="right">{row.views}</TableCell>
+              <TableCell>{rows[0].date}</TableCell>
+              <TableCell>{rows[0].title}</TableCell>
+              <TableCell>{rows[0].file}</TableCell>
+              <TableCell>{rows[0].by}</TableCell>
+              <TableCell align="right">{rows[0].views}</TableCell>
             </TableRow>
           ))}
         </TableBody>
+
       </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+      <Link color="primary" href="#" sx={{ mt: 3 }}>
         See more orders
       </Link>
     </React.Fragment>
