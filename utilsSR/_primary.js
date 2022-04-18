@@ -9,7 +9,6 @@ const nodemailer = require('../config/nodemailer')
 const errorMessages = require("./errorMessages")
 const { genToken } = require('./_secondary')
 const { upload } = require('./_tertiary')
-const errorMessages = require('./errorMessages')
 
 
 async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
@@ -121,7 +120,7 @@ async function doLogin(req, res, next, func)
     })(req, res, next);
 }
 
-async function doRegister(confirmationCode, password, res)
+async function doRegister(req, res, func)
 {
     const { confirmationCode, password } = req.body
 
@@ -147,7 +146,7 @@ async function doRegister(confirmationCode, password, res)
     }
 }
 
-async function doPending(username, email, date, res)
+async function doPending(req, res, func)
 {
     const { username, email, date } = req.body;
 
@@ -177,10 +176,6 @@ async function doPending(username, email, date, res)
             await pending.save()
             func()
         })
-    }
-    else
-    {
-        return pending;
     }
 }
 
