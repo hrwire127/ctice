@@ -10,6 +10,8 @@ import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 const useStyles = makeStyles({
   Toolbar: {
@@ -98,12 +100,7 @@ function Header(props)
       .then(response => response.json())
       .then(async res =>
       {
-        console.log(res)
-        if (res.type === "Home" || res.type === "Error")
-        {
-          window.location = res.redirect;
-          // changeUser(false)
-        }
+        CS_Redirects.tryResCS(res, window)
       })
   }
 

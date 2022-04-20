@@ -70,12 +70,6 @@ function determRendering(context, funcCS, funcSR)
     }
 }
 
-function withUser(props)
-{
-    const user = props.query.user
-    return { user }
-}
-
 function getGlobals(context)
 {
     let isUser; //admin + isUser for all pages
@@ -89,26 +83,26 @@ function getGlobals(context)
     return { isUser, admin }
 }
 
-function handleRes(res)
-{
-    if (res.type === "Error")
-    {
-        context.req.session.error = res.error;
-        context.res.redirect(res.redirect)
-    }
-    else if (res.type === "Login")
-    {
-        window.location = res.redirect
-    }
-    else 
-    {
-        return res.obj;
-    }
-}
-
 async function getDeclrs()
 {
     return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+async function getDeclr(id)
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -135,7 +129,7 @@ function parseDeclrs(declr)
 
 module.exports = {
     CropData, uploadFile, getCurrentDate,
-    handleFormData, isToken, withUser,
-    determRendering, getGlobals, handleRes, getDeclrs,
-    strfyDeclrs, parseDeclrs
+    handleFormData, isToken,
+    determRendering, getGlobals, getDeclrs,
+    strfyDeclrs, parseDeclrs, getDeclr
 }

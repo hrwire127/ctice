@@ -1,10 +1,12 @@
 import React from 'react'
 import ErrorPage from '../components/ErrorPage';
-
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function error(props)
 {
     const { status, message } = props.error;
+
     return (
         <ErrorPage status={status} message={message} />
     )
@@ -13,16 +15,15 @@ function error(props)
 error.getInitialProps = (props) =>
 {
     const { error } = props.query
-    const { context } = props;
-    let admin = false;
-    if (context)
+
+    return determRendering(props, () =>
     {
-        if (props.context.req.session.passport)
-        {
-            admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
-        }
-    }
-    return { error, admin }
+        CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+    }, () =>
+    {
+        let globals = getGlobals(props)
+        return { error, ...globals}
+    })
 }
 
 export default error 

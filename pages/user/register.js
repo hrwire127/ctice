@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Register from '../../components/Register'
-
+import CS_Redirects from '../../utilsCS/CS_Redirects'
+import { determRendering, getGlobals } from '../../utilsCS/_client'
 
 function register(props)
 {
@@ -23,19 +24,26 @@ function register(props)
     }).then(response => response.json())
       .then(async res =>
       {
-        if (res.type === "Home" || res.type === "Error")
-        {
-          window.location = res.redirect
-        }
-        else 
-        {
-          setError(res.err.message)
-        }
+        await CS_Redirects.tryResCS(res, window);
+        setError(res.err.message)
       })
   };
   return (
     <Register handleSubmit={handleSubmit} alert={alert} />
   )
 }
+
+register.getInitialProps = async (props) =>
+{
+    return determRendering(props, () =>
+    {
+        return {}
+    }, () =>
+    {
+        let globals = getGlobals(props)
+        return { ...globals }
+    })
+}
+
 
 export default register

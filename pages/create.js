@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import Link from 'next/link'
 import UserContext from '../components/context/contextUser'
-import { determRendering, getGlobals } from '../utilsCS/_client'
-
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function create(props)
 {
@@ -25,7 +25,7 @@ function create(props)
     {
         if (!user)
         {
-            window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
     }, [])
 
@@ -37,21 +37,12 @@ function create(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Home" || res.type === "Error" || res.type === "Login")
-                {
-                    window.location = res.redirect
-                }
-                else if (res.type === "Api")
-                {
-                    setError(res.obj.err.message)
-                }
+                await CS_Redirects.tryResCS(res, window)
+                setError(res.err.message)
             })
     };
-    return (<>
-        {user && (
-            <CreateForm handleSubmit={handleSubmit} alert={alert} />
-        )}
-    </>)
+    return user && (<CreateForm handleSubmit={handleSubmit} alert={alert} />)
+
 }
 
 create.getInitialProps = (props) =>
@@ -61,7 +52,12 @@ create.getInitialProps = (props) =>
         return {}
     }, () =>
     {
-        return { ...Object.values(getGlobals()) }
+        let globals = getGlobals(props)
+        if (!globals.user)
+        {
+            CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
+        }
+        return { ...globals }
     })
 }
 

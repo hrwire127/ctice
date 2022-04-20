@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Login from '../../components/Login'
-// import { UserContext } from '../../components/context/contextUser'
+import CS_Redirects from '../../utilsCS/CS_Redirects'
+import { determRendering, getGlobals } from '../../utilsCS/_client'
 
 
 function login(props)
@@ -24,20 +25,26 @@ function login(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Home" || res.type === "Error")
-                {
-                    window.location = res.redirect
-                }
-                else 
-                {
-                    setError(res.err.message)
-                }
+                await CS_Redirects.tryResCS(res, window); /// <====
+                setError(res.err.message)
             })
     };
 
     return (
         <Login handleSubmit={handleSubmit} alert={alert} />
     )
+}
+
+login.getInitialProps = async (props) =>
+{
+    return determRendering(props, () =>
+    {
+        return {}
+    }, () =>
+    {
+        let globals = getGlobals(props)
+        return { ...globals }
+    })
 }
 
 

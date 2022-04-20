@@ -17,7 +17,7 @@ function admin(props)
     {
         if (!admin)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
     }, [])
 
@@ -29,11 +29,11 @@ admin.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryCS(res)
+        CS_Redirects.tryResCS(res, window)
         return { declarations: strfyDeclrs(res.obj), noHeader: true }
     }, () =>
     {
-        CS_Redirects.trySR(res)
+        CS_Redirects.tryResSR(res)
         let globals = getGlobals(props)
         if (!globals.admin)
         {

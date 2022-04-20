@@ -5,7 +5,7 @@ import UserContext from '../../components/context/contextUser'
 
 function edit(props)
 {
-    const { declaration } = props;
+    const declaration = parseDeclrs(props.declaration);
     const { _id } = declaration;
 
 
@@ -38,14 +38,8 @@ function edit(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Home" || res.type === "Error" || res.type === "Login")
-                {
-                    window.location = res.redirect
-                }
-                else if (res.type === "Api")
-                {
-                    setError(res.obj.err.message)
-                }
+                CS_Redirects.tryResCS(res, window)
+                setError(res.err.message)
             })
     };
 
@@ -58,39 +52,22 @@ function edit(props)
     )
 }
 
-edit.getInitialProps = async (context) =>
+edit.getInitialProps = async (props) =>
 {
-    const { id } = context.query;
+    const { id } = props.query;
 
-    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/edit/${id}/api`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-            { secret: process.env.NEXT_PUBLIC_SECRET }
-        )
-    }).then(response => response.json())
-        .then(async res =>
-        {
-            if (res.type === "Error")
-            {
-                if (context.req) context.req.session.error = res.error;
-                context.res.redirect(res.redirect)
-            }
-            else if (res.type === "Login")
-            {
-                window.location = res.redirect
-            }
-            else 
-            {
-                return res.obj;
-            }
-        })
-    if (declaration)
+    let res = await getDeclr(id);
+
+    return determRendering(props, () =>
     {
-        return { declaration }
-    }
+        CS_Redirects.tryResCS(res, window)
+        return { declaration: strfyDeclrs(res.obj) }
+    }, () =>
+    {
+        CS_Redirects.tryResSR(res)
+        let globals = getGlobals(props)
+        return { declaration: strfyDeclrs(res.obj), ...globals }
+    })
 }
 
 

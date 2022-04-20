@@ -25,16 +25,12 @@ index.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryCS(res)
+        CS_Redirects.tryResCS(res, window)
         return { flash, declarations: strfyDeclrs(res.obj)}
     }, () =>
     {
-        CS_Redirects.trySR(res)
+        CS_Redirects.tryResSR(res)
         let globals = getGlobals(props)
-        if (!globals.admin)
-        {
-            CS_Redirects.Custom_SR(props.res, res.redirect)
-        }
         return { flash, declarations: strfyDeclrs(res.obj), ...globals}
     })
 }

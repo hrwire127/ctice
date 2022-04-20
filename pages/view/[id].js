@@ -1,11 +1,12 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
-// import { UserContext } from '../../components/context/contextUser'
+import CS_Redirects from '../../utilsCS/CS_Redirects'
+import { strfyDeclrs, parseDeclrs, getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
 
 
 function view(props)                                                                           
 {
-    const { declaration } = props;
+    const declaration = parseDeclrs(props.declaration);
     const { _id } = declaration;
 
     const onDelete = async (e) =>                                                                           
@@ -20,10 +21,7 @@ function view(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.type === "Home" || res.type === "Error" || res.type === "Login")
-                {
-                    window.location = res.redirect
-                }
+                CS_Redirects.tryResCS(res, window)
             })
     }
 
@@ -32,32 +30,22 @@ function view(props)
     )
 }
 
-view.getInitialProps = async (context) =>
+view.getInitialProps = async (props) =>
 {
-    const { id } = context.query;
+    const { id } = props.query;
 
-    const declaration = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-            { secret: process.env.NEXT_PUBLIC_SECRET }
-        )
-    }).then(response => response.json())
-        .then(async res =>
-        {
-            if (res.type === "Error")
-            {
-                context.req.session.error = res.error;
-                context.res.redirect(res.redirect)
-            }
-            else 
-            {
-                return res.obj;
-            }
-        })
-    return { declaration }
+    let res = await getDeclr(id);
+
+    return determRendering(props, () =>
+    {
+        CS_Redirects.tryResCS(res, window)
+        return { declaration: strfyDeclrs(res.obj) }
+    }, () =>
+    {
+        CS_Redirects.tryResSR(res)
+        let globals = getGlobals(props)
+        return { declaration: strfyDeclrs(res.obj), ...globals }
+    })
 }
 
 

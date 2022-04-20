@@ -17,7 +17,7 @@ function welcome(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryCS(res)
+                CS_Redirects.tryResCS(res, window)
             })
     };
     return (
@@ -29,16 +29,12 @@ welcome.getInitialProps = async (props) =>
 {
     return determRendering(props, () =>
     {
-        CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST)
+        CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST, window)
     }, () =>
     {
         const { confirmationCode } = props.query;
 
         let globals = getGlobals(props)
-        if (!globals.admin)
-        {
-            CS_Redirects.Custom_SR(props.res, res.redirect)
-        }
 
         return isToken(confirmationCode, () =>
         {
