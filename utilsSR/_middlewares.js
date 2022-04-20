@@ -1,4 +1,4 @@
-const Redirects_SR = require('./SR_Redirects');
+const { Redirects_SR } = require('./SR_Redirects');
 const Joi = require("joi");
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
@@ -194,13 +194,13 @@ function isAdmin(req, res, next)
     const session = req.session.passport
     if (session) 
     {
-        if(session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
+        if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
         {
             next()
         }
     }
     else
-    { 
+    {
         new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
     }
 }

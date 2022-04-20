@@ -1,17 +1,21 @@
+const Api_Call = "Api";
+const Def_Call = "Def"
+
 class SR_Redirect
 {
-    constructor(type, redirect)
+    constructor(redirect)
     {
-        this.type = type;
         this.redirect = redirect;
     }
-    sendObj(res, obj)
+    sendApi(res, obj)
     {
-        res.json({ type: this.type, obj })
+        const type = Api_Call
+        res.json({ type, obj })
     }
     CS(res)
     {
-        res.json({ type: this.type, redirect: this.redirect })
+        const type = Def_Call
+        res.json({ type, redirect: this.redirect })
     }
     SR(res)
     {
@@ -20,10 +24,11 @@ class SR_Redirect
 }
 
 const Redirects_SR = {
-    Home: new SR_Redirect("Home", "/"),
-    Error: new SR_Redirect("Error", "/error"),
-    Login: new SR_Redirect("Login", "/user/login"),
-    Api: new SR_Redirect("Api"),
+    Home: new SR_Redirect("/"),
+    Error: new SR_Redirect("/error"),
+    Login: new SR_Redirect("/user/login"),
+    Api: new SR_Redirect(),
 }
 
-module.exports = Redirects_SR;
+
+module.exports = { Redirects_SR, Api_Call, Def_Call };

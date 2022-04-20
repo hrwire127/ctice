@@ -1,61 +1,42 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function index(props)
 {
-    const { declarations, flash, isUser } = props;
+    const declarations = parseDeclrs(props.declarations);
+    const { flash, isUser } = props;
 
     return (
         <DeclrList declarations={declarations} flash={flash} />
     )
 }
 
-index.getInitialProps = async (context) =>
+index.getInitialProps = async (props) =>
 {
-    const flash = context.res ? context.res.locals.flash[0] : undefined
-    let isUser;
-    let admin = false;
-    if (context.res)
+    const flash = props.res ? props.res.locals.flash[0] : undefined
+    if (props.res) 
     {
-        isUser = context.req.isAuthenticated()
-        if(context.req.session.passport)
+        props.res.locals.flash = []
+    }
+
+    let res = await getDeclrs();
+
+    return determRendering(props, () =>
+    {
+        CS_Redirects.tryCS(res)
+        return { flash, declarations: strfyDeclrs(res.obj)}
+    }, () =>
+    {
+        CS_Redirects.trySR(res)
+        let globals = getGlobals(props)
+        if (!globals.admin)
         {
-            admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
+            CS_Redirects.Custom_SR(props.res, res.redirect)
         }
-    }
-    if (context.res) 
-    {
-        context.res.locals.flash = []
-    }
-    const declarations = await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(
-            { secret: process.env.NEXT_PUBLIC_SECRET }
-        )
-    }).then(response => response.json())
-        .then(async res =>
-        {
-            if (res.type === "Error")
-            {
-                context.req.session.error = res.error;
-                context.res.redirect(res.redirect)
-            }
-            else if (res.type === "Login")
-            {
-                window.location = res.redirect
-            }
-            else 
-            {
-                return res.obj;
-            }
-        })
-    if (declarations)
-    {
-        return { declarations, flash, isUser, admin }
-    }
+        return { flash, declarations: strfyDeclrs(res.obj), ...globals}
+    })
 }
 
 

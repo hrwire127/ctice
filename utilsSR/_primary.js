@@ -1,7 +1,7 @@
 const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
-const Redirects_SR = require('./SR_Redirects');
+const {Redirects_SR} = require('./SR_Redirects');
 const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")

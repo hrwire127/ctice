@@ -36,7 +36,7 @@ const admin = require("./routes/admin")
 
 const User = require('./models/user');
 const userError = require("./utilsSR/userError");
-const Redirects_SR = require('./utilsSR/SR_Redirects');
+const {Redirects_SR} = require('./utilsSR/SR_Redirects');
 const sessionConfig = require('./config/session.config')
 
 const fileupload = require("express-fileupload");

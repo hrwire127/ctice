@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
-const Redirects_SR = require('../utilsSR/SR_Redirects');
+const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utilsSR/_middlewares')
 const { ProcessDeclr } = require('../utilsSR/_primary')
 
@@ -14,7 +14,7 @@ router.get('/', (req, res) =>
 router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
-    Redirects_SR.Api.sendObj(res, declarations)
+    Redirects_SR.Api.sendApi(res, declarations)
 }))
 
 

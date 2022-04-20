@@ -1,37 +1,36 @@
+const { Api_Call, Def_Call } = require('../utilsSR/SR_Redirects')
+
 class CS_Redirect
 {
-    constructor(types)
+    constructor()
     {
-        this.types = types;
+
     }
-    CS(res)
+    tryCS(res)
     {
-        this.types.foreach(el =>
+        if (res.type === Def_Call)
         {
-            if (res.type === el)
-            {
-                window.location = res.redirect
-            }
-        })
+            window.location = res.redirect
+        }
     }
-    SR(res)
+    trySR(res)
     {
-        this.types.foreach(el =>
+        if (res.type === Def_Call)
         {
-            if (res.type === el)
-            {
-                props.req.session.error = res.error;
-                props.res.redirect(res.redirect)
-            }
-        })
+            props.req.session.error = res.error;
+            props.res.redirect(res.redirect)
+        }
+    }
+    Custom_SR(res, red)
+    {
+        res.redirect(red)
+    }
+    Custom_CS(red)
+    {
+        window.location = red;
     }
 }
 
-const Redirects_CS = {
-    Home: new CS_Redirect("Home"),
-    Error: new CS_Redirect("Error"),
-    Login: new CS_Redirect("Login"),
-    Api: new CS_Redirect("Api"),
-}
+const Redirects_CS = new CS_Redirect();
 
 module.exports = Redirects_CS;

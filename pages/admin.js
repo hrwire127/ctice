@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import AdminContext from '../components/context/contextAdmin'
 import Dashboard from '../components/Dashboard';
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function admin(props)
@@ -16,7 +17,7 @@ function admin(props)
     {
         if (!admin)
         {
-            window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/error` //separate admin + create
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
     }, [])
 
@@ -28,30 +29,17 @@ admin.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        if (res.type === "Error")
-        {
-            window.location = res.redirect
-        }
-        else
-        {
-            return { declarations: strfyDeclrs(res.obj), noHeader: true }
-        }
+        CS_Redirects.tryCS(res)
+        return { declarations: strfyDeclrs(res.obj), noHeader: true }
     }, () =>
     {
-        if (res.type === "Error")
+        CS_Redirects.trySR(res)
+        let globals = getGlobals(props)
+        if (!globals.admin)
         {
-            props.req.session.error = res.error;
-            props.res.redirect(res.redirect) 
+            CS_Redirects.Custom_SR(props.res, res.redirect)
         }
-        else 
-        {
-            let globals = getGlobals(props)
-            if (!globals.admin)
-            {
-                props.res.redirect(res.redirect)
-            }
-            return { declarations: strfyDeclrs(res.obj), ...globals, noHeader: true }
-        }
+        return { declarations: strfyDeclrs(res.obj), ...globals, noHeader: true }
     })
 }
 export default admin
