@@ -1,4 +1,4 @@
-class Redirect
+class CS_Redirect
 {
     constructor(type, redirect)
     {
@@ -19,11 +19,11 @@ class Redirect
     }
 }
 
-const Redircets = { 
-    Home: new Redirect("Home", "/"), 
-    Error: new Redirect("Error", "/error"),
-    Login: new Redirect("Login", "/user/login"),
-    Api: new Redirect("Api"),
+const Redirects_CS = { 
+    Home: new CS_Redirect("Home", "/"), 
+    Error: new CS_Redirect("Error", "/error"),
+    Login: new CS_Redirect("Login", "/user/login"),
+    Api: new CS_Redirect("Api"),
 }
 
-module.exports = Redircets;
+module.exports = Redirects_CS;

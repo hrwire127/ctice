@@ -26,52 +26,32 @@ admin.getInitialProps = async (props) =>
 {
     let res = await getDeclrs();
 
-    let globals = []
-    if (props.req)
+    return determRendering(props, () =>
+    {
+        if (res.type === "Error")
+        {
+            window.location = res.redirect
+        }
+        else
+        {
+            return { declarations: strfyDeclrs(res.obj), noHeader: true }
+        }
+    }, () =>
     {
         if (res.type === "Error")
         {
             props.req.session.error = res.error;
-            props.res.redirect(res.redirect) //separate client redirects
+            props.res.redirect(res.redirect) 
         }
-        globals = getGlobals(props)
-        if (!globals.admin)
+        else 
         {
-            props.res.redirect(res.redirect)
+            let globals = getGlobals(props)
+            if (!globals.admin)
+            {
+                props.res.redirect(res.redirect)
+            }
+            return { declarations: strfyDeclrs(res.obj), ...globals, noHeader: true }
         }
-    }
-    if (res.type === "Error")
-    {
-        window.location = res.redirect
-    }
-    return { declarations: strfyDeclrs(res.obj), ...globals, noHeader: true }
-
-    // return determRendering(props, () =>
-    // {
-    //     if (res.type === "Error")
-    //     {
-    //         window.location = res.redirect
-    //     }
-    //     else
-    //     {
-    //         return { declarations: res.obj, noHeader: true }
-    //     }
-    // }, () =>
-    // {
-    //     if (res.type === "Error")
-    //     {
-    //         props.req.session.error = res.error;
-    //         props.res.redirect(res.redirect) //separate client redirects
-    //     }
-    //     else 
-    //     {
-    //         let globals = getGlobals(props)
-    //         if(!globals.admin)
-    //         {
-    //             props.res.redirect(res.redirect)
-    //         }
-    //         return { declarations: res.obj,  ...globals, noHeader: true}
-    //     }
-    // })
+    })
 }
 export default admin

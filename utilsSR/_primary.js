@@ -1,7 +1,7 @@
 const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
-const Redirects = require('./Redirects');
+const Redirects_SR = require('./SR_Redirects');
 const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")
@@ -142,7 +142,7 @@ async function doRegister(req, res, func)
     else
     {
         new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-        Redirects.Error.CS(res)
+        Redirects_SR.Error.CS(res)
     }
 }
 

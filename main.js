@@ -36,7 +36,7 @@ const admin = require("./routes/admin")
 
 const User = require('./models/user');
 const userError = require("./utilsSR/userError");
-const Redirects = require('./utilsSR/Redirects');
+const Redirects_SR = require('./utilsSR/SR_Redirects');
 const sessionConfig = require('./config/session.config')
 
 const fileupload = require("express-fileupload");
@@ -85,7 +85,7 @@ app.prepare().then(() =>
         console.log(err)
         const error = new userError(err.message, err.status)
         req.session.error = error;
-        Redirects.Error.CS(res)
+        Redirects_SR.Error.CS(res)
     })
  
     server.get("/error", (req, res, next) =>

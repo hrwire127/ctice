@@ -1,4 +1,4 @@
-const Redirects = require('./Redirects');
+const Redirects_SR = require('./SR_Redirects');
 const Joi = require("joi");
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
@@ -120,7 +120,7 @@ function isLogged_SR(req, res, next)
 {
     if (!req.isAuthenticated())
     {
-        Redirects.Login.SR(res)
+        Redirects_SR.Login.SR(res)
     }
     else
     {
@@ -132,7 +132,7 @@ function isLogged_CS(req, res, next)
 {
     if (!req.isAuthenticated())
     {
-        Redirects.Login.CS(res)
+        Redirects_SR.Login.CS(res)
     }
     else
     {
@@ -163,7 +163,7 @@ function apiSecret(req, res, next)
 {
     if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
-        Redirects.Error.CS(res)
+        Redirects_SR.Error.CS(res)
         // next(new userError(...Object.values(errorMessages.unauthorized)))
     }
     next()
