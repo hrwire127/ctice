@@ -25,7 +25,7 @@ function register(props)
       .then(async res =>
       {
         await CS_Redirects.tryResCS(res, window);
-        setError(res.err.message)
+        if(res.err) setError(res.err.message)
       })
   };
   return (

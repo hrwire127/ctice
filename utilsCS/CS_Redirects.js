@@ -12,10 +12,6 @@ class CS_Redirect
         {
             window.location = res.redirect
         }
-        else
-        {
-            return false
-        }
     }
     tryResSR(res)
     {
@@ -23,10 +19,6 @@ class CS_Redirect
         {
             props.req.session.error = res.error;
             props.res.redirect(res.redirect)
-        }
-        else
-        {
-            return false
         }
     }
     Custom_SR(res, red)

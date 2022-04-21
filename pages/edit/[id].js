@@ -39,7 +39,7 @@ function edit(props)
             .then(async res =>
             {
                 CS_Redirects.tryResCS(res, window)
-                setError(res.err.message)
+                if(res.err) setError(res.err.message)
             })
     };
 

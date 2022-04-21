@@ -25,8 +25,8 @@ function login(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                await CS_Redirects.tryResCS(res, window); /// <====
-                setError(res.err.message)
+                CS_Redirects.tryResCS(res, window); /// <====
+                if(res.err) setError(res.err.message)
             })
     };
 
