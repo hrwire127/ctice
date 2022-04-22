@@ -5,10 +5,9 @@ import UserContext from '../../components/context/contextUser'
 
 function edit(props)
 {
-    const declaration = parseDeclrs(props.declaration);
+    const { declaration } = props;
     const { _id } = declaration;
-
-
+    
     const user = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
@@ -61,12 +60,12 @@ edit.getInitialProps = async (props) =>
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(declr, window)
-        return { declaration: strfyDeclrs(declr.obj) }
+        return { declaration: declr.obj }
     }, () =>
     {
         CS_Redirects.tryResSR(declr)
         let globals = getGlobals(props)
-        return { declaration: strfyDeclrs(declr.obj), ...globals }
+        return { declaration: declr.obj, ...globals }
     })
 }
 

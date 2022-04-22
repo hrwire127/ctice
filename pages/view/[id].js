@@ -1,14 +1,13 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { strfyDeclrs, parseDeclrs, getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
+import { getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
 
 
 function view(props)                                                                           
 {
-    const declaration = parseDeclrs(props.declaration);
+    const { declaration } = props;
     const { _id } = declaration;
-
     const onDelete = async (e) =>                                                                           
     {
         e.preventDefault();
@@ -39,12 +38,12 @@ view.getInitialProps = async (props) =>
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(declr, window)
-        return { declaration: strfyDeclrs(declr.obj) }
+        return { declaration: declr.obj }
     }, () =>
     {
         CS_Redirects.tryResSR(declr)
         let globals = getGlobals(props)
-        return { declaration: strfyDeclrs(declr.obj), ...globals }
+        return { declaration: declr.obj, ...globals }
     })
 }
 

@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
+import { getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
 
 function index(props)
 {
-    const declarations = parseDeclrs(props.declarations);
-    const { flash, isUser } = props;
+    const { flash, isUser, declarations } = props;
 
     return (
         <DeclrList declarations={declarations} flash={flash} />
@@ -26,12 +25,12 @@ index.getInitialProps = async (props) =>
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(declrs, window)
-        return { flash, declarations: strfyDeclrs(declrs.obj)}
+        return { flash, declarations: declrs.obj}
     }, () =>
     {
         CS_Redirects.tryResSR(declrs)
         let globals = getGlobals(props)
-        return { flash, declarations: strfyDeclrs(declrs.obj), ...globals}
+        return { flash, declarations: declrs.obj, ...globals}
     })
 }
 

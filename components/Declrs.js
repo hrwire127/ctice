@@ -1,18 +1,17 @@
 import * as React from 'react';
-import {Link, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import { Link, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Title from './Title';
-
-// Generate Order Data
-function createData(id, date, title, file, by, views)
-{
-  return { id, date, title, file, by, views };
-}
-
-
 
 export default function Declrs(props)
 {
   const { declarations } = props
+
+  function createData(id, date, title, file, by, views)
+  {
+    return { id, date, title, file, by, views };
+  }
+
+
   const rows = declarations.map(el =>
   {
     return createData(
@@ -26,7 +25,7 @@ export default function Declrs(props)
   })
 
   return (
-    <React.Fragment>
+    <>
       <Title>Recent Declarations</Title>
       <Table size="small">
         <TableHead>
@@ -54,6 +53,6 @@ export default function Declrs(props)
       <Link color="primary" href="#" sx={{ mt: 3 }}>
         See more orders
       </Link>
-    </React.Fragment>
+    </>
   );
 }

@@ -229,7 +229,7 @@ function Dashboard(props)
                             {/* Recent Orders */}
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                    <Declrs declarations={declarations.splice(0, 2)} />
+                                    <Declrs declarations={declarations.slice(0, 2)} />
                                 </Paper>
                             </Grid>
                         </Grid>
