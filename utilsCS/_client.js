@@ -20,9 +20,18 @@ const uploadFile = (e, changeState) =>
     ));
 }
 
-function getCurrentDate(separator = '')
+function getCurrentDate(separator = '.')
 {
     let newDate = new Date()
+    let date = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+
+    return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
+}
+
+function getSpecificDate(newDate, separator = '.')
+{
     let date = newDate.getDate();
     let month = newDate.getMonth() + 1;
     let year = newDate.getFullYear();
@@ -116,6 +125,23 @@ async function getDeclr(id)
         })
 }
 
+async function getUsers()
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 function strfyDeclrs(declr)
 {
     return JSON.stringify(declr)
@@ -130,5 +156,6 @@ module.exports = {
     CropData, uploadFile, getCurrentDate,
     handleFormData, isToken,
     determRendering, getGlobals, getDeclrs,
-    strfyDeclrs, parseDeclrs, getDeclr
+    strfyDeclrs, parseDeclrs, getDeclr, getUsers,
+    getSpecificDate
 }

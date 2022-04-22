@@ -57,7 +57,6 @@ const mdTheme = createTheme();
 
 function Dashboard(props)
 {
-    const { declarations } = props;
     const LogOut = () =>
     {
         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
@@ -69,8 +68,12 @@ function Dashboard(props)
                 CS_Redirects.tryResCS(res, window)
             })
     }
-
     const [open, setOpen] = React.useState(true);
+    const { users, declarations } = props;
+    console.log(props)
+    console.log(declarations)
+
+
     const toggleDrawer = () =>
     {
         setOpen(!open);
@@ -157,7 +160,7 @@ function Dashboard(props)
                                         height: 240,
                                     }}
                                 >
-                                    <Chart />
+                                    <Chart users={users} />
                                 </Paper>
                             </Grid>
                             {/* Recent Deposits */}

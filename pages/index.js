@@ -21,17 +21,17 @@ index.getInitialProps = async (props) =>
         props.res.locals.flash = []
     }
 
-    let res = await getDeclrs();
+    let declrs = await getDeclrs();
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(res, window)
-        return { flash, declarations: strfyDeclrs(res.obj)}
+        CS_Redirects.tryResCS(declrs, window)
+        return { flash, declarations: strfyDeclrs(declrs.obj)}
     }, () =>
     {
-        CS_Redirects.tryResSR(res)
+        CS_Redirects.tryResSR(declrs)
         let globals = getGlobals(props)
-        return { flash, declarations: strfyDeclrs(res.obj), ...globals}
+        return { flash, declarations: strfyDeclrs(declrs.obj), ...globals}
     })
 }
 

@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import AdminContext from '../components/context/contextAdmin'
 import Dashboard from '../components/Dashboard';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
+import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals, getUsers } from '../utilsCS/_client'
 
 function admin(props)
 {
     const declarations = parseDeclrs(props.declarations);
+    const { users } = props;
+    
     let admin = React.useContext(AdminContext);
     if (props.admin)
     {
@@ -21,25 +23,30 @@ function admin(props)
         }
     }, [])
 
-    return admin && (<Dashboard declarations={declarations} />)
+    return admin && (<Dashboard declarations={declarations} users={users} />)
 }
 admin.getInitialProps = async (props) =>
 {
-    let res = await getDeclrs();
+    let declrs = await getDeclrs();
+    let users = await getUsers()
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(res, window)
-        return { declarations: strfyDeclrs(res.obj), noHeader: true }
+        CS_Redirects.tryResCS(declrs, window)
+        CS_Redirects.tryResCS(users, window)
+
+        return { users: users.obj, declarations: strfyDeclrs(declrs.obj), noHeader: true }
     }, () =>
     {
-        CS_Redirects.tryResSR(res)
+        CS_Redirects.tryResSR(declrs)
+        CS_Redirects.tryResSR(users)
+
         let globals = getGlobals(props)
         if (!globals.admin)
         {
-            CS_Redirects.Custom_SR(props.res, res.redirect)
+            CS_Redirects.Custom_SR(props.res, declrs.redirect)
         }
-        return { declarations: strfyDeclrs(res.obj), ...globals, noHeader: true }
+        return { users: users.obj, declarations: strfyDeclrs(declrs.obj), ...globals, noHeader: true }
     })
 }
 export default admin

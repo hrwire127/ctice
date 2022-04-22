@@ -1,9 +1,22 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const {Redirects_SR} = require('../utilsSR/SR_Redirects');
-const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser } = require('../utilsSR/_middlewares')
+const { Redirects_SR } = require('../utilsSR/SR_Redirects');
+const User = require("../models/user")
+const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret } = require('../utilsSR/_middlewares')
 const { doPending, doLogin, doRegister } = require('../utilsSR/_primary')
 
+router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const users = await User.find({})
+    const securedUsers = users.map(function (item)
+    {
+        delete item.hash;
+        delete item.salt;
+        delete item.confirmationCode;
+        return item;
+    });
+    Redirects_SR.Api.sendApi(res, securedUsers)
+}))
 
 router.get('/register', async (req, res) =>
 {

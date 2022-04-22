@@ -34,17 +34,17 @@ view.getInitialProps = async (props) =>
 {
     const { id } = props.query;
 
-    let res = await getDeclr(id);
+    let declr = await getDeclr(id);
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(res, window)
-        return { declaration: strfyDeclrs(res.obj) }
+        CS_Redirects.tryResCS(declr, window)
+        return { declaration: strfyDeclrs(declr.obj) }
     }, () =>
     {
-        CS_Redirects.tryResSR(res)
+        CS_Redirects.tryResSR(declr)
         let globals = getGlobals(props)
-        return { declaration: strfyDeclrs(res.obj), ...globals }
+        return { declaration: strfyDeclrs(declr.obj), ...globals }
     })
 }
 
