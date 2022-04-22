@@ -12,35 +12,8 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
+import useStyles from "../assets/styles/_Header"
 
-const useStyles = makeStyles({
-  Toolbar: {
-    borderBottom: 1,
-    borderColor: 'divider',
-    typography: 'body1',
-    backgroundColor: "white"
-  },
-  List: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    overflowX: 'auto'
-  },
-  Profile: {
-    transition: "transform 0.4s",
-    "&:hover":
-    {
-      transform: "scale(1.2)",
-      cursor: "pointer",
-    }
-  },
-  Auth: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40
-  }
-})
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

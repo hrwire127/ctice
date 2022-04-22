@@ -5,15 +5,10 @@ import
     Button,
     CssBaseline,
     TextField,
-    FormControlLabel,
-    Checkbox,
-    Grid,
     Box,
     Typography,
     Container,
     FormHelperText,
-    IconButton,
-    Alert
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";

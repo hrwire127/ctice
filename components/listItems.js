@@ -65,4 +65,4 @@ const secondaryListItems = (
   </React.Fragment>
 );
 
-export {secondaryListItems, mainListItems}
+export { secondaryListItems, mainListItems }

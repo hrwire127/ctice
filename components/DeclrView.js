@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
-import { Box, ButtonGroup, Button, Card, Typography, CardContent, IconButton } from '@mui/material';
-import { Construction, ArrowBack, Delete, Build } from '@mui/icons-material';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { Box, Typography, IconButton } from '@mui/material';
+import { Delete, Build } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'

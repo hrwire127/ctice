@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
-import Link from 'next/link'
 import UserContext from '../components/context/contextUser'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
+import { determRendering, getGlobals } from '../utilsCS/_client'
 
 function create(props)
 {
@@ -37,7 +36,7 @@ function create(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                await CS_Redirects.tryResCS(res, window)
+                CS_Redirects.tryResCS(res, window)
                 if(res.err) setError(res.err.message)
             })
     };

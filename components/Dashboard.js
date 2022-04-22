@@ -66,12 +66,7 @@ function Dashboard(props)
             .then(response => response.json())
             .then(async res =>
             {
-                console.log(res)
-                if (res.type === "Home" || res.type === "Error")
-                {
-                    window.location = res.redirect;
-                    // changeUser(false)
-                }
+                CS_Redirects.tryResCS(res, window)
             })
     }
 
