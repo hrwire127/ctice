@@ -11,7 +11,7 @@ import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { strfyDeclrs, parseDeclrs, getDeclrs, determRendering, getGlobals } from '../utilsCS/_client'
+import { logout } from '../utilsCS/_client'
 import useStyles from "../assets/styles/_Header"
 
 
@@ -65,16 +65,9 @@ function Header(props)
   const { sections, title } = props;
   const classes = useStyles();
 
-  const LogOut = () =>
+  const Logout = () =>
   {
-    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
-      { method: 'POST' }
-    )
-      .then(response => response.json())
-      .then(async res =>
-      {
-        CS_Redirects.tryResCS(res, window)
-      })
+    logout(window)
   }
 
   return (
@@ -120,9 +113,9 @@ function Header(props)
           />
         </Search>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-            {admin && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
+          {admin && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
           {user
-            ? (<IconButton onClick={LogOut}><LogoutIcon /></IconButton>)
+            ? (<IconButton onClick={Logout}><LogoutIcon /></IconButton>)
             : (<>
               <Link href="/user/register" className={classes.Auth}>
                 <a style={{

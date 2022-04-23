@@ -1,3 +1,5 @@
+import CS_Redirects from '../utilsCS/CS_Redirects'
+
 const CropData = (data, length) =>
 {
     length++;
@@ -81,7 +83,7 @@ function determRendering(context, funcCS, funcSR)
 
 function getGlobals(context)
 {
-    let isUser; 
+    let isUser;
     let admin = false;
     isUser = context.req.isAuthenticated()
     if (context.req.session.passport)
@@ -152,10 +154,22 @@ function parseDeclrs(declr)
     return JSON.parse(declr)
 }
 
+const logout = (window) =>
+{
+    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+        { method: 'POST' }
+    )
+        .then(response => response.json())
+        .then(async res =>
+        {
+            CS_Redirects.tryResCS(res, window)
+        })
+}
+
 module.exports = {
     CropData, uploadFile, getCurrentDate,
     handleFormData, isToken,
     determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    getSpecificDate
+    getSpecificDate, logout
 }

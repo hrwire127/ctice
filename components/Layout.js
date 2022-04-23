@@ -6,6 +6,7 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import Loading from "../components/Loading"
 import Router from "next/router";
+import AdminLayout from "./AdminLayout"
 
 export default function Layout(props)
 {
@@ -58,7 +59,14 @@ export default function Layout(props)
                     :
                     (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {props.children.props.noHeader ? (<></>) : (<Header sections={[]} title="Ctice" />)}
-                        <Box sx={props.children.props.noHeader ? { margin: "0", flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
+
+                        {props.children.props.noHeader
+                            ? (<AdminLayout>{props.children}</AdminLayout>)
+                            : (
+                                <Box sx={props.children.props.noHeader ? { margin: 0, flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
+                            )
+                        }
+
                     </main>)
                 }
             </AdminContext.Provider>

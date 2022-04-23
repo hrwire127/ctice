@@ -3,11 +3,11 @@ import AdminContext from '../components/context/contextAdmin'
 import Dashboard from '../components/Dashboard';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrs, determRendering, getGlobals, getUsers } from '../utilsCS/_client'
+import AdminLayout from "../components/AdminLayout"
 
 function admin(props)
 {
     const { users, declarations } = props;
-    console.log(declarations)
 
     let admin = React.useContext(AdminContext);
     useEffect(() =>
@@ -23,7 +23,7 @@ function admin(props)
         }
     }, [])
 
-    return admin && (<Dashboard declarations={declarations} users={users} />)
+    return admin && (<Dashboard declarations={declarations} users={users} />) //<===
 }
 admin.getInitialProps = async (props) =>
 {
