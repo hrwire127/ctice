@@ -5,44 +5,37 @@ import { determRendering, getGlobals } from '../../utilsCS/_client'
 
 function register(props)
 {
-  const [alert, setAlert] = useState()
+	const [alert, setAlert] = useState()
 
-  const setError = (msg) => 
-  {
-    setAlert(msg)
-    setTimeout(() =>
-    {
-      setAlert()
-    }, 9000);
-  }
+	const setError = (msg) => 
+	{
+		setAlert(msg)
+		setTimeout(() =>
+		{
+			setAlert()
+		}, 9000);
+	}
 
-  const handleSubmit = async (body) =>
-  {
-    await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/register`, {
-      method: 'POST',
-      body: body,
-    }).then(response => response.json())
-      .then(async res =>
-      {
-        CS_Redirects.tryResCS(res, window);
-        if(res.err) setError(res.err.message)
-      })
-  };
-  return (
-    <Register handleSubmit={handleSubmit} alert={alert} />
-  )
+	const handleSubmit = async (body) =>
+	{
+		await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/register`, {
+			method: 'POST',
+			body: body,
+		}).then(response => response.json())
+			.then(async res =>
+			{
+				CS_Redirects.tryResCS(res, window);
+				if (res.err) setError(res.err.message)
+			})
+	};
+	return (
+		<Register handleSubmit={handleSubmit} alert={alert} />
+	)
 }
 
 register.getInitialProps = async (props) =>
 {
-    return determRendering(props, () =>
-    {
-        return {}
-    }, () =>
-    {
-        let globals = getGlobals(props)
-        return { ...globals }
-    })
+	return {}
 }
 
 

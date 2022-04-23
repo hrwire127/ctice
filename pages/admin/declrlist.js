@@ -38,12 +38,12 @@ declrlist.getInitialProps = async (props) =>
     {
         CS_Redirects.tryResSR(declrs)
 
-        let globals = getGlobals(props)
-        if (!globals.isAdmin)
-        {
-            CS_Redirects.Custom_SR(props.res, declrs.redirect)
-        }
-        return { declarations: declrs.obj, ...globals, noHeader: true }
+        // let globals = getGlobals(props)
+        // if (!globals.isAdmin)
+        // {
+        //     CS_Redirects.Custom_SR(props.res, declrs.redirect)
+        // }
+        return { declarations: declrs.obj, noHeader: true }
     })
 }
 export default declrlist

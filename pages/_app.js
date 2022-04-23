@@ -30,7 +30,6 @@ MyApp.getInitialProps = async (appContext) =>
     }, () =>
     {
         let globals = getGlobals(appContext.ctx)
-        console.log(globals)
         return { globals, ...appProps }
     })
 };

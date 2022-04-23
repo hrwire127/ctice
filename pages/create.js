@@ -51,12 +51,12 @@ create.getInitialProps = (props) =>
         return {}
     }, () =>
     {
-        let globals = getGlobals(props)
-        if (!globals.isUser)
-        {
-            CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
-        }
-        return { ...globals }
+        // let globals = getGlobals(props)
+        // if (!globals.isUser)
+        // {
+        //     CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
+        // }
+        return { }
     })
 }
 

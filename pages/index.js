@@ -29,9 +29,7 @@ index.getInitialProps = async (props) =>
     }, () =>
     {
         CS_Redirects.tryResSR(declrs)
-        let globals = getGlobals(props)
-        return { flash, declarations: declrs.obj, //...globals
-        }
+        return { flash, declarations: declrs.obj }
     })
 }
 

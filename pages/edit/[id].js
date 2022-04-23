@@ -7,7 +7,7 @@ function edit(props)
 {
     const { declaration } = props;
     const { _id } = declaration;
-    
+
     const userCtx = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
@@ -38,7 +38,7 @@ function edit(props)
             .then(async res =>
             {
                 CS_Redirects.tryResCS(res, window)
-                if(res.err) setError(res.err.message)
+                if (res.err) setError(res.err.message)
             })
     };
 
@@ -62,10 +62,14 @@ edit.getInitialProps = async (props) =>
         CS_Redirects.tryResCS(declr, window)
         return { declaration: declr.obj }
     }, () =>
-    {
+    { 
+        // let globals = getGlobals(props)
+        // if (!globals.isUser)
+        // {
+        //     CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
+        // }
         CS_Redirects.tryResSR(declr)
-        let globals = getGlobals(props)
-        return { declaration: declr.obj, ...globals }
+        return { declaration: declr.obj }
     })
 }
 

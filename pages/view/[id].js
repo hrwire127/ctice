@@ -42,8 +42,7 @@ view.getInitialProps = async (props) =>
     }, () =>
     {
         CS_Redirects.tryResSR(declr)
-        let globals = getGlobals(props)
-        return { declaration: declr.obj, ...globals }
+        return { declaration: declr.obj }
     })
 }
 

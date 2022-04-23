@@ -34,11 +34,9 @@ welcome.getInitialProps = async (props) =>
     {
         const { confirmationCode } = props.query;
 
-        let globals = getGlobals(props)
-
         return isToken(confirmationCode, () =>
         {
-            return { confirmationCode, ...globals }
+            return { confirmationCode, }
         }, props.res)
     })
 }

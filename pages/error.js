@@ -21,8 +21,7 @@ error.getInitialProps = (props) =>
         CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
     }, () =>
     {
-        let globals = getGlobals(props)
-        return { error, ...globals}
+        return { error}
     })
 }
 

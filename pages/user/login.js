@@ -25,8 +25,8 @@ function login(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window); 
-                if(res.err) setError(res.err.message)
+                CS_Redirects.tryResCS(res, window);
+                if (res.err) setError(res.err.message)
             })
     };
 
@@ -37,14 +37,7 @@ function login(props)
 
 login.getInitialProps = async (props) =>
 {
-    return determRendering(props, () =>
-    {
-        return {}
-    }, () =>
-    {
-        let globals = getGlobals(props)
-        return { ...globals }
-    })
+    return {}
 }
 
 

@@ -41,12 +41,12 @@ admin.getInitialProps = async (props) =>
         CS_Redirects.tryResSR(declrs)
         CS_Redirects.tryResSR(users)
 
-        let globals = getGlobals(props)
-        if (!globals.isAdmin)
-        {
-            CS_Redirects.Custom_SR(props.res, declrs.redirect)
-        }
-        return { users: users.obj, declarations: declrs.obj, ...globals, noHeader: true }
+        // let globals = getGlobals(props)
+        // if (!globals.isAdmin)
+        // {
+        //     CS_Redirects.Custom_SR(props.res, declrs.redirect)
+        // }
+        return { users: users.obj, declarations: declrs.obj, noHeader: true }
     })
 }
 export default admin
