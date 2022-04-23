@@ -10,13 +10,13 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
-const mainListItems = (
+const mainDrawerItems = (
   <React.Fragment>
     <ListItemButton>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="AdminLayout" />
+      <ListItemText primary="Dashboard" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
@@ -30,16 +30,10 @@ const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Users" />
     </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
   </React.Fragment>
 );
 
-const secondaryListItems = (
+const secondaryDrawerItems = (
   <React.Fragment>
     <ListSubheader component="div" inset>
       Saved reports
@@ -65,4 +59,4 @@ const secondaryListItems = (
   </React.Fragment>
 );
 
-export { secondaryListItems, mainListItems }
+export { secondaryDrawerItems, mainDrawerItems }

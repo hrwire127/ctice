@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Drawer, Box, AppBar, Toolbar, List, Typography, Divider, IconButton, Badge, Container, Grid, Paper } from '@mui/material';
-import { Menu, ChevronLeft, Close, Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material';
-import { mainListItems, secondaryListItems } from './listItems';
+import { Toolbar, IconButton, Container, Grid, Paper } from '@mui/material';
+import { Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material';
 import { logout } from '../utilsCS/_client'
 import Chart from './Chart';
 import Declrs from './Declrs';

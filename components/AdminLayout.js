@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Drawer, Box, AppBar, Toolbar, List, Typography, Divider, IconButton, Badge } from '@mui/material';
 import { Menu, ChevronLeft, Close } from '@mui/icons-material';
-import { mainListItems, secondaryListItems } from './listItems';
+import { mainDrawerItems, secondaryDrawerItems } from './DrawerItems';
 import Link from 'next/link'
 
 const drawerWidth = 240;
@@ -113,9 +113,9 @@ function AdminLayout(props)
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        {mainListItems}
+                        {mainDrawerItems}
                         <Divider sx={{ my: 1 }} />
-                        {secondaryListItems}
+                        {secondaryDrawerItems}
                     </List>
                 </Drawer_>
                 <Box
