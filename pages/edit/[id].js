@@ -64,7 +64,7 @@ edit.getInitialProps = async (props) =>
     }, () =>
     { 
         // let globals = getGlobals(props)
-        // if (!globals.isUser)
+        // if (!globals.isAdmin)
         // {
         //     CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         // }

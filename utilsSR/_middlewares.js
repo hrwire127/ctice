@@ -189,25 +189,37 @@ function verifyUser(req, res, next)
         });
 };
 
-function isAdmin(req, res, next)
+function isAdmin_SR(req, res, next)
 {
     const session = req.session.passport
     if (session) 
     {
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
         {
-            next()
+            return next()
         }
     }
-    else
+    new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
+}
+
+function isAdmin_CS(req, res, next)
+{
+    const session = req.session.passport
+    if (session) 
     {
-        new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
+        if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
+        {
+            return next()
+        }
     }
+    Redirects_CS.Error.CS(res)
+    // new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
 
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR: isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
-    apiSecret, verifyUser, isAdmin
+    apiSecret, verifyUser, isAdmin_SR,
+    isAdmin_CS
 }

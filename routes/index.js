@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret } = require('../utilsSR/_middlewares')
+const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS } = require('../utilsSR/_middlewares')
 const { ProcessDeclr } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
@@ -18,7 +18,7 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 }))
 
 
-router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
+router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const Obj = await ProcessDeclr(req.body, req.files);
     const declaration = new Declaration(Obj)
@@ -27,7 +27,7 @@ router.post('/', isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.get("/create", isLogged_SR, (req, res) =>
+router.get("/create", isLogged_SR, isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/create")
 })

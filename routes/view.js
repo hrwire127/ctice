@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret } = require('../utilsSR/_middlewares')
+const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS } = require('../utilsSR/_middlewares')
 const { ProcessDeclr } = require('../utilsSR/_primary')
 
 router.get("/:id", (req, res) =>
@@ -17,7 +17,7 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
-router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
+router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
@@ -27,7 +27,7 @@ router.put("/:id", isLogged_CS, validateDeclr, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.delete("/:id", isLogged_CS, tryAsync_CS(async (req, res) =>
+router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);

@@ -1,19 +1,19 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { isAdmin } = require('../utilsSR/_middlewares')
+const { isAdmin_SR } = require('../utilsSR/_middlewares')
 
 
-router.get("/", isAdmin, (req, res) =>
+router.get("/", isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/admin")
 })
 
-router.get("/declrlist", isAdmin, (req, res) =>
+router.get("/declrlist", isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/admin/declrlist")
 })
 
-router.get("/userlist", isAdmin, (req, res) =>
+router.get("/userlist", isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/admin/userlist")
 })
