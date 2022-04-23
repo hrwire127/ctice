@@ -8,7 +8,7 @@ function edit(props)
     const { declaration } = props;
     const { _id } = declaration;
     
-    const user = React.useContext(UserContext);
+    const userCtx = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
 
@@ -23,7 +23,7 @@ function edit(props)
 
     useEffect(() =>
     {
-        if (!user)
+        if (!userCtx)
         {
             window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
         }
@@ -44,7 +44,7 @@ function edit(props)
 
     return (
         <>
-            {user && (
+            {userCtx && (
                 <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />
             )}
         </>

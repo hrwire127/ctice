@@ -14,7 +14,7 @@ function DeclrCard(props)
     const { title, _id, description, date } = props;
     const classes = useStyles();
 
-    const user = React.useContext(UserContext);
+    const userCtx = React.useContext(UserContext);
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 
@@ -28,7 +28,7 @@ function DeclrCard(props)
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Box>
-                    {user &&
+                    {userCtx &&
                         (<Link href={`/edit/${_id}`}>
                             <IconButton size="small"><Build className={classes.Icon} /></IconButton>
                         </Link>)

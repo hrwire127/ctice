@@ -10,6 +10,7 @@ import AdminLayout from "./AdminLayout"
 
 export default function Layout(props)
 {
+    const { globals } = props;
     const [loading, setLoading] = useState(false);
     useEffect(() =>
     {
@@ -32,25 +33,25 @@ export default function Layout(props)
         };
     }, []);
 
-    const [user, setUser] = useState(false)
-    const [admin, setAdmin] = useState(false)
+    const [userCtx, setUser] = useState(false)
+    const [adminCtx, setAdmin] = useState(false)
 
     useEffect(() =>
     {
-        if (props.children.props.isUser)
+        if (globals.isUser)
         {
-            setUser(props.children.props.isUser)
+            setUser(globals.isUser)
         }
-        if (props.children.props.admin)
+        if (globals.isAdmin)
         {
-            setAdmin(props.children.props.admin)
+            setAdmin(globals.isAdmin)
         }
-    }, [user, admin]);
+    }, [userCtx, adminCtx]);
 
 
     return (
-        <UserContext.Provider value={user}>
-            <AdminContext.Provider value={admin}>
+        <UserContext.Provider value={userCtx}>
+            <AdminContext.Provider value={adminCtx}>
                 {loading
                     ?
                     (<div style={{ position: "absolute", top: "50%", left: "50%" }}>
@@ -58,14 +59,8 @@ export default function Layout(props)
                     </div>)
                     :
                     (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                        {props.children.props.noHeader ? (<></>) : (<Header sections={[]} title="Ctice" />)}
-
-                        {props.children.props.noHeader
-                            ? (<AdminLayout>{props.children}</AdminLayout>)
-                            : (
-                                <Box sx={props.children.props.noHeader ? { margin: 0, flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
-                            )
-                        }
+                        {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
+                        <Box sx={props.children.props.noHeader && adminCtx ? { margin: 0, flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
 
                     </main>)
                 }

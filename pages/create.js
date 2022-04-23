@@ -6,7 +6,7 @@ import { determRendering, getGlobals } from '../utilsCS/_client'
 
 function create(props)
 {
-    let user = React.useContext(UserContext);
+    let userCtx = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
 
@@ -22,7 +22,7 @@ function create(props)
 
     useEffect(() =>
     {
-        if (!user)
+        if (!userCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
@@ -40,7 +40,7 @@ function create(props)
                 if(res.err) setError(res.err.message)
             })
     };
-    return user && (<CreateForm handleSubmit={handleSubmit} alert={alert} />)
+    return userCtx && (<CreateForm handleSubmit={handleSubmit} alert={alert} />)
 
 }
 
@@ -52,7 +52,7 @@ create.getInitialProps = (props) =>
     }, () =>
     {
         let globals = getGlobals(props)
-        if (!globals.user)
+        if (!globals.isUser)
         {
             CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }

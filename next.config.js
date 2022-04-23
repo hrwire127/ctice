@@ -3,7 +3,7 @@ module.exports = {
     {
         config.module.rules.push({
             test: /\.pdf$/i,
-            type: 'asset/source'
+            type: 'asset/source',
         })
         return config
     }, devIndicators: {

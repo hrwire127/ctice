@@ -60,8 +60,8 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 function Header(props)
 {
-  const user = React.useContext(UserContext);
-  const admin = React.useContext(AdminContext);
+  const userCtx = React.useContext(UserContext);
+  const adminCtx = React.useContext(AdminContext);
   const { sections, title } = props;
   const classes = useStyles();
 
@@ -113,8 +113,8 @@ function Header(props)
           />
         </Search>
         <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-          {admin && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
-          {user
+          {adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
+          {userCtx
             ? (<IconButton onClick={Logout}><LogoutIcon /></IconButton>)
             : (<>
               <Link href="/user/register" className={classes.Auth}>

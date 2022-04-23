@@ -1,5 +1,5 @@
 import React from 'react'
 
-const UserContext = React.createContext({ user: false});
+const UserContext = React.createContext({ userCtx: false});
 
 export default UserContext;

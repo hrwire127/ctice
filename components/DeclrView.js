@@ -14,7 +14,7 @@ function DeclrView(props)
     const { declaration, onDelete } = props;
     const { title, description, file, date } = declaration;
     const { _id } = declaration;
-    const user = React.useContext(UserContext);
+    const userCtx = React.useContext(UserContext);
 
     const classes = useStyles();
 
@@ -35,7 +35,7 @@ function DeclrView(props)
                             {title}
                         </Typography>
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
-                            {user && (
+                            {userCtx && (
                                 <>
                                     <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
                                     <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>

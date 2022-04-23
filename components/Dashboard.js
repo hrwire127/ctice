@@ -98,6 +98,9 @@ function Dashboard(props)
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <Declrs declarations={declarations.slice(0, 2)} />
+                            <Link color="primary" href="/users/declrlist" sx={{ mt: 3 }}>
+                                See more orders
+                            </Link>
                         </Paper>
                     </Grid>
                 </Grid>

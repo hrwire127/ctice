@@ -84,13 +84,13 @@ function determRendering(context, funcCS, funcSR)
 function getGlobals(context)
 {
     let isUser;
-    let admin = false;
+    let isAdmin = false;
     isUser = context.req.isAuthenticated()
     if (context.req.session.passport)
     {
-        admin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
+        isAdmin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
     }
-    return { isUser, admin }
+    return { isUser, isAdmin }
 }
 
 async function getDeclrs()

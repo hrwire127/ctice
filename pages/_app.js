@@ -4,8 +4,10 @@ import "../assets/styles/TextArea.css"
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import App from 'next/app';
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { determRendering, getGlobals } from '../utilsCS/_client'
 
-function MyApp({ Component, pageProps })
+function MyApp({ Component, pageProps, globals })
 {
     return (
         <>
@@ -13,7 +15,7 @@ function MyApp({ Component, pageProps })
                 <title>Ctice</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Layout>
+            <Layout globals={globals}>
                 <Component {...pageProps} />
             </Layout>
         </>
@@ -22,8 +24,15 @@ function MyApp({ Component, pageProps })
 MyApp.getInitialProps = async (appContext) =>
 {
     const appProps = await App.getInitialProps(appContext);
-
-    return { ...appProps };
+    return determRendering(appContext.ctx, () =>
+    {
+        return { ...appProps }
+    }, () =>
+    {
+        let globals = getGlobals(appContext.ctx)
+        console.log(globals)
+        return { globals, ...appProps }
+    })
 };
 
 export default MyApp;

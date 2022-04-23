@@ -11,7 +11,7 @@ function DeclrList(props)
 {
     const { declarations, flash } = props;
     const classes = useStyles();
-    const user = React.useContext(UserContext);
+    const userCtx = React.useContext(UserContext);
     return (
         <>
             <Link href="/admin">admin</Link>
@@ -21,7 +21,7 @@ function DeclrList(props)
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                {user &&
+                {userCtx &&
                     (<ButtonGroup aria-label="button group">
                         <Link href="/create"><IconButton variant="outlined"><Add/></IconButton></Link>
                     </ButtonGroup>)}
