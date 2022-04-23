@@ -1,7 +1,7 @@
 const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
-const {Redirects_SR} = require('./SR_Redirects');
+const { Redirects_SR } = require('./SR_Redirects');
 const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")
@@ -10,6 +10,16 @@ const errorMessages = require("./errorMessages")
 const { genToken } = require('./_secondary')
 const { upload } = require('./_tertiary')
 
+
+function getUser(req, res)
+{
+    const session = req.session.passport
+    if (session) 
+    {
+        return session.user;
+    }
+    Redirects_SR.Error.CS(res)
+}
 
 async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
 {
@@ -188,7 +198,8 @@ async function sendEmail(pending)
     )
 }
 
+
 module.exports =
 {
-    doPending, doLogin, doRegister, ProcessDeclr, sendEmail
+    doPending, doLogin, doRegister, ProcessDeclr, sendEmail, getUser
 }

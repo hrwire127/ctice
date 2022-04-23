@@ -4,6 +4,7 @@ const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
 const { inspectDecrl, inspectUser, modifyDesc } = require('./_secondary')
+const { getUser } = require('./_primary')
 
 async function validateDeclr(req, res, next) 
 {
@@ -51,6 +52,9 @@ async function validateDeclr(req, res, next)
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
+
+    req.body.author = getUser(req, res)
+
     next()
 }
 
@@ -215,6 +219,8 @@ function isAdmin_CS(req, res, next)
     Redirects_CS.Error.CS(res)
     // new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
+
+
 
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,

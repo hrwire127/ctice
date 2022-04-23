@@ -30,7 +30,8 @@ const createDeclaration = async () =>
                 url: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice/A_rrpiog.pdf",
                 location: "ctice/A_rrpiog"
             },
-            date: ["22.02.2022"]
+            date: ["22.02.2022"],
+            author: "admin"
         })
         await declaration.save();
     }

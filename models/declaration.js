@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-
 const DeclarationSchema = new Schema({
     title: {
         type: String,
@@ -25,6 +24,10 @@ const DeclarationSchema = new Schema({
     },
     date: {
         type: [String],
+        required: true
+    },
+    author: {
+        type: String,
         required: true
     }
 
