@@ -7,14 +7,16 @@ import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 
 function DeclrView(props)
 {
 
     const { declaration, onDelete } = props;
-    const { title, description, file, date } = declaration;
+    const { title, description, file, date, author } = declaration;
     const { _id } = declaration;
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
 
     const classes = useStyles();
 
@@ -35,7 +37,7 @@ function DeclrView(props)
                             {title}
                         </Typography>
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
-                            {userCtx && (
+                            {adminCtx && (
                                 <>
                                     <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
                                     <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
@@ -46,7 +48,7 @@ function DeclrView(props)
 
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                     <Typography variant="h9" color="text.secondary">
-                        {date[date.length - 1]}
+                        {date[date.length - 1]} by {author}
                     </Typography>
                     <Link href="/" sx={{ p: 5 }}>
                         Back

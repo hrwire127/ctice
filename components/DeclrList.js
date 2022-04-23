@@ -6,12 +6,14 @@ import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
 import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 
 function DeclrList(props)
 {
     const { declarations, flash } = props;
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
     return (
         <>
             <Link href="/admin">admin</Link>
@@ -21,7 +23,7 @@ function DeclrList(props)
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                {userCtx &&
+                {adminCtx &&
                     (<ButtonGroup aria-label="button group">
                         <Link href="/create"><IconButton variant="outlined"><Add/></IconButton></Link>
                     </ButtonGroup>)}

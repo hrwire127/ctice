@@ -7,6 +7,7 @@ import useStyles from "../assets/styles/_DeclrCard"
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
 import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 
 
 function DeclrCard(props) 
@@ -15,6 +16,7 @@ function DeclrCard(props)
     const classes = useStyles();
 
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 
@@ -28,7 +30,7 @@ function DeclrCard(props)
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Box>
-                    {userCtx &&
+                    {adminCtx &&
                         (<Link href={`/edit/${_id}`}>
                             <IconButton size="small"><Build className={classes.Icon} /></IconButton>
                         </Link>)
