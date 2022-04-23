@@ -33,9 +33,10 @@ function DeclrView(props)
             <Box className={classes.Content}>
                 <Box className={classes.Paragraph}>
                     <Box sx={{ display: "flex", justifyContent: "left" }}>
-                        <Typography variant="h3">
+                        <Typography variant="h4">
                             {title}
                         </Typography>
+                        
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
                             {adminCtx && (
                                 <>

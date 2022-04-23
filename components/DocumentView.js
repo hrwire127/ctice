@@ -50,21 +50,16 @@ function DocumentView(props)
             loading={Loading}
             className={classes.Document}
         >
+            <Typography sx={{ fontSize: 30, mt: 5 }} color="text.secondary" align="center" gutterBottom>
+                {file.name}
+            </Typography>
             <Card
                 sx={{
                     mb: 5,
-                    mt: 5,
                 }}>
-
-                <Card sx={{ width: "100%" }}>
-                    <Typography sx={{ fontSize: 30 }} color="text.secondary" align="center" gutterBottom>
-                        {file.name}
-                    </Typography>
-                </Card>
                 {Content}
             </Card>
         </Document >
     )
 }
-
 export default DocumentView
