@@ -166,10 +166,18 @@ const logout = (window) =>
         })
 }
 
+async function getDeclrsDate(date)
+{
+    const declrs = await getDeclrs()
+    let newDeclrs = [];
+    declrs.obj.forEach(el => { if (el.date[el.date.length - 1] === date) newDeclrs.push(el) })
+    return newDeclrs;
+}
+
 module.exports = {
     CropData, uploadFile, getCurrentDate,
     handleFormData, isToken,
     determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    getSpecificDate, logout
+    getSpecificDate, logout, getDeclrsDate
 }
