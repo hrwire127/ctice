@@ -174,10 +174,45 @@ async function getDeclrsDate(date)
     return newDeclrs;
 }
 
+async function getDeclrsTitle(title)
+{
+    const declrs = await getDeclrs()
+    if (title === "")
+    {
+        return declrs.obj;
+    }
+    let newDeclrs = [];
+    declrs.obj.forEach(el =>
+    {
+        if (el.title.includes(title)) 
+        {
+            newDeclrs.push(el)
+        }
+    })
+    return newDeclrs;
+}
+async function getSpecificDeclrs(title, declrs)
+{
+
+    if (title === "")
+    {
+        return declrs.obj;
+    }
+    let newDeclrs = [];
+    declrs.obj.forEach(el =>
+    {
+        if (el.title.includes(title)) 
+        {
+            newDeclrs.push(el)
+        };
+    })
+    return newDeclrs;
+}
+
 module.exports = {
-    CropData, uploadFile, getCurrentDate,
-    handleFormData, isToken,
-    determRendering, getGlobals, getDeclrs,
+    CropData, uploadFile, getCurrentDate, handleFormData,
+    isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    getSpecificDate, logout, getDeclrsDate
+    getSpecificDate, logout, getDeclrsDate, getDeclrsTitle,
+    getSpecificDeclrs
 }

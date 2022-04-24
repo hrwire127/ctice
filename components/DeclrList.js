@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
 import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
 import DeclrCard from './DeclrCard';
@@ -7,16 +7,38 @@ import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
-import { getDeclrsDate, getCurrentDate, getDeclrs } from "../utilsCS/_client"
-
+import { getDeclrsDate, getSpecificDeclrs, getDeclrs, getDeclrsTitle, getSpecificDate } from "../utilsCS/_client"
 
 function DeclrList(props)
 {
     const { flash } = props;
     const [declarations, setDeclarations] = useState(props.declarations)
+    const [value, setValue] = useState("Invalid");
 
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
+
+    useEffect(() =>
+    {
+        let element = document.querySelector('.search-query')
+        var inputNodes = element.getElementsByTagName('INPUT');
+        inputNodes[0].addEventListener('input', async (e) => 
+        {
+            console.log(value)
+            if (value === "Invalid")
+            {
+                const newDeclrs = await getDeclrsTitle(inputNodes[0].value);
+                setDeclarations(newDeclrs)
+            }
+            else
+            {
+                const oldDecrls = await getDeclrsDate(getSpecificDate(value))
+                const newDeclrs = await getSpecificDeclrs(inputNodes[0].value, oldDecrls);
+                setDeclarations(newDeclrs)
+            }
+        })
+    }, [])
+
 
     const setTime = async (date) =>
     {
@@ -45,7 +67,7 @@ function DeclrList(props)
                         (<ButtonGroup aria-label="button group">
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
-                    <DatePicker setTime={setTime}/>
+                    <DatePicker setTime={setTime} setValue={setValue} value={value} />
                 </Box>
             </Box>
             {
