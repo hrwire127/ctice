@@ -12,7 +12,9 @@ import useStyles from '../assets/styles/_DatePicker';
 function DatePicker(props)
 {
     const [value, setValue] = React.useState("Invalid");
-    const { setTime } = props;
+    const { setTime } = props; 
+    const maxDate = new Date();
+    const minDate = new Date('2020-01-01');
     const classes = useStyles();
 
     const handleChange = (newValue) =>
@@ -37,11 +39,13 @@ function DatePicker(props)
                         inputFormat="MM/dd/yyyy"
                         value={value}
                         onChange={handleChange}
+                        maxDate={maxDate}
+                        minDate={minDate}
                         renderInput={(params) => 
                         {
                             if (value === "Invalid") 
                             {
-                                params.inputProps.value = "none";
+                                params.inputProps.value = "";
                                 params.error = false;
                             }
                             return <TextField {...params} />
