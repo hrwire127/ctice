@@ -11,18 +11,16 @@ import { getSpecificDate } from "../utilsCS/_client"
 
 function DatePicker(props)
 {
-    const [value, setValue] = React.useState(new Date(''));
+    const [value, setValue] = React.useState("Invalid");
     const { setTime } = props;
 
     const handleChange = (newValue) =>
     {
-        const empty = new Date('');
         console.log(newValue)
-        console.log(newValue === empty)
         setValue(newValue);
-        if(new String(newValue).valueOf() == new String("Invalid Date").valueOf())
+        if (newValue === "Invalid" || !newValue)
         {
-            setTime("a")
+            setTime("Invalid")
         }
         else
         {
@@ -34,14 +32,22 @@ function DatePicker(props)
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack spacing={3} sx={{ width: 200 }}>
                 <DesktopDatePicker
-                    label="Date desktop"
+                    label="Date Filter"
                     inputFormat="MM/dd/yyyy"
                     value={value}
                     onChange={handleChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => 
+                    {
+                        if (value === "Invalid") 
+                        {
+                            params.inputProps.value = "none";
+                            params.error = false;
+                        }
+                        return <TextField {...params} />
+                    }}
                 />
             </Stack>
-            <button onClick={handleChange.bind(null, new Date(''))}>x</button>
+            <button onClick={handleChange.bind(null, "Invalid")}>x</button>
         </LocalizationProvider>
     );
 }

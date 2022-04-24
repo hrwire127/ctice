@@ -20,8 +20,7 @@ function DeclrList(props)
 
     const setTime = async (date) =>
     {
-        console.log(date)
-        if(date === "a")
+        if(date === "Invalid")
         {
             console.log("1")
             const declrs = await getDeclrs()
