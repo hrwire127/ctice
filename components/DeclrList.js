@@ -20,15 +20,13 @@ function DeclrList(props)
 
     const setTime = async (date) =>
     {
-        if(date === "Invalid")
+        if (date === "Invalid")
         {
-            console.log("1")
             const declrs = await getDeclrs()
             setDeclarations(declrs.obj)
         }
         else
         {
-            console.log("2")
             setDeclarations(await getDeclrsDate(date))
         }
     }
@@ -42,11 +40,13 @@ function DeclrList(props)
                 <Typography variant="h4" >
                     Announcements
                 </Typography>
-                {adminCtx &&
-                    (<ButtonGroup aria-label="button group">
-                        <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
-                    </ButtonGroup>)}
-                <DatePicker setTime={setTime} />
+                <Box>
+                    {adminCtx &&
+                        (<ButtonGroup aria-label="button group">
+                            <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
+                        </ButtonGroup>)}
+                    <DatePicker setTime={setTime}/>
+                </Box>
             </Box>
             {
                 declarations.length > 0 ?
