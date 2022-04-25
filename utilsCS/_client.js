@@ -258,10 +258,22 @@ async function getDeclrsDateQuery(query, date)
     return queryDeclrs;
 }
 
+async function loadingWhile(isLoading, func)
+{
+    isLoading(true)
+    await func();
+    isLoading(false)
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 module.exports = {
     CropData, uploadFile, getCurrentDate, handleFormData,
     isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
     getSpecificDate, logout, getDeclrsDate, getDeclrsTitle,
-    getSpecificDeclrsTitle, getDeclrsDateQuery
+    getSpecificDeclrsTitle, getDeclrsDateQuery, loadingWhile,
+    timeout
 }

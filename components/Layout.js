@@ -33,8 +33,8 @@ export default function Layout(props)
         };
     }, []);
 
-    const [userCtx, setUser] = useState(false)
-    const [adminCtx, setAdmin] = useState(false)
+    const [userCtx, setUser] = useState(globals.isUser ? globals.isUser : false)
+    const [adminCtx, setAdmin] = useState(globals.isAdmin ? globals.isAdmin : false)
 
     useEffect(() =>
     {
@@ -53,10 +53,7 @@ export default function Layout(props)
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
                 {loading
-                    ?
-                    (<div style={{ position: "absolute", top: "50%", left: "50%" }}>
-                        <Loading />
-                    </div>)
+                    ? (<Loading fullPage={true} />)
                     :
                     (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                         {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}

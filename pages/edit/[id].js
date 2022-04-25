@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
 import UserContext from '../../components/context/contextUser'
+import CS_Redirects from '../../utilsCS/CS_Redirects'
+import { getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
 
 
 function edit(props)
@@ -25,7 +27,7 @@ function edit(props)
     {
         if (!userCtx)
         {
-            window.location = `${process.env.NEXT_PUBLIC_DR_HOST}/user/login`
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
     }, [])
 
@@ -62,12 +64,7 @@ edit.getInitialProps = async (props) =>
         CS_Redirects.tryResCS(declr, window)
         return { declaration: declr.obj }
     }, () =>
-    { 
-        // let globals = getGlobals(props)
-        // if (!globals.isAdmin)
-        // {
-        //     CS_Redirects.Custom_SR(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
-        // }
+    {
         CS_Redirects.tryResSR(declr)
         return { declaration: declr.obj }
     })
@@ -75,5 +72,3 @@ edit.getInitialProps = async (props) =>
 
 
 export default edit
-
-

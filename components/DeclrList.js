@@ -7,13 +7,15 @@ import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
-import { getDeclrsDate, getSpecificDeclrsTitle, getDeclrs, getDeclrsTitle, getDeclrsDateQuery, getSpecificDate } from "../utilsCS/_client"
+import Loading from './Loading'
+import { getDeclrsDate, getSpecificDeclrsTitle, getDeclrs, loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
 
 function DeclrList(props)
 {
     const [declarations, setDeclarations] = useState(props.declarations)
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const { flash } = props;
     const classes = useStyles();
@@ -31,11 +33,30 @@ function DeclrList(props)
 
     useEffect(async () =>
     {
-        await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
-        console.log(dateValue)
-        console.log(queryValue)
+        loadingWhile(setLoading, async () =>
+        {
+            await timeout(500)
+            await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
+        })
     }, [dateValue, queryValue])
 
+    const Declrs = () =>
+    {
+        if (loading)
+        {
+            return <Loading center={true}/>
+        }
+        else
+        {
+            return declarations.length > 0 ?
+                (<Box className={classes.List}>
+                    {declarations.map(d => (
+                        <DeclrCard {...d} key={d._id} />
+                    ))}
+                </Box>)
+                : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)
+        }
+    }
 
     return (
         <>
@@ -51,18 +72,10 @@ function DeclrList(props)
                         (<ButtonGroup aria-label="button group">
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
-                    <DatePicker setTime={setDate}/>
+                    <DatePicker setTime={setDate} />
                 </Box>
             </Box>
-            {
-                declarations.length > 0 ?
-                    (<Box className={classes.List}>
-                        {declarations.map(d => (
-                            <DeclrCard {...d} key={d._id} />
-                        ))}
-                    </Box>)
-                    : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)
-            }
+            <Declrs />
         </>
     )
 }

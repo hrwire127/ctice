@@ -6,7 +6,7 @@ import { Box, Button } from '@mui/material';
 class TextArea extends React.Component
 {
     static defaultProps = {
-        data: ""
+        data: false
     }
 
     constructor(props)
@@ -14,7 +14,7 @@ class TextArea extends React.Component
         super(props);
         this.state =
         {
-            editorState: props.data !== ""
+            editorState: props.data
                 ? EditorState.createWithContent(convertFromRaw(props.data))
                 : EditorState.createEmpty()
         };

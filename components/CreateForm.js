@@ -119,6 +119,20 @@ export default function CreateForm(props)
                             setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}
+                            // data={{
+                            //     blocks: [
+                            //         {
+                            //             key: '2q0qn',
+                            //             text: '',
+                            //             type: 'unstyled',
+                            //             depth: 0,
+                            //             inlineStyleRanges: [],
+                            //             entityRanges: [],
+                            //             data: {}
+                            //         },
+                            //     ],
+                            //     entityMap: {}
+                            // }}
                         />
 
                         {alert

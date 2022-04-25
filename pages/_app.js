@@ -26,7 +26,7 @@ MyApp.getInitialProps = async (appContext) =>
     const appProps = await App.getInitialProps(appContext);
     return determRendering(appContext.ctx, () =>
     {
-        return { ...appProps }
+        return { ...appProps, globals: {} }
     }, () =>
     {
         let globals = getGlobals(appContext.ctx)

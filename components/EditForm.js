@@ -20,6 +20,8 @@ function EditForm(props)
     const { declaration, handleSubmit, alert } = props;
     const { title, description, _id } = declaration;
 
+    console.log(JSON.parse(description))
+
     const [file, changeFile] = useState(declaration.file);
     const [editorState, setEditorState] = useState();
 
@@ -56,7 +58,13 @@ function EditForm(props)
                         Edit {title}
                     </Typography>
                     {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
-                    <Box component="form" error={TitleError} onSubmit={errCheck} noValidate className={classes.Form}>
+                    <Box
+                        component="form"
+                        error={TitleError}
+                        onSubmit={errCheck}
+                        noValidate
+                        className={classes.Form}
+                    >
                         <TextField
                             margin="normal"
                             inputProps={{ maxLength: 10 }}
