@@ -8,7 +8,7 @@ import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
-import { getDeclrsDate, getSpecificDeclrsTitle, getDeclrs, loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
+import { loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
 
 function DeclrList(props)
 {
@@ -44,7 +44,7 @@ function DeclrList(props)
     {
         if (loading)
         {
-            return <Loading center={true}/>
+            return <Loading center={true} />
         }
         else
         {
@@ -72,8 +72,8 @@ function DeclrList(props)
                         (<ButtonGroup aria-label="button group">
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
-                    <DatePicker setTime={setDate} />
                 </Box>
+                <DatePicker setTime={setDate} />
             </Box>
             <Declrs />
         </>

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import UserContext from '../components/context/contextUser'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { loadingWhile, timeout, determRendering } from '../utilsCS/_client'
-import Loading from '../components/Loading'
+import { timeout } from '../utilsCS/_client'
+import useLoading from '../components/hooks/useLoading'
 
 function create(props)
 {
     let userCtx = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
-    const [loading, setLoading] = useState(false)
+    const [loadingWhile, switchLoading] = useLoading(false)
 
     const setError = (msg) => 
     {
@@ -24,7 +24,6 @@ function create(props)
 
     useEffect(() =>
     {
-        console.log(userCtx)
         if (!userCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
@@ -33,9 +32,9 @@ function create(props)
 
     const handleSubmit = async (body) =>
     {
-        loadingWhile(setLoading, async () =>
+        loadingWhile(async () =>
         {
-            await timeout(500)
+            await timeout(2000)
             await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
                 method: 'POST',
                 body: body,
@@ -49,9 +48,8 @@ function create(props)
 
     };
 
-    return userCtx && (loading
-        ? (<Loading fullPage={true} />)
-        : (<CreateForm handleSubmit={handleSubmit} alert={alert} />))
+    return userCtx
+        && switchLoading(() => <CreateForm handleSubmit={handleSubmit} alert={alert} />)
 }
 
 export default create

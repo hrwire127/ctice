@@ -1,32 +1,39 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
+import { loadingWhile, timeout, determRendering } from '../utilsCS/_client'
+import useLoading from '../components/hooks/useLoading'
 
 
 function view(props)                                                                           
 {
     const { declaration } = props;
     const { _id } = declaration;
+    const [loadingWhile, switchLoading] = useLoading(false)
+
+
     const onDelete = async (e) =>                                                                           
     {
         e.preventDefault();
+        loadingWhile(async () =>
+        {
+            await timeout(500)
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                })
+        })
 
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(response => response.json())
-            .then(async res =>
-            {
-                CS_Redirects.tryResCS(res, window)
-            })
     }
 
-    return (
-        <DeclrView declaration={declaration} onDelete={onDelete} />
-    )
+    return userCtx
+        && switchLoading(() => <DeclrView declaration={declaration} onDelete={onDelete} />)
 }
 
 view.getInitialProps = async (props) =>

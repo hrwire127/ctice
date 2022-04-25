@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
 import UserContext from '../../components/context/contextUser'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclr, determRendering, getGlobals } from '../../utilsCS/_client'
-
+import { getDeclr, determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_client'
+import useLoading from '../../components/hooks/useLoading'
 
 function edit(props)
 {
@@ -13,6 +13,7 @@ function edit(props)
     const userCtx = React.useContext(UserContext);
 
     const [alert, setAlert] = useState()
+    const [loadingWhile, switchLoading] = useLoading(false)
 
     const setError = (msg) => 
     {
@@ -33,24 +34,23 @@ function edit(props)
 
     const handleSubmit = async (body) =>
     {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
-            method: 'PUT',
-            body: body,
-        }).then(response => response.json())
-            .then(async res =>
-            {
-                CS_Redirects.tryResCS(res, window)
-                if (res.err) setError(res.err.message)
-            })
+        loadingWhile(async () =>
+        {
+            await timeout(500)
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
+                method: 'PUT',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
     };
 
-    return (
-        <>
-            {userCtx && (
-                <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />
-            )}
-        </>
-    )
+    return userCtx
+        && switchLoading(() => <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />)
 }
 
 edit.getInitialProps = async (props) =>
