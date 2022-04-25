@@ -9,6 +9,7 @@ import
     Typography,
     Container,
     FormHelperText,
+    Link
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
@@ -16,10 +17,9 @@ import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import { getCurrentDate, handleFormData } from "../utilsCS/_client";
 import TextArea from "./TextArea";
-import Link from "next/link";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtn from "./UploadBtn";
-
+import BackLink from "./BackLink";
 
 const theme = createTheme();
 
@@ -138,9 +138,9 @@ export default function CreateForm(props)
                         >
                             Create
                         </Button>
-                        <Link href="/">Back</Link>
                     </Box>
                 </Box>
+                <BackLink>Back</BackLink>
             </Container>
         </ThemeProvider>
     );

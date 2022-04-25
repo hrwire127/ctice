@@ -8,6 +8,7 @@ import Link from 'next/link'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
+import BackLink from "./BackLink";
 
 function DeclrView(props)
 {
@@ -36,7 +37,7 @@ function DeclrView(props)
                         <Typography variant="h4">
                             {title}
                         </Typography>
-                        
+
                         <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
                             {adminCtx && (
                                 <>
@@ -51,9 +52,7 @@ function DeclrView(props)
                     <Typography variant="h9" color="text.secondary">
                         {date[date.length - 1]} by {author}
                     </Typography>
-                    <Link href="/" sx={{ p: 5 }}>
-                        Back
-                    </Link>
+                    <BackLink>Back</BackLink>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}
             </Box>

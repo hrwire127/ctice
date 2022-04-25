@@ -7,8 +7,8 @@ import { handleFormData } from "../utilsCS/_client";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
-import Link from 'next/link';
 import UploadBtn from "./UploadBtn";
+import BackLink from "./BackLink";
 
 const theme = createTheme();
 
@@ -19,7 +19,7 @@ function EditForm(props)
 
     const { declaration, handleSubmit, alert } = props;
     const { title, description, _id } = declaration;
-    
+
     const [file, changeFile] = useState(declaration.file);
     const [editorState, setEditorState] = useState();
 
@@ -107,9 +107,7 @@ function EditForm(props)
                         >
                             Finish
                         </Button>
-                        <Link href="/">
-                            Back
-                        </Link>
+                        <BackLink>Back</BackLink>
                     </Box>
                 </Box>
             </Container>

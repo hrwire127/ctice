@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
+import BackLink from "./BackLink";
 
 function ErrorPage(props)
 {
@@ -11,8 +12,9 @@ function ErrorPage(props)
             <Typography variant="h1" component="div">{status}</Typography>
             <Typography variant="h6" sx={{ width: "30vw", margin: "auto" }}>{message}</Typography>
             <Link href="/">
-                <Button variant="text">Back Home</Button>
+                <Button variant="text">Home</Button>
             </Link>
+            <BackLink>Back</BackLink>
         </Box>
     )
 }

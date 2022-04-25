@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
 import { getCurrentDate } from '../utilsCS/_client';
-
+import BackLink from "./BackLink";
 
 const theme = createTheme();
 
@@ -42,7 +42,7 @@ function Register(props)
         const email = data.get("email");
         data.append("date", getCurrentDate("."))
 
-        if (usernameValid(username)  && emailValid(email))
+        if (usernameValid(username) && emailValid(email))
         {
             setUsernameTrue();
             setEmailTrue();
@@ -132,9 +132,7 @@ function Register(props)
                         >
                             Register
                         </Button>
-                        <Link href="/">
-                            Back
-                        </Link>
+                        <BackLink>Back</BackLink>
                     </Box>
                 </Box>
             </Container>

@@ -8,7 +8,7 @@ import
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
-import Link from 'next/link';
+import BackLink from "./BackLink";
 
 function Welcome(props)
 {
@@ -86,9 +86,7 @@ function Welcome(props)
                 >
                     Register
                 </Button>
-                <Link href="/user/login">
-                    Back
-                </Link>
+                <BackLink>Back</BackLink>
             </Box>
         </Box>
     )
