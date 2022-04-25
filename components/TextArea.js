@@ -6,7 +6,20 @@ import { Box, Button } from '@mui/material';
 class TextArea extends React.Component
 {
     static defaultProps = {
-        data: false
+        data: {
+            blocks: [
+                {
+                    key: '2q0qn',
+                    text: '',
+                    type: 'unstyled',
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {}
+                },
+            ],
+            entityMap: {}
+        }
     }
 
     constructor(props)
@@ -18,7 +31,6 @@ class TextArea extends React.Component
                 ? EditorState.createWithContent(convertFromRaw(props.data))
                 : EditorState.createEmpty()
         };
-
         this.focus = () => this.refs.editor.focus();
         this.onChange = (editorState) =>
         {

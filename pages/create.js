@@ -7,52 +7,51 @@ import Loading from '../components/Loading'
 
 function create(props)
 {
-    // let userCtx = React.useContext(UserContext);
+    let userCtx = React.useContext(UserContext);
 
-    // const [alert, setAlert] = useState()
-    // const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState()
+    const [loading, setLoading] = useState(false)
 
-    // const setError = (msg) => 
-    // {
-    //     setAlert(msg)
-    //     setTimeout(() =>
-    //     {
-    //         setAlert()
-    //     }, 9000);
-    // }
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, 9000);
+    }
 
 
-    // useEffect(() =>
-    // {
-    //     console.log(userCtx)
-    //     if (!userCtx)
-    //     {
-    //         CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
-    //     }
-    // }, [])
+    useEffect(() =>
+    {
+        console.log(userCtx)
+        if (!userCtx)
+        {
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+        }
+    }, [])
 
-    // const handleSubmit = async (body) =>
-    // {
-    //     loadingWhile(setLoading, async () =>
-    //     {
-    //         await timeout(500)
-    //         await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
-    //             method: 'POST',
-    //             body: body,
-    //         }).then(response => response.json())
-    //             .then(async res =>
-    //             {
-    //                 CS_Redirects.tryResCS(res, window)
-    //                 if (res.err) setError(res.err.message)
-    //             })
-    //     })
+    const handleSubmit = async (body) =>
+    {
+        loadingWhile(setLoading, async () =>
+        {
+            await timeout(500)
+            await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
 
-    // };
+    };
 
-    // return userCtx && (loading
-    //     ? (<Loading fullPage={true} />)
-    //     : (<CreateForm handleSubmit={handleSubmit} alert={alert} />))
-    return <CreateForm />
+    return userCtx && (loading
+        ? (<Loading fullPage={true} />)
+        : (<CreateForm handleSubmit={handleSubmit} alert={alert} />))
 }
 
 export default create
