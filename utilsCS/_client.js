@@ -191,9 +191,8 @@ async function getDeclrsTitle(title)
     })
     return newDeclrs;
 }
-async function getSpecificDeclrs(title, declrs)
+async function getSpecificDeclrsTitle(title, declrs)
 {
-
     if (title === "")
     {
         return declrs.obj;
@@ -209,10 +208,60 @@ async function getSpecificDeclrs(title, declrs)
     return newDeclrs;
 }
 
+async function getDeclrsDateQuery(query, date)
+{
+    const declrs = await getDeclrs()
+    if (query === "" && date === "Invalid")
+    {
+        return declrs.obj;
+    }
+    if (date === "Invalid")
+    {
+        let queryDeclrs = [];
+        declrs.obj.forEach(el =>
+        {
+            if (el.title.includes(query)) 
+            {
+                queryDeclrs.push(el)
+            };
+        })
+        return queryDeclrs;
+    }
+    if (query === "")
+    {
+        let dateDeclrs = [];
+        declrs.obj.forEach(el =>
+        {
+            if (el.date[el.date.length - 1] === date) 
+            {
+                dateDeclrs.push(el)
+            };
+        })
+        return dateDeclrs;
+    }
+    let dateDeclrs = [];
+    declrs.obj.forEach(el =>
+    {
+        if (el.date[el.date.length - 1] === date) 
+        {
+            dateDeclrs.push(el)
+        };
+    })
+    let queryDeclrs = [];
+    dateDeclrs.forEach(el =>
+    {
+        if (el.title.includes(query)) 
+        {
+            queryDeclrs.push(el)
+        };
+    })
+    return queryDeclrs;
+}
+
 module.exports = {
     CropData, uploadFile, getCurrentDate, handleFormData,
     isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
     getSpecificDate, logout, getDeclrsDate, getDeclrsTitle,
-    getSpecificDeclrs
+    getSpecificDeclrsTitle, getDeclrsDateQuery
 }

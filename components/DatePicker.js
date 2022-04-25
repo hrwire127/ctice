@@ -11,7 +11,8 @@ import useStyles from '../assets/styles/_DatePicker';
 
 function DatePicker(props)
 {
-    const { setTime, setValue, value } = props; 
+    const { setTime} = props; 
+    const [value, setValue] = React.useState("Invalid");
     const maxDate = new Date();
     const minDate = new Date('2020-01-01');
     const classes = useStyles();
@@ -27,9 +28,7 @@ function DatePicker(props)
         {
             setTime(getSpecificDate(newValue))
             setValue(newValue);
-            console.log(newValue)
         }
-        console.log(value)
     };
 
     return (

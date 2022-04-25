@@ -7,14 +7,15 @@ import useStyles from '../assets/styles/_DeclrList';
 import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
-import { getDeclrsDate, getSpecificDeclrs, getDeclrs, getDeclrsTitle, getSpecificDate } from "../utilsCS/_client"
+import { getDeclrsDate, getSpecificDeclrsTitle, getDeclrs, getDeclrsTitle, getDeclrsDateQuery, getSpecificDate } from "../utilsCS/_client"
 
 function DeclrList(props)
 {
-    const { flash } = props;
     const [declarations, setDeclarations] = useState(props.declarations)
-    const [value, setValue] = useState("Invalid");
+    const [dateValue, setDate] = useState("Invalid");
+    const [queryValue, setQuery] = useState("");
 
+    const { flash } = props;
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
 
@@ -24,34 +25,17 @@ function DeclrList(props)
         var inputNodes = element.getElementsByTagName('INPUT');
         inputNodes[0].addEventListener('input', async (e) => 
         {
-            console.log(value)
-            if (value === "Invalid")
-            {
-                const newDeclrs = await getDeclrsTitle(inputNodes[0].value);
-                setDeclarations(newDeclrs)
-            }
-            else
-            {
-                const oldDecrls = await getDeclrsDate(getSpecificDate(value))
-                const newDeclrs = await getSpecificDeclrs(inputNodes[0].value, oldDecrls);
-                setDeclarations(newDeclrs)
-            }
+            setQuery(inputNodes[0].value)
         })
     }, [])
 
-
-    const setTime = async (date) =>
+    useEffect(async () =>
     {
-        if (date === "Invalid")
-        {
-            const declrs = await getDeclrs()
-            setDeclarations(declrs.obj)
-        }
-        else
-        {
-            setDeclarations(await getDeclrsDate(date))
-        }
-    }
+        await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
+        console.log(dateValue)
+        console.log(queryValue)
+    }, [dateValue, queryValue])
+
 
     return (
         <>
@@ -67,7 +51,7 @@ function DeclrList(props)
                         (<ButtonGroup aria-label="button group">
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
-                    <DatePicker setTime={setTime} setValue={setValue} value={value} />
+                    <DatePicker setTime={setDate}/>
                 </Box>
             </Box>
             {
