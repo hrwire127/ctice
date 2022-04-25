@@ -13,11 +13,20 @@ function useLoading(initialValue = false)
     }
 
 
-    const switchLoading = (func) =>
+    const switchLoading = (type, func) =>
     {
-        if(loading)
+        if (loading)
         {
-            return <Loading fullPage={true} />
+            switch (type)
+            {
+                case 0:
+                    return <Loading center={true} />
+                case 1:
+                    return <Loading middle={true} />
+                case 2:
+                    return <Loading fullPage={true} />
+
+            }
         }
         else
         {

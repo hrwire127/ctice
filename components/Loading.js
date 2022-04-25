@@ -8,7 +8,7 @@ function Loading(props)
         return <div style={{ position: "absolute", top: "50%" }}>
             <Box role="status">
                 <CircularProgress />
-            </Box>;
+            </Box>
         </div>
     }
     else if (props.center)
@@ -16,7 +16,7 @@ function Loading(props)
         return <div style={{ position: "absolute", left: "50%" }}>
             <Box role="status">
                 <CircularProgress />
-            </Box>;
+            </Box>
         </div>
     }
     else if (props.fullPage)
@@ -24,14 +24,14 @@ function Loading(props)
         return <div style={{ position: "absolute", top: "50%", left: "50%" }}>
             <Box role="status">
                 <CircularProgress />
-            </Box>;
+            </Box>
         </div>
     }
     else
     {
         return <Box role="status">
             <CircularProgress />
-        </Box>;
+        </Box>
     }
 }
 

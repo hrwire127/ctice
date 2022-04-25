@@ -9,13 +9,14 @@ import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
 import { loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
+import useLoading from './hooks/useLoading'
 
 function DeclrList(props)
 {
     const [declarations, setDeclarations] = useState(props.declarations)
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
-    const [loading, setLoading] = useState(false)
+    const [loadingWhile, switchLoading] = useLoading(false)
 
     const { flash } = props;
     const classes = useStyles();
@@ -33,7 +34,7 @@ function DeclrList(props)
 
     useEffect(async () =>
     {
-        loadingWhile(setLoading, async () =>
+        loadingWhile(async () =>
         {
             await timeout(500)
             await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
@@ -42,21 +43,15 @@ function DeclrList(props)
 
     const Declrs = () =>
     {
-        if (loading)
-        {
-            return <Loading center={true} />
-        }
-        else
-        {
-            return declarations.length > 0 ?
-                (<Box className={classes.List}>
-                    {declarations.map(d => (
-                        <DeclrCard {...d} key={d._id} />
-                    ))}
-                </Box>)
-                : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)
-        }
+        return switchLoading(0, () => (declarations.length > 0 ?
+            (<Box className={classes.List}>
+                {declarations.map(d => (
+                    <DeclrCard {...d} key={d._id} />
+                ))}
+            </Box>)
+            : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
     }
+
 
     return (
         <>

@@ -33,7 +33,7 @@ function view(props)
     }
 
     return userCtx
-        && switchLoading(() => <DeclrView declaration={declaration} onDelete={onDelete} />)
+        && switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} />)
 }
 
 view.getInitialProps = async (props) =>

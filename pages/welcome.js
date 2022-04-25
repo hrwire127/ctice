@@ -27,7 +27,7 @@ function welcome(props)
         })
     };
 
-    return userCtx && switchLoading(() => <Welcome handleSubmit={handleSubmit} />)
+    return userCtx && switchLoading(2, () => <Welcome handleSubmit={handleSubmit} />)
 }
 
 welcome.getInitialProps = async (props) =>

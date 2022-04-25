@@ -49,7 +49,7 @@ function create(props)
     };
 
     return userCtx
-        && switchLoading(() => <CreateForm handleSubmit={handleSubmit} alert={alert} />)
+        && switchLoading(2, () => <CreateForm handleSubmit={handleSubmit} alert={alert} />)
 }
 
 export default create

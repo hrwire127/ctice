@@ -50,7 +50,7 @@ function edit(props)
     };
 
     return userCtx
-        && switchLoading(() => <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />)
+        && switchLoading(2, () => <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />)
 }
 
 edit.getInitialProps = async (props) =>
