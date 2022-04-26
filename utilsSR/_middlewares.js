@@ -50,9 +50,10 @@ async function validateDeclr(req, res, next)
         return new userError(bodyError, 401).throw_CS(res)
     }
 
+    req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
     req.body.author = getUser(req, res)
-    console.log("1")
+
     next()
 }
 
@@ -80,6 +81,9 @@ async function validateRegUser(req, res, next)
     {
         return new userError(bodyError, 401).throw_CS(res)
     }
+
+    req.body.username = username.trim()
+    req.body.email = email.trim()
 
     next()
 
@@ -111,6 +115,9 @@ async function validateLogUser(req, res, next)
         return new userError(bodyError, 401).throw_CS(res)
     }
 
+    req.body.username = username.trim()
+    req.body.password = password.trim()
+    
     next()
 
 }

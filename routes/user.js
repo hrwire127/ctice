@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
+const Pending = require("../models/pending")
 const User = require("../models/user")
 const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret } = require('../utilsSR/_middlewares')
 const { doPending, doLogin, doRegister } = require('../utilsSR/_primary')
@@ -8,13 +9,7 @@ const { doPending, doLogin, doRegister } = require('../utilsSR/_primary')
 router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const users = await User.find({})
-    const securedUsers = users.map(function (item)
-    {
-        delete item.hash;
-        delete item.salt;
-        delete item.confirmationCode;
-        return item;
-    });
+    const securedUsers = User.getSecured(users)
     Redirects_SR.Api.sendApi(res, securedUsers)
 }))
 
@@ -30,20 +25,17 @@ router.get('/login', async (req, res) =>
 
 router.post('/register', validateRegUser, tryAsync_CS(async (req, res) =>
 {
-    return doPending(req, res, async () =>
-    {
-        req.flash('info', 'Checkout your email, pending exires in 5 min');
-        Redirects_SR.Home.CS(res)
-    })
+    const pending = new Pending(req.body)
+    await pending.processPending()
+    req.flash('info', 'Checkout your email, pending exires in 5 min');
+    Redirects_SR.Home.CS(res)
 }))
 
 router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
 {
-    return doLogin(req, res, next, async () =>
-    {
-        req.flash('success', 'Welcome Back');
-        Redirects_SR.Home.CS(res)
-    })
+    await User.processLogin(req, res, next);
+    req.flash('success', 'Welcome Back');
+    Redirects_SR.Home.CS(res)
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -61,11 +53,20 @@ router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res
 
 router.post("/confirm", tryAsync_SR(async (req, res) =>
 {
-    return doRegister(req, res, () =>
-    {
-        req.flash('success', 'Successfuly Registered');
-        Redirects_SR.Home.CS(res)
+    const { confirmationCode, password } = req.body
+    const pending = await Pending.findOne({ confirmationCode })
+    const { username, date, email } = pending
+    const user = new User({
+        username,
+        password,
+        date,
+        email,
+        confirmationCode,
+        status: "Active"
     })
+    user.processRegister(req, res, pending)
+    req.flash('success', 'Successfuly Registered');
+    Redirects_SR.Home.CS(res)
 }))
 
 module.exports = router;

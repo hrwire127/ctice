@@ -3,7 +3,7 @@ const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS } = require('../utilsSR/_middlewares')
-const { ProcessDeclr } = require('../utilsSR/_primary')
+// const { ProcessDeclr } = require('../utilsSR/_primary')
 
 router.get("/:id", (req, res) =>
 {
@@ -21,7 +21,7 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    const Obj = await ProcessDeclr(req.body, req.files, declaration);
+    const Obj = await Declaration.ProcessDeclr(req.body, req.files, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     req.flash('success', 'Edited Successfuly');
     Redirects_SR.Home.CS(res)
@@ -31,7 +31,7 @@ router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    await ProcessDeclr(req.body, req.files, declaration, true)
+    await Declaration.ProcessDeclr(req.body, req.files, declaration, true)
     await Declaration.findByIdAndDelete(id)
     req.flash('info', 'Deleted Successfuly');
     Redirects_SR.Home.CS(res)
