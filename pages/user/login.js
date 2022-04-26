@@ -36,8 +36,7 @@ function login(props)
         })
     };
 
-    return userCtx &&
-        switchLoading(2, () => <Login handleSubmit={handleSubmit} alert={alert} />)
+    return switchLoading(2, () => <Login handleSubmit={handleSubmit} alert={alert} />)
 }
 
 

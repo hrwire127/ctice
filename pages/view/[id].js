@@ -1,8 +1,8 @@
 import React from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { loadingWhile, timeout, determRendering } from '../utilsCS/_client'
-import useLoading from '../components/hooks/useLoading'
+import { loadingWhile, timeout, determRendering, getDeclr } from '../../utilsCS/_client'
+import useLoading from '../../components/hooks/useLoading'
 
 
 function view(props)                                                                           
@@ -31,9 +31,7 @@ function view(props)
         })
 
     }
-
-    return userCtx
-        && switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} />)
+    return switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} />)
 }
 
 view.getInitialProps = async (props) =>

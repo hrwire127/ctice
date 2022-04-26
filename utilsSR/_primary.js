@@ -21,14 +21,15 @@ function getUser(req, res)
     Redirects_SR.Error.CS(res)
 }
 
-async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false)
+async function ProcessDeclr(body = undefined, files = undefined, declaration = undefined, del = false) //sep
 {
-    const hadFile = declaration ? declaration['file']['url'] !== undefined : undefined;
+    const hadFile = declaration ? declaration.hasFile : undefined;
 
     let Obj = {
         ...body
     }
 
+    console.log("3")
     if (del)
     {
         await new excRule([], [], async () =>

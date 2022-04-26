@@ -18,7 +18,7 @@ class userError extends Error
     throw_CS(res) 
     {
         res.json(
-            {
+            { 
                 err: {
                     message: this.message,
                     status: this.status

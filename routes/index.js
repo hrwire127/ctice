@@ -15,7 +15,7 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
     Redirects_SR.Api.sendApi(res, declarations)
-}))
+})) 
 
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>

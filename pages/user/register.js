@@ -35,8 +35,7 @@ function register(props)
 		})
 	};
 
-	return userCtx
-		&& switchLoading(2, () => <Register handleSubmit={handleSubmit} alert={alert} />)
+	return switchLoading(2, () => <Register handleSubmit={handleSubmit} alert={alert} />)
 }
 
 export default register

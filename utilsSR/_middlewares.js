@@ -9,6 +9,7 @@ const { getUser } = require('./_primary')
 async function validateDeclr(req, res, next) 
 {
     let { title, description, date, file } = req.body
+
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.object({
@@ -40,21 +41,18 @@ async function validateDeclr(req, res, next)
         const msg = error.details.map(e => e.message).join(',')
         return new userError(msg, 401).throw_CS(res)
     }
+    
 
-    newFile = req.files ? req.files.file : undefined;
-
-    const bodyError = inspectDecrl(title, JSON.parse(description), newFile, date)
+    const bodyError = inspectDecrl(title, JSON.parse(description), date, req.files)
 
     if (bodyError) 
     {
         return new userError(bodyError, 401).throw_CS(res)
     }
 
-    req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
-
     req.body.author = getUser(req, res)
-
+    console.log("1")
     next()
 }
 
@@ -62,7 +60,6 @@ async function validateDeclr(req, res, next)
 async function validateRegUser(req, res, next) 
 {
     const { username, email } = req.body;
-
     const userSchema = Joi.object({
         username: Joi.string().required(),
         email: Joi.string().required()
@@ -77,28 +74,28 @@ async function validateRegUser(req, res, next)
         return new userError(msg, 401).throw_CS(res)
     }
 
-    const bodyError = inspectUser(username, undefined, email)
+    const bodyError = inspectUser(username, email)
 
     if (bodyError) 
     {
         return new userError(bodyError, 401).throw_CS(res)
     }
-    req.body.username = username.trim()
-    req.body.email = email.trim()
+
     next()
 
 }
 
 async function validateLogUser(req, res, next) 
 {
-    const { username, password } = req.body;
+    const { username, password, remember } = req.body;
 
     const userSchema = Joi.object({
         username: Joi.string().required(),
         password: Joi.string().required(),
+        remember : Joi.boolean().required()
     })
 
-    const { error } = userSchema.validate({ username, password })
+    const { error } = userSchema.validate({ username, password, remember })
 
     if (error) 
     {
@@ -107,14 +104,13 @@ async function validateLogUser(req, res, next)
         return new userError(msg, 401).throw_CS(res)
     }
 
-    const bodyError = inspectUser(username, password)
+    const bodyError = inspectUser(username, undefined, password)
 
     if (bodyError) 
     {
         return new userError(bodyError, 401).throw_CS(res)
     }
-    req.body.username = username.trim()
-    req.body.password = password.trim()
+
     next()
 
 }

@@ -1,9 +1,10 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import Link from 'next/link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
+import BackLink from "./BackLink";
 
 const theme = createTheme();
 
@@ -141,9 +142,7 @@ function Login(props)
                         >
                             Login
                         </Button>
-                        <Link href="/">
-                            {"Back"}
-                        </Link>
+                        <BackLink>Back</BackLink>
                     </Box>
                 </Box>
             </Container>

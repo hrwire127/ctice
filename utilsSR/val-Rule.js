@@ -16,7 +16,7 @@ class valRule
             case 1:
                 return value < expected
             case 2:
-                return value === expected
+                return value === expected 
             case 3:
                 return value !== expected
             case 4:
@@ -49,6 +49,7 @@ const Rules = {
     password_max_char: 10,
     email_max_char: 40,
     email_includes: "@",
+    file_max_name: 20,
 }
 
 module.exports = { valRule, Rules };

@@ -29,7 +29,7 @@ class excRule
                 v = false
                 return;
             }
-        });
+        }); 
         if(v)
         {
             await this.func()
