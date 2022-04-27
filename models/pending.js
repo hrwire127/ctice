@@ -51,7 +51,10 @@ PendingSchema.methods.processPending = async function (req, res)
             new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
         }
-        else if (await Pending.findOne({ username: this.username }) || await User.findOne({ username: this.username }))
+        else if (
+            // await Pending.findOne({ username: this.username }) || 
+            await User.findOne({ username: this.username })
+        )
         {
             new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
             reject();

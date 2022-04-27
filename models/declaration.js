@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { Rules } = require('../utilsSR/val-Rule')
-const { inspectDecrl, inspectUser, modifyDesc } = require('../utilsSR/_secondary')
+const { excRule } = require('../utilsSR/exc-Rule');
 const { upload } = require('../utilsSR/_tertiary')
+const { cloud } = require('../cloud/storage');
 
 const DeclarationSchema = new Schema({
     title: {

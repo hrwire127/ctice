@@ -97,6 +97,16 @@ UserSchema.methods.processRegister = async function (req, res, pending, { user, 
         {
             console.log(user)
             console.log(password)
+            if (await User.findOne({ email: user.email }))
+            {
+                new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+                reject();
+            }
+            else if (await User.findOne({ username: user.username }))
+            {
+                new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+                reject();
+            }
             await User.register(user, password)
             resolve()
         }

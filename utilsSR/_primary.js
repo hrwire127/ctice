@@ -2,13 +2,10 @@ const { excRule } = require('./exc-Rule');
 const userError = require('./userError');
 const { cloud } = require('../cloud/storage');
 const { Redirects_SR } = require('./SR_Redirects');
-const passport = require('passport');
 const User = require("../models/user");
 const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("./errorMessages")
-const { genToken } = require('./_secondary')
-const { upload } = require('./_tertiary')
 
 
 function getUser(req, res)
