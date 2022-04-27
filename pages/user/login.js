@@ -35,7 +35,8 @@ function login(props)
         })
     };
 
-    return switchLoading(2, () => <Login handleSubmit={handleSubmit} alert={alert} />)
+    return (<Login handleSubmit={handleSubmit} alert={alert} />)
+    // switchLoading(2, () => )
 }
 
 
