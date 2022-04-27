@@ -19,7 +19,7 @@ export default function Declrs(props)
             el.date[0],
             el.title,
             el.file ? el.file.name : "nothing",
-            "User",
+            el.author,
             2,
         )
     })
@@ -43,7 +43,7 @@ export default function Declrs(props)
                             <TableCell>{row.date}</TableCell>
                             <TableCell>{row.title}</TableCell>
                             <TableCell>{row.file}</TableCell>
-                            <TableCell>{rows.by}</TableCell>
+                            <TableCell>{row.by}</TableCell>
                             <TableCell align="right">{row.views}</TableCell>
                         </TableRow>
                     ))}

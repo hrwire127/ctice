@@ -3,7 +3,7 @@ import { Avatar, Button, CssBaseline, TextField, Box, Typography, Container, For
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
-import { handleFormData } from "../utilsCS/_client";
+import { handleDeclrData } from "../utilsCS/_client";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
@@ -29,7 +29,7 @@ function EditForm(props)
     {
         e.preventDefault();
 
-        const { data, title, description } = handleFormData(e.currentTarget, file, editorState)
+        const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
 
         if (titleValid(title) && descValid(description)) //add editor state
         {

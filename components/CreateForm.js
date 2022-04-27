@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
-import { getCurrentDate, handleFormData } from "../utilsCS/_client";
+import { getCurrentDate, handleDeclrData } from "../utilsCS/_client";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtn from "./UploadBtn";
@@ -57,7 +57,7 @@ export default function CreateForm(props)
     {
         e.preventDefault();
 
-        const { data, title, description } = handleFormData(e.currentTarget, file, editorState)
+        const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
 
         if (titleValid(title) && descValid(description))
         {

@@ -7,6 +7,18 @@ const CropData = (data, length) =>
     return data
 }
 
+function getField(obj, key, alt)
+{
+    if(obj)
+    {
+        return obj[key]
+    }
+    else
+    {
+        return alt
+    }
+}
+
 const uploadFile = (e, changeState) =>
 {
     const file = e.target.files[0];
@@ -41,7 +53,7 @@ function getSpecificDate(newDate, separator = '.')
     return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
 }
 
-function handleFormData(evtTarget, file = undefined, description)
+function handleDeclrData(evtTarget, file = undefined, description)
 {
     const data = new FormData(evtTarget);
 
@@ -86,16 +98,13 @@ function getGlobals(context)
     let isUser;
     let isAdmin = false;
     isUser = context.req.isAuthenticated()
-    if (context.req.session.passport)
-    {
-        isAdmin = context.req.session.passport.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME
-    }
+    isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
     return { isUser, isAdmin }
 }
 
 async function getDeclrs()
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -112,7 +121,7 @@ async function getDeclrs()
 
 async function getDeclr(id)
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -129,7 +138,7 @@ async function getDeclr(id)
 
 async function getUsers()
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -261,10 +270,11 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
 module.exports = {
-    CropData, uploadFile, getCurrentDate, handleFormData,
+    CropData, uploadFile, getCurrentDate, handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
     getSpecificDate, logout, getDeclrsDate, getDeclrsTitle,
-    getSpecificDeclrsTitle, getDeclrsDateQuery, timeout
+    getSpecificDeclrsTitle, getDeclrsDateQuery, timeout, getField
 }

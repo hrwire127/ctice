@@ -83,9 +83,10 @@ function Register(props)
                     )}
                     <Box
                         component="form"
+                        enctype="multipart/form-data"
+                        onSubmit={errCheck}
                         noValidate
                         sx={{ mt: 3 }}
-                        onSubmit={errCheck}
                     >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -105,8 +106,6 @@ function Register(props)
                                     ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
                                     : (<FormHelperText error={EmailError}>{helperEmailText}</FormHelperText>)
                                 }
-                            </Grid>
-                            <Grid item xs={12}>
                                 <TextField
                                     margin="normal"
                                     inputProps={{ maxLength: 10 }}
