@@ -18,8 +18,8 @@ function inspectDecrl(title, description, date, Files) //
 
     }
 
-    const dateRule = new valRule(date.length, Rules.date_length, 0)
-    if (dateRule.getVal()) return dateRule.processMsg()
+    // const dateRule = new valRule(date.length, Rules.date_length, 0)
+    // if (dateRule.getVal()) return dateRule.processMsg()
 }
 
 

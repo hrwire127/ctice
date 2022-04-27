@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
-import { getSpecificDate } from "../utilsCS/_client"
 
 function createData(time, amount)
 {
@@ -16,15 +15,16 @@ function getUserChartData(users)
 	let val = 0;
 	for (let i = 8; i >= 0; i--)
 	{
-		var priorDate = getSpecificDate(new Date(new Date().setDate(today.getDate() - i)));
+		var priorDate = new Date(new Date().setDate(today.getDate() - i)).toISOString().substring(2, 10)
+		console.log(priorDate)
 		users.map(el => 
 		{
-			if (el.date === priorDate) 
+			if (el.date.substring(2, 10) === priorDate) 
 			{
 				val++;
 			}
 		})
-		data.push(createData(priorDate.slice(0, 5), val))
+		data.push(createData(priorDate, val))
 	}
 	return data;
 }

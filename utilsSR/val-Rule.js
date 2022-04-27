@@ -44,7 +44,6 @@ const Rules = {
     file_max_height: 1000,
     file_min_width: 200,
     file_min_height: 200,
-    date_length: 10,
     username_max_char: 10,
     password_max_char: 10,
     email_max_char: 40,

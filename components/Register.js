@@ -4,7 +4,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Link from 'next/link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
-import { getCurrentDate } from '../utilsCS/_client';
 import BackLink from "./BackLink";
 
 const theme = createTheme();
@@ -40,7 +39,7 @@ function Register(props)
 
         const username = data.get("username");
         const email = data.get("email");
-        data.append("date", getCurrentDate("."))
+        data.append("date", new Date())
 
         if (usernameValid(username) && emailValid(email))
         {
@@ -86,7 +85,7 @@ function Register(props)
                         enctype="multipart/form-data"
                         onSubmit={errCheck}
                         noValidate
-                        sx={{ mt: 3 }}
+                        sx={{ mt: 1 }}
                     >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -106,6 +105,8 @@ function Register(props)
                                     ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
                                     : (<FormHelperText error={EmailError}>{helperEmailText}</FormHelperText>)
                                 }
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextField
                                     margin="normal"
                                     inputProps={{ maxLength: 10 }}

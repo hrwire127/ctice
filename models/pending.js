@@ -33,8 +33,7 @@ const PendingSchema = new Schema({
     },
     date:
     {
-        type: String,
-        max: Rules.date_length,
+        type: Date,
         required: true
     }
 });

@@ -56,7 +56,10 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
     const { confirmationCode, password } = req.body
     const pending = await Pending.findOne({ confirmationCode })
     const user = new User({
-        ...pending,
+        username: pending.username,
+        date: pending.date,
+        email: pending.email,
+        confirmationCode,
         status: "Active"
     })
     const credentials = { user, password }

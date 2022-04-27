@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
-import { getCurrentDate, handleDeclrData } from "../utilsCS/_client";
+import { handleDeclrData } from "../utilsCS/_client";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtn from "./UploadBtn";

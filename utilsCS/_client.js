@@ -34,24 +34,24 @@ const uploadFile = (e, changeState) =>
     ));
 }
 
-function getCurrentDate(separator = '.')
-{
-    let newDate = new Date()
-    let date = newDate.getDate();
-    let month = newDate.getMonth() + 1;
-    let year = newDate.getFullYear();
+// function getCurrentDate(separator = '.')
+// {
+//     let newDate = new Date()
+//     let date = newDate.getDate();
+//     let month = newDate.getMonth() + 1;
+//     let year = newDate.getFullYear();
 
-    return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
-}
+//     return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
+// }
 
-function getSpecificDate(newDate, separator = '.')
-{
-    let date = newDate.getDate();
-    let month = newDate.getMonth() + 1;
-    let year = newDate.getFullYear();
+// function getSpecificDate(newDate, separator = '.')
+// {
+//     let date = newDate.getDate();
+//     let month = newDate.getMonth() + 1;
+//     let year = newDate.getFullYear();
 
-    return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
-}
+//     return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
+// }
 
 function handleDeclrData(evtTarget, file = undefined, description)
 {
@@ -61,7 +61,7 @@ function handleDeclrData(evtTarget, file = undefined, description)
     else data.delete("file")
 
     data.append("description", JSON.stringify(description));
-    data.append("date", getCurrentDate("."))
+    data.append("date", new Date())
 
     const title_ = data.get("title");
     const description_ = description.blocks[0].text;
@@ -241,7 +241,8 @@ async function getDeclrsDateQuery(query, date)
         let dateDeclrs = [];
         declrs.obj.forEach(el =>
         {
-            if (el.date[el.date.length - 1] === date) 
+            console.log()
+            if (new Date(el.date[el.date.length - 1]).toDateString() === new Date(date).toDateString()) 
             {
                 dateDeclrs.push(el)
             };
@@ -251,7 +252,7 @@ async function getDeclrsDateQuery(query, date)
     let dateDeclrs = [];
     declrs.obj.forEach(el =>
     {
-        if (el.date[el.date.length - 1] === date) 
+        if (new Date(el.date[el.date.length - 1]).toDateString() === new Date(date).toDateString())
         {
             dateDeclrs.push(el)
         };
@@ -272,9 +273,12 @@ function timeout(ms) {
 
 
 module.exports = {
-    CropData, uploadFile, getCurrentDate, handleDeclrData,
+    CropData, uploadFile, 
+    //getCurrentDate,
+     handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    getSpecificDate, logout, getDeclrsDate, getDeclrsTitle,
+    //getSpecificDate,
+     logout, getDeclrsDate, getDeclrsTitle,
     getSpecificDeclrsTitle, getDeclrsDateQuery, timeout, getField
 }

@@ -10,7 +10,6 @@ const Redirects_SR = require('../utilsSR/SR_Redirects')
 
 
 const UserSchema = new Schema({
-
     email: {
         type: String,
         required: true,
@@ -29,8 +28,7 @@ const UserSchema = new Schema({
     },
     date:
     {
-        type: String,
-        max: Rules.date_length,
+        type: Date,
         required: true
     }
 });
@@ -95,8 +93,6 @@ UserSchema.methods.processRegister = async function (req, res, pending, { user, 
     {
         if (pending)
         {
-            console.log(user)
-            console.log(password)
             if (await User.findOne({ email: user.email }))
             {
                 new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)

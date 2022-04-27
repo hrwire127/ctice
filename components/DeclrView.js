@@ -50,7 +50,7 @@ function DeclrView(props)
 
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                     <Typography variant="h9" color="text.secondary">
-                        {date[date.length - 1]} by {author}
+                        {date[date.length - 1].match(/\d\d:\d\d/)} _ {date[date.length - 1].substring(0, 10)} by {author}
                     </Typography>
                     <BackLink>Back</BackLink>
                 </Box>

@@ -29,7 +29,7 @@ const DeclarationSchema = new Schema({
         }
     },
     date: {
-        type: [String],
+        type: [Date],
         required: true
     },
     author: {
