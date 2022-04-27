@@ -18,33 +18,6 @@ function getUser(req, res)
     Redirects_SR.Error.CS(res)
 }
 
-
-async function doRegister(req, res, func)
-{
-    const { confirmationCode, password } = req.body
-
-    const pending = await Pending.findOne({ confirmationCode })
-    if (pending)
-    {
-        const user = new User({
-            username: pending.username,
-            password,
-            date: pending.date,
-            email: pending.email,
-            confirmationCode: confirmationCode,
-            status: "Active",
-        })
-        await User.register(user, password)
-        await Pending.findByIdAndDelete(pending._id)
-        func()
-    }
-    else
-    {
-        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-        Redirects_SR.Error.CS(res)
-    }
-}
-
 async function sendEmail(pending)
 {
     await nodemailer.sendConfirmationEmail(
@@ -57,5 +30,5 @@ async function sendEmail(pending)
 
 module.exports =
 {
-    doRegister, sendEmail, getUser
+    sendEmail, getUser
 }

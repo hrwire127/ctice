@@ -23,7 +23,6 @@ function login(props)
     {
         loadingWhile(async () =>
         {
-            await timeout(2000)
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, {
                 method: 'POST',
                 body: body,

@@ -69,7 +69,7 @@ DeclarationSchema.statics.processObj = async function (body = undefined, files =
     Obj.date = declaration ? declaration.date : []
     Obj.date.push(body.date)
 
-    let q = await new excRule([body.file, files, hadFile], [], async () =>
+    if(await new excRule([body.file, files, hadFile], [], async () =>
     {
         let file = await upload(files.file)
         await cloud.destroy(
@@ -80,10 +80,9 @@ DeclarationSchema.statics.processObj = async function (body = undefined, files =
             url: file.url,
             location: file.location
         }
-    }).Try();
-    if (q) return Obj;
+    }).Try()) return Obj;
 
-    let w = await new excRule([body.file, files], [hadFile], async () =>
+    if(await new excRule([body.file, files], [hadFile], async () =>
     {
         let file = await upload(files.file)
         Obj.file = {
@@ -91,28 +90,24 @@ DeclarationSchema.statics.processObj = async function (body = undefined, files =
             url: file.url,
             location: file.location
         }
-    }).Try();
-    if (w) return Obj;
+    }).Try()) return Obj;
 
-    let e = await new excRule([], [body.file, files, hadFile], async () =>
-    { }).Try();
-    if (e) return Obj;
+    if(await new excRule([], [body.file, files, hadFile], async () =>
+    { }).Try()) return Obj;
 
-    let r = await new excRule([hadFile], [body.file, files,], async () =>
+    if(await new excRule([hadFile], [body.file, files,], async () =>
     {
         await cloud.destroy(
             declaration.file.location,
         )
         declaration.file = undefined
         await declaration.save();
-    }).Try();
-    if (r) return Obj;
+    }).Try()) return Obj;
 
-    let t = await new excRule([body.file, hadFile], [files], async () =>
+    if(await new excRule([body.file, hadFile], [files], async () =>
     {
         Obj.file = declaration.file;
-    }).Try()
-    if (t) return Obj;
+    }).Try()) return Obj;
 
 }
 

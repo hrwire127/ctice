@@ -91,40 +91,46 @@ function Login(props)
                         noValidate
                         sx={{ mt: 1 }}
                     >
-                        <TextField
-                            margin="normal"
-                            inputProps={{ maxLength: 10 }}
-                            required
-                            error={UsernameError}
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            onKeyPress={checkUsernameKey}
-                            autoFocus
-                        />
-                        {alert
-                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                            : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
-                        }
-                        <TextField
-                            margin="normal"
-                            inputProps={{ maxLength: 10 }}
-                            required
-                            error={PasswordError}
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onKeyPress={checkPasswordKey}
-                        />
-                        {alert
-                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                            : (<FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>)
-                        }
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="normal"
+                                    inputProps={{ maxLength: 10 }}
+                                    required
+                                    error={UsernameError}
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    autoComplete="username"
+                                    onKeyPress={checkUsernameKey}
+                                    autoFocus
+                                />
+                                {alert
+                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                    : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    margin="normal"
+                                    inputProps={{ maxLength: 10 }}
+                                    required
+                                    error={PasswordError}
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onKeyPress={checkPasswordKey}
+                                />
+                                {alert
+                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                    : (<FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>)
+                                }
+                            </Grid>
+                        </Grid>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" onChange={() => setRemember(!remember)} />}
                             label="Remember me"

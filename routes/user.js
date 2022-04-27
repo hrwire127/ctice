@@ -4,7 +4,6 @@ const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
 const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret } = require('../utilsSR/_middlewares')
-const { doPending, doLogin, doRegister } = require('../utilsSR/_primary')
 
 router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
