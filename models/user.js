@@ -45,7 +45,7 @@ UserSchema.statics.getSecured = function (users)
     return users;
 }
 
-UserSchema.statics.processLogin = async function (req, res, next, func)
+UserSchema.statics.processLogin = async function (req, res, next)
 {
     return new Promise((resolve, reject) =>
     {
@@ -54,16 +54,19 @@ UserSchema.statics.processLogin = async function (req, res, next, func)
             if (err)
             {
                 new userError(err.message, err.status).throw_CS(res);
+                reject()
             }
             else if (!user) 
             {
                 new userError(info.message, 404).throw_CS(res);
+                reject()
             }
             else
             {
                 if (user.status !== "Active")
                 {
                     new userError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
+                    reject()
                 }
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
@@ -84,20 +87,28 @@ UserSchema.statics.processLogin = async function (req, res, next, func)
     })
 }
 
-const User = mongoose.model('User', UserSchema);
 
-UserSchema.methods.processRegister = async function (req, res, pending)
+UserSchema.methods.processRegister = async function (req, res, pending, { user, password })
 {
-    if (pending)
+    const User = mongoose.model('User')
+    return new Promise(async (resolve, reject) =>
     {
-        await User.register(this.user, this.password)
-        await Pending.findByIdAndDelete(pending._id)
-    }
-    else
-    {
-        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-        Redirects_SR.Error.CS(res)
-    }
+        if (pending)
+        {
+            console.log(user)
+            console.log(password)
+            await User.register(user, password)
+            resolve()
+        }
+        else
+        {
+            new userError(...Object.values(errorMessages.noPending)).setup(req, res);
+            Redirects_SR.Error.CS(res)
+            reject()
+        }
+    })
 }
+
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User

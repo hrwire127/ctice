@@ -26,7 +26,8 @@ router.get('/login', async (req, res) =>
 router.post('/register', validateRegUser, tryAsync_CS(async (req, res) =>
 {
     const pending = new Pending(req.body)
-    await pending.processPending()
+    await pending.processPending(req, res)
+    await pending.save()
     req.flash('info', 'Checkout your email, pending exires in 5 min');
     Redirects_SR.Home.CS(res)
 }))
@@ -58,13 +59,14 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
     const { username, date, email } = pending
     const user = new User({
         username,
-        password,
         date,
         email,
         confirmationCode,
         status: "Active"
     })
-    user.processRegister(req, res, pending)
+    const credentials = { user, password }
+    await user.processRegister(req, res, pending, credentials)
+    await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');
     Redirects_SR.Home.CS(res)
 }))

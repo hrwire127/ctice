@@ -3,7 +3,7 @@ const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS } = require('../utilsSR/_middlewares')
-// const { ProcessDeclr } = require('../utilsSR/_primary')
+// const { processObj } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
 {
@@ -20,7 +20,7 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
-    const Obj = await Declaration.ProcessDeclr(req.body, req.files);
+    const Obj = await Declaration.processObj(req.body, req.files);
     const declaration = new Declaration(Obj)
     await declaration.save();
     req.flash('success', 'Created Successfuly');

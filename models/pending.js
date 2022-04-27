@@ -5,6 +5,7 @@ const { genToken } = require('../utilsSR/_secondary')
 const User = require("./user");
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("../utilsSR/errorMessages")
+const userError = require('../utilsSR/userError');
 
 
 const PendingSchema = new Schema({
@@ -38,30 +39,41 @@ const PendingSchema = new Schema({
     }
 });
 
-const Pending = mongoose.model('Pending', PendingSchema)
 
 PendingSchema.methods.processPending = async function (req, res)
 {
-    this.confirmationCode = genToken()
-    if (await Pending.findOne({ email }) || await User.findOne({ email }))
+    return new Promise(async (resolve, reject) =>
     {
-        new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
-    }
-    else if (await Pending.findOne({ username }) || await User.findOne({ username }))
-    {
-        new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
-    }
-    else
-    {
-        nodemailer.sendConfirmationEmail(
-            this.username,
-            this.email,
-            this.confirmationCode
-        ).then(async () =>
+        this.confirmationCode = genToken()
+        const Pending = mongoose.model('Pending');
+        if (await Pending.findOne({ email: this.email }) || await User.findOne({ email: this.email }))
         {
-            return;
-        })
-    }
+            new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+            reject();
+        }
+        else if (await Pending.findOne({ username: this.username }) || await User.findOne({ username: this.username }))
+        {
+            new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+            reject();
+        }
+        else
+        {
+            nodemailer.sendConfirmationEmail(
+                this.username,
+                this.email,
+                this.confirmationCode
+            ).then(async (res) =>
+            {
+                resolve();
+            }).catch((err) =>
+            {
+                reject()
+            })
+        }
+    })
 }
+
+
+const Pending = mongoose.model('Pending', PendingSchema)
 
 module.exports = Pending;

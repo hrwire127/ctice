@@ -1,8 +1,7 @@
 import React from 'react'
 import Welcome from '../components/Welcome'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { isToken, determRendering, getGlobals } from '../utilsCS/_client'
-import { loadingWhile, timeout, determRendering } from '../utilsCS/_client'
+import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function welcome(props)
@@ -16,6 +15,7 @@ function welcome(props)
 
         loadingWhile(async () =>
         {
+            timeout(5000)
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/confirm`, {
                 method: 'POST',
                 body: body,
@@ -27,7 +27,7 @@ function welcome(props)
         })
     };
 
-    return userCtx && switchLoading(2, () => <Welcome handleSubmit={handleSubmit} />)
+    return switchLoading(2, () => <Welcome handleSubmit={handleSubmit} />)
 }
 
 welcome.getInitialProps = async (props) =>
@@ -35,13 +35,14 @@ welcome.getInitialProps = async (props) =>
     return determRendering(props, () =>
     {
         CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST, window)
+        return { }
     }, () =>
     {
         const { confirmationCode } = props.query;
 
         return isToken(confirmationCode, () =>
         {
-            return { confirmationCode, }
+            return { confirmationCode }
         }, props.res)
     })
 }

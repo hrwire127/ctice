@@ -61,7 +61,7 @@ function isToken(confirmationCode, func, res)
 {
     if (confirmationCode)
     {
-        func();
+        return func();
     }
     else
     {
