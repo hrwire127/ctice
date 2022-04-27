@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
 import UserContext from '../../components/context/contextUser'
+import AdminContext from '../../components/context/contextAdmin'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getDeclr, determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
@@ -11,6 +12,7 @@ function edit(props)
     const { _id } = declaration;
 
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
 
     const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -26,7 +28,7 @@ function edit(props)
 
     useEffect(() =>
     {
-        if (!userCtx)
+        if (!adminCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
@@ -49,8 +51,7 @@ function edit(props)
         })
     };
 
-    return userCtx
-        && switchLoading(2, () => <EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} />)
+    return adminCtx && (<EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} switchLoading={switchLoading}/>)
 }
 
 edit.getInitialProps = async (props) =>

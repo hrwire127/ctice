@@ -34,7 +34,7 @@ function register(props)
 		})
 	};
 
-	return (<Register handleSubmit={handleSubmit} alert={alert} />)
+	return (<Register handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading}/>)
 	// switchLoading(2, () => 
 }
 

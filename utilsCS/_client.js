@@ -9,7 +9,7 @@ const CropData = (data, length) =>
 
 function getField(obj, key, alt)
 {
-    if(obj)
+    if (obj)
     {
         return obj[key]
     }
@@ -267,18 +267,44 @@ async function getDeclrsDateQuery(query, date)
     })
     return queryDeclrs;
 }
-function timeout(ms) {
+function timeout(ms)
+{
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getDateDifference(d2, d1)
+{
+    let diffTime = Math.abs(d2.valueOf() - d1.valueOf());
+    let days = diffTime / (24 * 60 * 60 * 1000);
+    let hours = (days % 1) * 24;
+    let minutes = (hours % 1) * 60;
+    let secs = (minutes % 1) * 60;
+    [days, hours, minutes, secs] = [Math.floor(days), Math.floor(hours), Math.floor(minutes), Math.floor(secs)]
+
+    if (days > 0)
+    {
+        return `${days} day${days > 1 ? "s" : ""}`
+    }
+    else if (hours > 0)
+    {
+        return `${hours} hour${hours > 1 ? "s" : ""}`
+    }
+    else if (minutes > 0)
+    {
+        return `${minutes} minute${minutes > 1 ? "s" : ""}`
+    }
+    else if (secs > 0)
+    {
+        return `${secs} seond${secs > 1 ? "s" : ""}`
+    }
+}
 
 module.exports = {
-    CropData, uploadFile, 
-    //getCurrentDate,
-     handleDeclrData,
+    CropData, uploadFile,
+    handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
     strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    //getSpecificDate,
-     logout, getDeclrsDate, getDeclrsTitle,
-    getSpecificDeclrsTitle, getDeclrsDateQuery, timeout, getField
+    logout, getDeclrsDate, getDeclrsTitle,
+    getSpecificDeclrsTitle, getDeclrsDateQuery, timeout, getField,
+    getDateDifference
 }

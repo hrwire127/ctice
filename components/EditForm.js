@@ -17,7 +17,7 @@ function EditForm(props)
     const [TitleError, setTitleError, helperTitleText, setHelperTitleText, checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, setDescError, helperDescText, setHelperDescText, checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration, handleSubmit, alert } = props;
+    const { declaration, handleSubmit, alert, switchLoading } = props;
     const { title, description, _id } = declaration;
 
     const [file, changeFile] = useState(declaration.file);
@@ -98,16 +98,20 @@ function EditForm(props)
                         }
 
                         <UploadBtn changeFile={changeFile} file={file} />
+                        {switchLoading(0, () => (
+                            <>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Finish
+                                </Button>
+                                <BackLink>Back</BackLink>
+                            </>
+                        ))}
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Finish
-                        </Button>
-                        <BackLink>Back</BackLink>
                     </Box>
                 </Box>
             </Container>

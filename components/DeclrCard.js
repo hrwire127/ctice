@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
 import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
-import { CropData } from '../utilsCS/_client';
+import { CropData, getDateDifference } from '../utilsCS/_client';
 import Link from 'next/link'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -14,6 +14,13 @@ function DeclrCard(props)
 {
     const { title, _id, description, date } = props;
     const classes = useStyles();
+    const [diff, setDiff] = useState()
+
+    useEffect(() => {
+        setDiff(getDateDifference(new Date(), new Date(date)))
+    }, [])
+    
+
 
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
@@ -40,7 +47,7 @@ function DeclrCard(props)
                     </Link>
                 </Box>
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                    {date[date.length - 1].substring(0, 10)} 
+                    {diff} ago
                 </Typography>
             </CardActions>
         </Card>

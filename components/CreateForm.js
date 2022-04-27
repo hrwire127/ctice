@@ -49,7 +49,7 @@ export default function CreateForm(props)
     const [file, changeFile] = useState();
     const [editorState, setEditorState] = useState();
 
-    const { handleSubmit, alert } = props;
+    const { handleSubmit, alert, switchLoading } = props;
     const classes = useStyles()
 
 
@@ -130,17 +130,20 @@ export default function CreateForm(props)
 
                         <UploadBtn changeFile={changeFile} file={file} />
 
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Create
-                        </Button>
+                        {switchLoading(0, () =>
+                        (<>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Create
+                            </Button>
+                            <BackLink>Back</BackLink>
+                        </>))}
                     </Box>
                 </Box>
-                <BackLink>Back</BackLink>
             </Container>
         </ThemeProvider>
     );

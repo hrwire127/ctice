@@ -10,7 +10,6 @@ const theme = createTheme();
 
 function Register(props)
 {
-    const { handleSubmit, alert } = props;
     const [
         UsernameError,
         setUsernameError,
@@ -31,6 +30,8 @@ function Register(props)
         setEmailFalse,
         emailValid,
     ] = useFormError(false);
+
+    const { handleSubmit, alert, switchLoading } = props;
 
     const errCheck = (e) =>
     {
@@ -124,15 +125,17 @@ function Register(props)
                                 }
                             </Grid>
                         </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Register
-                        </Button>
-                        <BackLink>Back</BackLink>
+                        {switchLoading(0, () =>
+                        (<>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Register
+                            </Button>
+                            <BackLink>Back</BackLink></>))}
                     </Box>
                 </Box>
             </Container>

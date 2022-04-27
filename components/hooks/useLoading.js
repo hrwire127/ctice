@@ -24,6 +24,8 @@ function useLoading(initialValue = false)
                 case 1:
                     return <Loading middle={true} />
                 case 2:
+                    return <Loading full={true} />
+                case 3:
                     return <Loading fullPage={true} />
 
             }

@@ -32,7 +32,7 @@ function Login(props)
     ] = useFormError(false);
 
     const [remember, setRemember] = useState(false)
-    const { handleSubmit, alert } = props;
+    const { handleSubmit, alert, switchLoading } = props;
 
     const errCheck = (e) =>
     {
@@ -78,6 +78,7 @@ function Login(props)
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
+
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
@@ -135,15 +136,21 @@ function Login(props)
                             control={<Checkbox value="remember" color="primary" onChange={() => setRemember(!remember)} />}
                             label="Remember me"
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Login
-                        </Button>
-                        <BackLink>Back</BackLink>
+
+                        {switchLoading(0, () =>
+                        (<>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Login
+                            </Button>
+                            <BackLink>Back</BackLink>
+                        </>
+                        ))}
+
                     </Box>
                 </Box>
             </Container>

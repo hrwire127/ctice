@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
-import UserContext from '../components/context/contextUser'
+import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { timeout } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function create(props)
 {
-    let userCtx = React.useContext(UserContext);
+    let adminCtx = React.useContext(AdminContext);
 
     const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -24,7 +24,7 @@ function create(props)
 
     useEffect(() =>
     {
-        if (!userCtx)
+        if (!adminCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
@@ -48,8 +48,7 @@ function create(props)
 
     };
 
-    return userCtx
-        && switchLoading(2, () => <CreateForm handleSubmit={handleSubmit} alert={alert} />)
+    return adminCtx && (<CreateForm handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading} />)
 }
 
 export default create
