@@ -8,7 +8,7 @@ function index(props)
 {
     const { flash } = props;
     const [declarations, setDeclarations] = useState(props.declarations)
-    const [loadingWhile, switchLoading] = useLoading(true)
+    const [loadingWhile, switchLoading] = useLoading(false)
     const [count, setCount] = useState(props.count)
 
     function loadMore(e)

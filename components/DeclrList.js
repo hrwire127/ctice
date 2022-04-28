@@ -8,12 +8,14 @@ import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
-import { loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
+import { getDeclrsDateQuery, timeout } from "../utilsCS/_client"
+import useLoading from '../components/hooks/useLoading'
 
 function DeclrList(props)
 {
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
+    const [loadingWhileFull, switchLoadingFull] = useLoading(true)
 
     const { flash, loadMore, declarations, setDeclarations, switchLoading, loadingWhile, count } = props;
     const classes = useStyles();
@@ -31,16 +33,17 @@ function DeclrList(props)
 
     useEffect(async () =>
     {
-        loadingWhile(async () =>
+        loadingWhileFull(async () =>
         {
             await timeout(500)
             await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
         })
+
     }, [dateValue, queryValue])
 
     const Declrs = () =>
     {
-        return declarations.length > 0 ?
+        return (switchLoadingFull(0, () => declarations.length > 0 ?
             (<>
                 <Box className={classes.List}>
                     {declarations.map(d => (
@@ -56,7 +59,7 @@ function DeclrList(props)
                     </Box>))
                 }
             </>)
-            : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)
+            : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
     }
 
 
