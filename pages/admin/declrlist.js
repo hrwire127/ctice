@@ -1,15 +1,18 @@
-import React, { useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminDeclrs from '../../components/AdminDeclrs';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclrs, determRendering, getGlobals, getUsers } from '../../utilsCS/_client'
+import { getDeclrs, determRendering, timeout } from '../../utilsCS/_client'
 import AdminLayout from "../../components/AdminLayout"
+import useLoading from '../../components/hooks/useLoading'
 
 function declrlist(props)
 {
-    const { declarations } = props;
+    const [declarations, setDeclrs] = useState(props.declarations)
 
+    const [loadingWhile, switchLoading] = useLoading(false)
     let adminCtx = React.useContext(AdminContext);
+
     useEffect(() =>
     {
         if (props.isAdmin)
@@ -23,8 +26,28 @@ function declrlist(props)
         }
     }, [])
 
+    const onDelete = async (e, id) =>                                                                           
+    {
+        e.preventDefault();
+        loadingWhile(async () =>
+        {
+            await timeout(500)
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => response.json())
+                    .then(async () =>
+                    {
+                        const newDeclr = await getDeclrs()
+                        setDeclrs(newDeclr.obj)
+                    })
+        })
 
-    return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations}/></AdminLayout>) : (<></>)
+    }
+
+    return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations} switchLoading={switchLoading} onDelete={onDelete} /></AdminLayout>) : (<></>)
 }
 declrlist.getInitialProps = async (props) =>
 {
@@ -37,12 +60,6 @@ declrlist.getInitialProps = async (props) =>
     }, () =>
     {
         CS_Redirects.tryResSR(declrs)
-
-        // let globals = getGlobals(props)
-        // if (!globals.isAdmin)
-        // {
-        //     CS_Redirects.Custom_SR(props.res, declrs.redirect)
-        // }
         return { declarations: declrs.obj, noHeader: true }
     })
 }

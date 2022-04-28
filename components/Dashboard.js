@@ -97,10 +97,12 @@ function Dashboard(props)
                     {/* Recent Orders */}
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <Declrs declarations={declarations.slice(0, 5)} />
-                            <Link color="primary" href="/admin/declrlist" sx={{ mt: 3 }}>
-                                See more declarations
-                            </Link>
+                            <Declrs declarations={declarations.slice(0, 5)} noControlls />
+                            {declarations.length > 5 &&
+                                (<Link color="primary" href="/admin/declrlist" sx={{ mt: 3 }}>
+                                    See more declarations
+                                </Link>)
+                            }
                         </Paper>
                     </Grid>
                 </Grid>

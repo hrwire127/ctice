@@ -3,12 +3,13 @@ import Login from '../../components/Login'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getDeclr, determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
-
+import { useRouter } from 'next/router'
 
 function login(props)
 {
     const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
+    const router = useRouter()
 
     const setError = (msg) => 
     {
@@ -29,8 +30,9 @@ function login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window);
-                    if (res.err) setError(res.err.message)
+                    router.back()
+                    // CS_Redirects.tryResCS(res, window);
+                    // if (res.err) setError(res.err.message)
                 })
         })
     };

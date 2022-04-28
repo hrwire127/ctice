@@ -16,7 +16,7 @@ function DeclrList(props)
     const [declarations, setDeclarations] = useState(props.declarations)
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
-    const [loadingWhile, switchLoading] = useLoading(false)
+    const [loadingWhile, switchLoading] = useLoading(true)
 
     const { flash } = props;
     const classes = useStyles();
