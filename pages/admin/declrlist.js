@@ -40,7 +40,7 @@ function declrlist(props)
                 }).then(response => response.json())
                     .then(async () =>
                     {
-                        const newDeclr = await getDeclrs()
+                        const newDeclr = await getDeclrs() //to do load more
                         setDeclrs(newDeclr.obj)
                     })
         })
@@ -59,7 +59,7 @@ declrlist.getInitialProps = async (props) =>
         return { declarations: declrs.obj, noHeader: true }
     }, () =>
     {
-        CS_Redirects.tryResSR(declrs)
+        CS_Redirects.tryResSR(declrs, props)
         return { declarations: declrs.obj, noHeader: true }
     })
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { getDeclrs, determRendering, getLimitedDeclrs, timeout } from '../utilsCS/_client'
+import { determRendering, getLimitedDeclrs, timeout } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function index(props)
@@ -17,9 +17,10 @@ function index(props)
         loadingWhile(async () =>
         {
             await timeout(2000)
-            const newDeclrs = await getLimitedDeclrs(declarations.length);
+            const newDeclrs = await getLimitedDeclrs(declarations);
+            console.log(newDeclrs.obj.list)
             setCount(newDeclrs.obj.count)
-            setDeclarations(newDeclrs.obj.list);
+            setDeclarations(declarations.concat(newDeclrs.obj.list));
         })
     }
 
@@ -36,7 +37,7 @@ index.getInitialProps = async (props) =>
         props.res.locals.flash = []
     }
 
-    let declrs = await getLimitedDeclrs(0);
+    let declrs = await getLimitedDeclrs([]);
 
     return determRendering(props, () =>
     {
@@ -44,7 +45,7 @@ index.getInitialProps = async (props) =>
         return { flash, declarations: declrs.obj.list, count: declrs.obj.count }
     }, () =>
     {
-        CS_Redirects.tryResSR(declrs)
+        CS_Redirects.tryResSR(declrs, props)
         return { flash, declarations: declrs.obj.list, count: declrs.obj.count }
     })
 }

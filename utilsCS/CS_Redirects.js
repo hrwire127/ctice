@@ -13,7 +13,7 @@ class CS_Redirect
             window.location = res.redirect
         }
     }
-    tryResSR(res)
+    tryResSR(res, props)
     {
         if (res.type === Def_Call)
         {

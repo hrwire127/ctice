@@ -33,26 +33,6 @@ const uploadFile = (e, changeState) =>
         }
     ));
 }
-
-// function getCurrentDate(separator = '.')
-// {
-//     let newDate = new Date()
-//     let date = newDate.getDate();
-//     let month = newDate.getMonth() + 1;
-//     let year = newDate.getFullYear();
-
-//     return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
-// }
-
-// function getSpecificDate(newDate, separator = '.')
-// {
-//     let date = newDate.getDate();
-//     let month = newDate.getMonth() + 1;
-//     let year = newDate.getFullYear();
-
-//     return `${date < 10 ? `0${date}` : `${date}`}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${year}`
-// }
-
 function handleDeclrData(evtTarget, file = undefined, description)
 {
     const data = new FormData(evtTarget);
@@ -136,7 +116,7 @@ async function getDeclr(id)
         })
 }
 
-async function getLimitedDeclrs(size)
+async function getLimitedDeclrs(declarations)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/limit/api`, {
         method: 'POST',
@@ -144,7 +124,7 @@ async function getLimitedDeclrs(size)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { size: size, secret: process.env.NEXT_PUBLIC_SECRET }
+            { declarations, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -170,15 +150,6 @@ async function getUsers()
         })
 }
 
-function strfyDeclrs(declr)
-{
-    return JSON.stringify(declr)
-}
-
-function parseDeclrs(declr)
-{
-    return JSON.parse(declr)
-}
 
 const logout = (window) =>
 {
@@ -192,54 +163,12 @@ const logout = (window) =>
         })
 }
 
-async function getDeclrsDate(date)
-{
-    const declrs = await getDeclrs()
-    let newDeclrs = [];
-    declrs.obj.forEach(el => { if (el.date[el.date.length - 1] === date) newDeclrs.push(el) })
-    return newDeclrs;
-}
-
-async function getDeclrsTitle(title)
-{
-    const declrs = await getDeclrs()
-    if (title === "")
-    {
-        return declrs.obj;
-    }
-    let newDeclrs = [];
-    declrs.obj.forEach(el =>
-    {
-        if (el.title.includes(title)) 
-        {
-            newDeclrs.push(el)
-        }
-    })
-    return newDeclrs;
-}
-async function getSpecificDeclrsTitle(title, declrs)
-{
-    if (title === "")
-    {
-        return declrs.obj;
-    }
-    let newDeclrs = [];
-    declrs.obj.forEach(el =>
-    {
-        if (el.title.includes(title)) 
-        {
-            newDeclrs.push(el)
-        };
-    })
-    return newDeclrs;
-}
-
 async function getDeclrsDateQuery(query, date)
 {
     const declrs = await getDeclrs()
     if (query === "" && date === "Invalid")
     {
-        let newDeclrs = await getLimitedDeclrs(0);
+        let newDeclrs = await getLimitedDeclrs([]);
         return newDeclrs.obj.list;
     }
     if (date === "Invalid")
@@ -321,8 +250,8 @@ module.exports = {
     CropData, uploadFile,
     handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
-    strfyDeclrs, parseDeclrs, getDeclr, getUsers,
-    logout, getDeclrsDate, getDeclrsTitle,
-    getSpecificDeclrsTitle, getDeclrsDateQuery, timeout, getField,
+    getDeclr, getUsers,
+    logout,
+    getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs
 }

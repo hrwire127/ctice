@@ -46,7 +46,7 @@ view.getInitialProps = async (props) =>
         return { declaration: declr.obj }
     }, () =>
     {
-        CS_Redirects.tryResSR(declr)
+        CS_Redirects.tryResSR(declr, props)
         return { declaration: declr.obj }
     })
 }

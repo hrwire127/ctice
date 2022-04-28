@@ -28,7 +28,7 @@ function admin(props)
 }
 admin.getInitialProps = async (props) =>
 {
-    let declrs = await getDeclrs();
+    let declrs = await getDeclrs(); //todo load only some
     let users = await getUsers()
 
     return determRendering(props, () =>
@@ -38,8 +38,8 @@ admin.getInitialProps = async (props) =>
         return { users: users.obj, declarations: declrs.obj, noHeader: true }
     }, () =>
     {
-        CS_Redirects.tryResSR(declrs)
-        CS_Redirects.tryResSR(users)
+        CS_Redirects.tryResSR(declrs, props)
+        CS_Redirects.tryResSR(users, props)
 
         // let globals = getGlobals(props)
         // if (!globals.isAdmin)

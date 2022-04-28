@@ -40,24 +40,23 @@ function DeclrList(props)
 
     const Declrs = () =>
     {
-        return switchLoading(0, () => (declarations.length > 0 ?
+        return declarations.length > 0 ?
             (<>
                 <Box className={classes.List}>
                     {declarations.map(d => (
                         <DeclrCard {...d} key={d._id} />
                     ))}
                 </Box>
-                {
-                    count > declarations.length
-                    && (<Box
+                {switchLoading(0, () => count > declarations.length &&
+                    (<Box
                         display="flex"
                         justifyContent="center"
                     >
                         <Button onClick={loadMore}>Load More</Button>
-                    </Box>)
+                    </Box>))
                 }
             </>)
-            : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
+            : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)
     }
 
 

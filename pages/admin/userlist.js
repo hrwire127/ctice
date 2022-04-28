@@ -2,7 +2,7 @@ import React, { useEffect} from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclrs, determRendering, getGlobals, getUsers } from '../../utilsCS/_client'
+import { determRendering, getGlobals, getUsers } from '../../utilsCS/_client'
 import AdminLayout from "../../components/AdminLayout"
 
 function userlist(props)
@@ -36,7 +36,7 @@ userlist.getInitialProps = async (props) =>
         return { users: users.obj, noHeader: true }
     }, () =>
     {
-        CS_Redirects.tryResSR(users)
+        CS_Redirects.tryResSR(users, props)
 
         // let globals = getGlobals(props)
         // if (!globals.isAdmin)
