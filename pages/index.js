@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering, getLimitedDeclrs, timeout } from '../utilsCS/_client'
+import { determRendering, getLimitedDeclrs, timeout, getDeclrsCount } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function index(props)
 {
-    const { flash } = props;
+    const { flash, count } = props;
     const [declarations, setDeclarations] = useState(props.declarations)
     const [loadingWhile, switchLoading] = useLoading(false)
-    const [count, setCount] = useState(props.count)
 
     function loadMore(e)
     {
@@ -18,14 +17,12 @@ function index(props)
         {
             await timeout(2000)
             const newDeclrs = await getLimitedDeclrs(declarations);
-            console.log(newDeclrs.obj.list)
-            setCount(newDeclrs.obj.count)
-            setDeclarations(declarations.concat(newDeclrs.obj.list));
+            setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }
 
     return (
-        <DeclrList declarations={declarations} flash={flash} loadMore={loadMore} setDeclarations={setDeclarations} switchLoading={switchLoading} loadingWhile={loadingWhile} count={count}/>
+        <DeclrList declarations={declarations} flash={flash} loadMore={loadMore} setDeclarations={setDeclarations} switchLoading={switchLoading} loadingWhile={loadingWhile} count={count} />
     )
 }
 
@@ -37,16 +34,18 @@ index.getInitialProps = async (props) =>
         props.res.locals.flash = []
     }
 
-    let declrs = await getLimitedDeclrs([]);
+    // let declrs = await getLimitedDeclrs([]);
+    let declrs = { obj: "" }
+    let count = await getDeclrsCount();
 
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(declrs, window)
-        return { flash, declarations: declrs.obj.list, count: declrs.obj.count }
+        return { flash, declarations: declrs.obj, count: count.obj }
     }, () =>
     {
         CS_Redirects.tryResSR(declrs, props)
-        return { flash, declarations: declrs.obj.list, count: declrs.obj.count }
+        return { flash, declarations: declrs.obj, count: count.obj }
     })
 }
 

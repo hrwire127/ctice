@@ -133,6 +133,23 @@ async function getLimitedDeclrs(declarations)
         })
 }
 
+async function getDeclrsCount(declarations)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/count/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { declarations, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 async function getUsers()
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
@@ -169,7 +186,8 @@ async function getDeclrsDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let newDeclrs = await getLimitedDeclrs([]);
-        return newDeclrs.obj.list;
+        console.log(newDeclrs)
+        return newDeclrs.obj;
     }
     if (date === "Invalid")
     {
@@ -253,5 +271,5 @@ module.exports = {
     getDeclr, getUsers,
     logout,
     getDeclrsDateQuery, timeout, getField,
-    getDateDifference, getLimitedDeclrs
+    getDateDifference, getLimitedDeclrs, getDeclrsCount
 }

@@ -22,9 +22,16 @@ router.post('/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     const { declarations } = req.body;
     const newDeclarations = await Declaration.find({ _id: { $nin: declarations } }).limit(5)
 
-    const count = await Declaration.count({})
-    Redirects_SR.Api.sendApi(res, { list: newDeclarations, count })
+    Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
+
+router.post('/count/api', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const count = await Declaration.count({})
+
+    Redirects_SR.Api.sendApi(res, count)
+}))
+
 
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>

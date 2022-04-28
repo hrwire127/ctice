@@ -21,8 +21,11 @@ function DeclrList(props)
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
 
+    console.log(count)
+    console.log(declarations.length)
     useEffect(() =>
     {
+
         let element = document.querySelector('.search-query')
         var inputNodes = element.getElementsByTagName('INPUT');
         inputNodes[0].addEventListener('input', async (e) => 
@@ -33,6 +36,7 @@ function DeclrList(props)
 
     useEffect(async () =>
     {
+    
         loadingWhileFull(async () =>
         {
             await timeout(500)
