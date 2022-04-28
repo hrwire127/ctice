@@ -17,7 +17,7 @@ db.once("open", () =>
 const createDeclaration = async () =>
 {
     await Declaration.deleteMany({});
-    for (let i = 0; i < 3; i++)
+    for (let i = 0; i < 20; i++)
     {
         const randnum = Math.floor(Math.random() * titles.length);
         const declaration = new Declaration({

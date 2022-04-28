@@ -9,16 +9,13 @@ import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
 import { loadingWhile, getDeclrsDateQuery, timeout } from "../utilsCS/_client"
-import useLoading from './hooks/useLoading'
 
 function DeclrList(props)
 {
-    const [declarations, setDeclarations] = useState(props.declarations)
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
-    const [loadingWhile, switchLoading] = useLoading(true)
 
-    const { flash } = props;
+    const { flash, loadMore, declarations, setDeclarations, switchLoading, loadingWhile, count } = props;
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
 
@@ -44,11 +41,22 @@ function DeclrList(props)
     const Declrs = () =>
     {
         return switchLoading(0, () => (declarations.length > 0 ?
-            (<Box className={classes.List}>
-                {declarations.map(d => (
-                    <DeclrCard {...d} key={d._id} />
-                ))}
-            </Box>)
+            (<>
+                <Box className={classes.List}>
+                    {declarations.map(d => (
+                        <DeclrCard {...d} key={d._id} />
+                    ))}
+                </Box>
+                {
+                    count > declarations.length
+                    && (<Box
+                        display="flex"
+                        justifyContent="center"
+                    >
+                        <Button onClick={loadMore}>Load More</Button>
+                    </Box>)
+                }
+            </>)
             : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
     }
 

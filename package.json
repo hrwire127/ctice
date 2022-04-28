@@ -4,7 +4,7 @@
   "description": "clone",
   "private": true,
   "scripts": {
-    "main": "nodemon -w main.js -w routes -w utilsSR -w models -w config -w cloud -w assets main.js",
+    "main": "nodemon -w main.js -w routes -w utilsSR -w models -w config -w cloud main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack",
     "build": "next build",

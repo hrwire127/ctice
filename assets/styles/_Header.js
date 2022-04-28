@@ -5,7 +5,10 @@ const useStyles = makeStyles({
 		borderBottom: 1,
 		borderColor: 'divider',
 		typography: 'body1',
-		backgroundColor: "white"
+		backgroundColor: "white",
+        ["@media (max-width:467px)"]: {
+			minHeight: 80
+        },
 	},
 	List: {
 		flex: 1,
@@ -36,7 +39,12 @@ const useStyles = makeStyles({
 		display: "flex",
 		justifyContent: "space-between",
 		gap: 50,
-		alignItems: "center"
+		alignItems: "center",
+        ["@media (max-width:500px)"]: {
+            flexWrap: "wrap",
+            gap: 10,
+			justifyContent: "center",
+        },
 	}
 })
 
