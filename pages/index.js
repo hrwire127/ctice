@@ -7,7 +7,7 @@ import useLoading from '../components/hooks/useLoading'
 function index(props)
 {
     const { flash, count } = props;
-    const [declarations, setDeclarations] = useState(props.declarations)
+    const [declarations, setDeclarations] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
 
     function loadMore(e)
@@ -35,17 +35,14 @@ index.getInitialProps = async (props) =>
     }
 
     // let declrs = await getLimitedDeclrs([]);
-    let declrs = { obj: "" }
     let count = await getDeclrsCount();
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(declrs, window)
-        return { flash, declarations: declrs.obj, count: count.obj }
+        return { flash, count: count.obj }
     }, () =>
     {
-        CS_Redirects.tryResSR(declrs, props)
-        return { flash, declarations: declrs.obj, count: count.obj }
+        return { flash, count: count.obj }
     })
 }
 

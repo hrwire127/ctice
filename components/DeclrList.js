@@ -21,8 +21,6 @@ function DeclrList(props)
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
 
-    console.log(count)
-    console.log(declarations.length)
     useEffect(() =>
     {
 

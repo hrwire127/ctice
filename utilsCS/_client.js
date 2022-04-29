@@ -82,6 +82,35 @@ function getGlobals(context)
     return { isUser, isAdmin }
 }
 
+async function getUsers()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+const logout = (window) =>
+{
+    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+        { method: 'POST' }
+    )
+        .then(response => response.json())
+        .then(async res =>
+        {
+            CS_Redirects.tryResCS(res, window)
+        })
+}
+
 async function getDeclrs()
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
@@ -150,15 +179,15 @@ async function getDeclrsCount(declarations)
         })
 }
 
-async function getUsers()
+function getDeclrsQuery(query)
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/query/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { secret: process.env.NEXT_PUBLIC_SECRET }
+            { query, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -167,70 +196,51 @@ async function getUsers()
         })
 }
 
-
-const logout = (window) =>
+function getDeclrsDate(date)
 {
-    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
-        { method: 'POST' }
-    )
-        .then(response => response.json())
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/date/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { date, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
         .then(async res =>
         {
-            CS_Redirects.tryResCS(res, window)
+            return res;
         })
 }
 
 async function getDeclrsDateQuery(query, date)
 {
-    const declrs = await getDeclrs()
     if (query === "" && date === "Invalid")
     {
-        let newDeclrs = await getLimitedDeclrs([]);
-        console.log(newDeclrs)
+        let newDeclrs = await getLimitedDeclrs([])
         return newDeclrs.obj;
     }
+
     if (date === "Invalid")
     {
-        let queryDeclrs = [];
-        declrs.obj.forEach(el =>
-        {
-            if (el.title.includes(query)) 
-            {
-                queryDeclrs.push(el)
-            };
-        })
-        return queryDeclrs;
+        let queryDeclrs = await getDeclrsQuery(query)
+        return queryDeclrs.obj;
     }
     if (query === "")
     {
-        let dateDeclrs = [];
-        declrs.obj.forEach(el =>
-        {
-            console.log()
-            if (new Date(el.date[el.date.length - 1]).toDateString() === new Date(date).toDateString()) 
-            {
-                dateDeclrs.push(el)
-            };
-        })
-        return dateDeclrs;
+        let dateDeclrs = await getDeclrsDate(date)
+        return dateDeclrs.obj;
     }
-    let dateDeclrs = [];
-    declrs.obj.forEach(el =>
+    let newDeclrs = []
+    let dateDeclrs = await getDeclrsDate(date)
+    dateDeclrs.obj.forEach((el) =>
     {
-        if (new Date(el.date[el.date.length - 1]).toDateString() === new Date(date).toDateString())
+        if(el.title.includes(query))
         {
-            dateDeclrs.push(el)
-        };
+            newDeclrs.push(el)
+        }
     })
-    let queryDeclrs = [];
-    dateDeclrs.forEach(el =>
-    {
-        if (el.title.includes(query)) 
-        {
-            queryDeclrs.push(el)
-        };
-    })
-    return queryDeclrs;
+    return newDeclrs;
 }
 function timeout(ms)
 {
@@ -268,8 +278,8 @@ module.exports = {
     CropData, uploadFile,
     handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
-    getDeclr, getUsers,
-    logout,
+    getDeclr, getUsers, getDeclrsDate,
+    logout, getDeclrsQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getDeclrsCount
 }
