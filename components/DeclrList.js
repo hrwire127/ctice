@@ -8,16 +8,17 @@ import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
-import { getDeclrsDateQuery, timeout } from "../utilsCS/_client"
+import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import useLoading from '../components/hooks/useLoading'
 
 function DeclrList(props)
 {
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
+    const [count, setCount] = useState(props.count);
     const [loadingWhileFull, switchLoadingFull] = useLoading(true)
 
-    const { flash, loadMore, declarations, setDeclarations, switchLoading, loadingWhile, count } = props;
+    const { flash, loadMore, declarations, setDeclarations, switchLoading, loadingWhile } = props;
     const classes = useStyles();
     const adminCtx = React.useContext(AdminContext);
 
@@ -34,11 +35,12 @@ function DeclrList(props)
 
     useEffect(async () =>
     {
-    
+
         loadingWhileFull(async () =>
         {
             await timeout(500)
             await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
+            await setCount(await getCountDateQuery(queryValue, dateValue))
         })
 
     }, [dateValue, queryValue])

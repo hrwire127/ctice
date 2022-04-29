@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering, getLimitedDeclrs, timeout, getDeclrsCount } from '../utilsCS/_client'
+import { determRendering, getLimitedDeclrs, timeout, getAllCount } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function index(props)
@@ -35,7 +35,7 @@ index.getInitialProps = async (props) =>
     }
 
     // let declrs = await getLimitedDeclrs([]);
-    let count = await getDeclrsCount();
+    let count = await getAllCount();
 
     return determRendering(props, () =>
     {

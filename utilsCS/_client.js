@@ -162,9 +162,9 @@ async function getLimitedDeclrs(declarations)
         })
 }
 
-async function getDeclrsCount(declarations)
+async function getAllCount(declarations)
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/count/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/countall/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -213,12 +213,41 @@ function getDeclrsDate(date)
         })
 }
 
+function getLimitCount(query, date)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/countlimit/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { query, date, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+async function getCountDateQuery(query, date)
+{
+    if (query === "" && date === "Invalid")
+    {
+        let count = await getAllCount([])
+        return count.obj;
+    }
+
+    let count = await getLimitCount(query, date)
+    return count.obj;
+}
+
 async function getDeclrsDateQuery(query, date)
 {
     if (query === "" && date === "Invalid")
     {
-        let newDeclrs = await getLimitedDeclrs([])
-        return newDeclrs.obj;
+        let count = await getLimitedDeclrs([])
+        return count.obj;
     }
 
     if (date === "Invalid")
@@ -242,6 +271,7 @@ async function getDeclrsDateQuery(query, date)
     })
     return newDeclrs;
 }
+
 function timeout(ms)
 {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -279,7 +309,7 @@ module.exports = {
     handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
     getDeclr, getUsers, getDeclrsDate,
-    logout, getDeclrsQuery,
+    logout, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
-    getDateDifference, getLimitedDeclrs, getDeclrsCount
+    getDateDifference, getLimitedDeclrs, getAllCount
 }

@@ -20,42 +20,49 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { declarations } = req.body;
-    const newDeclarations = await Declaration.find({ _id: { $nin: declarations } }).limit(5)
+    const newDeclarations = await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT)
 
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
 
-router.post('/count/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const count = await Declaration.count({})
     Redirects_SR.Api.sendApi(res, count)
 }))
 
+router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const { query, date } = req.body;
+    const queryCount = query === "" ? 0 : await Declaration.count({ title: { $regex: query, $options: "i" } })
+    const dateCount = date === "Invalid" ? 0 : await Declaration.aggregate([
+        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+        { $match: { last: date.substring(0, 10) } },
+        { $count: "count" }
+    ])
+    console.log(dateCount)
+    console.log(dateCount.length > 0 )
+    console.log(dateCount.length > 0 ? dateCount[0].count : 0)
+    const sum = queryCount + (dateCount.length > 0 ? dateCount[0].count : 0)
+    Redirects_SR.Api.sendApi(res, sum)
+}))
+
 router.post('/query/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const { query } = req.body;
-    const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } })
+    const { query } = req.body; //declrs 
+    const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).limit(process.env.DOCS_LOAD_LIMIT)
 
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
 router.post('/date/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const { date } = req.body;
-    const newDate = date.substring(0, 10)
-    console.log(newDate)
+    const { date } = req.body; //declrs 
     const declarations = await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-        { $match: { last: newDate } }
+        { $match: { last: date.substring(0, 10) } },
+        { $limit: 5 }
     ])
-    // const declarations = await Declaration.find({ $expr: { $gt: [{ $arrayElemAt: ["$date", -1] }, date] } })
-    // const declarations = await Declaration.find({ $regex: [{ $last: "$date" }, newDate], $options: "i" })
-    //{ "$regex": [{ $last: "$date" }, newDate], "$options": "i" }
-    //     $where: function ()
-    //     {
-    //         return new Date(this.date[this.date.length - 1]).toDateString() === new Date(date).toDateString()
-    //     }
-    // })
 
     Redirects_SR.Api.sendApi(res, declarations)
 }))
