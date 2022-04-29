@@ -8,6 +8,7 @@ import TransitionAlerts from './TransitionAlerts'
 import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import Loading from './Loading'
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import useLoading from '../components/hooks/useLoading'
 
@@ -39,11 +40,15 @@ function DeclrList(props)
         loadingWhileFull(async () =>
         {
             await timeout(500)
-            await setDeclarations(await getDeclrsDateQuery(queryValue, dateValue))
-            await setCount(await getCountDateQuery(queryValue, dateValue))
+            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue);
+            CS_Redirects.tryResCS(newDeclrs, window)
+            setDeclarations(newDeclrs)
+            const newQuery = await getCountDateQuery(queryValue, dateValue);
+            CS_Redirects.tryResCS(newQuery, window) //
+            setCount(newQuery)
         })
 
-    }, [dateValue, queryValue])
+    }, [dateValue, queryValue, count])
 
     const Declrs = () =>
     {

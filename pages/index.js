@@ -17,6 +17,7 @@ function index(props)
         {
             await timeout(2000)
             const newDeclrs = await getLimitedDeclrs(declarations, date, query);
+            CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }
@@ -34,14 +35,15 @@ index.getInitialProps = async (props) =>
         props.res.locals.flash = []
     }
 
-    // let declrs = await getLimitedDeclrs([]);
     let count = await getAllCount();
 
     return determRendering(props, () =>
     {
+        CS_Redirects.tryResCS(count, window)
         return { flash, count: count.obj }
     }, () =>
     {
+        CS_Redirects.tryResSR(count, props)
         return { flash, count: count.obj }
     })
 }

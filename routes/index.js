@@ -32,8 +32,7 @@ router.post('/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
                 { _id: { $nin: declarations } },
                 { title: { $regex: query, $options: "i" } }
             ]
-        }) 
-        console.log(queryDeclarations)
+        })
         queryDeclarations.forEach((el) =>
         {
             const eldate = el.date[el.date.length - 1].toISOString().substring(0, 10)
@@ -54,14 +53,31 @@ router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
-    const queryCount = query === "" ? 0 : await Declaration.count({ title: { $regex: query, $options: "i" } })
-    const dateCount = date === "Invalid" ? 0 : await Declaration.aggregate([
-        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-        { $match: { last: date.substring(0, 10) } },
-        { $count: "count" }
-    ])
-    const sum = queryCount + (dateCount.length > 0 ? dateCount[0].count : 0)
-    Redirects_SR.Api.sendApi(res, sum)
+    let obj = [];
+    if (query === "")
+    {
+        obj = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
+            { $count: "count" }
+        ])
+    }
+    else if (date === "Invalid")
+    {
+        obj.push({count: await Declaration.count({ title: { $regex: query, $options: "i" } })})
+    }
+    else
+    {
+        obj = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
+            { $match: { title: { $regex: query, $options: 'i' } } },
+            { $count: "count" }
+        ])
+    }
+    console.log(obj)
+    if(obj.length === 0) obj.push({count: 0})
+    Redirects_SR.Api.sendApi(res, obj[0].count)
 }))
 
 router.post('/query/api', apiSecret, tryAsync_CS(async (req, res) =>

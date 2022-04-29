@@ -124,6 +124,7 @@ async function getDeclrs()
     }).then(response => response.json())
         .then(async res =>
         {
+            CS_Redirects.tryResCS(res, window)
             return res;
         })
 }
@@ -239,6 +240,7 @@ async function getCountDateQuery(query, date)
     }
 
     let count = await getLimitCount(query, date)
+    console.log(count)
     return count.obj;
 }
 
@@ -264,7 +266,7 @@ async function getDeclrsDateQuery(query, date)
     let dateDeclrs = await getDeclrsDate(date)
     dateDeclrs.obj.forEach((el) =>
     {
-        if(el.title.includes(query))
+        if (el.title.includes(query))
         {
             newDeclrs.push(el)
         }
