@@ -10,13 +10,13 @@ function index(props)
     const [declarations, setDeclarations] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
 
-    function loadMore(e)
+    function loadMore(e, date, query)
     {
         e.preventDefault()
         loadingWhile(async () =>
         {
             await timeout(2000)
-            const newDeclrs = await getLimitedDeclrs(declarations);
+            const newDeclrs = await getLimitedDeclrs(declarations, date, query);
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }

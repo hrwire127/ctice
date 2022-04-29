@@ -30,14 +30,13 @@ function login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    router.back()
-                    // CS_Redirects.tryResCS(res, window);
-                    // if (res.err) setError(res.err.message)
+                    CS_Redirects.tryResCS(res, window);
+                    if (res.err) setError(res.err.message)
                 })
         })
     };
 
-    return (<Login handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading}/>)
+    return (<Login handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading} />)
     // switchLoading(2, () => )
 }
 

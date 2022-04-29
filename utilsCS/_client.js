@@ -145,7 +145,7 @@ async function getDeclr(id)
         })
 }
 
-async function getLimitedDeclrs(declarations)
+async function getLimitedDeclrs(declarations, date, query)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/limit/api`, {
         method: 'POST',
@@ -153,7 +153,7 @@ async function getLimitedDeclrs(declarations)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { declarations, secret: process.env.NEXT_PUBLIC_SECRET }
+            { declarations, date, query, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -246,7 +246,7 @@ async function getDeclrsDateQuery(query, date)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await getLimitedDeclrs([])
+        let count = await getLimitedDeclrs([], "Invalid", "")
         return count.obj;
     }
 

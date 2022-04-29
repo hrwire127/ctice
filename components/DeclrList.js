@@ -59,7 +59,7 @@ function DeclrList(props)
                         display="flex"
                         justifyContent="center"
                     >
-                        <Button onClick={loadMore}>Load More</Button>
+                        <Button onClick={(e) => loadMore(e, dateValue, queryValue)}>Load More</Button>
                     </Box>))
                 }
             </>)
