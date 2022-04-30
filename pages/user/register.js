@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Register from '../../components/Register'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclr, determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
 
 function register(props)

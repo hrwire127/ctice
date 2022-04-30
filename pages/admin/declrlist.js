@@ -40,8 +40,9 @@ function declrlist(props)
                 }).then(response => response.json())
                     .then(async () =>
                     {
-                        const newDeclr = await getDeclrs() //to do load more
-                        setDeclrs(newDeclr.obj)
+                        const newDeclrs = await getDeclrs() //to do load more
+                        CS_Redirects.tryResCS(newDeclrs, window)
+                        setDeclrs(newDeclrs.obj)
                     })
         })
 

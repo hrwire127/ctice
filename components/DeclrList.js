@@ -44,7 +44,7 @@ function DeclrList(props)
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(newDeclrs)
             const newQuery = await getCountDateQuery(queryValue, dateValue);
-            CS_Redirects.tryResCS(newQuery, window) //
+            CS_Redirects.tryResCS(newQuery, window) 
             setCount(newQuery)
         })
 
