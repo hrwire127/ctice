@@ -41,7 +41,7 @@ async function validateDeclr(req, res, next)
         const msg = error.details.map(e => e.message).join(',')
         return new userError(msg, 401).throw_CS(res)
     }
-    
+
 
     const bodyError = inspectDecrl(title, JSON.parse(description), date, req.files)
 
@@ -57,6 +57,32 @@ async function validateDeclr(req, res, next)
     next()
 }
 
+async function validateApiDeclrs(req, res, next) 
+{
+    const { declarations } = req.body;
+
+    if (!declarations) return Redirects_SR.Api.sendApi(res, [])
+
+    next()
+}
+
+async function validateApiQuery(req, res, next) 
+{
+    const { query } = req.body;
+
+    if (query === undefined || query === null) return Redirects_SR.Api.sendApi(res, [])
+
+    next()
+}
+
+async function validateApiDate(req, res, next) 
+{
+    const { date } = req.body;
+
+    if (!date) return Redirects_SR.Api.sendApi(res, [])
+
+    next()
+}
 
 async function validateRegUser(req, res, next) 
 {
@@ -96,7 +122,7 @@ async function validateLogUser(req, res, next)
     const userSchema = Joi.object({
         username: Joi.string().required(),
         password: Joi.string().required(),
-        remember : Joi.boolean().required()
+        remember: Joi.boolean().required()
     })
 
     const { error } = userSchema.validate({ username, password, remember })
@@ -117,7 +143,7 @@ async function validateLogUser(req, res, next)
 
     req.body.username = username.trim()
     req.body.password = password.trim()
-    
+
     next()
 
 }
@@ -230,5 +256,6 @@ module.exports = {
     validateLogUser, isLogged_SR: isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, verifyUser, isAdmin_SR,
-    isAdmin_CS
+    isAdmin_CS, validateApiDeclrs, validateApiQuery,
+    validateApiDate
 }

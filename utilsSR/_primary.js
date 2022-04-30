@@ -29,7 +29,6 @@ async function sendEmail(pending)
 
 async function limitNan(declarations)
 {
-    if (!declarations) return []
     // return await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT);
     return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT);
     // .aggregate([
@@ -41,7 +40,6 @@ async function limitNan(declarations)
 }
 async function limitQuery(query, declarations)
 {
-    if (!query && !declarations) return []
     const queryDeclarations = await Declaration.find({
         $and: [
             { _id: { $nin: declarations } },
@@ -55,7 +53,6 @@ async function limitQuery(query, declarations)
 
 async function limitDate(date, declarations)
 {
-    if (!date && !declarations) return []
     let newDeclarations = [];
     const queryDeclarations = await Declaration.find({
         _id: { $nin: declarations }
@@ -74,7 +71,6 @@ async function limitDate(date, declarations)
 
 async function limitFilter(query, date, declarations)
 {
-    if (!query && !date && !declarations) return []
     let newDeclarations = [];
     const queryDeclarations = await Declaration.find({
         $and: [
@@ -96,7 +92,6 @@ async function limitFilter(query, date, declarations)
 
 async function allDateCount(date)
 {
-    if (!date) return [{ count: 0 }]
     return await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
@@ -106,16 +101,11 @@ async function allDateCount(date)
 
 async function allQueryCount(query)
 {
-    if (!query) return 0
-    console.log(query)
     return await Declaration.count({ title: { $regex: query, $options: "i" } })
 }
 
 async function limitFilterCount(date, query)
 {
-    if (!query && !date) return [{ count: 0 }]
-    console.log(query)
-    console.log(date)
     return await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },

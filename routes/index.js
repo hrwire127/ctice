@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS } = require('../utilsSR/_middlewares')
+const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, validateApiDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
 const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
@@ -10,14 +10,13 @@ router.get('/', (req, res) =>
     app.render(req, res, "/")
 })
 
-
 router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/limit/api', apiSecret, validateApiDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date } = req.body;
     let newDeclarations = [];
@@ -35,7 +34,7 @@ router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, count)
 }))
 
-router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate,  tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
     let obj = [];
@@ -48,18 +47,16 @@ router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, obj[0].count)
 }))
 
-router.post('/query/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, res) =>
 {
     const { query } = req.body;
-    if (!query) return Redirects_SR.Api.sendApi(res, [])
     const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT)
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/date/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/date/api', apiSecret, validateApiDate,  tryAsync_CS(async (req, res) =>
 {
     const { date } = req.body;
-    if (!date) return Redirects_SR.Api.sendApi(res, [])
     const declarations = await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },

@@ -43,7 +43,6 @@ function DeclrList(props)
             await timeout(500)
             const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue);
             const newQuery = await getCountDateQuery(queryValue, dateValue);
-            console.log(newQuery)
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window) 
             setDeclarations(newDeclrs)
