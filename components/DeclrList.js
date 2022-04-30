@@ -11,6 +11,7 @@ import Loading from './Loading'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import useLoading from '../components/hooks/useLoading'
+import FilterBy from './FilterBy';
 
 function DeclrList(props)
 {
@@ -42,6 +43,7 @@ function DeclrList(props)
             await timeout(500)
             const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue);
             const newQuery = await getCountDateQuery(queryValue, dateValue);
+            console.log(newQuery)
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window) 
             setDeclarations(newDeclrs)
@@ -86,6 +88,7 @@ function DeclrList(props)
                         (<ButtonGroup aria-label="button group">
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
+                        {/* <FilterBy setDeclarations={setDeclarations} declarations={declarations}/> */}
                 </Box>
                 <DatePicker setTime={setDate} />
             </Box>

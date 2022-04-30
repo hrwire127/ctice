@@ -29,20 +29,59 @@ async function sendEmail(pending)
 
 async function limitNan(declarations)
 {
-    if(!declarations) return []
-    return await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT);
+    if (!declarations) return []
+    // return await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT);
+    return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT);
+    // .aggregate([
+    //     { $project: { c: { $setDifference: [ "$", declarations ] } } },
+    //     { _id: { $nin: declarations } },
+    //     { $addFields: { last: { $last: "ndeclrs.date" } } },
+    //     { $sort: { last: 1 } }
+    // ]);, $expr: { $eq: [{ $last: "$myArray" }, "C"] } }
+}
+async function limitQuery(query, declarations)
+{
+    if (!query && !declarations) return []
+    const queryDeclarations = await Declaration.find({
+        $and: [
+            { _id: { $nin: declarations } },
+            { title: { $regex: query, $options: "i" } }
+        ]
+    }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT)
+    queryDeclarations.slice(0, process.env.DOCS_LOAD_LIMIT)
+
+    return queryDeclarations;
 }
 
-async function limitNanFilter(query, date, declarations)
+async function limitDate(date, declarations)
 {
-    if(!query && !date && !declarations) return []
+    if (!date && !declarations) return []
+    let newDeclarations = [];
+    const queryDeclarations = await Declaration.find({
+        _id: { $nin: declarations }
+    }).sort({ _id: -1 })
+    queryDeclarations.forEach((el) =>
+    {
+        if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        {
+            newDeclarations.push(el)
+        }
+    })
+    newDeclarations.slice(0, process.env.DOCS_LOAD_LIMIT)
+
+    return newDeclarations;
+}
+
+async function limitFilter(query, date, declarations)
+{
+    if (!query && !date && !declarations) return []
     let newDeclarations = [];
     const queryDeclarations = await Declaration.find({
         $and: [
             { _id: { $nin: declarations } },
             { title: { $regex: query, $options: "i" } }
         ]
-    })
+    }).sort({ _id: -1 })
     queryDeclarations.forEach((el) =>
     {
         if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
@@ -57,7 +96,7 @@ async function limitNanFilter(query, date, declarations)
 
 async function allDateCount(date)
 {
-    if(!date) return [{count: 0}]
+    if (!date) return [{ count: 0 }]
     return await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
@@ -67,13 +106,16 @@ async function allDateCount(date)
 
 async function allQueryCount(query)
 {
-    if(!query) return 0
+    if (!query) return 0
+    console.log(query)
     return await Declaration.count({ title: { $regex: query, $options: "i" } })
 }
 
 async function limitFilterCount(date, query)
 {
-    if(!query && !date) return [{count: 0}]
+    if (!query && !date) return [{ count: 0 }]
+    console.log(query)
+    console.log(date)
     return await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
@@ -84,5 +126,5 @@ async function limitFilterCount(date, query)
 
 module.exports =
 {
-    sendEmail, getUser, limitNan, limitNanFilter, allDateCount, allQueryCount, limitFilterCount
+    sendEmail, getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate
 }

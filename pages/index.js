@@ -13,10 +13,13 @@ function index(props)
     function loadMore(e, date, query)
     {
         e.preventDefault()
+        console.log(date)
+        console.log(query)
         loadingWhile(async () =>
         {
             await timeout(2000)
             const newDeclrs = await getLimitedDeclrs(declarations, date, query);
+            console.log(newDeclrs)
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
