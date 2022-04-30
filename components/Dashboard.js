@@ -11,6 +11,7 @@ function Dashboard(props)
     const Logout = () =>
     {
         logout(window)
+        CS_Redirects.tryResCS(res, window)
     }
     const { users, declarations } = props;
     return (

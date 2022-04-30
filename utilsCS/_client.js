@@ -1,4 +1,5 @@
 import CS_Redirects from '../utilsCS/CS_Redirects'
+const { Api_Call, Def_Call } = require('../utilsSR/SR_Redirects')
 
 const CropData = (data, length) =>
 {
@@ -107,7 +108,7 @@ const logout = (window) =>
         .then(response => response.json())
         .then(async res =>
         {
-            CS_Redirects.tryResCS(res, window)
+            return res;
         })
 }
 
@@ -124,7 +125,6 @@ async function getDeclrs()
     }).then(response => response.json())
         .then(async res =>
         {
-            CS_Redirects.tryResCS(res, window)
             return res;
         })
 }
@@ -231,16 +231,29 @@ function getLimitCount(query, date)
         })
 }
 
+function checkFetchError(res)
+{
+    if(res.type)
+    {
+        if(res.type === Def_Call)
+        {
+            return true
+        }
+    }
+    return false;
+}
+
 async function getCountDateQuery(query, date)
 {
     if (query === "" && date === "Invalid")
     {
         let count = await getAllCount([])
+        if(checkFetchError(count)) return count
         return count.obj;
     }
 
     let count = await getLimitCount(query, date)
-    console.log(count)
+    if(checkFetchError(count)) return count
     return count.obj;
 }
 
@@ -249,21 +262,25 @@ async function getDeclrsDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let count = await getLimitedDeclrs([], "Invalid", "")
+        if(checkFetchError(count)) return count
         return count.obj;
     }
 
     if (date === "Invalid")
     {
         let queryDeclrs = await getDeclrsQuery(query)
+        if(checkFetchError(queryDeclrs)) return queryDeclrs
         return queryDeclrs.obj;
     }
     if (query === "")
     {
         let dateDeclrs = await getDeclrsDate(date)
+        if(checkFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
     let newDeclrs = []
     let dateDeclrs = await getDeclrsDate(date)
+    if(checkFetchError(dateDeclrs)) return dateDeclrs
     dateDeclrs.obj.forEach((el) =>
     {
         if (el.title.includes(query))

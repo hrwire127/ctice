@@ -3,7 +3,7 @@ const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS } = require('../utilsSR/_middlewares')
-// const { processObj } = require('../utilsSR/_primary')
+const { limitNan, limitNanFilter, allDateCount, allQueryCount, limitFilterCount } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
 {
@@ -20,26 +20,9 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date } = req.body;
-    let newDeclarations = [];
-    if (query === "" && date === "Invalid")
-    {
-        newDeclarations = await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT)
-    }
-    else
-    {
-        const queryDeclarations = await Declaration.find({
-            $and: [
-                { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } }
-            ]
-        })
-        queryDeclarations.forEach((el) =>
-        {
-            const eldate = el.date[el.date.length - 1].toISOString().substring(0, 10)
-            if (eldate === date.substring(0, 10)) newDeclarations.push(el)
-        })
-        newDeclarations.slice(0, 5)
-    }
+    const newDeclarations = query === "" && date === "Invalid"
+        ? await limitNan(declarations)
+        : await limitNanFilter(query, date, declarations)
 
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
@@ -54,43 +37,27 @@ router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
     let obj = [];
-    if (query === "")
-    {
-        obj = await Declaration.aggregate([
-            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-            { $match: { last: date.substring(0, 10) } },
-            { $count: "count" }
-        ])
-    }
-    else if (date === "Invalid")
-    {
-        obj.push({count: await Declaration.count({ title: { $regex: query, $options: "i" } })})
-    }
-    else
-    {
-        obj = await Declaration.aggregate([
-            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-            { $match: { last: date.substring(0, 10) } },
-            { $match: { title: { $regex: query, $options: 'i' } } },
-            { $count: "count" }
-        ])
-    }
-    console.log(obj)
-    if(obj.length === 0) obj.push({count: 0})
+
+    if (query === "") obj = await allDateCount(date)
+    else if (date === "Invalid") obj.push({ count: await allQueryCount(query) })
+    else obj = await limitFilterCount(date, query)
+
+    if (obj.length === 0) obj.push({ count: 0 })
     Redirects_SR.Api.sendApi(res, obj[0].count)
 }))
 
 router.post('/query/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const { query } = req.body; //declrs 
+    const { query } = req.body;
+    if(!declarations) return Redirects_SR.Api.sendApi(res, [])
     const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).limit(process.env.DOCS_LOAD_LIMIT)
-
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
 router.post('/date/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const { date } = req.body; //declrs 
+    const { date } = req.body;
+    if(!date) return Redirects_SR.Api.sendApi(res, [])
     const declarations = await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
