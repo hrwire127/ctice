@@ -7,7 +7,7 @@ const useStyles = makeStyles({
         padding: "20px",
         width: "90vw",
         margin: "auto",
-        ["@media (max-width:500px)"]: {
+        ["@media (max-width:510px)"]: {
             flexWrap: "wrap",
             justifyContent: "center"
         },

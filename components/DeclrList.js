@@ -11,7 +11,6 @@ import Loading from './Loading'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import useLoading from '../components/hooks/useLoading'
-import FilterBy from './FilterBy';
 
 function DeclrList(props)
 {

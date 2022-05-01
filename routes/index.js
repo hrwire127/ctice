@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
+const User = require("../models/user");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, validateApiDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
 const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery } = require('../utilsSR/_primary')
@@ -70,6 +71,7 @@ router.post('/date/api', apiSecret, validateApiDate,  tryAsync_CS(async (req, re
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const Obj = await Declaration.processObj(req.body, req.files);
+    Obj.author = await User.findOne({username: req.session.passport.user}) 
     const declaration = new Declaration(Obj)
     await declaration.save();
     req.flash('success', 'Created Successfuly');

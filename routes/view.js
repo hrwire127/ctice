@@ -13,7 +13,8 @@ router.get("/:id", (req, res) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id)
+    const declaration = await Declaration.findById(id).populate("author", 'email status username')
+    
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
