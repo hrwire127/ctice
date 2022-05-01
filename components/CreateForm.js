@@ -116,6 +116,7 @@ export default function CreateForm(props)
 
 
                         <TextArea
+                            placeholder="Description"
                             setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}

@@ -49,6 +49,7 @@ const Rules = {
     email_max_char: 40,
     email_includes: "@",
     file_max_name: 20,
+    comment_max_blocks: 10,
 }
 
 module.exports = { valRule, Rules };

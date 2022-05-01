@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Typography, IconButton } from '@mui/material';
-import { Delete, Build } from '@mui/icons-material';
+import { Box, Typography, IconButton, Avatar } from '@mui/material';
+import { Delete, Build, Comment } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
@@ -9,12 +9,13 @@ import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import BackLink from "./BackLink";
+import CommentCreate from "./CommentCreate";
 
 function DeclrView(props)
 {
 
-    const { declaration, onDelete } = props;
-    console.log(declaration)
+    const { declaration, onDelete, switchLoading, alert, handleSubmit } = props;
+
     const { title, description, file, date, authors, _id } = declaration;
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
@@ -63,8 +64,18 @@ function DeclrView(props)
                             Last Edited by {authors[authors.length - 1].username}
                         </Typography>
                         )}
-
                     <BackLink>Back</BackLink>
+
+                    <CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit}/>
+
+                    <Box display="flex" justifyContent="left" alignItems="center">
+                        <Avatar sx={{ m: 1, bgcolor: "primary" }}>
+                            <Comment />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Comments
+                        </Typography>
+                    </Box>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}
             </Box>

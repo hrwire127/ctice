@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { loadingWhile, timeout, determRendering, getDeclr } from '../../utilsCS/_client'
@@ -9,8 +9,18 @@ function view(props)
 {
     const { declaration } = props;
     const { _id } = declaration;
+    const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
+    const [loadingWhileContent, switchLoadingContent] = useLoading(false)
 
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, 9000);
+    }
 
     const onDelete = async (e) =>                                                                           
     {
@@ -31,7 +41,26 @@ function view(props)
         })
 
     }
-    return switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} />)
+
+    const handleSubmit = async (body) =>
+    {
+        loadingWhileContent(async () =>
+        {
+            await timeout(2000)
+            await fetch(process.env.NEXT_PUBLIC_DR_HOST, {//to route submit
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+
+    };
+
+    return switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} switchLoading={switchLoadingContent} alert={alert} handleSubmit={handleSubmit} />)
 }
 
 view.getInitialProps = async (props) =>

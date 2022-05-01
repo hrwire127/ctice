@@ -116,7 +116,7 @@ class TextArea extends React.Component
                         editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
                         onChange={this.onChange}
-                        placeholder="Description"
+                        placeholder={this.props.placeholder}
                         ref="editor"
                         spellCheck={true}
                         keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}

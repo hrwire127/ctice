@@ -86,6 +86,7 @@ function EditForm(props)
 
 
                         <TextArea
+                            placeholder="Description"
                             setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}
