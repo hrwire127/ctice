@@ -4,6 +4,7 @@ const { Rules } = require('../utilsSR/val-Rule')
 const { excRule } = require('../utilsSR/exc-Rule');
 const { upload } = require('../utilsSR/_tertiary')
 const { cloud } = require('../cloud/storage');
+const User = require("./user");
 
 const DeclarationSchema = new Schema({
     title: {
@@ -32,8 +33,8 @@ const DeclarationSchema = new Schema({
         type: [Date],
         required: true
     },
-    author: {
-        type: Schema.Types.ObjectId,
+    authors: {
+        type: [Schema.Types.ObjectId],
         ref: "User",
         required: true
     }
@@ -44,13 +45,16 @@ DeclarationSchema.virtual('hasFile').get(function ()
     return this.file['url'] !== undefined;
 })
 
-DeclarationSchema.statics.processObj = async function (body = undefined, files = undefined, declaration = undefined, del = false) 
+DeclarationSchema.statics.processObj = async function (req, declaration = undefined, del = false) 
 {
+    let { body, files } = req;
+
     const hadFile = declaration ? declaration.hasFile : undefined;
 
     let Obj = {
         ...body
     }
+
 
     if (del)
     {
@@ -68,6 +72,9 @@ DeclarationSchema.statics.processObj = async function (body = undefined, files =
 
     Obj.date = declaration ? declaration.date : []
     Obj.date.push(body.date)
+
+    Obj.authors = []
+    Obj.authors.push(await User.findOne({ username: req.session.passport.user }))
 
     if (await new excRule([body.file, files, hadFile], [], async () =>
     {

@@ -15,7 +15,7 @@ function DeclrView(props)
 
     const { declaration, onDelete } = props;
     console.log(declaration)
-    const { title, description, file, date, author, _id } = declaration;
+    const { title, description, file, date, authors, _id } = declaration;
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
@@ -53,11 +53,17 @@ function DeclrView(props)
                         {date[date.length - 1].match(/\d\d:\d\d/)} _ {date[date.length - 1].substring(0, 10)}
                     </Typography>
                     <Box display="flex" justifyContent="left" gap={1} alignItems="center">
-                        <Typography variant="h8" component="h8" color="text.secondary">
-                            by {author.username}
+                        <Typography variant="h8" color="text.secondary">
+                            Created by {authors[0].username}
                         </Typography>
-                        <Typography variant="h8" component="h8" color="green"> {author.status} </Typography>
+                        <Typography variant="h8" color="green"> {authors[0].status} </Typography>
                     </Box>
+                    {authors.length > 1 &&
+                        (<Typography variant="h8" color="text.secondary">
+                            Last Edited by {authors[authors.length - 1].username}
+                        </Typography>
+                        )}
+
                     <BackLink>Back</BackLink>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}

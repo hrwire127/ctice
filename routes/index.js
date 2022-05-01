@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
-const User = require("../models/user");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, validateApiDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
 const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery } = require('../utilsSR/_primary')
@@ -35,7 +34,7 @@ router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, count)
 }))
 
-router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate,  tryAsync_CS(async (req, res) =>
+router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
     let obj = [];
@@ -55,7 +54,7 @@ router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, r
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/date/api', apiSecret, validateApiDate,  tryAsync_CS(async (req, res) =>
+router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
 {
     const { date } = req.body;
     const declarations = await Declaration.aggregate([
@@ -70,8 +69,7 @@ router.post('/date/api', apiSecret, validateApiDate,  tryAsync_CS(async (req, re
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
-    const Obj = await Declaration.processObj(req.body, req.files);
-    Obj.author = await User.findOne({username: req.session.passport.user}) 
+    const Obj = await Declaration.processObj(req);
     const declaration = new Declaration(Obj)
     await declaration.save();
     req.flash('success', 'Created Successfuly');

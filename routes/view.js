@@ -13,7 +13,7 @@ router.get("/:id", (req, res) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id).populate("author", 'email status username')
+    const declaration = await Declaration.findById(id).populate("authors", 'email status username')
     
     Redirects_SR.Api.sendApi(res, declaration)
 }))
@@ -22,7 +22,7 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    const Obj = await Declaration.processObj(req.body, req.files, declaration);
+    const Obj = await Declaration.processObj(req, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     req.flash('success', 'Edited Successfuly');
     Redirects_SR.Home.CS(res)
@@ -32,7 +32,7 @@ router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id);
-    await Declaration.processObj(req.body, req.files, declaration, true)
+    await Declaration.processObj(req, declaration, true)
     await Declaration.findByIdAndDelete(id)
     req.flash('info', 'Deleted Successfuly');
     Redirects_SR.Home.CS(res)

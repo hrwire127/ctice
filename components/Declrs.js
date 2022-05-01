@@ -21,7 +21,7 @@ export default function Declrs(props)
             el.date[0],
             el.title,
             el.file ? el.file.name : "nothing",
-            el.author,
+            el.authors[0],
             2,
         )
     })

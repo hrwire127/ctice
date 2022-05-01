@@ -31,7 +31,7 @@ const createDeclaration = async () =>
                 location: "ctice/A_rrpiog"
             },
             date: [new Date()],
-            author: "admin"
+            authors: 'ObjectId("62696403a60c0d6ebec55335")'
         })
         await declaration.save();
     }

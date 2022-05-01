@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
@@ -16,10 +16,11 @@ function DeclrCard(props)
     const classes = useStyles();
     const [diff, setDiff] = useState()
 
-    useEffect(() => {
-        setDiff(getDateDifference(new Date(), new Date(date)))
+    useEffect(() =>
+    {
+        setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
     }, [])
-    
+
 
 
     const userCtx = React.useContext(UserContext);
