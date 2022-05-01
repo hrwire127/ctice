@@ -319,7 +319,7 @@ function getDateDifference(d2, d1)
     }
     else if (secs > 0)
     {
-        return `${secs} seond${secs > 1 ? "s" : ""}`
+        return `${secs} second${secs > 1 ? "s" : ""}`
     }
 }
 
