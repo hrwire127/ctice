@@ -39,10 +39,26 @@ function Comment(props)
         })
 
     };
+    
+    const handleDelete = async () =>
+    {
+        loadingWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${comment._id}`, {
+                method: 'DELETE',
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+
+    };
 
     return edit
         ? (<CommentEdit comment={comment} handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading} />)
-        : (<CommentCard {...comment} edit={edit} setEdit={setEdit} />)
+        : (<CommentCard {...comment} edit={edit} setEdit={setEdit} handleDelete={handleDelete} />)
 
 }
 

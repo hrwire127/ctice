@@ -58,15 +58,16 @@ router.put("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async 
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.delete("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+router.delete("/:id/comment/:cid", isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
     let declaration = await Declaration.findById(id)
     let comment = await Comment.findById(cid)
-    let Obj = await Comment.processObj(req, declaration, comment, true)
-    await Comment.findByIdAndUpdate(id, Obj)
+    let i = await Comment.processObj(req, declaration, comment, true)
+    declaration.comments.splice(i, 1);
+    await Comment.findByIdAndDelete(cid)
     await declaration.save()
-    await comment.save()
+    req.flash('info', 'Deleted Successfuly');
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 

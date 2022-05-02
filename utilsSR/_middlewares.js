@@ -297,8 +297,6 @@ function isAdmin_CS(req, res, next)
     // new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
 
-
-
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR: isLogged_SR,

@@ -5,11 +5,11 @@ import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } f
 import useStyles from "../assets/styles/_CommentCard"
 import { CropData, getDateDifference } from '../utilsCS/_client';
 import UserContext from './context/contextUser'
-import { Build, Visibility } from '@mui/icons-material';
+import { Build, Delete } from '@mui/icons-material';
 
 function CommentCard(props)
 {
-    const { _id, content, date, author, setEdit, edit } = props;
+    const { _id, content, date, author, setEdit, handleDelete } = props;
     const [diff, setDiff] = useState()
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
@@ -35,7 +35,10 @@ function CommentCard(props)
                     {diff} ago
                 </Typography>
                 {userCtx === author.username && (
-                    <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                    <>
+                        <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                        <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                    </>
                 )}
             </CardActions>
         </Card>

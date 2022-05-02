@@ -24,7 +24,7 @@ const CommentSchema = new Schema({
 
 CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
 {
-    let { content, date, author } = req.body;
+    let { content, date } = req.body;
 
     let Obj = { content, date }
 
@@ -32,22 +32,17 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
     {
         await new excRule([], [], async () =>
         {
-            declaration.comments.forEach(c, i =>
+            let author = await User.findOne({ username: req.session.passport.user })
+            return declaration.comments.forEach((c, i) =>
             {
-                if (c === comment._id)
+                if (c === comment._id && author._id === comment._id)
                 {
-                    declaration.comments.splice(i, 1);
+                    console.log(i)
+                    return i;
                 }
             });
         }, true).Try();
-        return;
     }
-
-    console.log(content)
-    console.log(date)
-    console.log(author)
-    console.log(comment)
-    console.log(declaration)
 
     if (await new excRule([content, date], [comment, declaration], async () =>
     {
