@@ -14,8 +14,16 @@ router.get("/:id", (req, res) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id).populate("authors", 'email status username')
-    
+    const declaration = await Declaration.findById(id)
+        .populate({
+            path: 'comments',
+            populate: {
+                path: 'author'
+            }
+        })
+        .populate("authors", 'email status username')
+    // await declaration.comments[0].populate("author", 'email status username')
+    console.log(declaration)
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
@@ -33,10 +41,10 @@ router.post("/comment/:id", isLogged_CS, validateComment, tryAsync_CS(async (req
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    let comment = new Comment(req.body)
-    console.log(comment)
+    let comment = new Comment(await Comment.processObj(req))
     declaration.comments.push(comment)
     await declaration.save()
+    await comment.save()
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 

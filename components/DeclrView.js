@@ -10,13 +10,14 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import BackLink from "./BackLink";
 import CommentCreate from "./CommentCreate";
+import CommentList from "./CommentList";
 
 function DeclrView(props)
 {
 
     const { declaration, onDelete, switchLoading, alert, handleSubmit } = props;
 
-    const { title, description, file, date, authors, _id } = declaration;
+    const { title, description, file, date, authors, _id, comments } = declaration;
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
@@ -66,15 +67,16 @@ function DeclrView(props)
                         )}
                     <BackLink>Back</BackLink>
 
-                    <CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit}/>
+                    {userCtx && (<CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit} />)}
 
-                    <Box display="flex" justifyContent="left" alignItems="center">
+                    <Box display="flex" justifyContent="left" alignItems="center" flexDirection="column">
                         <Avatar sx={{ m: 1, bgcolor: "primary" }}>
                             <Comment />
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Comments
                         </Typography>
+                        <CommentList comments={comments} />
                     </Box>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}

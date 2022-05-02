@@ -100,7 +100,7 @@ async function getUsers()
         })
 }
 
-const logout = (window) =>
+const logout = () =>
 {
     fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
         { method: 'POST' }

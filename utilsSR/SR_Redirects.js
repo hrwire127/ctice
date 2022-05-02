@@ -26,6 +26,10 @@ class SR_Redirect
         const type = Def_Call
         res.json({ type, redirect })
     }
+    customSR(res, redirect)
+    {
+        res.redirect(redirect)
+    }
 }
 
 const Redirects_SR = {

@@ -52,7 +52,7 @@ async function validateDeclr(req, res, next)
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
-    req.body.author = getUser(req, res)
+    // req.body.author = getUser(req, res)
 
     next()
 }
@@ -100,7 +100,7 @@ async function validateComment(req, res, next)
     }
 
     req.body.content = JSON.stringify(modifyDesc(JSON.parse(content)))
-    req.body.author = getUser(req, res)
+    // req.body.author = getUser(req, res)
 
     next()
 }

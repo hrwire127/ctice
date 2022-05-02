@@ -52,7 +52,7 @@ function Header(props)
 
 	const Logout = () =>
 	{
-		logout(window)
+		const res = logout()
 		CS_Redirects.tryResCS(res, window)
 	}
 

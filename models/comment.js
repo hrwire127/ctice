@@ -22,5 +22,17 @@ const CommentSchema = new Schema({
     },
 });
 
+CommentSchema.statics.processObj = async function (req) 
+{
+    let { content, date, author } = req.body;
+
+    let Obj = { content, date }
+
+    Obj.author = await User.findOne({ username: req.session.passport.user })
+
+    return Obj;
+
+}
+
 
 module.exports = mongoose.model('Comment', CommentSchema)
