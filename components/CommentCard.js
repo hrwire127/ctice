@@ -10,6 +10,7 @@ import { Build, Delete } from '@mui/icons-material';
 function CommentCard(props)
 {
     const { _id, content, date, author, setEdit, handleDelete } = props;
+    const [initDiff, setInitialDiff] = useState()
     const [diff, setDiff] = useState()
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
@@ -19,6 +20,7 @@ function CommentCard(props)
 
     useEffect(() =>
     {
+        setInitialDiff(getDateDifference(new Date(), new Date(date[0])))
         setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
     }, [])
 
@@ -31,9 +33,14 @@ function CommentCard(props)
                 <Editor editorKey="editor" readOnly={true} editorState={editorState} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
-                <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                    {diff} ago
-                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
+                        Created {initDiff}
+                    </Typography>
+                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
+                        Edited {diff}
+                    </Typography>
+                </Box>
                 {userCtx === author.username && (
                     <>
                         <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>

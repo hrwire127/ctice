@@ -26,7 +26,7 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
 {
     let { content, date } = req.body;
 
-    let Obj = { content, date }
+    let Obj = { content }
 
     if (del)
     {
@@ -46,15 +46,18 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
 
     if (await new excRule([content, date], [comment, declaration], async () =>
     {
-        Obj.author = comment.author
-        Obj.date.push(comment.date)
-        console.log(Obj)
-    }).Try()) return Obj;
-
-    if (await new excRule([content, date], [], async () =>
-    {
+        Obj.date = date
         Obj.author = await User.findOne({ username: req.session.passport.user })
     }).Try()) return Obj;
+
+    if (await new excRule([content, date, comment, declaration], [], async () =>
+    {
+        Obj.date = comment.date
+        Obj.date.push(new Date(date))
+        Obj.author = comment.author
+
+    }).Try()) return Obj;
+
 
 }
 

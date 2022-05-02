@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles({
     Card: {
         width: 220,
-        height: 207,
+        height: 247,
         position: 'relative'
     },
     Actions: {
