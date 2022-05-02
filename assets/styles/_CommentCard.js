@@ -12,7 +12,7 @@ const useStyles = makeStyles({
         background: "rgb(255,255,255)",
         background: "linear-gradient(180deg, rgb(255 255 255) 0%, rgb(255 255 255 / 26%) 0%, rgb(255 255 255 / 100%) 10%)",
         position: "absolute",
-        width: "93%",
+        width: "100%",
         height: 40,
     },
     Title: {

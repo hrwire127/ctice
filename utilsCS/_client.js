@@ -78,7 +78,7 @@ function getGlobals(context)
 {
     let isUser;
     let isAdmin = false;
-    isUser = context.req.isAuthenticated()
+    if(context.req.session.passport) isUser = context.req.session.passport.user
     isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
     return { isUser, isAdmin }
 }

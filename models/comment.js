@@ -22,15 +22,44 @@ const CommentSchema = new Schema({
     },
 });
 
-CommentSchema.statics.processObj = async function (req) 
+CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
 {
     let { content, date, author } = req.body;
 
     let Obj = { content, date }
 
-    Obj.author = await User.findOne({ username: req.session.passport.user })
+    if (del)
+    {
+        await new excRule([], [], async () =>
+        {
+            declaration.comments.forEach(c, i =>
+            {
+                if (c === comment._id)
+                {
+                    declaration.comments.splice(i, 1);
+                }
+            });
+        }, true).Try();
+        return;
+    }
 
-    return Obj;
+    console.log(content)
+    console.log(date)
+    console.log(author)
+    console.log(comment)
+    console.log(declaration)
+
+    if (await new excRule([content, date], [comment, declaration], async () =>
+    {
+        Obj.author = comment.author
+        Obj.date.push(comment.date)
+        console.log(Obj)
+    }).Try()) return Obj;
+
+    if (await new excRule([content, date], [], async () =>
+    {
+        Obj.author = await User.findOne({ username: req.session.passport.user })
+    }).Try()) return Obj;
 
 }
 

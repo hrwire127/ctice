@@ -23,7 +23,6 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
         })
         .populate("authors", 'email status username')
     // await declaration.comments[0].populate("author", 'email status username')
-    console.log(declaration)
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
@@ -37,12 +36,35 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
     Redirects_SR.Home.CS(res)
 }))
 
-router.post("/comment/:id", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
     let comment = new Comment(await Comment.processObj(req))
     declaration.comments.push(comment)
+    await declaration.save()
+    await comment.save()
+    Redirects_SR.Home.customCS(res, `${id}`)
+}))
+
+router.put("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+{
+    const { id, cid } = req.params;
+    let declaration = await Declaration.findById(id)
+    let comment = await Comment.findById(cid)
+    let Obj = await Comment.processObj(req, declaration, comment)
+    await Comment.findByIdAndUpdate(cid, Obj)
+    await declaration.save()
+    Redirects_SR.Home.customCS(res, `${id}`)
+}))
+
+router.delete("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+{
+    const { id, cid } = req.params;
+    let declaration = await Declaration.findById(id)
+    let comment = await Comment.findById(cid)
+    let Obj = await Comment.processObj(req, declaration, comment, true)
+    await Comment.findByIdAndUpdate(id, Obj)
     await declaration.save()
     await comment.save()
     Redirects_SR.Home.customCS(res, `${id}`)

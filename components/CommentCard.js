@@ -9,7 +9,7 @@ import { Build, Visibility } from '@mui/icons-material';
 
 function CommentCard(props)
 {
-    const { content, date, author } = props;
+    const { _id, content, date, author, setEdit, edit } = props;
     const [diff, setDiff] = useState()
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
@@ -34,9 +34,9 @@ function CommentCard(props)
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
                     {diff} ago
                 </Typography>
-                {/* {userCtx && (
-                    <Build />
-                )} */}
+                {userCtx === author.username && (
+                    <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                )}
             </CardActions>
         </Card>
     )

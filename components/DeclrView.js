@@ -76,7 +76,7 @@ function DeclrView(props)
                         <Typography component="h1" variant="h5">
                             Comments
                         </Typography>
-                        <CommentList comments={comments} />
+                        <CommentList comments={comments} id={_id} />
                     </Box>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}
