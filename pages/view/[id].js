@@ -46,7 +46,7 @@ function view(props)
     {
         loadingWhileContent(async () =>
         {
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view${_id}/comment/`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/comment/`, {
                 method: 'POST',
                 body: body,
             }).then(response => response.json())
