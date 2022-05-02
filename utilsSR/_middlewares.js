@@ -3,7 +3,7 @@ const Joi = require("joi");
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
-const { inspectDecrl, inspectUser, modifyDesc } = require('./_secondary')
+const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_secondary')
 const { getUser } = require('./_primary')
 
 async function validateDeclr(req, res, next) 
@@ -52,6 +52,54 @@ async function validateDeclr(req, res, next)
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
+    req.body.author = getUser(req, res)
+
+    next()
+}
+
+async function validateComment(req, res, next)
+{
+    let { content, date } = req.body
+
+    const commentSchema = Joi.object({
+        content: Joi.object({
+            blocks: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required(),
+                text: Joi.string().required().allow(''),
+                type: Joi.string().required(),
+                depth: Joi.number().required(),
+                inlineStyleRanges: Joi.array().required(),
+                entityRanges: Joi.array().required(),
+                data: Joi.object().required()
+            })),
+            entityMap: Joi.object().required()
+        }).required(),
+        date: Joi.string().required()
+    })
+
+    const preparedBody =
+    {
+        content: JSON.parse(content), date
+    }
+
+    const { error } = commentSchema.validate(preparedBody)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new userError(msg, 401).throw_CS(res)
+    }
+
+
+    const bodyError = inspectComment(JSON.parse(content), date)
+
+    if (bodyError) 
+    {
+        return new userError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.content = JSON.stringify(modifyDesc(JSON.parse(content)))
     req.body.author = getUser(req, res)
 
     next()
@@ -257,5 +305,5 @@ module.exports = {
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, verifyUser, isAdmin_SR,
     isAdmin_CS, validateApiDeclrs, validateApiQuery,
-    validateApiDate
+    validateApiDate, validateComment
 }

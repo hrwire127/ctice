@@ -22,6 +22,12 @@ function inspectDecrl(title, description, date, Files) //
     // if (dateRule.getVal()) return dateRule.processMsg()
 }
 
+function inspectComment(content, date) //
+{
+    const contentRule = new valRule(content.blocks.length, Rules.comment_max_blocks, 0)
+    if (contentRule.getVal()) return contentRule.processMsg()
+
+}
 
 function inspectUser(username, email = undefined, password = undefined)
 {
@@ -86,4 +92,4 @@ function genToken()
 }
 
 
-module.exports = { inspectDecrl, inspectUser, modifyDesc, genToken }
+module.exports = { inspectDecrl, inspectComment, inspectUser, modifyDesc, genToken }

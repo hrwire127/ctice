@@ -21,6 +21,11 @@ class SR_Redirect
     {
         res.redirect(this.redirect)
     }
+    customCS(res, redirect)
+    {
+        const type = Def_Call
+        res.json({ type, redirect })
+    }
 }
 
 const Redirects_SR = {

@@ -99,7 +99,6 @@ export default function CommentCreate(props)
                             >
                                 Create
                             </Button>
-                            <BackLink>Back</BackLink>
                         </>))}
                     </Box>
                 </Box>

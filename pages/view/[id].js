@@ -46,8 +46,7 @@ function view(props)
     {
         loadingWhileContent(async () =>
         {
-            await timeout(2000)
-            await fetch(process.env.NEXT_PUBLIC_DR_HOST, {//to route submit
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/comment/${_id}`, {
                 method: 'POST',
                 body: body,
             }).then(response => response.json())
