@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getLimitedComments, timeout, determRendering, getDeclr } from '../../utilsCS/_client'
+import { getLimitedComments, timeout, determRendering, getDeclr, setError } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
 
 
@@ -12,8 +12,8 @@ function view(props)
     const [alert, setAlert] = useState()
     const [comments, setComments] = useState([])
     const [loadingWhile, switchLoading] = useLoading(false)
-    const [loadingComment, switchComment] = useLoading(false)
-    const [loadingWhileContent, switchLoadingContent] = useLoading(false)
+    const [commentWhile, switchComment] = useLoading(false)
+    const [creatingWhile, creatingSwitch] = useLoading(false)
 
     const setError = (msg) => 
     {
@@ -24,7 +24,7 @@ function view(props)
         }, 9000);
     }
 
-    const onDelete = async (e) =>                                                                           
+    const onDeclrDelete = async (e) =>                                                                           
     {
         e.preventDefault();
         loadingWhile(async () =>
@@ -39,6 +39,7 @@ function view(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
                 })
         })
 
@@ -46,7 +47,7 @@ function view(props)
 
     const handleSubmit = async (body) =>
     {
-        loadingWhileContent(async () =>
+        creatingWhile(async () =>
         {
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/comment/`, {
                 method: 'POST',
@@ -64,9 +65,8 @@ function view(props)
     function loadMore(e)
     {
         e.preventDefault()
-        loadingComment(async () =>
+        commentWhile(async () =>
         {
-            // getLimitedComments
             await timeout(500)
             const newComments = await getLimitedComments(comments, _id);
             CS_Redirects.tryResCS(newComments, window)
@@ -76,15 +76,15 @@ function view(props)
 
     return switchLoading(2, () => <DeclrView
         declaration={declaration}
-        onDelete={onDelete}
-        switchLoading={switchLoadingContent}
+        onDeclrDelete={onDeclrDelete}
+        creatingSwitch={creatingSwitch}
         alert={alert}
         handleSubmit={handleSubmit}
         comments={comments}
         setComments={setComments}
         loadMore={loadMore}
         switchComment={switchComment}
-        loadingComment={loadingComment}
+        commentWhile={commentWhile}
     />)
 }
 

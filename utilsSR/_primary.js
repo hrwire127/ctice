@@ -1,9 +1,4 @@
-const { excRule } = require('./exc-Rule');
-const userError = require('./userError');
-const { cloud } = require('../cloud/storage');
 const { Redirects_SR } = require('./SR_Redirects');
-const User = require("../models/user");
-const Pending = require("../models/pending")
 const nodemailer = require('../config/nodemailer')
 const Declaration = require("../models/declaration");
 
@@ -29,14 +24,7 @@ async function sendEmail(pending)
 
 async function limitNan(declarations)
 {
-    // return await Declaration.find({ _id: { $nin: declarations } }).limit(process.env.DOCS_LOAD_LIMIT);
     return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT);
-    // .aggregate([
-    //     { $project: { c: { $setDifference: [ "$", declarations ] } } },
-    //     { _id: { $nin: declarations } },
-    //     { $addFields: { last: { $last: "ndeclrs.date" } } },
-    //     { $sort: { last: 1 } }
-    // ]);, $expr: { $eq: [{ $last: "$myArray" }, "C"] } }
 }
 async function limitQuery(query, declarations)
 {

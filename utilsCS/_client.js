@@ -100,9 +100,9 @@ async function getUsers()
         })
 }
 
-const logout = () =>
+const LogoutFetch = () =>
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/LogoutFetch`,
         { method: 'POST' }
     )
         .then(response => response.json())
@@ -114,7 +114,7 @@ const logout = () =>
 
 async function getDeclrs()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/all/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ function getDeclrsDate(date)
         })
 }
 
-function getLimitCount(query, date)
+function getCountLimit(query, date)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/countlimit/api`, {
         method: 'POST',
@@ -231,7 +231,7 @@ function getLimitCount(query, date)
         })
 }
 
-function checkFetchError(res)
+function nowindowFetchError(res)
 {
     if(res.type)
     {
@@ -248,12 +248,12 @@ async function getCountDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let count = await getAllCount([])
-        if(checkFetchError(count)) return count
+        if(nowindowFetchError(count)) return count
         return count.obj;
     }
 
-    let count = await getLimitCount(query, date)
-    if(checkFetchError(count)) return count
+    let count = await getCountLimit(query, date)
+    if(nowindowFetchError(count)) return count
     return count.obj;
 }
 
@@ -262,25 +262,25 @@ async function getDeclrsDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let count = await getLimitedDeclrs([], "Invalid", "")
-        if(checkFetchError(count)) return count
+        if(nowindowFetchError(count)) return count
         return count.obj;
     }
 
     if (date === "Invalid")
     {
         let queryDeclrs = await getDeclrsQuery(query)
-        if(checkFetchError(queryDeclrs)) return queryDeclrs
+        if(nowindowFetchError(queryDeclrs)) return queryDeclrs
         return queryDeclrs.obj;
     }
     if (query === "")
     {
         let dateDeclrs = await getDeclrsDate(date)
-        if(checkFetchError(dateDeclrs)) return dateDeclrs
+        if(nowindowFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
     let newDeclrs = []
     let dateDeclrs = await getDeclrsDate(date)
-    if(checkFetchError(dateDeclrs)) return dateDeclrs
+    if(nowindowFetchError(dateDeclrs)) return dateDeclrs
     dateDeclrs.obj.forEach((el) =>
     {
         if (el.title.includes(query))
@@ -340,13 +340,23 @@ async function getLimitedComments(comments, id)
         })
 }
 
+function getFlash (props)
+{
+    let flash = props.res ? props.res.locals.flash[0] : undefined;
+    if (props.res) 
+    {
+        props.res.locals.flash = []
+    }
+    return flash;
+}
+
 module.exports = {
     CropData, uploadFile,
     handleDeclrData,
     isToken, determRendering, getGlobals, getDeclrs,
     getDeclr, getUsers, getDeclrsDate,
-    logout, getDeclrsQuery, getCountDateQuery,
+    LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getAllCount,
-    getLimitedComments
+    getLimitedComments, getFlash
 }

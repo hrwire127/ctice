@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, validateApiDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
+const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, hasDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
 const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery } = require('../utilsSR/_primary')
 
 router.get('/', (req, res) =>
@@ -10,13 +10,13 @@ router.get('/', (req, res) =>
     app.render(req, res, "/")
 })
 
-router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/limit/api', apiSecret, validateApiDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/limit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date } = req.body;
     let newDeclarations = [];

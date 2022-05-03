@@ -2,10 +2,6 @@ const { Api_Call, Def_Call } = require('../utilsSR/SR_Redirects')
 
 class CS_Redirect
 {
-    constructor()
-    {
-
-    }
     tryResCS(res, window)
     {
         if (res.type === Def_Call)

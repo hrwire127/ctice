@@ -3,8 +3,7 @@ const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS, validateComment } = require('../utilsSR/_middlewares')
-// const { processObj } = require('../utilsSR/_primary')
+const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS, validateComment, checkCommentUser } = require('../utilsSR/_middlewares')
 
 router.get("/:id", (req, res) =>
 {
@@ -16,13 +15,6 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
         .populate("authors", 'email status username')
-    // .populate({
-    //     path: 'comments',
-    //     populate: {
-    //         path: 'author'
-    //     }
-    // })
-    // await declaration.comments[0].populate("author", 'email status username')
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
@@ -38,7 +30,7 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
             },
             options: {
                 limit: process.env.COMMENTS_LOAD_LIMIT,
-                sort: { date: -1 },
+                sort: { _id: -1 },
                 skip: comments.length,
             }
         })
@@ -77,7 +69,7 @@ router.put("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async 
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.delete("/:id/comment/:cid", isLogged_CS, tryAsync_CS(async (req, res) =>
+router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
     let declaration = await Declaration.findById(id)

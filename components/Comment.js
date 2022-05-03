@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
 import CommentCard from './CommentCard';
 import CommentEdit from './CommentEdit';
 import useLoading from './hooks/useLoading'
@@ -9,9 +8,9 @@ function Comment(props)
 {
     const [edit, setEdit] = useState(false)
     const [alert, setAlert] = useState()
-    const [loadingWhile, switchLoading] = useLoading(false)
+    const [submitWhile, submitSwitch] = useLoading(false)
 
-    const { comment, id } = props;
+    const { comment, id, loadingMoreWhile } = props;
 
     const setError = (msg) => 
     {
@@ -25,7 +24,7 @@ function Comment(props)
 
     const handleSubmit = async (body) =>
     {
-        loadingWhile(async () =>
+        submitWhile(async () =>
         {
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${comment._id}`, {
                 method: 'PUT',
@@ -33,17 +32,21 @@ function Comment(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    loadingMoreWhile(() =>
+                    {
+                        CS_Redirects.tryResCS(res, window)
+                        if (res.err) setError(res.err.message)
+                    })
                 })
         })
 
     };
-    
+
     const handleDelete = async () =>
     {
-        loadingWhile(async () =>
+        submitWhile(async () =>
         {
+            await timeout(3000)
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${comment._id}`, {
                 method: 'DELETE',
             }).then(response => response.json())
@@ -57,7 +60,7 @@ function Comment(props)
     };
 
     return edit
-        ? (<CommentEdit comment={comment} handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading} />)
+        ? (<CommentEdit comment={comment} handleSubmit={handleSubmit} alert={alert} submitSwitch={submitSwitch} />)
         : (<CommentCard {...comment} edit={edit} setEdit={setEdit} handleDelete={handleDelete} />)
 
 }

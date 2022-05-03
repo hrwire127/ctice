@@ -1,6 +1,6 @@
 const { valRule, Rules } = require('./val-Rule');
 
-function inspectDecrl(title, description, date, Files) //
+function inspectDecrl(title, description, Files) //
 {
     const titleRule = new valRule(title.length, Rules.title_max_char, 0)
     if (titleRule.getVal()) return titleRule.processMsg()
@@ -17,12 +17,9 @@ function inspectDecrl(title, description, date, Files) //
         if (fileFormat.getVal()) return fileFormat.processMsg()
 
     }
-
-    // const dateRule = new valRule(date.length, Rules.date_length, 0)
-    // if (dateRule.getVal()) return dateRule.processMsg()
 }
 
-function inspectComment(content, date) //
+function inspectComment(content) 
 {
     const contentRule = new valRule(content.blocks.length, Rules.comment_max_blocks, 0)
     if (contentRule.getVal()) return contentRule.processMsg()

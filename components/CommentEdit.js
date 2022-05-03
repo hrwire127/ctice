@@ -12,13 +12,10 @@ import
     Link
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
-import UploadBtn from "./UploadBtn";
-import BackLink from "./BackLink";
 
 const theme = createTheme();
 
@@ -35,7 +32,7 @@ export default function CommentEdit(props)
         contentValid,
     ] = useFormError(false);
 
-    const { handleSubmit, alert, switchLoading, comment } = props;
+    const { handleSubmit, alert, submitSwitch, comment } = props;
     const { content, _id } = comment;
 
     const [editorState, setEditorState] = useState();
@@ -88,7 +85,7 @@ export default function CommentEdit(props)
                             : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
                         }
 
-                        {switchLoading(0, () =>
+                        {submitSwitch(0, () =>
                         (<>
                             <Button
                                 type="submit"

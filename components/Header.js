@@ -11,7 +11,7 @@ import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { logout } from '../utilsCS/_client'
+import { LogoutFetch } from '../utilsCS/_client'
 import useStyles from "../assets/styles/_Header"
 
 
@@ -52,7 +52,7 @@ function Header(props)
 
 	const Logout = async () =>
 	{
-		const res = await logout()
+		const res = await LogoutFetch()
 		CS_Redirects.tryResCS(res, window)
 	}
 

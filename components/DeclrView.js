@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Typography, IconButton, Avatar, Collapse, Button } from '@mui/material';
-import { Delete, Build, Comment, Close } from '@mui/icons-material';
+import { Delete, Build, Close } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
@@ -19,11 +19,11 @@ function DeclrView(props)
 
     const {
         declaration,
-        onDelete,
-        switchLoading,
+        onDeclrDelete,
+        creatingSwitch,
         alert,
         handleSubmit,
-        loadingComment,
+        commentWhile,
         switchComment,
         loadMore,
         setComments,
@@ -41,7 +41,7 @@ function DeclrView(props)
 
     useEffect(() =>
     {
-        loadingComment(async () =>
+        commentWhile(async () =>
         {
             await timeout(500)
             const newComments = await getLimitedComments(comments, _id);
@@ -61,7 +61,7 @@ function DeclrView(props)
         return (
             <Box sx={{ width: '100%' }}>
                 <Collapse in={open}>
-                    <CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit} />
+                    <CommentCreate creatingSwitch={creatingSwitch} alert={alert} handleSubmit={handleSubmit} />
                 </Collapse>
                 {open && (
                     <IconButton
@@ -89,6 +89,27 @@ function DeclrView(props)
             </Box>)
     }
 
+    const Comments = () =>
+    {
+        return comments.length > 0 ? (<>
+
+            {switchComment(0, () =>
+            {
+                if (comments.length < declaration.comments.length && comments.length > 0)
+                {
+                    return (<>
+                        <CommentList comments={comments} id={_id} />
+                        <Button onClick={loadMore}>Load More</Button>
+                    </>)
+                }
+            })}
+        </>)
+            : (<Typography component="h5" color="text.secondary" variant="h5">
+                Nothing
+            </Typography>)
+
+    }
+
     return (
         <Box className='h-75'>
             <Box className={classes.Content}>
@@ -102,7 +123,7 @@ function DeclrView(props)
                             {adminCtx && (
                                 <>
                                     <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
-                                    <Link href=""><IconButton onClick={onDelete} size="small"><Delete /></IconButton></Link>
+                                    <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete /></IconButton></Link>
                                 </>
                             )}
                         </Box>
@@ -118,35 +139,24 @@ function DeclrView(props)
                         </Typography>
                         <Typography variant="h8" color="green"> {authors[0].status} </Typography>
                     </Box>
+
+
+                    <BackLink>Back</BackLink>
+
+                    <Typography component="h1" variant="h5">
+                        Comments
+                    </Typography>
+
                     {authors.length > 1 &&
                         (<Typography variant="h8" color="text.secondary">
                             Last Edited by {authors[authors.length - 1].username}
                         </Typography>
                         )}
-                    <BackLink>Back</BackLink>
 
                     {userCtx ? (<CommentFormCreate />) : (<Typography variant="h6">Please Log in to comment</Typography>)}
-                    <Typography component="h1" variant="h5">
-                        Comments
-                    </Typography>
 
                     <Box display="flex" alignItems="left" flexDirection="column">
-                        {comments.length > 0 ? (<>
-                            <CommentList comments={comments} id={_id} />
-                            {switchComment(0, () =>
-                            {
-                                console.log(declaration.comments.length)
-                                console.log(comments.length)
-                                if (comments.length < declaration.comments.length && comments.length > 0)
-                                {
-                                    return <Button onClick={loadMore}>Load More</Button>
-                                }
-                            })}
-                        </>)
-                            : (<Typography component="h5" variant="h5">
-                                Nothing
-                            </Typography>)}
-
+                        <Comments />
                     </Box>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}

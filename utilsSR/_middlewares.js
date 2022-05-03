@@ -3,6 +3,8 @@ const Joi = require("joi");
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
+const Comment = require("../models/comment")
+const Redirects_CS = require("../utilsCS/CS_Redirects")
 const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_secondary')
 const { getUser } = require('./_primary')
 
@@ -43,7 +45,7 @@ async function validateDeclr(req, res, next)
     }
 
 
-    const bodyError = inspectDecrl(title, JSON.parse(description), date, req.files)
+    const bodyError = inspectDecrl(title, JSON.parse(description), req.files)
 
     if (bodyError) 
     {
@@ -92,7 +94,7 @@ async function validateComment(req, res, next)
     }
 
 
-    const bodyError = inspectComment(JSON.parse(content), date)
+    const bodyError = inspectComment(JSON.parse(content))
 
     if (bodyError) 
     {
@@ -100,12 +102,11 @@ async function validateComment(req, res, next)
     }
 
     req.body.content = JSON.stringify(modifyDesc(JSON.parse(content)))
-    // req.body.author = getUser(req, res)
 
     next()
 }
 
-async function validateApiDeclrs(req, res, next) 
+async function hasDeclrs(req, res, next) 
 {
     const { declarations } = req.body;
 
@@ -245,7 +246,6 @@ function apiSecret(req, res, next)
     if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
         Redirects_SR.Error.CS(res)
-        // next(new userError(...Object.values(errorMessages.unauthorized)))
     }
     next()
 }
@@ -265,7 +265,7 @@ function verifyUser(req, res, next)
         })
         .catch((err) => 
         {
-            console.log("error", err)
+            console.log(err)
             new userError(err.message, err.status).throw_SR(req, res)
         });
 };
@@ -294,14 +294,24 @@ function isAdmin_CS(req, res, next)
         }
     }
     Redirects_CS.Error.CS(res)
-    // new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
 
+async function checkCommentUser(req, res, next)
+{
+    let comment = await Comment.findById(req.params.cid).populate({
+        path: 'author',
+    })
+    if(comment.author.username === req.session.passport.user)
+    {
+        next()
+    }
+    Redirects_CS.Error.CS(res)
+}
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR: isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, verifyUser, isAdmin_SR,
-    isAdmin_CS, validateApiDeclrs, validateApiQuery,
-    validateApiDate, validateComment
+    isAdmin_CS, hasDeclrs, validateApiQuery,
+    validateApiDate, validateComment, checkCommentUser
 }

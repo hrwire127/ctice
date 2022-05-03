@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Toolbar, IconButton, Container, Grid, Paper } from '@mui/material';
 import { Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material';
-import { logout } from '../utilsCS/_client'
+import { LogoutFetch } from '../utilsCS/_client'
 import Chart from './Chart';
 import Declrs from './Declrs';
 import Link from 'next/link'
@@ -10,7 +10,7 @@ function Dashboard(props)
 {
     const Logout = () =>
     {
-        logout(window)
+        LogoutFetch(window)
         CS_Redirects.tryResCS(res, window)
     }
     const { users, declarations } = props;
