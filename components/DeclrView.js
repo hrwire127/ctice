@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Typography, IconButton, Avatar, Collapse, Button } from '@mui/material';
 import { Delete, Build, Comment, Close } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import { getLimitedComments, timeout } from '../utilsCS/_client'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -15,9 +17,19 @@ import CommentList from "./CommentList";
 function DeclrView(props)
 {
 
-    const { declaration, onDelete, switchLoading, alert, handleSubmit } = props;
+    const {
+        declaration,
+        onDelete,
+        switchLoading,
+        alert,
+        handleSubmit,
+        loadingComment,
+        switchComment,
+        loadMore,
+        setComments,
+        comments } = props;
 
-    const { title, description, file, date, authors, _id, comments } = declaration;
+    const { title, description, file, date, authors, _id } = declaration;
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
@@ -26,6 +38,18 @@ function DeclrView(props)
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
+
+    useEffect(() =>
+    {
+        loadingComment(async () =>
+        {
+            await timeout(500)
+            const newComments = await getLimitedComments(comments, _id);
+            CS_Redirects.tryResCS(newComments, window)
+            setComments(newComments.obj)
+        })
+    }, [])
+
 
     const Placeholder = (
         <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
@@ -107,7 +131,22 @@ function DeclrView(props)
                     </Typography>
 
                     <Box display="flex" alignItems="left" flexDirection="column">
-                        <CommentList comments={comments} id={_id} />
+                        {comments.length > 0 ? (<>
+                            <CommentList comments={comments} id={_id} />
+                            {switchComment(0, () =>
+                            {
+                                console.log(declaration.comments.length)
+                                console.log(comments.length)
+                                if (comments.length < declaration.comments.length && comments.length > 0)
+                                {
+                                    return <Button onClick={loadMore}>Load More</Button>
+                                }
+                            })}
+                        </>)
+                            : (<Typography component="h5" variant="h5">
+                                Nothing
+                            </Typography>)}
+
                     </Box>
                 </Box>
                 {file ? (<DocumentView file={file} />) : Placeholder}

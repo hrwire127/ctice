@@ -323,6 +323,23 @@ function getDateDifference(d2, d1)
     }
 }
 
+async function getLimitedComments(comments, id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { comments, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 module.exports = {
     CropData, uploadFile,
     handleDeclrData,
@@ -330,5 +347,6 @@ module.exports = {
     getDeclr, getUsers, getDeclrsDate,
     logout, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
-    getDateDifference, getLimitedDeclrs, getAllCount
+    getDateDifference, getLimitedDeclrs, getAllCount,
+    getLimitedComments
 }

@@ -15,15 +15,34 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
+        .populate("authors", 'email status username')
+    // .populate({
+    //     path: 'comments',
+    //     populate: {
+    //         path: 'author'
+    //     }
+    // })
+    // await declaration.comments[0].populate("author", 'email status username')
+    Redirects_SR.Api.sendApi(res, declaration)
+}))
+
+router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const { id } = req.params;
+    const { comments } = req.body;
+    const declaration = await Declaration.findById(id)
         .populate({
             path: 'comments',
             populate: {
                 path: 'author'
+            },
+            options: {
+                limit: process.env.COMMENTS_LOAD_LIMIT,
+                sort: { date: -1 },
+                skip: comments.length,
             }
         })
-        .populate("authors", 'email status username')
-    // await declaration.comments[0].populate("author", 'email status username')
-    Redirects_SR.Api.sendApi(res, declaration)
+    Redirects_SR.Api.sendApi(res, declaration.comments)
 }))
 
 router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { loadingWhile, timeout, determRendering, getDeclr } from '../../utilsCS/_client'
+import { getLimitedComments, timeout, determRendering, getDeclr } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
 
 
@@ -10,7 +10,9 @@ function view(props)
     const { declaration } = props;
     const { _id } = declaration;
     const [alert, setAlert] = useState()
+    const [comments, setComments] = useState([])
     const [loadingWhile, switchLoading] = useLoading(false)
+    const [loadingComment, switchComment] = useLoading(false)
     const [loadingWhileContent, switchLoadingContent] = useLoading(false)
 
     const setError = (msg) => 
@@ -59,7 +61,31 @@ function view(props)
 
     };
 
-    return switchLoading(2, () => <DeclrView declaration={declaration} onDelete={onDelete} switchLoading={switchLoadingContent} alert={alert} handleSubmit={handleSubmit} />)
+    function loadMore(e)
+    {
+        e.preventDefault()
+        loadingComment(async () =>
+        {
+            // getLimitedComments
+            await timeout(500)
+            const newComments = await getLimitedComments(comments, _id);
+            CS_Redirects.tryResCS(newComments, window)
+            setComments(comments.concat(newComments.obj));
+        })
+    }
+
+    return switchLoading(2, () => <DeclrView
+        declaration={declaration}
+        onDelete={onDelete}
+        switchLoading={switchLoadingContent}
+        alert={alert}
+        handleSubmit={handleSubmit}
+        comments={comments}
+        setComments={setComments}
+        loadMore={loadMore}
+        switchComment={switchComment}
+        loadingComment={loadingComment}
+    />)
 }
 
 view.getInitialProps = async (props) =>
