@@ -102,7 +102,7 @@ async function getUsers()
 
 const logout = () =>
 {
-    fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
         { method: 'POST' }
     )
         .then(response => response.json())

@@ -3,11 +3,11 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles({
     List: {
         margin: "auto",
-        width: "10vw",
+        width: "100%",
         paddingBottom: "50px",
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, 220px)",
-        justifyContent: "center",
+        justifyContent: "left",
         gridGap: "20px",
     },
 });

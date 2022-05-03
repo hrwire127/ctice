@@ -26,10 +26,18 @@ function CommentCard(props)
 
     return (
         <Card className={classes.Card}>
-            <CardContent sx={{ height: 160 }}>
-                <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                    {author.username}
-                </Typography>
+            <CardContent sx={{ height: 160}}>
+                <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                    <Typography className={classes.Title} color="text.secondary" gutterBottom>
+                        {author.username}
+                    </Typography>
+                    {userCtx === author.username && (
+                        <Box sx={{position: "absolute", marginLeft: 16}}>
+                            <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                            <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                        </Box>
+                    )}
+                </Box>
                 <Editor editorKey="editor" readOnly={true} editorState={editorState} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
@@ -41,12 +49,6 @@ function CommentCard(props)
                         Edited {diff}
                     </Typography>
                 </Box>
-                {userCtx === author.username && (
-                    <>
-                        <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
-                        <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
-                    </>
-                )}
             </CardActions>
         </Card>
     )

@@ -50,9 +50,9 @@ function Header(props)
 	const { sections, title } = props;
 	const classes = useStyles();
 
-	const Logout = () =>
+	const Logout = async () =>
 	{
-		const res = logout()
+		const res = await logout()
 		CS_Redirects.tryResCS(res, window)
 	}
 

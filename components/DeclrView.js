@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Typography, IconButton, Avatar } from '@mui/material';
-import { Delete, Build, Comment } from '@mui/icons-material';
+import { Box, Typography, IconButton, Avatar, Collapse, Button } from '@mui/material';
+import { Delete, Build, Comment, Close } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
@@ -21,6 +21,7 @@ function DeclrView(props)
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
+    const [open, setOpen] = React.useState(true);
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
@@ -30,6 +31,39 @@ function DeclrView(props)
         <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
             No Upload...
         </Typography>)
+
+    const CommentFormCreate = () =>
+    {
+        return (
+            <Box sx={{ width: '100%' }}>
+                <Collapse in={open}>
+                    <CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit} />
+                </Collapse>
+                {open && (
+                    <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() =>
+                        {
+                            setOpen(false);
+                        }}
+                    >
+                        <Close fontSize="inherit" />
+                    </IconButton>)}
+
+                {!open && (<Button
+                    variant="outlined"
+                    onClick={() =>
+                    {
+                        setOpen(true);
+                    }}
+                >
+                    Comment
+                </Button>)}
+
+            </Box>)
+    }
 
     return (
         <Box className='h-75'>
@@ -67,15 +101,12 @@ function DeclrView(props)
                         )}
                     <BackLink>Back</BackLink>
 
-                    {userCtx && (<CommentCreate switchLoading={switchLoading} alert={alert} handleSubmit={handleSubmit} />)}
+                    {userCtx ? (<CommentFormCreate />) : (<Typography variant="h6">Please Log in to comment</Typography>)}
+                    <Typography component="h1" variant="h5">
+                        Comments
+                    </Typography>
 
-                    <Box display="flex" justifyContent="left" alignItems="center" flexDirection="column">
-                        <Avatar sx={{ m: 1, bgcolor: "primary" }}>
-                            <Comment />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Comments
-                        </Typography>
+                    <Box display="flex" alignItems="left" flexDirection="column">
                         <CommentList comments={comments} id={_id} />
                     </Box>
                 </Box>
