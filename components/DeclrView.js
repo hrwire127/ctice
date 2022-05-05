@@ -27,7 +27,8 @@ function DeclrView(props)
         switchComment,
         loadMore,
         setComments,
-        comments } = props;
+        comments,
+        loadMoreSwitch } = props;
 
     const { title, description, file, date, authors, _id } = declaration;
     const userCtx = React.useContext(UserContext);
@@ -91,23 +92,17 @@ function DeclrView(props)
 
     const Comments = () =>
     {
-        return comments.length > 0 ? (<>
-
-            {switchComment(0, () =>
-            {
-                if (comments.length < declaration.comments.length && comments.length > 0)
-                {
-                    return (<>
-                        <CommentList comments={comments} id={_id} />
-                        <Button onClick={loadMore}>Load More</Button>
-                    </>)
-                }
-            })}
-        </>)
-            : (<Typography component="h5" color="text.secondary" variant="h5">
-                Nothing
-            </Typography>)
-
+        return (switchComment(0, () =>
+        {
+            return comments.length > 0
+                ? (<>
+                    <CommentList comments={comments} id={_id} />
+                    {loadMoreSwitch(0, () => comments.length < declaration.comments.length && comments.length > 0 && (<Button onClick={loadMore}>Load More</Button>))}
+                </>)
+                : (<Typography component="h5" color="text.secondary" variant="h5">
+                    Nothing
+                </Typography>)
+        }))
     }
 
     return (
