@@ -14,6 +14,7 @@ function view(props)
     const [loadingWhile, switchLoading] = useLoading(false)
     const [commentWhile, switchComment] = useLoading(false)
     const [creatingWhile, creatingSwitch] = useLoading(false)
+    const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
 
     const setError = (msg) => 
     {
@@ -65,7 +66,7 @@ function view(props)
     function loadMore(e)
     {
         e.preventDefault()
-        commentWhile(async () =>
+        loadMoreWhile(async () =>
         {
             await timeout(500)
             const newComments = await getLimitedComments(comments, _id);
@@ -85,6 +86,7 @@ function view(props)
         loadMore={loadMore}
         switchComment={switchComment}
         commentWhile={commentWhile}
+        loadMoreSwitch={loadMoreSwitch}
     />)
 }
 
