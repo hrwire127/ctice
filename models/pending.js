@@ -2,10 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { Rules } = require('../utilsSR/val-Rule')
 const { genToken } = require('../utilsSR/_secondary')
-const User = require("./user");
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("../utilsSR/errorMessages")
 const userError = require('../utilsSR/userError');
+const User = require("./user");
 
 
 const PendingSchema = new Schema({
@@ -41,11 +41,15 @@ const PendingSchema = new Schema({
 
 PendingSchema.methods.processPending = async function (req, res)
 {
+    this.date = new Date();
     return new Promise(async (resolve, reject) =>
     {
         this.confirmationCode = genToken()
+        console.log(User)
         const Pending = mongoose.model('Pending');
-        if (await Pending.findOne({ email: this.email }) || await User.findOne({ email: this.email }))
+        if (await Pending.findOne({ email: this.email })
+            || await User.findOne({ email: this.email })
+        )
         {
             new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
@@ -74,8 +78,5 @@ PendingSchema.methods.processPending = async function (req, res)
         }
     })
 }
-
-
-const Pending = mongoose.model('Pending', PendingSchema)
-
+const Pending = mongoose.model('Pending', PendingSchema);
 module.exports = Pending;

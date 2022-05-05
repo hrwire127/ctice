@@ -24,7 +24,7 @@ const CommentSchema = new Schema({
 
 CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
 {
-    let { content, date } = req.body;
+    let { content } = req.body;
 
     let Obj = { content }
 
@@ -44,16 +44,16 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
         }, true).Try();
     }
 
-    if (await new excRule([content, date], [comment, declaration], async () =>
+    if (await new excRule([content], [comment, declaration], async () =>
     {
-        Obj.date = date
+        Obj.date = new Date();
         Obj.author = await User.findOne({ username: req.session.passport.user })
     }).Try()) return Obj;
 
-    if (await new excRule([content, date, comment, declaration], [], async () =>
+    if (await new excRule([content, comment, declaration], [], async () =>
     {
         Obj.date = comment.date
-        Obj.date.push(new Date(date))
+        Obj.date.push(new Date())
         Obj.author = comment.author
 
     }).Try()) return Obj;
@@ -61,5 +61,5 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
 
 }
 
-
-module.exports = mongoose.model('Comment', CommentSchema)
+const Comment = mongoose.model('Comment', CommentSchema);
+module.exports = Comment;

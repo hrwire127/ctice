@@ -43,7 +43,7 @@ export default function CommentCreate(props)
         const data = new FormData(e.currentTarget);
 
         data.append("content", JSON.stringify(editorState));
-        data.append("date", new Date())
+        // data.append("date", new Date())
 
         const content = editorState.blocks[0].text;
 

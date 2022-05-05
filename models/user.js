@@ -5,7 +5,6 @@ const userError = require('../utilsSR/userError');
 const { Rules } = require('../utilsSR/val-Rule')
 const passport = require('passport');
 const errorMessages = require("../utilsSR/errorMessages")
-const Pending = require("./pending")
 const Redirects_SR = require('../utilsSR/SR_Redirects')
 
 
@@ -88,7 +87,7 @@ UserSchema.statics.processLogin = async function (req, res, next)
 
 UserSchema.methods.processRegister = async function (req, res, pending, { user, password })
 {
-    const User = mongoose.model('User')
+    const User = mongoose.model('User', UserSchema)
     return new Promise(async (resolve, reject) =>
     {
         if (pending)
@@ -114,7 +113,6 @@ UserSchema.methods.processRegister = async function (req, res, pending, { user, 
         }
     })
 }
-
 const User = mongoose.model('User', UserSchema);
 
-module.exports = User
+module.exports = User;

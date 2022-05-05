@@ -45,7 +45,7 @@ export default function CommentEdit(props)
         const data = new FormData(e.currentTarget);
 
         data.append("content", JSON.stringify(editorState));
-        data.append("date", new Date())
+        // data.append("date", new Date())
 
 
         if (contentValid(content))

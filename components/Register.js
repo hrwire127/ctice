@@ -40,7 +40,7 @@ function Register(props)
 
         const username = data.get("username");
         const email = data.get("email");
-        data.append("date", new Date())
+        // data.append("date", new Date())
 
         if (usernameValid(username) && emailValid(email))
         {

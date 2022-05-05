@@ -75,7 +75,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
     }
 
     Obj.date = declaration ? declaration.date : []
-    Obj.date.push(body.date)
+    Obj.date.push(new Date())
 
     Obj.authors = []
     Obj.authors.push(await User.findOne({ username: req.session.passport.user }))
@@ -121,5 +121,5 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
     }).Try()) return Obj;
 
 }
-
-module.exports = mongoose.model('Declaration', DeclarationSchema)
+const Declaration = mongoose.model('Declaration', DeclarationSchema);
+module.exports = Declaration;

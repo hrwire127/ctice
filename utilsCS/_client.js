@@ -42,7 +42,7 @@ function handleDeclrData(evtTarget, file = undefined, description)
     else data.delete("file")
 
     data.append("description", JSON.stringify(description));
-    data.append("date", new Date())
+    // data.append("date", new Date())
 
     const title_ = data.get("title");
     const description_ = description.blocks[0].text;
@@ -78,7 +78,7 @@ function getGlobals(context)
 {
     let isUser;
     let isAdmin = false;
-    if(context.req.session.passport) isUser = context.req.session.passport.user
+    if (context.req.session.passport) isUser = context.req.session.passport.user
     isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
     return { isUser, isAdmin }
 }
@@ -102,9 +102,10 @@ async function getUsers()
 
 const LogoutFetch = () =>
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/LogoutFetch`,
-        { method: 'POST' }
-    )
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
+        {
+            method: 'POST'
+        })
         .then(response => response.json())
         .then(async res =>
         {
@@ -233,9 +234,9 @@ function getCountLimit(query, date)
 
 function nowindowFetchError(res)
 {
-    if(res.type)
+    if (res.type)
     {
-        if(res.type === Def_Call)
+        if (res.type === Def_Call)
         {
             return true
         }
@@ -248,12 +249,12 @@ async function getCountDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let count = await getAllCount([])
-        if(nowindowFetchError(count)) return count
+        if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
     let count = await getCountLimit(query, date)
-    if(nowindowFetchError(count)) return count
+    if (nowindowFetchError(count)) return count
     return count.obj;
 }
 
@@ -262,25 +263,25 @@ async function getDeclrsDateQuery(query, date)
     if (query === "" && date === "Invalid")
     {
         let count = await getLimitedDeclrs([], "Invalid", "")
-        if(nowindowFetchError(count)) return count
+        if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
     if (date === "Invalid")
     {
         let queryDeclrs = await getDeclrsQuery(query)
-        if(nowindowFetchError(queryDeclrs)) return queryDeclrs
+        if (nowindowFetchError(queryDeclrs)) return queryDeclrs
         return queryDeclrs.obj;
     }
     if (query === "")
     {
         let dateDeclrs = await getDeclrsDate(date)
-        if(nowindowFetchError(dateDeclrs)) return dateDeclrs
+        if (nowindowFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
     let newDeclrs = []
     let dateDeclrs = await getDeclrsDate(date)
-    if(nowindowFetchError(dateDeclrs)) return dateDeclrs
+    if (nowindowFetchError(dateDeclrs)) return dateDeclrs
     dateDeclrs.obj.forEach((el) =>
     {
         if (el.title.includes(query))
@@ -340,7 +341,7 @@ async function getLimitedComments(comments, id)
         })
 }
 
-function getFlash (props)
+function getFlash(props)
 {
     let flash = props.res ? props.res.locals.flash[0] : undefined;
     if (props.res) 

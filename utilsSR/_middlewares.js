@@ -1,12 +1,11 @@
 const { Redirects_SR } = require('./SR_Redirects');
-const Joi = require("joi");
+const Joi = require("joi").extend(require('@joi/date'));;
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
 const Comment = require("../models/comment")
 const Redirects_CS = require("../utilsCS/CS_Redirects")
 const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_secondary')
-const { getUser } = require('./_primary')
 
 async function validateDeclr(req, res, next) 
 {
@@ -27,12 +26,12 @@ async function validateDeclr(req, res, next)
             entityMap: Joi.object().required()
         }).required(),
         file: Joi.string(),
-        date: Joi.string().required()
+        date: Joi.date().iso().required()
     })
 
     const preparedBody =
     {
-        title, description: JSON.parse(description), file, date
+        title, description: JSON.parse(description), file, date: new Date(date)
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -76,12 +75,12 @@ async function validateComment(req, res, next)
             })),
             entityMap: Joi.object().required()
         }).required(),
-        date: Joi.string().required()
+        date: Joi.date().iso().required()
     })
 
     const preparedBody =
     {
-        content: JSON.parse(content), date
+        content: JSON.parse(content), date: new Date(date)
     }
 
     const { error } = commentSchema.validate(preparedBody)
@@ -301,7 +300,7 @@ async function checkCommentUser(req, res, next)
     let comment = await Comment.findById(req.params.cid).populate({
         path: 'author',
     })
-    if(comment.author.username === req.session.passport.user)
+    if (comment.author.username === req.session.passport.user)
     {
         next()
     }
