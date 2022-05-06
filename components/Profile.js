@@ -3,7 +3,7 @@ import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkb
 
 function Profile(props)
 {
-    const { username, status, date } = props.user;
+    const { username, status, date, email } = props.user;
 
     return (<Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -15,7 +15,7 @@ function Profile(props)
                 alignItems: 'center',
             }}
         >
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h3">
                 {username}
             </Typography>
             <Box
@@ -30,6 +30,11 @@ function Profile(props)
                     <Grid item xs={12}>
                         <Typography variant="h7" >
                             {date}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h7" >
+                            {email}
                         </Typography>
                     </Grid>
                 </Grid>

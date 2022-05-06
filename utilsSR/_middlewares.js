@@ -310,7 +310,7 @@ async function checkCommentUser(req, res, next)
 
 async function getUsername(req, res)
 {
-    return await User.findOne({ username: req.session.passport.user })
+    return await User.findOne({ username: req.session.passport.user }, {username: 1, email: 1, status: 1, date: 1})
 }
 
 // async function checkUser(req, res)
