@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 function Dashboard(props)
 {
-    const Logout = () =>
+    const Logout = async () =>
     {
         const res = await LogoutFetch()
         CS_Redirects.tryResCS(res, window)

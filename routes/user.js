@@ -18,20 +18,19 @@ router.get('/login', async (req, res) =>
 router.get('/profile', isLogged_SR, async (req, res) =>
 {
     const user = await getUsername(req, res)
-    console.log(user)
     app.render(req, res, "/user/profile", { user })
 })
 
 router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const securedUsers = User.getSecured(await User.find({}))
+    const users = await User.find({});
+    const securedUsers = User.getSecured(users)
     Redirects_SR.Api.sendApi(res, securedUsers)
 }))
 
-router.post('/one/api', isLogged_CS, tryAsync_CS(async (req, res) =>
+router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUsername(req, res)
-    // req.flash('info', 'Checkout your email, pending exires in 5 min');
     Redirects_SR.Api.sendApi(res, user)
 }))
 

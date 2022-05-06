@@ -11,7 +11,7 @@ function admin(props)
 
     let adminCtx = React.useContext(AdminContext);
     useEffect(() =>
-    {
+    { 
         if (props.isAdmin)
         {
             adminCtx = props.isAdmin
@@ -26,9 +26,10 @@ function admin(props)
 
     return adminCtx ? (<AdminLayout><Dashboard declarations={declarations} users={users} /></AdminLayout>) :(<></>)
 }
+
 admin.getInitialProps = async (props) =>
 {
-    let declrs = await getDeclrs(); //todo load only some
+    let declrs = await getDeclrs();
     let users = await getUsers()
 
     return determRendering(props, () =>
