@@ -4,6 +4,7 @@ const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
 const Comment = require("../models/comment")
+const User = require("../models/user")
 const Redirects_CS = require("../utilsCS/CS_Redirects")
 const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_secondary')
 
@@ -306,11 +307,24 @@ async function checkCommentUser(req, res, next)
     }
     Redirects_CS.Error.CS(res)
 }
+
+async function getUsername(req, res)
+{
+    return await User.findOne({ username: req.session.passport.user })
+}
+
+// async function checkUser(req, res)
+// {
+//     if(req.body.u)
+// }
+
+
 module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
-    validateLogUser, isLogged_SR: isLogged_SR,
+    validateLogUser, isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, verifyUser, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
-    validateApiDate, validateComment, checkCommentUser
+    validateApiDate, validateComment, checkCommentUser,
+    getUsername
 }

@@ -10,7 +10,7 @@ function Dashboard(props)
 {
     const Logout = () =>
     {
-        LogoutFetch(window)
+        const res = await LogoutFetch()
         CS_Redirects.tryResCS(res, window)
     }
     const { users, declarations } = props;

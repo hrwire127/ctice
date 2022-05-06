@@ -3,15 +3,7 @@ const { app } = require("../main");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
-const { validateRegUser, validateLogUser, isLogged_CS, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret } = require('../utilsSR/_middlewares')
-
-router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
-{
-    const users = await User.find({})
-    const securedUsers = User.getSecured(users)
-    Redirects_SR.Api.sendApi(res, securedUsers)
-}))
-
+const { validateRegUser, validateLogUser, isLogged_CS, isLogged_SR, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret, getUsername } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
 {
@@ -22,6 +14,20 @@ router.get('/login', async (req, res) =>
 {
     app.render(req, res, "/user/login")
 })
+
+router.get('/profile', isLogged_SR, async (req, res) =>
+{
+    const user = await getUsername(req, res)
+    app.render(req, res, "/user/profile", { user})
+})
+
+router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const users = await User.find({})
+    const securedUsers = User.getSecured(users)
+    Redirects_SR.Api.sendApi(res, securedUsers)
+}))
+
 
 router.post('/register', validateRegUser, tryAsync_CS(async (req, res) =>
 {
@@ -46,6 +52,14 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
     req.flash('info', 'Logged Out');
     Redirects_SR.Home.CS(res)
 }))
+
+router.post('/one/api', isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const user = await getUsername(req, res)
+    // req.flash('info', 'Checkout your email, pending exires in 5 min');
+    Redirects_SR.Api.sendApi(res, user)
+}))
+
 
 router.get("/confirm/:confirmationCode", verifyUser, tryAsync_SR(async (req, res) =>
 {

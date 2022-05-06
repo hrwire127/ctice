@@ -35,7 +35,6 @@ const uploadFile = (e, changeState) =>
     ));
 }
 function handleDeclrData(evtTarget, file = undefined, description)
-
 {
     const data = new FormData(evtTarget);
 
@@ -88,7 +87,24 @@ function getGlobals(context)
 
 async function getUsers()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/all/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+function getClientUser()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/one/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -362,5 +378,5 @@ module.exports = {
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getAllCount,
-    getLimitedComments, getFlash
+    getLimitedComments, getFlash, getClientUser
 }

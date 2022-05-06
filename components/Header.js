@@ -2,11 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Toolbar, Button, IconButton, Typography, InputBase, Box, TextField } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { makeStyles } from '@mui/styles';
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -89,15 +87,6 @@ function Header(props)
 						</Link>
 					))}
 				</Toolbar>
-				{/* <Search>
-					<SearchIconWrapper>
-						<SearchIcon />
-					</SearchIconWrapper>
-					<StyledInputBase
-						placeholder="Search…"
-						inputProps={{ 'aria-label': 'search' }}
-					/>
-				</Search> */}
 				<Box className={classes.Tools}>
 					<TextField
 						className="search-query"
@@ -108,7 +97,10 @@ function Header(props)
 					<Box className={classes.Authbar}>
 						{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
 						{userCtx
-							? (<IconButton onClick={Logout}><LogoutIcon /></IconButton>)
+							? (<>
+									<Link href="/user/profile"><IconButton><AccountCircleIcon /></IconButton></Link>
+									<IconButton onClick={Logout}><LogoutIcon /></IconButton>
+								</>)
 							: (<>
 								<Link href="/user/register" className={classes.Auth}>
 									<a style={{
