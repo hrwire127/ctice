@@ -35,6 +35,7 @@ const uploadFile = (e, changeState) =>
     ));
 }
 function handleDeclrData(evtTarget, file = undefined, description)
+
 {
     const data = new FormData(evtTarget);
 
@@ -43,6 +44,7 @@ function handleDeclrData(evtTarget, file = undefined, description)
 
     data.append("description", JSON.stringify(description));
     // data.append("date", new Date())
+
 
     const title_ = data.get("title");
     const description_ = description.blocks[0].text;
@@ -55,6 +57,7 @@ function isToken(confirmationCode, func, res)
     if (confirmationCode)
     {
         return func();
+
     }
     else
     {

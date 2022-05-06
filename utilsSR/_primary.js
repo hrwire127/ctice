@@ -104,5 +104,4 @@ async function limitFilterCount(date, query)
 
 module.exports =
 {
-    sendEmail, getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate
-}
+    sendEmail, getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate }

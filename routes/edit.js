@@ -4,6 +4,7 @@ const Declaration = require("../models/declaration")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const { isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS } = require('../utilsSR/_middlewares')
 
+
 router.get("/:id", isLogged_SR, isAdmin_CS, async (req, res) =>
 {
     const { id } = req.params;

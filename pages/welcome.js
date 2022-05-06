@@ -4,6 +4,7 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
+
 function welcome(props)
 {
     const { confirmationCode } = props;
@@ -28,6 +29,7 @@ function welcome(props)
     };
 
     return switchLoading(2, () => <Welcome handleSubmit={handleSubmit} />)
+
 }
 
 welcome.getInitialProps = async (props) =>
@@ -39,6 +41,8 @@ welcome.getInitialProps = async (props) =>
     }, () =>
     {
         const { confirmationCode } = props.query;
+
+
 
         return isToken(confirmationCode, () =>
         {

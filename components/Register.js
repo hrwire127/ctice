@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 
+
 const theme = createTheme();
 
 function Register(props)

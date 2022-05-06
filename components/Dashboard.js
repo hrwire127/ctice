@@ -92,7 +92,6 @@ function Dashboard(props)
                                     </Paper>
                                 </Grid>
                             </Grid>
-
                         </Paper>
                     </Grid>
                     {/* Recent Orders */}
