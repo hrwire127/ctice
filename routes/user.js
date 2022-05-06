@@ -12,6 +12,7 @@ router.post('/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, securedUsers)
 }))
 
+
 router.get('/register', async (req, res) =>
 {
     app.render(req, res, "/user/register")
@@ -36,6 +37,7 @@ router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
     await User.processLogin(req, res, next);
     req.flash('success', 'Welcome Back');
     Redirects_SR.Home.CS(res)
+
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -61,6 +63,7 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
         email: pending.email,
         confirmationCode,
         status: "Active"
+
     })
     const credentials = { user, password }
     await user.processRegister(req, res, pending, credentials)
