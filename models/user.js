@@ -27,15 +27,11 @@ const UserSchema = new Schema({
         enum: ['Disabled', 'Active'],
         default: 'Disabled'
     },
-    confirmationCode: {
-        type: String,
-        unique: true
-    },
     date:
     {
         type: Date,
         required: true
-    }
+    },
 });
 
 UserSchema.plugin(passportLocalMongoose);
@@ -92,12 +88,12 @@ UserSchema.statics.processLogin = async function (req, res, next)
 }
 
 
-UserSchema.methods.processRegister = async function (req, res, pending, { user, password })
+UserSchema.methods.processRegister = async function (req, res, token, { user, password })
 {
     const User = mongoose.model('User', UserSchema)
     return new Promise(async (resolve, reject) =>
     {
-        if (pending)
+        if (token)
         {
             if (await User.findOne({ email: user.email }))
             {

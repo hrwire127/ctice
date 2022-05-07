@@ -3,6 +3,7 @@ const { app } = require("../main");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
+const Token = require("../models/token")
 const { validateRegUser, validateLogUser, isLogged_CS, isLogged_SR, tryAsync_CS, tryAsync_SR, verifyUser, apiSecret, getUsername } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
@@ -72,7 +73,6 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
         username: pending.username,
         date: pending.date,
         email: pending.email,
-        confirmationCode,
         status: "Active"
 
     })
@@ -83,18 +83,31 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
+//forgot password page + email
 router.get('/reset/:confirmationCode', verifyUser, tryAsync_CS(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
     app.render(req, res, "/reset", { confirmationCode })
 }))
 
-router.post('/reset', tryAsync_CS(async (req, res) =>
+router.post('/reset/pending', tryAsync_CS(async (req, res) =>
 {
     const user = await getUsername(req, res);
-    const pending = new Pending(user)
-    await pending.processPending(req, res)
-    await pending.save()
+    const token = new Token({user})
+    await token.processPending(req, res)
+    await token.save()
+    req.flash('success', 'Check your email');
+    Redirects_SR.Home.CS(res)
 }))
 
+router.post('/reset', tryAsync_CS(async (req, res) =>
+{
+    const { confirmationCode, password } = req.body;
+    const user = await Token.findOne({ token: confirmationCode }).populate('user').user;
+    //user.password = password
+    await user.processRegister(req, res, confirmationCode, { user, password })
+    await User.findByIdAndDelete(user._id);
+    await Token.deleteOne({ token: confirmationCode });
+    // await user.save()
+}))
 module.exports = router;

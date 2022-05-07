@@ -19,7 +19,7 @@ function profile(props)
 
     const resetPassword = async () =>
     {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset`, {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/pending`, {
             method: 'POST',
         }).then(response => response.json())
             .then(res =>

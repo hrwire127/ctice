@@ -3,6 +3,7 @@ import Welcome from '../components/Welcome'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
+import Reset from '../components/Reset'
 
 function reset()
 {
@@ -16,9 +17,9 @@ function reset()
         loadingWhile(async () =>
         {
             timeout(5000)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/confirm`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset`, {
                 method: 'POST',
-                body: body,
+                body,
             }).then(response => response.json())
                 .then(async res =>
                 {
@@ -26,19 +27,17 @@ function reset()
                 })
         })
     };
-    return switchLoading(2, () => <Welcome handleSubmit={handleSubmit} />)
+    return switchLoading(2, () => <Reset handleSubmit={handleSubmit} />)
 }
 reset.getInitialProps = async (props) =>
 {
     return determRendering(props, () =>
     {
         CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST, window)
-        return { }
+        return {}
     }, () =>
     {
         const { confirmationCode } = props.query;
-
-
 
         return isToken(confirmationCode, () =>
         {
