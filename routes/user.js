@@ -83,4 +83,18 @@ router.post("/confirm", tryAsync_SR(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
+router.get('/reset/:confirmationCode', verifyUser, tryAsync_CS(async (req, res) =>
+{
+    const confirmationCode = req.params.confirmationCode
+    app.render(req, res, "/reset", { confirmationCode })
+}))
+
+router.post('/reset', tryAsync_CS(async (req, res) =>
+{
+    const user = await getUsername(req, res);
+    const pending = new Pending(user)
+    await pending.processPending(req, res)
+    await pending.save()
+}))
+
 module.exports = router;

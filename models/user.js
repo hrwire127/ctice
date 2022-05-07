@@ -9,6 +9,12 @@ const Redirects_SR = require('../utilsSR/SR_Redirects')
 
 
 const UserSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        max: Rules.username_max_char,
+        unique: true
+    },
     email: {
         type: String,
         required: true,
@@ -41,6 +47,7 @@ UserSchema.statics.getSecured = function (users)
     delete users.confirmationCode;
     return users;
 }
+
 
 UserSchema.statics.processLogin = async function (req, res, next)
 {

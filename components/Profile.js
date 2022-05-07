@@ -1,9 +1,10 @@
 import React from 'react'
-import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
+import { Button, CssBaseline, Grid, Box, Typography, Container, Link } from '@mui/material';
 
 function Profile(props)
 {
-    const { username, status, date, email } = props.user;
+    const { resetPassword, user } = props;
+    const { username, status, date, email } = user;
 
     return (<Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -37,6 +38,7 @@ function Profile(props)
                             {email}
                         </Typography>
                     </Grid>
+                    <Link onClick={resetPassword}>Reset Password</Link>
                 </Grid>
             </Box>
         </Box>

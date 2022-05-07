@@ -8,68 +8,58 @@ const userError = require('../utilsSR/userError');
 const User = require("./user");
 
 
-const PendingSchema = new Schema({
-    username: {
-        type: String,
+const TokenSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
-        max: Rules.username_max_char,
-        unique: true
     },
-    email: {
+    token: {
         type: String,
+        default: genToken(),
         required: true,
-        unique: true
     },
-    confirmationCode: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    expireAt: {
+    createdAt: {
         type: Date,
         default: Date.now,
-        index: { expires: '20m' },
-        required: true
+        expires: 3600,
     },
-    date:
-    {
-        type: Date,
-        required: true
-    }
 });
 
 
-PendingSchema.methods.processPending = async function (req, res)
+TokenSchema.methods.processPending = async function (req, res)
 {
-    this.date = new Date();
     return new Promise(async (resolve, reject) =>
     {
-        this.confirmationCode = genToken()
-        console.log(User)
-        const Pending = mongoose.model('Pending');
-        if (await Pending.findOne({ email: this.email })
-            || await User.findOne({ email: this.email })
-        )
+        console.log("@")
+        const Token = mongoose.model('Token', TokenSchema);
+        console.log("@")
+        console.log("@")
+        if (await Token.findOne({ email: this.user.email })|| await User.findOne({ email: this.user.email }))
         {
+            console.log("2")
             new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
         }
-        else if (
-            // await Pending.findOne({ username: this.username }) || 
-            await User.findOne({ username: this.username })
-        )
+        else if (await User.findOne({ username: this.user.username }))
         {
+            console.log("3")
             new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
             reject();
         }
         else
         {
+            console.log("@")
+            console.log(this.user.username)
+            console.log(this.user.email)
+            console.log(this.token)
             nodemailer.sendConfirmationEmail(
-                this.username,
-                this.email,
-                this.confirmationCode
+                this.user.username,
+                this.user.email,
+                this.token
             ).then(async (res) =>
             {
+                console.log("@")
                 resolve();
             }).catch((err) =>
             {
@@ -79,6 +69,6 @@ PendingSchema.methods.processPending = async function (req, res)
     })
 }
 
-const Pending = mongoose.model('Pending', PendingSchema);
+const Token = mongoose.model('Token', TokenSchema);
 
-module.exports = Pending;
+module.exports = Token;

@@ -17,7 +17,18 @@ function profile(props)
         }
     }, [])
 
-    return userCtx && (<Profile user={user} />)
+    const resetPassword = async () =>
+    {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset`, {
+            method: 'POST',
+        }).then(response => response.json())
+            .then(res =>
+            {
+                CS_Redirects.tryResCS(res, window)
+            })
+    }
+
+    return userCtx && (<Profile user={user} resetPassword={resetPassword}/>)
 }
 
 profile.getInitialProps = async (props) =>
