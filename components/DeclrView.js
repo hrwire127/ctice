@@ -6,7 +6,7 @@ import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { getLimitedComments, timeout } from '../utilsCS/_client'
+import { getLimitedComments, timeout, getClientUser } from '../utilsCS/_client'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -35,11 +35,12 @@ function DeclrView(props)
     const adminCtx = React.useContext(AdminContext);
 
     const [open, setOpen] = React.useState(true);
+    const [likes, setLikes] = React.useState(declaration.likes.length);
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
-
+    // getClientUser
     useEffect(() =>
     {
         commentWhile(async () =>
@@ -50,6 +51,39 @@ function DeclrView(props)
             setComments(newComments.obj)
         })
     }, [])
+
+    const onLike = async () =>
+    {
+        const user = await getClientUser();
+        CS_Redirects.tryResCS(user, window)
+        if (user)
+        {
+            if (declaration.likes.includes(user.obj._id))
+            {
+                return
+            }
+            else 
+            {
+                console.log(user)
+                fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        { uid: user.obj._id, secret: process.env.NEXT_PUBLIC_SECRET }
+                    )
+                }).then(response => response.json())
+                    .then(async res =>
+                    {
+                        console.log(res)
+                        CS_Redirects.tryResCS(res, window)
+                        if (!res.redirect) setLikes(res.obj.length)
+                    })
+            }
+        }
+
+    }
 
 
     const Placeholder = (
@@ -128,6 +162,10 @@ function DeclrView(props)
                     <Typography variant="h9" color="text.secondary">
                         {date[date.length - 1].match(/\d\d:\d\d/)} _ {date[date.length - 1].substring(0, 10)}
                     </Typography>
+                    <Typography variant="h9" color="text.secondary">
+                        {likes} likes
+                    </Typography>
+                    <Button onClick={onLike}>Like</Button>
                     <Box display="flex" justifyContent="left" gap={1} alignItems="center">
                         <Typography variant="h8" color="text.secondary">
                             Created by {authors[0].username}

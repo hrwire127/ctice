@@ -1,10 +1,13 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { Rules } = require('../utilsSR/val-Rule')
+const userError = require('../utilsSR/userError');
+const errorMessages = require('../utilsSR/errorMessages');
 const { excRule } = require('../utilsSR/exc-Rule');
 const { upload } = require('../utilsSR/_tertiary')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
+const Like = require("./like");
 
 const DeclarationSchema = new Schema({
     title: {
@@ -41,6 +44,12 @@ const DeclarationSchema = new Schema({
     comments: {
         type: [Schema.Types.ObjectId],
         ref: "Comment"
+    },
+    likes: {
+        type: [Schema.Types.ObjectId],
+        default: [],
+        ref: "Like",
+        required: true
     }
 });
 
@@ -121,5 +130,19 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
     }).Try()) return Obj;
 
 }
+
+DeclarationSchema.methods.tryLike = async function (userId, req, res)
+{
+    if (this.likes.includes(userId)) 
+    {
+        new userError(...Object.values(errorMessages.likeExists)).throw_CS(res)
+    }
+    else
+    {
+        this.likes.push(userId);
+    }
+}
+
 const Declaration = mongoose.model('Declaration', DeclarationSchema);
+
 module.exports = Declaration;
