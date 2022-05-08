@@ -91,35 +91,26 @@ UserSchema.statics.processLogin = async function (req, res, next)
 UserSchema.methods.processRegister = async function (req, res, token, { user, password })
 {
     const User = mongoose.model('User', UserSchema)
-    return new Promise(async (resolve, reject) =>
+    if (token)
     {
-        if (token)
+        if (await User.findOne({ email: user.email }))
         {
-            if (await User.findOne({ email: user.email }))
-            {
-                new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
-                reject();
-            }
-            else if (await User.findOne({ username: user.username }))
-            {
-                new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
-                reject();
-            }
-            await User.register(user, password, function (err, user)
-            {
-                console.log(err)
-                console.log(user)
-                reject()
-            })
-            resolve()
+            new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+        }
+        else if (await User.findOne({ username: user.username }))
+        {
+            new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
         }
         else
         {
-            new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-            Redirects_SR.Error.CS(res)
-            reject()
+            await User.register(user, password)
         }
-    })
+    }
+    else
+    {
+        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
+        Redirects_SR.Error.CS(res)
+    }
 }
 const User = mongoose.model('User', UserSchema);
 

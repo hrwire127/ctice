@@ -6,9 +6,10 @@ module.exports = {
     userIsPending: { message: "User pending, check your email!", status: 401 },
     unauthorized: { message: "UnAuthorized", status: 401 },
     PageNotFound: { message: "Page Not Found", status: 404 },
-    pendingExpired: { message: "Pending User Expired", status: 400},
-    tokenExpired: { message: "Token User Expired", status: 400},
+    pendingExpired: { message: "Pending User Expired", status: 400 },
+    tokenExpired: { message: "Token User Expired", status: 400 },
     emailAllreadyUsed: { message: "Email Allready Used", status: 400 },
-    usernameAllreadyUsed: { message: "Username Allready Used", status: 400}
+    usernameAllreadyUsed: { message: "Username Allready Used", status: 400 },
+    userNotFound: { message: "User Not Found", status: 404 }
 
 }

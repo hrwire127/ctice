@@ -62,9 +62,15 @@ TokenSchema.methods.processReset = async function (req, res, token, { user, pass
 {
     if (token)
     {
-        await user.setPassword(password);
-        console.log(user)
-        await user.save()
+        if (await User.findOne({ username: user.username }))
+        {
+            await user.setPassword(password);
+            await user.save()
+        }
+        else
+        {
+            new userError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
+        }
     }
     else
     {
