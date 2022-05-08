@@ -44,10 +44,11 @@ welcome.getInitialProps = async (props) =>
 
 
 
-        return isToken(confirmationCode, () =>
-        {
-            return { confirmationCode }
-        }, props.res)
+        // return isToken(confirmationCode, () =>
+        // {
+        //     return { confirmationCode }
+        // }, props.res)
+        return { confirmationCode }
     })
 }
 export default welcome

@@ -5,7 +5,7 @@ import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_cli
 import useLoading from '../components/hooks/useLoading'
 import Reset from '../components/Reset'
 
-function reset()
+function reset(props)
 {
     const { confirmationCode } = props;
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -38,11 +38,7 @@ reset.getInitialProps = async (props) =>
     }, () =>
     {
         const { confirmationCode } = props.query;
-
-        return isToken(confirmationCode, () =>
-        {
-            return { confirmationCode }
-        }, props.res)
+        return { confirmationCode }
     })
 }
 export default reset

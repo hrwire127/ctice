@@ -3,6 +3,7 @@ const Joi = require("joi").extend(require('@joi/date'));;
 const userError = require('./userError');
 const errorMessages = require('./errorMessages');
 const Pending = require("../models/pending")
+const Token = require("../models/token")
 const Comment = require("../models/comment")
 const User = require("../models/user")
 const Redirects_CS = require("../utilsCS/CS_Redirects")
@@ -250,7 +251,7 @@ function apiSecret(req, res, next)
     next()
 }
 
-function verifyUser(req, res, next) 
+function verifyPendingUser(req, res, next) 
 {
     Pending.findOne({
         confirmationCode: req.params.confirmationCode,
@@ -260,6 +261,26 @@ function verifyUser(req, res, next)
             if (!pending)
             {
                 new userError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+            }
+            next()
+        })
+        .catch((err) => 
+        {
+            console.log(err)
+            new userError(err.message, err.status).throw_SR(req, res)
+        });
+};
+
+function verifyTokenUser(req, res, next) 
+{
+    Token.findOne({
+        token: req.params.confirmationCode,
+    })
+        .then(async (token) =>
+        {
+            if (!token)
+            {
+                new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
             }
             next()
         })
@@ -323,8 +344,8 @@ module.exports = {
     validateDeclr: validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
-    apiSecret, verifyUser, isAdmin_SR,
+    apiSecret, verifyPendingUser, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
     validateApiDate, validateComment, checkCommentUser,
-    getUsername
+    getUsername, verifyTokenUser
 }

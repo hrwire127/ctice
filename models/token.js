@@ -42,7 +42,7 @@ TokenSchema.methods.processPending = async function (req, res)
             console.log(this.user.username)
             console.log(this.user.email)
             console.log(this.token)
-            nodemailer.sendConfirmationEmail(
+            nodemailer.sendResetEmail(
                 this.user.username,
                 this.user.email,
                 this.token
@@ -57,6 +57,21 @@ TokenSchema.methods.processPending = async function (req, res)
     })
 }
 
+
+TokenSchema.methods.processReset = async function (req, res, token, { user, password })
+{
+    if (token)
+    {
+        await user.setPassword(password);
+        console.log(user)
+        await user.save()
+    }
+    else
+    {
+        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
+        Redirects_SR.Error.CS(res)
+    }
+}
 const Token = mongoose.model('Token', TokenSchema);
 
 module.exports = Token;

@@ -13,15 +13,6 @@ function getUser(req, res)
     Redirects_SR.Error.CS(res)
 }
 
-async function sendEmail(pending)
-{
-    await nodemailer.sendConfirmationEmail(
-        pending.username,
-        pending.email,
-        pending.confirmationCode
-    )
-}
-
 async function limitNan(declarations)
 {
     return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT);
@@ -104,4 +95,5 @@ async function limitFilterCount(date, query)
 
 module.exports =
 {
-    sendEmail, getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate }
+    getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate
+}

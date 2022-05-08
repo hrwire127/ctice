@@ -105,7 +105,12 @@ UserSchema.methods.processRegister = async function (req, res, token, { user, pa
                 new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
                 reject();
             }
-            await User.register(user, password)
+            await User.register(user, password, function (err, user)
+            {
+                console.log(err)
+                console.log(user)
+                reject()
+            })
             resolve()
         }
         else

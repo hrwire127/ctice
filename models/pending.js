@@ -64,7 +64,7 @@ PendingSchema.methods.processPending = async function (req, res)
         }
         else
         {
-            nodemailer.sendConfirmationEmail(
+            nodemailer.sendRegisterEmail(
                 this.username,
                 this.email,
                 this.confirmationCode
