@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, Button, IconButton, Typography, InputBase, Box, TextField } from '@mui/material';
+import { Toolbar, Button, IconButton, Typography, InputBase, Box, TextField, Menu, MenuItem } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Link from 'next/link';
@@ -13,33 +14,6 @@ import { LogoutFetch } from '../utilsCS/_client'
 import useStyles from "../assets/styles/_Header"
 
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-	color: 'inherit',
-	'& .MuiInputBase-input': {
-		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
-		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-		transition: theme.transitions.create('width'),
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			width: '12ch',
-			'&:focus': {
-				width: '20ch',
-			},
-		},
-	},
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-	padding: theme.spacing(0, 2),
-	height: '100%',
-	position: 'absolute',
-	pointerEvents: 'none',
-	display: 'flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-}));
-
 
 function Header(props)
 {
@@ -47,6 +21,19 @@ function Header(props)
 	const adminCtx = React.useContext(AdminContext);
 	const { sections, title } = props;
 	const classes = useStyles();
+
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const open = Boolean(anchorEl);
+
+	const handleClick = (e) =>
+	{
+		setAnchorEl(e.currentTarget);
+	};
+
+	const handleClose = () =>
+	{
+		setAnchorEl(null);
+	};
 
 	const Logout = async () =>
 	{
@@ -56,79 +43,89 @@ function Header(props)
 
 	return (
 		<React.Fragment>
-			<Toolbar className={classes.Toolbar}>
-				<a
-					href="/"
-					style={{
-						textDecoration: "none",
-						fontSize: 26,
-						fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-						color: "rgb(0 0 0 / 60%)"
-					}}
-				>
-					{title}
-				</a>
-				<Toolbar
-					component="nav"
-					variant="dense"
-					className={classes.List}
-				>
-					{sections.map(section => (
-						<Link
-							color="inherit"
-							noWrap
-							key={section.title}
-							variant="body2"
-							href={section.url}
-							underline="none"
-							sx={{ p: 1, flexShrink: 0 }}
+			<Box className={classes.Total}>
+				<Box className={classes.RedBar} />
+				<Toolbar className={classes.Toolbar}>
+					<div>
+						<IconButton
+							id="basic-button"
+							aria-controls={open ? 'basic-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? 'true' : undefined}
+							onClick={handleClick}
+							sx={{ textTransform: "none" }}
 						>
-							{section.title}
-						</Link>
-					))}
-				</Toolbar>
-				<Box className={classes.Tools}>
-					<TextField
-						className="search-query"
-						sx={{ width: 200 }}
-						variant="standard"
-						placeholder="Search…"
-					/>
-					<Box className={classes.Authbar}>
-						{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
-						{userCtx
-							? (<>
+							<MenuIcon sx={{ fontSize: 30 }} />
+						</IconButton>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								'aria-labelledby': 'basic-button',
+							}}
+						>
+							<MenuItem onClick={handleClose}>Profile</MenuItem>
+							<MenuItem onClick={handleClose}>My account</MenuItem>
+							<MenuItem onClick={handleClose}>Logout</MenuItem>
+						</Menu>
+					</div>
+					<Box sx={{ height: "100%", display: "flex", alignItems: "center" }}>
+						<a href="/" className={classes.Brand}>
+							{title}
+						</a>
+					</Box>
+					<Toolbar
+						component="nav"
+						variant="dense"
+						className={classes.List}
+					>
+						{sections.map(section => (
+							<Link
+								color="inherit"
+								noWrap
+								key={section.title}
+								variant="body2"
+								href={section.url}
+								underline="none"
+								sx={{ p: 1, flexShrink: 0 }}
+							>
+								{section.title}
+							</Link>
+						))}
+					</Toolbar>
+					<Box className={classes.Tools}>
+						<TextField
+							className="search-query"
+							sx={{
+								width: 200,
+							
+							}}
+							color="primary"
+							variant="standard"
+							placeholder="Search…"
+						/>
+						<Box className={classes.Authbar}>
+							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
+							{userCtx
+								? (<>
 									<Link href="/user/profile"><IconButton><AccountCircleIcon /></IconButton></Link>
 									<IconButton onClick={Logout}><LogoutIcon /></IconButton>
 								</>)
-							: (<>
-								<Link href="/user/register" className={classes.Auth}>
-									<a style={{
-										textDecoration: "none",
-										fontSize: 16,
-										fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-										color: "rgb(0 0 0 / 60%)"
-									}}>
-										Register
-									</a>
-								</Link>
-								<Link href="/user/login" className={classes.Auth}>
-									<a style={{
-										textDecoration: "none",
-										fontSize: 16,
-										fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-										color: "rgb(0 0 0 / 60%)"
-									}}>
-										Login
-									</a>
-								</Link>
-							</>)
-						}
-
-
+								: (<>
+									<Link href="/user/register" className={classes.Auth}>
+										<Button sx={{ borderColor: "#143F6B", color: "#143F6B", textTransform: "none" }} disableElevation variant="outlined">Sign Up</Button>
+									</Link>
+									<Link href="/user/login" className={classes.Auth}>
+										<Button sx={{ backgroundColor: "#143F6B", textTransform: "none" }} disableElevation variant="contained">Sign In</Button>
+									</Link>
+								</>)
+							}
+						</Box>
 					</Box>
-				</Box>
-			</Toolbar>
+				</Toolbar>
+			</Box>
 		</React.Fragment >
 	);
 }
