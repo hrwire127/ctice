@@ -30,15 +30,13 @@ function DeclrList(props)
     {
         const element = document.querySelector('.search-query')
         var inputNodes = element.getElementsByTagName('INPUT');
-        inputNodes[0].addEventListener('input', async (e) => 
+        inputNodes[0].addEventListener('input', async () => 
         {
-            console.log(inputNodes[0].value)
             setQuery(inputNodes[0].value)
         })
         const btn = document.querySelector('.query-clear')
         btn.onclick = function (e)  
         {
-            console.log("!")
             setQuery("")
         }
     }, [])

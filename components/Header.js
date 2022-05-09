@@ -6,7 +6,7 @@ import
 	Typography, InputBase, Box, TextField, Menu,
 	MenuItem, InputAdornment
 } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, ThemeProvider, createTheme } from '@mui/material/styles';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -19,13 +19,19 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import { LogoutFetch } from '../utilsCS/_client'
 import useStyles from "../assets/styles/_Header"
 
+// const Title = styled(Checkbox)(({ theme }) => ({
+// 	color: theme.status.danger,
+// 	'&.Mui-checked': {
+// 	  color: theme.status.danger,
+// 	},
+//   }));
 
 
 function Header(props)
 {
 	const userCtx = React.useContext(UserContext);
 	const adminCtx = React.useContext(AdminContext);
-	const { sections, title } = props;
+	const { sections, title, toggleTheme } = props;
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
@@ -62,7 +68,7 @@ function Header(props)
 							onClick={handleClick}
 							sx={{ textTransform: "none" }}
 						>
-							<MenuIcon sx={{ fontSize: 30 }} />
+							<MenuIcon color="primary" sx={{ fontSize: 30 }} />
 						</IconButton>
 						<Menu
 							id="basic-menu"
@@ -72,10 +78,11 @@ function Header(props)
 							MenuListProps={{
 								'aria-labelledby': 'basic-button',
 							}}
+							className={classes.DropDown}
 						>
-							<MenuItem onClick={handleClose}>Profile</MenuItem>
-							<MenuItem onClick={handleClose}>My account</MenuItem>
-							<MenuItem onClick={handleClose}>Logout</MenuItem>
+							<MenuItem color="primary" onClick={handleClose}>Profile</MenuItem>
+							<MenuItem color="primary" onClick={handleClose}>My account</MenuItem>
+							<MenuItem color="primary" onClick={handleClose}>Logout</MenuItem>
 						</Menu>
 					</div>
 					<Box sx={{ height: "100%", display: "flex", alignItems: "center" }}>
@@ -112,16 +119,16 @@ function Header(props)
 							onChange={(e) => setInputValue(e.target.value)}
 							InputProps={{
 								endAdornment:
-									<InputAdornment position="end" sx={inputValue === "" ? {display: "none"} : {}}>
+									<InputAdornment position="end" sx={inputValue === "" ? { display: "none" } : {}}>
 										<IconButton
 											className="query-clear"
-											onClick={(e) =>
+											onClick={() =>
 											{
 												setInputValue("")
 											}}
 											edge="end"
 										>
-											<ClearIcon />
+											<ClearIcon color="primary"/>
 										</IconButton>
 									</InputAdornment>
 							}}
@@ -144,6 +151,7 @@ function Header(props)
 								</>)
 							}
 						</Box>
+						<Button onClick={toggleTheme}>Theme</Button>
 					</Box>
 				</Toolbar>
 			</Box >
@@ -161,4 +169,4 @@ Header.propTypes = {
 	title: PropTypes.string.isRequired,
 };
 
-export default Header;
+export default Header

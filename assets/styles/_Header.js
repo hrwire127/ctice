@@ -1,12 +1,12 @@
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	Toolbar: {
 		borderBottom: 1,
 		minHeight: 60,
 		borderColor: 'divider',
 		typography: 'body1',
-		backgroundColor: "white",
+		backgroundColor: theme.background.primary,
 		["@media (max-width:467px)"]: {
 			minHeight: 60
 		},
@@ -73,45 +73,50 @@ const useStyles = makeStyles({
 		width: "100vw",
 		height: 3,
 		background: "rgb(255, 255, 255)",
-		background: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%, rgba(254,177,57,1) 0%, rgba(245,83,83,1) 100%)"
+		background: theme.gradient
 	},
 	Brand: {
+		fontFamily: theme.title.font,
 		margin: "auto",
 		textDecoration: "none",
-		fontSize: 22,
-		fontWeight: 600,
-		fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
-		color: "rgb(0 0 0 / 60%)",
-		transition: "font-size 0.2s",
-		"&:hover": {
-			fontSize: 23
-		}
+		fontSize: theme.title.size,
+		fontWeight: theme.title.weight,
+		color: theme.title.color,
+		margin: "auto",
+		textDecoration: "none",
 	},
 	SignIn: {
-		backgroundColor: "#143F6B",
+		backgroundColor: "primary",
 		textTransform: "none",
 		"&:hover": {
-			backgroundColor: "#FEB139"
+			backgroundColor: "secondary"
 		}
 	},
 	SignUp: {
-		borderColor: "#143F6B",
-		color: "#143F6B",
+		borderColor: "primary",
+		color: "primary",
 		textTransform: "none",
 		"&:hover": {
-			borderColor: "#FEB139",
-			backgroundColor: "rgb(254, 177, 57, 0.1)",
+			borderColor: "secondary",
+			backgroundColor: "secondary",
 		}
 	},
 	Search: {
 		width: 200,
+		color: theme.background.secondary,
 		["@media (max-width:534px)"]: {
 			width: 100,
 		},
 		["@media (max-width:452px)"]: {
 			width: 200,
 		},
+	},
+	DropDown: {
+		"& ul":
+		{
+			backgroundColor: theme.background.primary,
+		}
 	}
-})
+}))
 
 export default useStyles;
