@@ -28,12 +28,19 @@ function DeclrList(props)
 
     useEffect(() =>
     {
-        let element = document.querySelector('.search-query')
+        const element = document.querySelector('.search-query')
         var inputNodes = element.getElementsByTagName('INPUT');
         inputNodes[0].addEventListener('input', async (e) => 
         {
+            console.log(inputNodes[0].value)
             setQuery(inputNodes[0].value)
         })
+        const btn = document.querySelector('.query-clear')
+        btn.onclick = function (e)  
+        {
+            console.log("!")
+            setQuery("")
+        }
     }, [])
 
     useEffect(async () =>

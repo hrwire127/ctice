@@ -8,10 +8,14 @@ const useStyles = makeStyles({
 		typography: 'body1',
 		backgroundColor: "white",
 		["@media (max-width:467px)"]: {
-			minHeight: 80
+			minHeight: 60
 		},
 		paddingLeft: 80,
-		paddingRight: 80
+		paddingRight: 80,
+		["@media (max-width:740px)"]: {
+			paddingLeft: 10,
+			paddingRight: 10,
+		},
 	},
 	List: {
 		flex: 1,
@@ -36,7 +40,13 @@ const useStyles = makeStyles({
 	Authbar: {
 		display: "flex",
 		justifyContent: "space-between",
-		gap: 20
+		gap: 20,
+		["@media (max-width:553px)"]: {
+			gap: 0,
+		},
+		["@media (max-width:740px)"]: {
+			marginLeft: 20
+		},
 	},
 	Tools: {
 		display: "flex",
@@ -47,6 +57,9 @@ const useStyles = makeStyles({
 			flexWrap: "wrap",
 			gap: 10,
 			justifyContent: "center",
+		},
+		["@media (max-width:740px)"]: {
+			gap: 0,
 		},
 	},
 	Total: {
@@ -73,6 +86,31 @@ const useStyles = makeStyles({
 		"&:hover": {
 			fontSize: 23
 		}
+	},
+	SignIn: {
+		backgroundColor: "#143F6B",
+		textTransform: "none",
+		"&:hover": {
+			backgroundColor: "#FEB139"
+		}
+	},
+	SignUp: {
+		borderColor: "#143F6B",
+		color: "#143F6B",
+		textTransform: "none",
+		"&:hover": {
+			borderColor: "#FEB139",
+			backgroundColor: "rgb(254, 177, 57, 0.1)",
+		}
+	},
+	Search: {
+		width: 200,
+		["@media (max-width:534px)"]: {
+			width: 100,
+		},
+		["@media (max-width:452px)"]: {
+			width: 200,
+		},
 	}
 })
 

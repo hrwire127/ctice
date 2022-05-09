@@ -1,9 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, Button, IconButton, Typography, InputBase, Box, TextField, Menu, MenuItem } from '@mui/material';
+import
+{
+	Toolbar, Button, IconButton,
+	Typography, InputBase, Box, TextField, Menu,
+	MenuItem, InputAdornment
+} from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
+import ClearIcon from '@mui/icons-material/Clear';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Link from 'next/link';
@@ -23,6 +29,7 @@ function Header(props)
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [inputValue, setInputValue] = React.useState("");
 	const open = Boolean(anchorEl);
 
 	const handleClick = (e) =>
@@ -97,14 +104,28 @@ function Header(props)
 					</Toolbar>
 					<Box className={classes.Tools}>
 						<TextField
-							className="search-query"
-							sx={{
-								width: 200,
-							
-							}}
+							className={`${classes.Search} search-query`}
 							color="primary"
 							variant="standard"
 							placeholder="Search…"
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							InputProps={{
+								endAdornment:
+									<InputAdornment position="end" sx={inputValue === "" ? {display: "none"} : {}}>
+										<IconButton
+											className="query-clear"
+											onClick={(e) =>
+											{
+												setInputValue("")
+											}}
+											edge="end"
+										>
+											<ClearIcon />
+										</IconButton>
+									</InputAdornment>
+							}}
+
 						/>
 						<Box className={classes.Authbar}>
 							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
@@ -115,17 +136,17 @@ function Header(props)
 								</>)
 								: (<>
 									<Link href="/user/register" className={classes.Auth}>
-										<Button sx={{ borderColor: "#143F6B", color: "#143F6B", textTransform: "none" }} disableElevation variant="outlined">Sign Up</Button>
+										<Button className={classes.SignUp} disableElevation variant="outlined">Sign Up</Button>
 									</Link>
 									<Link href="/user/login" className={classes.Auth}>
-										<Button sx={{ backgroundColor: "#143F6B", textTransform: "none" }} disableElevation variant="contained">Sign In</Button>
+										<Button className={classes.SignIn} disableElevation variant="contained">Sign In</Button>
 									</Link>
 								</>)
 							}
 						</Box>
 					</Box>
 				</Toolbar>
-			</Box>
+			</Box >
 		</React.Fragment >
 	);
 }
