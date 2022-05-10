@@ -48,7 +48,7 @@ function DeclrCard(props)
                         <IconButton size="small"><Visibility className={classes.Icon} /></IconButton>
                     </Link>
                 </Box>
-                <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
+                <Typography sx={{ margin: 0 }} variant="h9" color="text.base" gutterBottom>
                     {diff} ago
                 </Typography>
             </CardActions>

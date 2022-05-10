@@ -6,15 +6,15 @@ const useStyles = makeStyles((theme) => ({
 		minHeight: 60,
 		borderColor: 'divider',
 		typography: 'body1',
-		backgroundColor: theme.background.primary,
+		backgroundColor: theme.background,
 		["@media (max-width:467px)"]: {
 			minHeight: 60
 		},
-		paddingLeft: 80,
-		paddingRight: 80,
+		paddingLeft: theme.maxPadding,
+		paddingRight: theme.maxPadding,
 		["@media (max-width:740px)"]: {
-			paddingLeft: 10,
-			paddingRight: 10,
+			paddingLeft: theme.minPadding,
+			paddingRight: theme.minPadding,
 		},
 	},
 	List: {
@@ -67,10 +67,11 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "center",
 		flexDirection: "column",
 		width: "100%",
-		boxShadow: "0px 0px 10px -7px"
+		boxShadow: `0px 0px 10px -7px ${theme.palette.primary.main}`,
+		zIndex: 1
 	},
 	RedBar: {
-		width: "100vw",
+		width: "100%",
 		height: 3,
 		background: "rgb(255, 255, 255)",
 		background: theme.gradient
@@ -103,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	Search: {
 		width: 200,
-		color: theme.background.secondary,
+		color: theme.text,
 		["@media (max-width:534px)"]: {
 			width: 100,
 		},
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 	DropDown: {
 		"& ul":
 		{
-			backgroundColor: theme.background.primary,
+			backgroundColor: theme.background,
 		}
 	}
 }))

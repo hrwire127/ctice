@@ -48,13 +48,13 @@ function DatePicker(props)
                                 params.inputProps.value = "";
                                 params.error = false;
                             }
-                            return <TextField {...params} />
+                            return <TextField className={classes.TextField} {...params} />
                         }}
                     />
                 </Stack>
             </LocalizationProvider>
             <Box>
-                <IconButton onClick={handleChange.bind(null, "Invalid")}><HighlightOffIcon /></IconButton>
+                <IconButton className={classes.Btn} onClick={handleChange.bind(null, "Invalid")}><HighlightOffIcon /></IconButton>
             </Box>
         </Box>
     );

@@ -7,6 +7,9 @@ const themeLight = createTheme({
         },
         secondary: {
             main: "#FEB139"
+        }, 
+        tertiary: {
+            main: "#56BBF1"
         },
         base: {
             main: "#332FD0"
@@ -18,12 +21,12 @@ const themeLight = createTheme({
         weight: 600,
         color: "rgb(0 0 0 / 60%)",
     },
-    background:
-    {
-        primary: "white",
-        secondary: "#d9d9d9"
-    },
-    gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%, #143F6B 0%, #4D77FF 100%)"
+    background: "white",
+    backgroundSecondary: "rgb(236, 236, 236)",
+    text: "#303030",
+    gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%, #143F6B 0%, #4D77FF 100%)",
+    maxPadding: 80,
+    minPadding: 10
 });
 
 const themeBlack = createTheme({
@@ -33,6 +36,9 @@ const themeBlack = createTheme({
         },
         secondary: {
             main: "#143F6B"
+        },
+        tertiary: {
+            main: "#F6F54D"
         },
         base: {
             main: "#F55353"
@@ -47,12 +53,12 @@ const themeBlack = createTheme({
         weight: 600,
         color: "#FEB139",
     },
-    background:
-    {
-        primary: "#222222",
-        secondary: "#2b2b2b"
-    },
-    gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%,#FEB139 0%, #F55353 100%)"
+    background: "#222222",
+    backgroundSecondary: "#242424",
+    text: "#d1d1d1",
+    gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%,#FEB139 0%, #F55353 100%)",
+    maxPadding: 80,
+    minPadding: 10
 
 });
 

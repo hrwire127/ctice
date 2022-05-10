@@ -65,8 +65,8 @@ export default function Layout(props)
                         ? (<Loading fullPage={true} />)
                         :
                         (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                            {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme}/>)}
-                            <Box sx={props.children.props.noHeader && adminCtx ? { margin: 0, flex: 1 } : { mt: 3, mb: 3, flex: 1 }} >{props.children}</Box>
+                            {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
+                            <Box sx={props.children.props.noHeader && adminCtx ? { margin: 0, flex: 1 } : { mb: 3, flex: 1 }} >{props.children}</Box>
 
                         </main>)
                     }

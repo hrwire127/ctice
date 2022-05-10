@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, ButtonGroup, Button, Grid, IconButton } from '@mui/material';
+import { Box, Typography, ButtonGroup, Button, Grid, IconButton, AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, MailIcon, Toolbar, ListItemButton } from '@mui/material';
 import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
 import DeclrCard from './DeclrCard';
 import Link from 'next/link'
@@ -9,6 +9,10 @@ import AdminContext from './context/contextAdmin'
 import DatePicker from './DatePicker'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MenuIcon from '@mui/icons-material/Menu';
+
+const drawerWidth = 240;
 
 function DeclrList(props)
 {
@@ -83,12 +87,81 @@ function DeclrList(props)
             : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
     }
 
+    const drawer = (
+        <List className={classes.DrawerList}>
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    );
+
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    const handleDrawerToggle = () =>
+    {
+        setMobileOpen(!mobileOpen);
+    };
+
+    const container = undefined;
 
     return (
         <>
-            <Link href="/admin">admin</Link>
-            <Link href="/welcome">123</Link>
-            {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
+            <Box className={classes.Body}>
+                <CssBaseline />
+                <Box
+                    component="nav"
+                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                    aria-label="mailbox folders"
+                >
+                    {drawer}
+                </Box>
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                >
+                    {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
+                    <Box className={classes.Bar}>
+                        <Typography variant="h4" className={classes.Title}>
+                            Announcements
+                        </Typography>
+                        <Box>
+                            {adminCtx &&
+                                (<ButtonGroup aria-label="button group">
+                                    <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
+                                </ButtonGroup>)}
+                        </Box>
+                        <DatePicker setTime={setDate} />
+                    </Box>
+                    <Declrs />
+                </Box>
+            </Box>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            {/* <Link href="/admin">admin</Link>
+            <Link href="/welcome">123</Link> */}
+            {/* {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4" >
                     Announcements
@@ -101,7 +174,7 @@ function DeclrList(props)
                 </Box>
                 <DatePicker setTime={setDate} />
             </Box>
-            <Declrs />
+            <Declrs /> */}
         </>
     )
 }
