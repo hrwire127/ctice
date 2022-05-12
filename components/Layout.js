@@ -8,6 +8,7 @@ import Loading from "../components/Loading"
 import Router from "next/router";
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
+import NavLayout from './NavLayout'
 
 export default function Layout(props)
 {
@@ -66,8 +67,12 @@ export default function Layout(props)
                         :
                         (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                             {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
-                            <Box sx={props.children.props.noHeader && adminCtx ? { margin: 0, flex: 1 } : { mb: 3, flex: 1 }} >{props.children}</Box>
-
+                            <Box sx={props.children.props.noHeader && adminCtx
+                                ? { margin: 0, flex: 1, backgroundColor: "background.default" }
+                                : { mb: 3, flex: 1, backgroundColor: "background.default" }}
+                            >
+                                <NavLayout>{props.children}</NavLayout>
+                            </Box>
                         </main>)
                     }
                 </ThemeProvider>

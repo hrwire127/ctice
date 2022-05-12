@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
 		minHeight: 60,
 		borderColor: 'divider',
 		typography: 'body1',
-		backgroundColor: theme.background,
+		backgroundColor: theme.top,
 		["@media (max-width:467px)"]: {
 			minHeight: 60
 		},
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 		textTransform: "none",
 		"&:hover": {
 			backgroundColor: "secondary"
-		}
+		},
 	},
 	SignUp: {
 		borderColor: "primary",
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	Search: {
 		width: 200,
-		color: theme.text,
+		color: "text.primary",
 		["@media (max-width:534px)"]: {
 			width: 100,
 		},
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 	DropDown: {
 		"& ul":
 		{
-			backgroundColor: theme.background,
+			backgroundColor: "background",
 		}
 	}
 }))

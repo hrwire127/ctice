@@ -28,7 +28,7 @@ async function validateDeclr(req, res, next)
             entityMap: Joi.object().required()
         }).required(),
         file: Joi.string(),
-        date: Joi.date().iso().required()
+        date: Joi.date().iso()
     })
 
     const preparedBody =
@@ -77,7 +77,7 @@ async function validateComment(req, res, next)
             })),
             entityMap: Joi.object().required()
         }).required(),
-        date: Joi.date().iso().required()
+        date: Joi.date().iso()
     })
 
     const preparedBody =

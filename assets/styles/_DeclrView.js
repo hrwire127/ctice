@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     BtnGroup: {
         margin: "auto",
         display: "flex",
@@ -21,6 +21,6 @@ const useStyles = makeStyles({
         display: "flex",
         justifyContent: "space-evenly",
     }
-});
+}));
 
 export default useStyles;

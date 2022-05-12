@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
             flexWrap: "wrap",
             justifyContent: "center"
         },
+        "& button": {
+			color: theme.palette.tertiary.main
+        }
     },
     Grid: {
         margin: "auto!important",
@@ -24,19 +27,6 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateColumns: "repeat(auto-fill, 220px)",
         justifyContent: "center",
         gridGap: "20px",
-    },
-    DrawerList: {
-        height: "100vh",
-        zIndex: 0,
-        backgroundColor: theme.background,
-        paddingBottom: 24,
-        paddingTop: 24,
-        textAlign: "right"
-    },
-    Body:
-    {
-        display: 'flex',
-        backgroundColor: theme.backgroundSecondary
     },
     Title: {
         color: theme.palette.primary.main
