@@ -271,6 +271,26 @@ function verifyPendingUser(req, res, next)
         });
 };
 
+function verifyPendingCode(req, res, next) 
+{
+    Pending.findOne({
+        confirmationCode: req.body.confirmationCode,
+    })
+        .then(async (pending) =>
+        {
+            if (!pending)
+            {
+                new userError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+            }
+            next()
+        })
+        .catch((err) => 
+        {
+            console.log(err)
+            new userError(err.message, err.status).throw_SR(req, res)
+        });
+};
+
 function verifyTokenUser(req, res, next) 
 {
     Token.findOne({
@@ -290,6 +310,27 @@ function verifyTokenUser(req, res, next)
             new userError(err.message, err.status).throw_SR(req, res)
         });
 };
+
+function verifyUser(req, res, next) 
+{
+    if (req.session.passport)
+    {
+        next()
+    }
+    new userError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
+};
+
+async function verifyConfirmCode(req, res, next)
+{
+    if (req.body.confirmationCode)
+    {
+        if (await Token.findOne({ token: req.body.confirmationCode }))
+        {
+            next()
+        }
+    }
+    new userError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
+}
 
 function isAdmin_SR(req, res, next)
 {
@@ -331,7 +372,7 @@ async function checkCommentUser(req, res, next)
 
 async function getUsername(req, res)
 {
-    return await User.findOne({ username: req.session.passport.user }, {username: 1, email: 1, status: 1, date: 1})
+    return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1 })
 }
 
 // async function checkUser(req, res)
@@ -347,5 +388,6 @@ module.exports = {
     apiSecret, verifyPendingUser, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
     validateApiDate, validateComment, checkCommentUser,
-    getUsername, verifyTokenUser
+    getUsername, verifyTokenUser, verifyUser, tryAsync_CS,
+    verifyConfirmCode, verifyPendingCode
 }

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 0
     },
     Line: {
-        width: 6,
+        width: 4,
         backgroundColor: theme.palette.primary.main,
         alignSelf: "stretch"
     }
