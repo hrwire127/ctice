@@ -80,9 +80,11 @@ function getGlobals(context)
 {
     let isUser;
     let isAdmin = false;
+    let lightTheme = true;
     if (context.req.session.passport) isUser = context.req.session.passport.user
+    if (context.req.session.light !== undefined) lightTheme = context.req.session.light
     isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
-    return { isUser, isAdmin }
+    return { isUser, isAdmin, lightTheme }
 }
 
 async function getUsers()

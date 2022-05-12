@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     {
         display: 'flex',
         paddingLeft: theme.maxPadding,
+        paddingRight: theme.maxPadding,
     },
     ItemButton: {
         backgroundColor: theme.palette.shadow,

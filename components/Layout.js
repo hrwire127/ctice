@@ -9,12 +9,13 @@ import Router from "next/router";
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
 import NavLayout from './NavLayout'
+import { makeStyles } from '@mui/styles'
 
 export default function Layout(props)
 {
     const { globals } = props;
     const [loading, setLoading] = useState(false);
-    const [light, setThemeLight] = useState(true);
+    const [light, setThemeLight] = useState(globals.lightTheme);
 
 
     useEffect(() =>
@@ -53,9 +54,22 @@ export default function Layout(props)
         }
     }, [userCtx, adminCtx]);
 
-    const toggleTheme = () =>
+    const toggleTheme = async () =>
     {
-        setThemeLight(!light)
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/theme`,
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    { light, secret: process.env.NEXT_PUBLIC_SECRET }
+                )
+            }).then(response => response.json())
+            .then(async res =>
+            {
+                setThemeLight(res.obj)
+            })
     }
 
     return (
@@ -63,7 +77,11 @@ export default function Layout(props)
             <AdminContext.Provider value={adminCtx}>
                 <ThemeProvider theme={light ? themeLight : themeBlack}>
                     {loading
-                        ? (<Loading fullPage={true} />)
+                        ? (
+                            <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
+                                <Loading fullPage={true} />
+                            </Box>
+                        )
                         :
                         (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                             {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}

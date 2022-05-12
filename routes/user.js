@@ -111,4 +111,11 @@ router.post('/reset', tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
+router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const { light } = req.body;
+    req.session.light = !light
+    Redirects_SR.Api.sendApi(res, !light)
+}))
+
 module.exports = router;
