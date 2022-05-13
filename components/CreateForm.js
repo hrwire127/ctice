@@ -21,8 +21,6 @@ import useStyles from "../assets/styles/_CreateForm";
 import UploadBtn from "./UploadBtn";
 import BackLink from "./BackLink";
 
-const theme = createTheme();
-
 export default function CreateForm(props)
 {
     const [
@@ -78,74 +76,72 @@ export default function CreateForm(props)
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box className={classes.Container}>
-                    <Avatar sx={{ m: 1, bgcolor: "primary" }}>
-                        <Article />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Create Declaration
-                    </Typography>
-                    {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
-                    <Box
-                        component="form"
-                        enctype="multipart/form-data"
-                        onSubmit={errCheck}
-                        noValidate
-                        className={classes.Form}
-                    >
-                        <TextField
-                            margin="normal"
-                            inputProps={{ maxLength: 10 }}
-                            required
-                            error={TitleError}
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box className={classes.Container}>
+                <Avatar sx={{ m: 1, bgcolor: "primary" }}>
+                    <Article />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Create Declaration
+                </Typography>
+                {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+                <Box
+                    component="form"
+                    enctype="multipart/form-data"
+                    onSubmit={errCheck}
+                    noValidate
+                    className={classes.Form}
+                >
+                    <TextField
+                        margin="normal"
+                        inputProps={{ maxLength: 10 }}
+                        required
+                        error={TitleError}
+                        fullWidth
+                        id="title"
+                        label="Title"
+                        name="title"
+                        autoComplete="title"
+                        onKeyPress={checkTitleKey}
+                        autoFocus
+                    />
+                    {alert
+                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                        : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
+                    }
+
+
+                    <TextArea
+                        placeholder="Description"
+                        setData={setEditorState}
+                        error={DescError}
+                        checkDescKey={checkDescKey}
+                    />
+
+                    {alert
+                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                        : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
+                    }
+
+
+
+                    <UploadBtn changeFile={changeFile} file={file} />
+
+                    {switchLoading(0, () =>
+                    (<>
+                        <Button
+                            type="submit"
                             fullWidth
-                            id="title"
-                            label="Title"
-                            name="title"
-                            autoComplete="title"
-                            onKeyPress={checkTitleKey}
-                            autoFocus
-                        />
-                        {alert
-                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                            : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
-                        }
-
-
-                        <TextArea
-                            placeholder="Description"
-                            setData={setEditorState}
-                            error={DescError}
-                            checkDescKey={checkDescKey}
-                        />
-
-                        {alert
-                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                            : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
-                        }
-
-
-
-                        <UploadBtn changeFile={changeFile} file={file} />
-
-                        {switchLoading(0, () =>
-                        (<>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Create
-                            </Button>
-                            <BackLink>Back</BackLink>
-                        </>))}
-                    </Box>
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Create
+                        </Button>
+                        <BackLink>Back</BackLink>
+                    </>))}
                 </Box>
-            </Container>
-        </ThemeProvider>
+            </Box>
+        </Container>
     );
 }

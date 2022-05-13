@@ -10,6 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
 import NavLayout from './NavLayout'
 import { makeStyles } from '@mui/styles'
+import { StyledEngineProvider } from '@mui/material/styles';
 
 export default function Layout(props)
 {
@@ -76,23 +77,25 @@ export default function Layout(props)
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
                 <ThemeProvider theme={light ? themeLight : themeBlack}>
-                    {loading
-                        ? (
-                            <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
-                                <Loading fullPage={true} />
-                            </Box>
-                        )
-                        :
-                        (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                            {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
-                            <Box sx={props.children.props.noHeader && adminCtx
-                                ? { margin: 0, flex: 1, backgroundColor: "background.default" }
-                                : { mb: 3, flex: 1, backgroundColor: "background.default" }}
-                            >
-                                <NavLayout>{props.children}</NavLayout>
-                            </Box>
-                        </main>)
-                    }
+                    <StyledEngineProvider injectFirst>
+                        {loading
+                            ? (
+                                <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
+                                    <Loading fullPage={true} />
+                                </Box>
+                            )
+                            :
+                            (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
+                                <Box sx={props.children.props.noHeader && adminCtx
+                                    ? { margin: 0, flex: 1, backgroundColor: "background.default" }
+                                    : { pb: 3, flex: 1, backgroundColor: "background.default" }}
+                                >
+                                    <NavLayout>{props.children}</NavLayout>
+                                </Box>
+                            </main>)
+                        }
+                    </StyledEngineProvider>
                 </ThemeProvider>
             </AdminContext.Provider>
         </UserContext.Provider>

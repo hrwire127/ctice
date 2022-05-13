@@ -17,7 +17,6 @@ import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 
-const theme = createTheme();
 
 export default function CommentCreate(props)
 {
@@ -58,48 +57,46 @@ export default function CommentCreate(props)
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box className={classes.Container}>
-                    <Typography align="left" component="h6" variant="h6">
-                        Create Comment
-                    </Typography>
-                    {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
-                    <Box
-                        component="form"
-                        enctype="multipart/form-data"
-                        onSubmit={errCheck}
-                        noValidate
-                        className={classes.Form}
-                    >
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box className={classes.Container}>
+                <Typography align="left" component="h6" variant="h6">
+                    Create Comment
+                </Typography>
+                {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+                <Box
+                    component="form"
+                    enctype="multipart/form-data"
+                    onSubmit={errCheck}
+                    noValidate
+                    className={classes.Form}
+                >
 
-                        <TextArea
-                            placeholder="Comment"
-                            setData={setEditorState}
-                            error={ContentError}
-                            checkDescKey={checkContentKey}
-                        />
+                    <TextArea
+                        placeholder="Comment"
+                        setData={setEditorState}
+                        error={ContentError}
+                        checkDescKey={checkContentKey}
+                    />
 
-                        {alert
-                            ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                            : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
-                        }
+                    {alert
+                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                        : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
+                    }
 
-                        {creatingSwitch(0, () =>
-                        (<>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Create
-                            </Button>
-                        </>))}
-                    </Box>
+                    {creatingSwitch(0, () =>
+                    (<>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Create
+                        </Button>
+                    </>))}
                 </Box>
-            </Container>
-        </ThemeProvider>
+            </Box>
+        </Container>
     );
 }

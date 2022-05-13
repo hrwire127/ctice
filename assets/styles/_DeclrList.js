@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         gridGap: "20px",
     },
-    Title: {
-        color: theme.palette.primary.main
-    }
 }));
 
 export default useStyles;

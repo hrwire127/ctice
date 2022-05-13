@@ -51,7 +51,6 @@ const Drawer_ = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
     }),
 );
 
-const mdTheme = createTheme();
 
 function AdminLayout(props)
 {
@@ -63,77 +62,75 @@ function AdminLayout(props)
     };
 
     return (
-        <ThemeProvider theme={mdTheme}>
-            <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                <AppBar_ position="absolute" open={open}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={toggleDrawer}
-                            sx={{
-                                marginRight: '36px',
-                                ...(open && { display: 'none' }),
-                            }}
-                        >
-                            <Menu />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            sx={{ flexGrow: 1 }}
-                        >
-                            Admin
-                        </Typography>
-                        <Link href="/">
-                            <IconButton color="inherit">
-                                <Badge color="secondary">
-                                    <Close />
-                                </Badge>
-                            </IconButton>
-                        </Link>
-                    </Toolbar>
-                </AppBar_>
-                <Drawer_ variant="permanent" open={open}>
-                    <Toolbar
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar_ position="absolute" open={open}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            px: [1],
+                            marginRight: '36px',
+                            ...(open && { display: 'none' }),
                         }}
                     >
-                        <IconButton onClick={toggleDrawer}>
-                            <ChevronLeft />
+                        <Menu />
+                    </IconButton>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        sx={{ flexGrow: 1 }}
+                    >
+                        Admin
+                    </Typography>
+                    <Link href="/">
+                        <IconButton color="inherit">
+                            <Badge color="secondary">
+                                <Close />
+                            </Badge>
                         </IconButton>
-                    </Toolbar>
-                    <Divider />
-                    <List component="nav">
-                        {mainDrawerItems}
-                        <Divider sx={{ my: 1 }} />
-                        {secondaryDrawerItems}
-                    </List>
-                </Drawer_>
-                <Box
-                    component="main"
+                    </Link>
+                </Toolbar>
+            </AppBar_>
+            <Drawer_ variant="permanent" open={open}>
+                <Toolbar
                     sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        px: [1],
                     }}
                 >
-                    {props.children}
-                </Box>
+                    <IconButton onClick={toggleDrawer}>
+                        <ChevronLeft />
+                    </IconButton>
+                </Toolbar>
+                <Divider />
+                <List component="nav">
+                    {mainDrawerItems}
+                    <Divider sx={{ my: 1 }} />
+                    {secondaryDrawerItems}
+                </List>
+            </Drawer_>
+            <Box
+                component="main"
+                sx={{
+                    backgroundColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[900],
+                    flexGrow: 1,
+                    height: '100vh',
+                    overflow: 'auto',
+                }}
+            >
+                {props.children}
             </Box>
-        </ThemeProvider>
+        </Box>
     );
 }
 

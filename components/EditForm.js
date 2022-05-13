@@ -10,7 +10,6 @@ import TextArea from './TextArea'
 import UploadBtn from "./UploadBtn";
 import BackLink from "./BackLink";
 
-const theme = createTheme();
 
 function EditForm(props)
 {

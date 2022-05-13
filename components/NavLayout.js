@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, ButtonGroup, Button, Grid, IconButton, AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, MailIcon, Toolbar, ListItemButton } from '@mui/material';
-import { Add, AutoFixHigh, Backspace } from '@mui/icons-material';
-import DeclrCard from './DeclrCard';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
-import TransitionAlerts from './TransitionAlerts'
-import AdminContext from './context/contextAdmin'
-import DatePicker from './DatePicker'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import { useRouter } from 'next/router'
 
@@ -15,7 +9,6 @@ function NavLayout(props)
 {
 
     const classes = useStyles();
-    const drawerWidth = 240;
 
     const Item = (props) =>
     {
@@ -56,14 +49,14 @@ function NavLayout(props)
             <CssBaseline />
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                className={classes.Drawer}
                 aria-label="mailbox folders"
             >
                 {drawer}
             </Box>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                className={classes.Content}
             >
                 {props.children}
             </Box>

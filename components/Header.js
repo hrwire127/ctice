@@ -6,9 +6,7 @@ import
 	Typography, InputBase, Box, TextField, Menu,
 	MenuItem, InputAdornment
 } from '@mui/material';
-import { styled, alpha, ThemeProvider, createTheme } from '@mui/material/styles';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
 import ClearIcon from '@mui/icons-material/Clear';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -18,13 +16,6 @@ import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { LogoutFetch } from '../utilsCS/_client'
 import useStyles from "../assets/styles/_Header"
-
-// const Title = styled(Checkbox)(({ theme }) => ({
-// 	color: theme.status.danger,
-// 	'&.Mui-checked': {
-// 	  color: theme.status.danger,
-// 	},
-//   }));
 
 
 function Header(props)
@@ -60,16 +51,6 @@ function Header(props)
 				<Box className={classes.RedBar} />
 				<Toolbar className={classes.Toolbar}>
 					<div>
-						{/* <IconButton
-							id="basic-button"
-							aria-controls={open ? 'basic-menu' : undefined}
-							aria-haspopup="true"
-							aria-expanded={open ? 'true' : undefined}
-							onClick={handleClick}
-							sx={{ textTransform: "none" }}
-						> phone
-							<MenuIcon color="primary" sx={{ fontSize: 30 }} />
-						</IconButton> */}
 						<Menu
 							id="basic-menu"
 							anchorEl={anchorEl}
@@ -158,15 +139,5 @@ function Header(props)
 		</React.Fragment >
 	);
 }
-
-Header.propTypes = {
-	sections: PropTypes.arrayOf(
-		PropTypes.shape({
-			title: PropTypes.string.isRequired,
-			url: PropTypes.string.isRequired,
-		}),
-	).isRequired,
-	title: PropTypes.string.isRequired,
-};
 
 export default Header

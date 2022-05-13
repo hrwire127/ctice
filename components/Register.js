@@ -7,8 +7,6 @@ import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 
 
-const theme = createTheme();
-
 function Register(props)
 {
     const [
@@ -62,85 +60,83 @@ function Register(props)
         }
     }
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Avatar sx={{ m: 1, bgcolor: 'tertiary.main' }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography variant="h4">
+                    Register
+                </Typography>
+                {alert && (
+                    <Alert severity="error">{alert}</Alert>
+                )}
                 <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
+                    component="form"
+                    enctype="multipart/form-data"
+                    onSubmit={errCheck}
+                    noValidate
+                    sx={{ mt: 1 }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Register
-                    </Typography>
-                    {alert && (
-                        <Alert severity="error">{alert}</Alert>
-                    )}
-                    <Box
-                        component="form"
-                        enctype="multipart/form-data"
-                        onSubmit={errCheck}
-                        noValidate
-                        sx={{ mt: 1 }}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    margin="normal"
-                                    inputProps={{ maxLength: 40 }}
-                                    required
-                                    error={EmailError}
-                                    fullWidth
-                                    id="email"
-                                    label="Email"
-                                    name="email"
-                                    onKeyPress={checkEmailKey}
-                                    autoFocus
-                                />
-                                {alert
-                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                                    : (<FormHelperText error={EmailError}>{helperEmailText}</FormHelperText>)
-                                }
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    margin="normal"
-                                    inputProps={{ maxLength: 10 }}
-                                    required
-                                    error={UsernameError}
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    onKeyPress={checkUsernameKey}
-                                />
-                                {alert
-                                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                                    : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
-                                }
-                            </Grid>
-                        </Grid>
-                        {switchLoading(0, () =>
-                        (<>
-                            <Button
-                                type="submit"
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                margin="normal"
+                                inputProps={{ maxLength: 40 }}
+                                required
+                                error={EmailError}
                                 fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Register
-                            </Button>
-                            <BackLink>Back</BackLink></>))}
-                    </Box>
+                                id="email"
+                                label="Email"
+                                name="email"
+                                onKeyPress={checkEmailKey}
+                                autoFocus
+                            />
+                            {alert
+                                ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                : (<FormHelperText error={EmailError}>{helperEmailText}</FormHelperText>)
+                            }
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                margin="normal"
+                                inputProps={{ maxLength: 10 }}
+                                required
+                                error={UsernameError}
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                onKeyPress={checkUsernameKey}
+                            />
+                            {alert
+                                ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                                : (<FormHelperText error={UsernameError}>{helperUsernameText}</FormHelperText>)
+                            }
+                        </Grid>
+                    </Grid>
+                    {switchLoading(0, () =>
+                    (<>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Register
+                        </Button>
+                        <BackLink>Back</BackLink></>))}
                 </Box>
-            </Container>
-        </ThemeProvider >
+            </Box>
+        </Container>
     );
 }
 

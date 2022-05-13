@@ -20,6 +20,7 @@ const themeLight = createTheme({
         },
         shadow: "rgba(118, 118, 118, 0.23)",
     },
+    drawerWidth: 240,
     card: "#F2F2F2",
     top: "#EBEBEB",
     line: "#9F9F9F",
@@ -43,7 +44,9 @@ const themeBlack = createTheme({
             paper: "#262626"
         },
         primary: {
-            main: "#FEB139"
+            main: "#FEB139",
+            light: "#FEB139",
+            dark: "#FEB139",
         },
         secondary: {
             main: "#143F6B"
@@ -53,6 +56,11 @@ const themeBlack = createTheme({
         },
         base: {
             main: "#F55353"
+        },
+        info: {
+            main: "#FEB139",
+            light: "#FEB139",
+            dark: "#FEB139"
         },
         text: {
             default: "#FF9F45"
@@ -67,13 +75,23 @@ const themeBlack = createTheme({
         h1: {
             color: "#FF9F45"
         },
-        button: {
+        h2: {
             color: "#FF9F45"
-        }
-    }, 
-    root: {
-        color: "#F55353"
+        },
+        h3: {
+            color: "#FF9F45"
+        },
+        h4: {
+            color: "#FF9F45"
+        },
+        h5: {
+            color: "#129F65"
+        },
+        h6: {
+            color: "#FF9F45"
+        },
     },
+    drawerWidth: 240,
     card: "#111111",
     top: "#1E1E1E",
     line: "#111111",

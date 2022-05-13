@@ -2,7 +2,7 @@ import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles((theme) => ({
     DrawerList: {
-        height: "100vh",
+        height: "100%",
         zIndex: 0,
         backgroundColor: "background.default",
         borderRight: `2px solid ${theme.line}`,
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         paddingLeft: theme.maxPadding,
         paddingRight: theme.maxPadding,
+        height: "100%"
     },
     ItemButton: {
         backgroundColor: theme.palette.shadow,
@@ -25,6 +26,15 @@ const useStyles = makeStyles((theme) => ({
         width: 4,
         backgroundColor: theme.palette.primary.main,
         alignSelf: "stretch"
+    },
+    Drawer: {
+        width: theme.drawerWidth,
+        flexShrink: { sm: 0 }
+    },
+    Content: {
+        flexGrow: 1,
+        padding: 24,
+        width: { sm: `calc(100% - ${theme.drawerWidth}px)` }
     }
 }))
 
