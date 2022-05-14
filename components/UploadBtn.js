@@ -32,7 +32,7 @@ function UploadBtn(props)
             <IconButton
                 onClick={() =>changeFile()}
             >
-                <Clear />
+                <Clear color="tertiary" />
             </IconButton>
         </Box>
     )

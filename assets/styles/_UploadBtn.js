@@ -1,19 +1,19 @@
 import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     UploadBtn: {
-        borderColor: "rgb(175, 175, 175)",
-        color: "rgb(30, 30, 30)",
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
         flex: 1,
         "&:hover": {
-            borderColor: "black",
+            borderColor: theme.palette.text.default,
         },
     },
     Upload: {
         display: "flex",
         marginTop: 8,
     },
-});
+}));
 
 
 export default useStyles;
