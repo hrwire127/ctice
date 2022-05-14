@@ -91,7 +91,7 @@ function DeclrList(props)
 
     return (
         <>
-            {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
+            {/* {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)} */}
             <Box className={classes.Bar}>
                 <Typography variant="h4">
                     Announcements

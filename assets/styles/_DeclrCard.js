@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles((theme) => ({
     Card: {
         width: 220,
-        height: 207,
+        height: 195,
         position: 'relative',
         backgroundColor: theme.card,
         color: theme.palette.tertiary.main
@@ -11,9 +11,9 @@ const useStyles = makeStyles((theme) => ({
     Actions: {
         display: "flex",
         justifyContent: "space-between",
-        background: `linear-gradient(180deg, rgb(255 255 255) 0%, ${theme.background} 0%, ${theme.background} 10%)`,
+        background: `linear-gradient(180deg, #1e1e1e00 0%, ${theme.top} 10%, ${theme.top} 0%)`,
         position: "absolute",
-        width: "93%",
+        width: "100%",
         height: 40,
         "& button": {
             color: theme.palette.primary.main,
