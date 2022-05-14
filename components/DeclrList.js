@@ -4,7 +4,7 @@ import
     Box, Typography, ButtonGroup, Button, Grid,
     IconButton, AppBar, CssBaseline, Divider, Drawer,
     List, ListItem, ListItemIcon, ListItemText, MailIcon,
-    Toolbar, ListItemButton, TransitionAlerts
+    Toolbar, ListItemButton
 } from '@mui/material';
 import DeclrCard from './DeclrCard';
 import useStyles from '../assets/styles/_DeclrList'
@@ -14,6 +14,7 @@ import { Add } from "@mui/icons-material"
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
 import DatePicker from './DatePicker'
+import TransitionAlerts from './TransitionAlerts'
 
 
 function DeclrList(props)
@@ -91,7 +92,7 @@ function DeclrList(props)
 
     return (
         <>
-            {/* {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)} */}
+            {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4">
                     Announcements
