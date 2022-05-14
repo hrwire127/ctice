@@ -21,7 +21,7 @@ export default function TransitionAlerts(props)
     }, [children])
 
     return (
-        <Box sx={{ width: 1000, margin: "0 auto" }}>
+        <Box sx={{ width: "100%", margin: "0 auto" }}>
             <Collapse in={flash ? true : false}>
                 <Alert
                     severity={type}

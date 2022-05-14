@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     Content: {
         flexGrow: 1,
         padding: 24,
-        width: { sm: `calc(100% - ${theme.drawerWidth}px)` }
+        width: theme.drawerWidth
     }
 }))
 

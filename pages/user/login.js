@@ -30,7 +30,12 @@ function login(props)
                 .then(async res =>
                 {
                     if (res.err) setError(res.err.message)
-                    else { window.location = document.referrer; }
+                    else
+                    {
+                        window.location = (window.location.href !== document.referrer
+                            ? document.referrer
+                            : process.env.NEXT_PUBLIC_DR_HOST)
+                    }
                 })
         })
     };
