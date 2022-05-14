@@ -49,8 +49,6 @@ const themeBlack = createTheme({
         },
         primary: {
             main: "#FEB139",
-            light: "#FEB139",
-            dark: "#FEB139",
         },
         secondary: {
             main: "#143F6B"
@@ -60,11 +58,6 @@ const themeBlack = createTheme({
         },
         base: {
             main: "#F55353"
-        },
-        info: {
-            main: "#FEB139",
-            light: "#FEB139",
-            dark: "#FEB139"
         },
         text: {
             default: "#ECECEC",
