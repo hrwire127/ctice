@@ -17,9 +17,42 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         gap: "20px",
     },
+    Bar: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
     Content: {
         display: "flex",
         justifyContent: "space-evenly",
+    },
+    FullWidth: {
+        width: '100%'
+    },
+    Line: {
+        width: "100%",
+        height: 2,
+        marginTop: 20,
+        marginBottom: 20,
+        backgroundColor: theme.line,
+        alignSelf: "stretch"
+    },
+    Vote: {
+        display: "flex",
+        justifyContent: "top",
+        flexDirection: "column",
+        textAlign: "center",
+    },
+    VoteBtn: {
+        "&:hover": {
+            color: theme.palette.base.main,
+        },
+        fontSize: 55,
+        marginBottom: -10,
+        marginTop: -10,
+    },
+    Title: {
+        display: "flex",
+        justifyContent: "left"
     }
 }));
 

@@ -93,7 +93,6 @@ function Header(props)
 					<Box className={classes.Tools}>
 						<TextField
 							className={`${classes.Search} search-query`}
-							color="primary"
 							variant="standard"
 							placeholder="Search…"
 							value={inputValue}
@@ -116,11 +115,11 @@ function Header(props)
 
 						/>
 						<Box className={classes.Authbar}>
-							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon /></IconButton></Link>)}
+							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon color="tertiary"/></IconButton></Link>)}
 							{userCtx
 								? (<>
-									<Link href="/user/profile"><IconButton><AccountCircleIcon /></IconButton></Link>
-									<IconButton onClick={Logout}><LogoutIcon /></IconButton>
+									<Link href="/user/profile"><IconButton><AccountCircleIcon color="tertiary"/></IconButton></Link>
+									<IconButton onClick={Logout}><LogoutIcon color="tertiary"/></IconButton>
 								</>)
 								: (<>
 									<Link href="/user/register" className={classes.Auth}>

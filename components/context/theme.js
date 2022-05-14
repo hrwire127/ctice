@@ -18,9 +18,14 @@ const themeLight = createTheme({
         base: {
             main: "#332FD0"
         },
+        text: {
+            default: "#ECECEC",
+            primary: "#292929",
+            tertiary: "#2D5C7F",
+            base: "#332FD0",
+        },
         shadow: "rgba(118, 118, 118, 0.23)",
     },
-    drawerWidth: 240,
     card: "#F2F2F2",
     top: "#EBEBEB",
     line: "#9F9F9F",
@@ -30,11 +35,10 @@ const themeLight = createTheme({
         weight: 600,
         color: "rgb(0 0 0 / 60%)",
     },
-    text: "#303030",
     gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%, #143F6B 0%, #4D77FF 100%)",
-    maxPadding: 80,
-    minPadding: 10,
-    drawerWidth: 240,
+    maxPadding: 200,
+    minPadding: 30,
+    drawerWidth: 170,
 });
 
 const themeBlack = createTheme({
@@ -63,14 +67,17 @@ const themeBlack = createTheme({
             dark: "#FEB139"
         },
         text: {
-            default: "#FF9F45"
+            default: "#ECECEC",
+            primary: "#FEB139",
+            tertiary: "#FFBC80",
+            base: "#F55353",
         },
         shadow: "rgba(118, 118, 118, 0.23)",
         mode: "dark",
     },
     typography: {
         body1: {
-            color: "#FF9F45"
+            color: "#ECECEC"
         },
         h1: {
             color: "#FF9F45"
@@ -85,13 +92,12 @@ const themeBlack = createTheme({
             color: "#FF9F45"
         },
         h5: {
-            color: "#129F65"
+            color: "#FF9F45"
         },
         h6: {
             color: "#FF9F45"
         },
     },
-    drawerWidth: 240,
     card: "#111111",
     top: "#1E1E1E",
     line: "#111111",
@@ -102,9 +108,9 @@ const themeBlack = createTheme({
         color: "#FEB139",
     },
     gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%,#FEB139 0%, #F55353 100%)",
-    maxPadding: 80,
-    minPadding: 10,
-    drawerWidth: 240,
+    maxPadding: 200,
+    minPadding: 30,
+    drawerWidth: 170,
 
 });
 

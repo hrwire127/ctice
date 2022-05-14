@@ -89,7 +89,7 @@ export default function Layout(props)
                                 {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
                                 <Box sx={props.children.props.noHeader && adminCtx
                                     ? { margin: 0, flex: 1, backgroundColor: "background.default" }
-                                    : { pb: 3, flex: 1, backgroundColor: "background.default" }}
+                                    : { flex: 1, backgroundColor: "background.default" }}
                                 >
                                     <NavLayout>{props.children}</NavLayout>
                                 </Box>

@@ -21,7 +21,7 @@ function NavLayout(props)
                     (<>
                         <ListItemButton className={classes.ItemButton}>
                             <Link href={url}>
-                                <ListItemText primary={<Typography fontWeight="bold">{text}</Typography>} />
+                                <ListItemText primary={<Typography color="text.primary" fontWeight="bold">{text}</Typography>} />
                             </Link>
                         </ListItemButton>
                         <Box className={classes.Line}>
@@ -29,7 +29,7 @@ function NavLayout(props)
                     </>)
                     : (<ListItemButton>
                         <Link href={url}>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={<Typography color="text.primary" >{text}</Typography>} />
                         </Link>
                     </ListItemButton>)
                 }

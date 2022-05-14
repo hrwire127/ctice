@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Typography, IconButton, Avatar, Collapse, Button } from '@mui/material';
-import { Delete, Build, Close } from '@mui/icons-material';
+import { Box, Typography, IconButton, Avatar, Collapse, Button, Grid } from '@mui/material';
+import { Delete, Build, Close, KeyboardArrowUp, KeyboardArrowDown, Scale } from '@mui/icons-material';
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
@@ -13,6 +13,7 @@ import AdminContext from './context/contextAdmin'
 import BackLink from "./BackLink";
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
+import arrow from "../assets/images/arrow.png";
 
 function DeclrView(props)
 {
@@ -41,6 +42,7 @@ function DeclrView(props)
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
     // getClientUser
+
     useEffect(() =>
     {
         commentWhile(async () =>
@@ -64,7 +66,6 @@ function DeclrView(props)
             }
             else 
             {
-                console.log(user)
                 fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
                     method: 'PUT',
                     headers: {
@@ -76,7 +77,6 @@ function DeclrView(props)
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        console.log(res)
                         CS_Redirects.tryResCS(res, window)
                         if (!res.redirect) setLikes(res.obj.length)
                     })
@@ -94,33 +94,39 @@ function DeclrView(props)
     const CommentFormCreate = () =>
     {
         return (
-            <Box sx={{ width: '100%' }}>
+            <Box className={classes.FullWidth}>
+                {open && (
+                    <Grid container justifyContent="center">
+                        <IconButton
+                            aria-label="close"
+                            color="tertiary"
+                            size="small"
+                            onClick={() =>
+                            {
+                                setOpen(false);
+                            }}
+                        >
+                            <KeyboardArrowUp fontSize="inherit" />
+                        </IconButton>
+                    </Grid>)}
+
+                {!open && (
+                    <Grid container justifyContent="center">
+                        <IconButton
+                            aria-label="close"
+                            color="tertiary"
+                            size="small"
+                            onClick={() =>
+                            {
+                                setOpen(true);
+                            }}
+                        >
+                            <KeyboardArrowDown fontSize="inherit" />
+                        </IconButton>
+                    </Grid>)}
                 <Collapse in={open}>
                     <CommentCreate creatingSwitch={creatingSwitch} alert={alert} handleSubmit={handleSubmit} />
                 </Collapse>
-                {open && (
-                    <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        size="small"
-                        onClick={() =>
-                        {
-                            setOpen(false);
-                        }}
-                    >
-                        <Close fontSize="inherit" />
-                    </IconButton>)}
-
-                {!open && (<Button
-                    variant="outlined"
-                    onClick={() =>
-                    {
-                        setOpen(true);
-                    }}
-                >
-                    Comment
-                </Button>)}
-
             </Box>)
     }
 
@@ -134,67 +140,77 @@ function DeclrView(props)
                     {loadMoreSwitch(0, () => comments.length < declaration.comments.length && comments.length > 0 && (<Button onClick={loadMore}>Load More</Button>))}
                 </>)
                 : (<Typography component="h5" color="text.secondary" variant="h5">
-                    Nothing
+                    No Comments
                 </Typography>)
         }))
     }
 
     return (
-        <Box className='h-75'>
-            <Box className={classes.Content}>
-                <Box className={classes.Paragraph}>
-                    <Box sx={{ display: "flex", justifyContent: "left" }}>
-                        <Typography variant="h4">
-                            {title}
-                        </Typography>
+        <Box>
+            <Box className={classes.Bar}>
+                <Box className={classes.Title}>
+                    <Typography variant="h4" color="text.primary">
+                        {title}
+                    </Typography>
+                    {adminCtx && (
+                        <>
+                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
+                            <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete color="tertiary" /></IconButton></Link>
+                        </>
+                    )}
+                </Box>
+                <Typography variant="h8" color="text.secondary" alignSelf="center">
+                    Created by {authors[0].username}
+                </Typography>
+            </Box>
+            <Box className={classes.Bar}>
+                <Typography variant="h9" color="text.secondary" sx={{ alignSelf: "center" }}>
+                    Published on {date[date.length - 1].substring(0, 10)}, {date[date.length - 1].match(/\d\d:\d\d/)}
+                </Typography>
+                {authors.length > 1 &&
+                    (<Typography variant="h9" color="text.secondary">
+                        Last Edited by {authors[authors.length - 1].username}
+                    </Typography>
+                    )}
 
-                        <Box sx={{ display: "flex", alignItems: "center", marginLeft: "10%" }}>
-                            {adminCtx && (
-                                <>
-                                    <Link href={`/edit/${_id}`}><IconButton size="small"><Build /></IconButton></Link>
-                                    <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete /></IconButton></Link>
-                                </>
-                            )}
-                        </Box>
-                    </Box>
+
+                {/* <BackLink>Back</BackLink> */}
+            </Box>
+            <Box className={classes.Line} />
+
+            <Box sx={{ display: "flex", gap: 2 }}>
+                <Box className={classes.Vote}>
+                    <KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />
+                    {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
+                    <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
+                        {likes}
+                    </Typography>
+                    <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
+                </Box>
+                <Box>
 
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
-                    <Typography variant="h9" color="text.secondary">
-                        {date[date.length - 1].match(/\d\d:\d\d/)} _ {date[date.length - 1].substring(0, 10)}
-                    </Typography>
-                    <Typography variant="h9" color="text.secondary">
-                        {likes} likes
-                    </Typography>
-                    <Button onClick={onLike}>Like</Button>
-                    <Box display="flex" justifyContent="left" gap={1} alignItems="center">
-                        <Typography variant="h8" color="text.secondary">
-                            Created by {authors[0].username}
-                        </Typography>
-                        <Typography variant="h8" color="green"> {authors[0].status} </Typography>
-                    </Box>
-
-
-                    <BackLink>Back</BackLink>
-
-                    <Typography component="h1" variant="h5">
-                        Comments
-                    </Typography>
-
-                    {authors.length > 1 &&
-                        (<Typography variant="h8" color="text.secondary">
-                            Last Edited by {authors[authors.length - 1].username}
-                        </Typography>
-                        )}
-
-                    {userCtx ? (<CommentFormCreate />) : (<Typography variant="h6">Please Log in to comment</Typography>)}
-
-                    <Box display="flex" alignItems="left" flexDirection="column">
-                        <Comments />
-                    </Box>
                 </Box>
-                {file ? (<DocumentView file={file} />) : Placeholder}
             </Box>
-        </Box >
+
+            <Box className={classes.Line} />
+
+            <Box className={classes.Paragraph}>
+                <Typography component="h1" variant="h4">
+                    Comments
+                </Typography>
+
+                <Box display="flex" alignItems="left" flexDirection="column">
+                    <Comments />
+                </Box>
+            </Box>
+
+            <Box className={classes.Line} />
+
+            {userCtx ? (<CommentFormCreate />) : (<Typography variant="h6" color="text.base">Please Log in to comment</Typography>)}
+
+            {/* {file ? (<DocumentView file={file} />) : Placeholder} */}
+        </Box>
     )
 }
 export default DeclrView;

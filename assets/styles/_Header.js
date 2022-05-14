@@ -4,8 +4,6 @@ const useStyles = makeStyles((theme) => ({
 	Toolbar: {
 		borderBottom: 1,
 		minHeight: 60,
-		borderColor: 'divider',
-		typography: 'body1',
 		backgroundColor: theme.top,
 		["@media (max-width:467px)"]: {
 			minHeight: 60
@@ -87,24 +85,16 @@ const useStyles = makeStyles((theme) => ({
 		textDecoration: "none",
 	},
 	SignIn: {
-		backgroundColor: "primary",
 		textTransform: "none",
 		"&:hover": {
-			backgroundColor: "secondary"
+			backgroundColor: theme.palette.tertiary.main
 		},
 	},
 	SignUp: {
-		borderColor: "primary",
-		color: "primary",
 		textTransform: "none",
-		"&:hover": {
-			borderColor: "secondary",
-			backgroundColor: "secondary",
-		}
 	},
 	Search: {
 		width: 200,
-		color: "text.primary",
 		["@media (max-width:534px)"]: {
 			width: 100,
 		},

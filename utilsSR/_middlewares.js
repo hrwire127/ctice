@@ -33,7 +33,7 @@ async function validateDeclr(req, res, next)
 
     const preparedBody =
     {
-        title, description: JSON.parse(description), file, date: new Date(date)
+        title, description: JSON.parse(description), file
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -82,7 +82,7 @@ async function validateComment(req, res, next)
 
     const preparedBody =
     {
-        content: JSON.parse(content), date: new Date(date)
+        content: JSON.parse(content)
     }
 
     const { error } = commentSchema.validate(preparedBody)

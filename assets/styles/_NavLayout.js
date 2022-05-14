@@ -4,12 +4,10 @@ const useStyles = makeStyles((theme) => ({
     DrawerList: {
         height: "100%",
         zIndex: 0,
-        backgroundColor: "background.default",
         borderRight: `2px solid ${theme.line}`,
         paddingBottom: 24,
         paddingTop: 24,
         textAlign: "right",
-        color: theme.palette.textColor,
     },
     Body:
     {

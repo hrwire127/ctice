@@ -51,6 +51,7 @@ UserSchema.statics.processLogin = async function (req, res, next)
     {
         passport.authenticate('local', function (err, user, info)
         {
+            console.log("1")
             if (err)
             {
                 new userError(err.message, err.status).throw_CS(res);
@@ -63,11 +64,13 @@ UserSchema.statics.processLogin = async function (req, res, next)
             }
             else
             {
+                console.log("2")
                 if (user.status !== "Active")
                 {
                     new userError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
                     reject()
                 }
+                console.log("3")
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
                 {
@@ -81,6 +84,7 @@ UserSchema.statics.processLogin = async function (req, res, next)
                 {
                     req.session.cookie.originalMaxAge = 24 * 60 * 60 * 1000 // Expires in 1 day
                 }
+                console.log("4")
                 resolve()
             }
         })(req, res, next);
