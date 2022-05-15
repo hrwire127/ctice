@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Declaration = require("../models/declaration")
+const User = require("../models/user")
 
 const { titles } = require("./seedHelpers")
 
@@ -17,7 +18,8 @@ db.once("open", () =>
 const createDeclaration = async () =>
 {
     await Declaration.deleteMany({});
-    for (let i = 0; i < 20; i++)
+    const user = await User.findById("62696403a60c0d6ebec55335");
+    for (let i = 0; i < 50; i++)
     {
         const randnum = Math.floor(Math.random() * titles.length);
         const declaration = new Declaration({
@@ -31,7 +33,7 @@ const createDeclaration = async () =>
                 location: "ctice/A_rrpiog"
             },
             date: [new Date()],
-            authors: 'ObjectId("62696403a60c0d6ebec55335")'
+            authors: [user._id]
         })
         await declaration.save();
     }

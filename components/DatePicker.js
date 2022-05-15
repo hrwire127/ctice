@@ -10,7 +10,7 @@ import useStyles from '../assets/styles/_DatePicker';
 
 function DatePicker(props)
 {
-    const { setTime} = props; 
+    const { setTime } = props;
     const [value, setValue] = React.useState("Invalid");
     const maxDate = new Date();
     const minDate = new Date('2020-01-01');
@@ -25,8 +25,17 @@ function DatePicker(props)
         }
         else
         {
-            setTime(newValue)
-            setValue(newValue);
+            if (new Date().toDateString() === newValue.toDateString())
+            {
+                setTime("Invalid")
+                setValue("Invalid");
+                return;
+            }
+            else 
+            {
+                setTime(newValue)
+                setValue(newValue);
+            }
         }
     };
 
