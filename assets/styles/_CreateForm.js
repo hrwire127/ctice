@@ -11,6 +11,9 @@ const useStyles = makeStyles({
         width: "100%",
         marginTop: 8,
     },
+    Editor: {
+        
+    }
 });
 
 

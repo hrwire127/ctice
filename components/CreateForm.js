@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import
 {
     Avatar,
@@ -20,6 +20,7 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtn from "./UploadBtn";
 import BackLink from "./BackLink";
+import { useTheme } from '@mui/styles';
 
 export default function CreateForm(props)
 {
@@ -49,6 +50,15 @@ export default function CreateForm(props)
 
     const { handleSubmit, alert, switchLoading } = props;
     const classes = useStyles()
+    const theme = useTheme();
+
+    // useEffect(() =>
+    // {
+    //     const element = document.querySelector('.RichEditor-root')
+    //     element.addEventListener("mouseenter", () => {
+    //         element.style.borderColor = theme.palette.primary;
+    //       }, false);
+    // }, [])
 
 
     const errCheck = async (e) =>
@@ -113,6 +123,7 @@ export default function CreateForm(props)
 
 
                     <TextArea
+                        styles={classes.Editor}
                         placeholder="Description"
                         setData={setEditorState}
                         error={DescError}

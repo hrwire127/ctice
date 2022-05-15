@@ -99,7 +99,29 @@ class TextArea extends React.Component
         }
 
         return (
-            <Box className="RichEditor-root" sx={this.props.error ? { width: "100%", borderColor: "red!important" } : { width: "100%" }}>
+            <Box className="RichEditor-root"//theme => theme.spacing(2)
+                sx={
+                    this.props.error
+                        ? {
+                            width: "100%",
+                            border: "1px solid",
+                            borderColor: "red!important",
+                            "&:hover":
+                            {
+                                borderColor: "white"
+                            }
+                        }
+                        : {
+                            width: "100%",
+                            border: "1px solid",
+                            borderColor: theme => theme.line,
+                            "&:hover":
+                            {
+                                borderColor: theme => theme.palette.text.default,
+                            }
+                        }
+                }
+            >
                 <BlockStyleControls
                     editorState={editorState}
                     onToggle={this.toggleBlockType}
