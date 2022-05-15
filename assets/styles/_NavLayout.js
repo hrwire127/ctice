@@ -2,12 +2,11 @@ import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles((theme) => ({
     DrawerList: {
-        height: "100%",
-        zIndex: 0,
-        borderRight: `2px solid ${theme.line}`,
-        paddingBottom: 24,
-        paddingTop: 24,
         textAlign: "right",
+        position: "sticky",
+        overflowY: "auto",
+        width: "auto",
+        top: 24
     },
     Body:
     {
@@ -27,7 +26,12 @@ const useStyles = makeStyles((theme) => ({
     },
     Drawer: {
         width: theme.drawerWidth,
-        flexShrink: { sm: 0 }
+        flexShrink: { sm: 0 },
+        height: "100%",
+        borderRight: `2px solid ${theme.line}`,
+        paddingBottom: 24,
+        paddingTop: 24,
+        zIndex: 0,
     },
     Content: {
         flexGrow: 1,
