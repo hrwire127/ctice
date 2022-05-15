@@ -13,19 +13,19 @@ const mainDrawerItems = (
   <React.Fragment>
     <ListItemButton>
       <ListItemIcon>
-        <DashboardIcon />
+        <DashboardIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/"><ListItemText primary="Dashboard" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <ShoppingCartIcon color="tertiary"/>
       </ListItemIcon>
       <Link href="/admin/declrlist"><ListItemText primary="Declarations" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <PeopleIcon />
+        <PeopleIcon color="tertiary"/>
       </ListItemIcon>
       <Link href="/admin/userlist"><ListItemText primary="Users" /></Link>
     </ListItemButton>
@@ -39,19 +39,19 @@ const secondaryDrawerItems = (
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon color="tertiary"/>
       </ListItemIcon>
       <ListItemText primary="Current month" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon color="tertiary"/>
       </ListItemIcon>
       <ListItemText primary="Last quarter" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon color="tertiary"/>
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItemButton>

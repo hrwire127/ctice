@@ -32,6 +32,8 @@ function login(props)
                     if (res.err) setError(res.err.message)
                     else
                     {
+                        console.log(window.location.href)
+                        console.log(document.referrer)
                         window.location = (window.location.href !== document.referrer
                             ? document.referrer
                             : process.env.NEXT_PUBLIC_DR_HOST)

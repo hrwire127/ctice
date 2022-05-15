@@ -4,7 +4,7 @@ const themeLight = createTheme({
     palette: {
         background: {
             default: "#DCDCDC",
-            paper: "#DCDCDC"
+            paper: "#F2F2F2"
         },
         primary: {
             main: "#143F6B"
@@ -19,7 +19,7 @@ const themeLight = createTheme({
             main: "#332FD0"
         },
         text: {
-            default: "#ECECEC",
+            default: "#262626",
             primary: "#292929",
             tertiary: "#2D5C7F",
             base: "#332FD0",
@@ -93,7 +93,7 @@ const themeBlack = createTheme({
     },
     card: "#111111",
     top: "#1E1E1E",
-    line: "#111111",
+    line: "#c9c9c9",
     title: {
         font: "'Lato', sans-serif",
         size: 22,

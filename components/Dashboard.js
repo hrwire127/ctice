@@ -52,7 +52,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/create"><IconButton><Add /></IconButton></Link>
+                                        <Link href="/create"><IconButton><Add color="tertiary"/></IconButton></Link>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -64,7 +64,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <IconButton onClick={Logout}><ExitToApp /></IconButton>
+                                        <IconButton onClick={Logout}><ExitToApp color="tertiary"/></IconButton>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -76,7 +76,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/user/login"><IconButton><Login /></IconButton></Link>
+                                        <Link href="/user/login"><IconButton><Login color="tertiary"/></IconButton></Link>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -88,7 +88,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/user/register"><IconButton><AppRegistration /></IconButton></Link>
+                                        <Link href="/user/register"><IconButton><AppRegistration color="tertiary"/></IconButton></Link>
                                     </Paper>
                                 </Grid>
                             </Grid>

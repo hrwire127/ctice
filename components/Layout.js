@@ -87,12 +87,19 @@ export default function Layout(props)
                             :
                             (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                                 {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
-                                <Box sx={props.children.props.noHeader && adminCtx
-                                    ? { margin: 0, flex: 1, backgroundColor: "background.default" }
-                                    : { flex: 1, backgroundColor: "background.default" }}
-                                >
-                                    <NavLayout>{props.children}</NavLayout>
-                                </Box>
+
+                                {props.children.props.noHeader && adminCtx
+                                    ? (<Box sx={
+                                        { margin: 0, flex: 1, backgroundColor: "background.default" }
+                                    }
+                                    >
+                                        {props.children}
+                                    </Box>)
+                                    : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
+                                    >
+                                        <NavLayout>{props.children}</NavLayout>
+                                    </Box>)
+                                }
                             </main>)
                         }
                     </StyledEngineProvider>

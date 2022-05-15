@@ -26,7 +26,7 @@ function CommentCard(props)
 
     return (
         <Card className={classes.Card}>
-            <CardContent sx={{ height: 160}}>
+            <CardContent sx={{ height: 145}}>
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography className={classes.Title} color="text.secondary" gutterBottom>
                         {author.username}
