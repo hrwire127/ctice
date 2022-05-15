@@ -45,7 +45,7 @@ const themeBlack = createTheme({
     palette: {
         background: {
             default: "#262626",
-            paper: "#262626"
+            paper: "#111111"
         },
         primary: {
             main: "#FEB139",
@@ -60,8 +60,8 @@ const themeBlack = createTheme({
             main: "#F55353"
         },
         text: {
-            default: "#ECECEC",
-            primary: "#FEB139",
+            default: "#FEB139",
+            primary: "#ECECEC",
             tertiary: "#FFBC80",
             base: "#F55353",
         },

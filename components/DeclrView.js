@@ -149,7 +149,7 @@ function DeclrView(props)
         <Box>
             <Box className={classes.Bar}>
                 <Box className={classes.Title}>
-                    <Typography variant="h4" color="text.primary">
+                    <Typography variant="h4" color="text.default">
                         {title}
                     </Typography>
                     {adminCtx && (
