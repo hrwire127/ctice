@@ -12,35 +12,52 @@ function NavLayout(props)
 
     const Item = (props) =>
     {
-        const { text, url } = props
+        const { text, url, includes } = props
         const router = useRouter();
 
-        return (
-            <ListItem key={text} disablePadding>
-                {router.pathname === url ?
-                    (<>
-                        <ListItemButton className={classes.ItemButton}>
-                            <Link href={url}>
-                                <ListItemText primary={<Typography color="text.primary" fontWeight="bold">{text}</Typography>} />
-                            </Link>
-                        </ListItemButton>
-                        <Box className={classes.Line}>
-                        </Box>
-                    </>)
-                    : (<ListItemButton>
-                        <Link href={url}>
-                            <ListItemText primary={<Typography color="text.primary" >{text}</Typography>} />
-                        </Link>
-                    </ListItemButton>)
-                }
-            </ListItem >)
+        const selected = (<>
+            <ListItemButton className={classes.ItemButton}>
+                <Link href={url}>
+                    <ListItemText primary={<Typography color="text.primary" fontWeight="bold">{text}</Typography>} />
+                </Link>
+            </ListItemButton>
+            <Box className={classes.Line}>
+            </Box>
+        </>)
+
+        const basic = (<ListItemButton>
+            <Link href={url}>
+                <ListItemText primary={<Typography color="text.primary">{text}</Typography>} />
+            </Link >
+        </ListItemButton >)
+
+        if (includes)
+        {
+            return (
+                <ListItem key={text} disablePadding>
+                    {router.pathname.includes(url)
+                        ? selected
+                        : basic
+                    }
+                </ListItem >)
+        }
+        else
+        {
+            return (
+                <ListItem key={text} disablePadding>
+                    {router.pathname === url
+                        ? selected
+                        : basic
+                    }
+                </ListItem >)
+        }
     }
 
     const drawer = (
         <List className={classes.DrawerList}>
             <Item text="Home" url="/" />
-            <Item text="Log in" url="/user/login" />
-            <Item text="Sign up" url="/user/register" />
+            <Item text="Login" url="/user/login" />
+            <Item text="Profile" url="/user/profile" />
         </List>
     );
 

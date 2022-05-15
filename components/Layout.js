@@ -97,7 +97,10 @@ export default function Layout(props)
                                     </Box>)
                                     : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
                                     >
-                                        <NavLayout>{props.children}</NavLayout>
+                                        {props.children.props.noNav
+                                            ? (<>{props.children}</>)
+                                            : (<NavLayout>{props.children}</NavLayout>)}
+
                                     </Box>)
                                 }
                             </main>)
