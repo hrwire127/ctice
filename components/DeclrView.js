@@ -178,7 +178,7 @@ function DeclrView(props)
             </Box>
             <Box className={classes.Line} />
 
-            <Box sx={{ display: "flex", gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Box className={classes.Vote}>
                     <KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />
                     {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
@@ -187,8 +187,7 @@ function DeclrView(props)
                     </Typography>
                     <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
                 </Box>
-                <Box>
-
+                <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
             </Box>
