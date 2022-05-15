@@ -5,7 +5,6 @@ import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } f
 import { Build, Visibility } from '@mui/icons-material';
 import useStyles from "../assets/styles/_DeclrCard"
 import { CropData, getDateDifference } from '../utilsCS/_client';
-
 import Link from 'next/link'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
