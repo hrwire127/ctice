@@ -7,7 +7,7 @@ import { handleDeclrData } from "../utilsCS/_client";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
-import UploadBtn from "./UploadBtn";
+import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 
 
@@ -96,7 +96,7 @@ function EditForm(props)
                         : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
                     }
 
-                    <UploadBtn changeFile={changeFile} file={file} />
+                    <UploadBtnPdf changeFile={changeFile} file={file} />
                     {switchLoading(0, () => (
                         <>
                             <Button

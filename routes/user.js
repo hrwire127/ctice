@@ -7,7 +7,7 @@ const Token = require("../models/token")
 const { validateRegUser, validateLogUser, isLogged_CS,
     isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPendingUser,
     apiSecret, getUsername, verifyTokenUser, verifyUser,
-    verifyConfirmCode, verifyPendingCode } = require('../utilsSR/_middlewares')
+    verifyConfirmCode, verifyPendingCode, validateUser } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
 {
@@ -68,20 +68,23 @@ router.get("/confirm/:confirmationCode", verifyPendingUser, tryAsync_SR(async (r
     app.render(req, res, "/welcome", { confirmationCode })
 }))
 
-router.post("/confirm", tryAsync_SR(async (req, res) =>
+router.post("/confirm", validateUser, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
+    const { profile } = req.files;
     const pending = await Pending.findOne({ confirmationCode })
     const user = new User({
         username: pending.username,
         date: pending.date,
         email: pending.email,
         status: "Active"
-
     })
+
     const credentials = { user, password }
-    await user.processRegister(req, res, pending, credentials)
+    await User.processRegister(req, res, pending, credentials)
+    console.log("!!!!")
     await Pending.findByIdAndDelete(pending._id)
+    console.log("!!!!")
     req.flash('success', 'Successfuly Registered');
     Redirects_SR.Home.CS(res)
 }))

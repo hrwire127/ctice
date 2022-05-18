@@ -4,7 +4,7 @@ const { Rules } = require('../utilsSR/val-Rule')
 const userError = require('../utilsSR/userError');
 const errorMessages = require('../utilsSR/errorMessages');
 const { excRule } = require('../utilsSR/exc-Rule');
-const { upload } = require('../utilsSR/_tertiary')
+const { upload_pdf } = require('../utilsSR/_tertiary')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
 const Like = require("./like");
@@ -91,7 +91,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
     if (await new excRule([body.file, files, hadFile], [], async () =>
     {
-        let file = await upload(files.file)
+        let file = await upload_pdf(files.file)
         await cloud.destroy(
             declaration.file.location,
         )
@@ -104,7 +104,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
     if (await new excRule([body.file, files], [hadFile], async () =>
     {
-        let file = await upload(files.file)
+        let file = await upload_pdf(files.file)
         Obj.file = {
             name: files.file.name,
             url: file.url,

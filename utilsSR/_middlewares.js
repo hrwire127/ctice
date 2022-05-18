@@ -60,6 +60,43 @@ async function validateDeclr(req, res, next)
     next()
 }
 
+async function validateUser(req, res, next) 
+{
+    let { confirmationCode, password, profile } = req.body
+
+    const declarationSchema = Joi.object({
+        confirmationCode: Joi.string().required(),
+        password: Joi.string().required(),
+        profile: Joi.string().required(),
+    })
+
+    const preparedBody =
+    {
+        confirmationCode, password, profile
+    }
+
+    const { error } = declarationSchema.validate(preparedBody)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new userError(msg, 401).throw_CS(res)
+    }
+
+
+    const bodyError = inspectUser(undefined, undefined, password, req.files.profile)
+
+    if (bodyError) 
+    {
+        return new userError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.password = password.trim()
+
+    next()
+}
+
 async function validateComment(req, res, next)
 {
     let { content, date } = req.body
@@ -382,12 +419,12 @@ async function getUsername(req, res)
 
 
 module.exports = {
-    validateDeclr: validateDeclr, validateRegUser,
+    validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
     apiSecret, verifyPendingUser, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
     validateApiDate, validateComment, checkCommentUser,
     getUsername, verifyTokenUser, verifyUser, tryAsync_CS,
-    verifyConfirmCode, verifyPendingCode
+    verifyConfirmCode, verifyPendingCode, validateUser
 }

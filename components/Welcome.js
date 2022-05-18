@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import
 {
     Avatar, Button, CssBaseline,
@@ -6,13 +6,15 @@ import
     Grid, Box, Typography, Container, Alert,
     FormHelperText
 } from '@mui/material';
+import TransitionAlerts from './TransitionAlerts'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
+import UploadBtnProfile from './UploadBtnProfile';
 
 function Welcome(props)
 {
-    const { handleSubmit } = props;
+    const { handleSubmit, alert, switchLoading } = props;
     const [
         PasswordError,
         setPasswordError,
@@ -23,10 +25,14 @@ function Welcome(props)
         setPasswordFalse,
         passwordValid,
     ] = useFormError(false);
+    const [file, changeFile] = useState();
+
     const errCheck = (e) =>
     {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
+        console.log(file)
+        if (file) data.append("profile", file)
 
         const password = data.get("password");
 
@@ -53,7 +59,7 @@ function Welcome(props)
             <Typography component="h1" variant="h5">
                 Please introduce a password
             </Typography>
-
+            {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
             <Box
                 component="form"
                 noValidate
@@ -77,16 +83,23 @@ function Welcome(props)
                         />
                         <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
                     </Grid>
+                    <Grid item xs={12}>
+                        <UploadBtnProfile changeFile={changeFile} file={file} />
+                    </Grid>
                 </Grid>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                    Register
-                </Button>
-                <BackLink>Back</BackLink>
+
+                {switchLoading(0, () =>
+                (<>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Register
+                    </Button>
+                    <BackLink>Back</BackLink>
+                </>))}
             </Box>
         </Box>
     )

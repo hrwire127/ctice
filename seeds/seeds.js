@@ -29,8 +29,8 @@ const createDeclaration = async () =>
             }),
             file: {
                 name: "A.pdf",
-                url: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice/A_rrpiog.pdf",
-                location: "ctice/A_rrpiog"
+                url: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice/pdfs/A_rrpiog.pdf",
+                location: "ctice/pdfs/A_rrpiog"
             },
             date: [new Date()],
             authors: [user._id]

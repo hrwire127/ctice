@@ -18,7 +18,7 @@ import useFormError from "./hooks/useFormError";
 import { handleDeclrData } from "../utilsCS/_client";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
-import UploadBtn from "./UploadBtn";
+import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import { useTheme } from '@mui/styles';
 
@@ -137,7 +137,7 @@ export default function CreateForm(props)
 
 
 
-                    <UploadBtn changeFile={changeFile} file={file} />
+                    <UploadBtnPdf changeFile={changeFile} file={file} />
 
                     {switchLoading(0, () =>
                     (<>

@@ -10,12 +10,11 @@ function inspectDecrl(title, description, Files) //
 
     if (Files)
     {
-        const fileRule = new valRule(Files.file.size, Rules.file_max_size, 0)
+        const fileRule = new valRule(Files.file.size, Rules.pdf_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat = new valRule(Files.file.mimetype, Rules.file_format, 3)
+        const fileFormat = new valRule(Files.file.mimetype, Rules.pdf_format, 3)
         if (fileFormat.getVal()) return fileFormat.processMsg()
-
     }
 }
 
@@ -26,10 +25,13 @@ function inspectComment(content)
 
 }
 
-function inspectUser(username, email = undefined, password = undefined)
+function inspectUser(username = undefined, email = undefined, password = undefined, file = undefined)
 {
-    const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
-    if (usernameRule.getVal()) return usernameRule.processMsg()
+    if (username)
+    {
+        const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
+        if (usernameRule.getVal()) return usernameRule.processMsg()
+    }
 
     if (password)
     {
@@ -45,6 +47,15 @@ function inspectUser(username, email = undefined, password = undefined)
 
         const includesRule = new valRule(email, Rules.email_includes, 4)
         if (includesRule.getVal()) return includesRule.processMsg()
+    }
+
+    if (file)
+    {
+        const fileRule = new valRule(file.size, Rules.profile_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+
+        const fileFormat = new valRule(file.mimetype, Rules.profile_formats, 5)
+        if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 }
 

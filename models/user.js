@@ -6,6 +6,7 @@ const { Rules } = require('../utilsSR/val-Rule')
 const passport = require('passport');
 const errorMessages = require("../utilsSR/errorMessages")
 const Redirects_SR = require('../utilsSR/SR_Redirects')
+const { upload_profiles } = require('../utilsSR/_tertiary')
 
 
 const UserSchema = new Schema({
@@ -32,6 +33,11 @@ const UserSchema = new Schema({
         type: Date,
         required: true
     },
+    profile:
+    {
+        type: String,
+        required: true
+    }
 });
 
 UserSchema.plugin(passportLocalMongoose);
@@ -49,9 +55,8 @@ UserSchema.statics.processLogin = async function (req, res, next)
 {
     return new Promise((resolve, reject) =>
     {
-        passport.authenticate('local', function (err, user, info)
+        passport.authenticate('local', async function (err, user, info)
         {
-            console.log("1")
             if (err)
             {
                 new userError(err.message, err.status).throw_CS(res);
@@ -64,13 +69,11 @@ UserSchema.statics.processLogin = async function (req, res, next)
             }
             else
             {
-                console.log("2")
                 if (user.status !== "Active")
                 {
                     new userError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
                     reject()
                 }
-                console.log("3")
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
                 {
@@ -84,7 +87,6 @@ UserSchema.statics.processLogin = async function (req, res, next)
                 {
                     req.session.cookie.originalMaxAge = 24 * 60 * 60 * 1000 // Expires in 1 day
                 }
-                console.log("4")
                 resolve()
             }
         })(req, res, next);
@@ -92,7 +94,7 @@ UserSchema.statics.processLogin = async function (req, res, next)
 }
 
 
-UserSchema.methods.processRegister = async function (req, res, token, { user, password })
+UserSchema.statics.processRegister = async function (req, res, token, { user, password })
 {
     const User = mongoose.model('User', UserSchema)
     if (token)
@@ -107,7 +109,15 @@ UserSchema.methods.processRegister = async function (req, res, token, { user, pa
         }
         else
         {
-            await User.register(user, password)
+            console.log("!!!!")
+            const file = await upload_profiles(req.files.profile)
+            console.log(file)
+            user.profile = file.url
+            await User.register(user, password, (err, user) => {
+                console.log(user)
+                console.log(err)
+            })
+            console.log("2222")
         }
     }
     else
