@@ -17,7 +17,8 @@ function index(props)
         loadMoreWhile(async () =>
         {
             await timeout(500)
-            const newDeclrs = await getLimitedDeclrs(declarations, date, query);
+            //doclimit --!!!!
+            const newDeclrs = await getLimitedDeclrs(declarations, date, query, 5);
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })

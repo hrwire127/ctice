@@ -13,24 +13,24 @@ function getUser(req, res)
     Redirects_SR.Error.CS(res)
 }
 
-async function limitNan(declarations)
+async function limitNan(declarations, doclimit)
 {
-    return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT);
+    return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(doclimit);
 }
-async function limitQuery(query, declarations)
+async function limitQuery(query, declarations, doclimit)
 {
     const queryDeclarations = await Declaration.find({
         $and: [
             { _id: { $nin: declarations } },
             { title: { $regex: query, $options: "i" } }
         ]
-    }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT)
-    queryDeclarations.slice(0, process.env.DOCS_LOAD_LIMIT)
+    }).sort({ _id: -1 }).limit(doclimit)
+    queryDeclarations.slice(0, doclimit)
 
     return queryDeclarations;
 }
 
-async function limitDate(date, declarations)
+async function limitDate(date, declarations, doclimit)
 {
     let newDeclarations = [];
     const queryDeclarations = await Declaration.find({
@@ -43,12 +43,12 @@ async function limitDate(date, declarations)
             newDeclarations.push(el)
         }
     })
-    newDeclarations.slice(0, process.env.DOCS_LOAD_LIMIT)
+    newDeclarations.slice(0, doclimit)
 
     return newDeclarations;
 }
 
-async function limitFilter(query, date, declarations)
+async function limitFilter(query, date, declarations, doclimit)
 {
     let newDeclarations = [];
     const queryDeclarations = await Declaration.find({
@@ -64,7 +64,7 @@ async function limitFilter(query, date, declarations)
             newDeclarations.push(el)
         }
     })
-    newDeclarations.slice(0, process.env.DOCS_LOAD_LIMIT)
+    newDeclarations.slice(0, doclimit)
 
     return newDeclarations;
 }

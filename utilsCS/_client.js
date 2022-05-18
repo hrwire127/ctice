@@ -168,7 +168,7 @@ async function getDeclr(id)
         })
 }
 
-async function getLimitedDeclrs(declarations, date, query)
+async function getLimitedDeclrs(declarations, date, query, doclimit)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/limit/api`, {
         method: 'POST',
@@ -176,7 +176,7 @@ async function getLimitedDeclrs(declarations, date, query)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { declarations, date, query, secret: process.env.NEXT_PUBLIC_SECRET }
+            { doclimit, declarations, date, query, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -202,7 +202,7 @@ async function getAllCount(declarations)
         })
 }
 
-function getDeclrsQuery(query)
+function getDeclrsQuery(query, doclimit)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/query/api`, {
         method: 'POST',
@@ -210,7 +210,7 @@ function getDeclrsQuery(query)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { query, secret: process.env.NEXT_PUBLIC_SECRET }
+            { doclimit, query, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -279,18 +279,18 @@ async function getCountDateQuery(query, date)
     return count.obj;
 }
 
-async function getDeclrsDateQuery(query, date)
+async function getDeclrsDateQuery(query, date, doclimit)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await getLimitedDeclrs([], "Invalid", "")
+        let count = await getLimitedDeclrs([], "Invalid", "", doclimit)
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
     if (date === "Invalid")
     {
-        let queryDeclrs = await getDeclrsQuery(query)
+        let queryDeclrs = await getDeclrsQuery(query, doclimit)
         if (nowindowFetchError(queryDeclrs)) return queryDeclrs
         return queryDeclrs.obj;
     }

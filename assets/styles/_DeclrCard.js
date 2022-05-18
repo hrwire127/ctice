@@ -1,6 +1,9 @@
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
+    Content: {
+        height: theme.cardHeight                       
+    },
     Card: {
         width: 220,
         height: 195,

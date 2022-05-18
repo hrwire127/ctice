@@ -9,7 +9,6 @@ import Link from 'next/link'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 
-
 function DeclrCard(props) 
 {
     const { title, _id, description, date } = props;
@@ -21,8 +20,6 @@ function DeclrCard(props)
         setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
     }, [])
 
-
-
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
     const data = CropData(JSON.parse(description), 6);
@@ -30,7 +27,7 @@ function DeclrCard(props)
 
     return (
         <Card className={classes.Card}>
-            <CardContent sx={{ height: 155 }}>
+            <CardContent className={classes.Content}>
                 <Typography className={classes.Title} color="text.secondary" gutterBottom>
                     {title}
                 </Typography>

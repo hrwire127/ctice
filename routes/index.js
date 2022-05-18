@@ -19,12 +19,12 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/limit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
-    const { declarations, query, date } = req.body;
+    const { declarations, query, date, doclimit } = req.body;
     let newDeclarations = [];
-    if (query === "" && date === "Invalid") newDeclarations = await limitNan(declarations)
-    if (date === "Invalid") newDeclarations = await limitQuery(query, declarations)
-    else if (query === "") newDeclarations = await limitDate(date, declarations)
-    else newDeclarations = limitFilter(query, date, declarations)
+    if (query === "" && date === "Invalid") newDeclarations = await limitNan(declarations, doclimit)
+    if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit)
+    else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit)
+    else newDeclarations = limitFilter(query, date, declarations, doclimit)
 
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
@@ -50,19 +50,19 @@ router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate, try
 
 router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, res) =>
 {
-    const { query } = req.body;
-    const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(process.env.DOCS_LOAD_LIMIT)
+    const { query, doclimit } = req.body;
+    const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(doclimit)
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
 router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
 {
-    const { date } = req.body;
+    const { date, doclimit } = req.body;
     const declarations = await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
         { $sort: { _id: -1 } },
-        { $limit: 5 },
+        { $limit: doclimit },
     ])
 
     Redirects_SR.Api.sendApi(res, declarations)

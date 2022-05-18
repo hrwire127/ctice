@@ -39,6 +39,7 @@ const themeLight = createTheme({
     maxPadding: 200,
     minPadding: 30,
     drawerWidth: 170,
+    cardHeight: 155
 });
 
 const themeBlack = createTheme({
@@ -104,6 +105,7 @@ const themeBlack = createTheme({
     maxPadding: 200,
     minPadding: 30,
     drawerWidth: 170,
+    cardHeight: 155
 
 });
 

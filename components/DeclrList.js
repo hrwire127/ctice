@@ -16,7 +16,6 @@ import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_clie
 import DatePicker from './DatePicker'
 import TransitionAlerts from './TransitionAlerts'
 
-
 function DeclrList(props)
 {
     const [dateValue, setDate] = useState("Invalid");
@@ -53,8 +52,9 @@ function DeclrList(props)
         fullWhile(async () =>
         {
             await timeout(500)
-            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue);
-            const newQuery = await getCountDateQuery(queryValue, dateValue);
+            //doclimit ---!!!
+            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue, 4);
+            const newQuery = await getCountDateQuery(queryValue, dateValue, 4);
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window)
             setDeclarations(newDeclrs)
