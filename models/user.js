@@ -132,6 +132,7 @@ UserSchema.methods.updateChanges = async function (req, res)
     else
     {
         this.username = username;
+        req.session.passport.user = username
     }
 }
 

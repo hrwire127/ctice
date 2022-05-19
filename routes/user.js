@@ -120,7 +120,7 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, isSessionUser, validateChange, tryAsync_CS(async (req, res) =>
+router.post('/change', isLogged_CS, isSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {//
     const { id } = req.body;
     console.log(id)
