@@ -30,7 +30,8 @@ const UserSchema = new Schema({
     },
     date:
     {
-        type: Date,
+        type: [Date],
+        default: new Date(),
         required: true
     },
     profile:
@@ -133,6 +134,7 @@ UserSchema.methods.updateChanges = async function (req, res)
     {
         this.username = username;
         req.session.passport.user = username
+        this.date.push(new Date())
     }
 }
 

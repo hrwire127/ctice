@@ -19,7 +19,7 @@ function Profile(props)
 
     useEffect(() =>
     {
-        setDiff(getDateDifference(new Date(), new Date(date)))
+        setDiff(getDateDifference(new Date(), new Date(date[0])))
     }, [])
 
 

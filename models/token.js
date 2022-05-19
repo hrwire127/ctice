@@ -23,10 +23,6 @@ const TokenSchema = new Schema({
         type: Date,
         default: Date.now,
         expires: 120,
-    },
-    typeOf: {
-        type: String,
-        required: true,
     }
 });
 

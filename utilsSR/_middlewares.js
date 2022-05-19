@@ -11,7 +11,7 @@ const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_se
 
 async function validateDeclr(req, res, next) 
 {
-    let { title, description, date, file } = req.body
+    let { title, description, file } = req.body
 
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
@@ -27,8 +27,7 @@ async function validateDeclr(req, res, next)
             })),
             entityMap: Joi.object().required()
         }).required(),
-        file: Joi.string(),
-        date: Joi.date().iso()
+        file: Joi.string()
     })
 
     const preparedBody =
@@ -374,8 +373,6 @@ function verifyToken(req, res)
         })
             .then(async (token) =>
             {
-                // if (!token) new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
-                // if (token.typeOf !== "Reset") new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
                 resolve(token)
             })
             .catch((err) => 

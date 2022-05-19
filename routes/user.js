@@ -74,7 +74,7 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
     const pending = await Pending.findOne({ confirmationCode })
     const user = new User({ //copy user static
         username: pending.username,
-        date: pending.date,
+        date: [pending.date],
         email: pending.email,
         status: "Active"
     })
