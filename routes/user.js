@@ -89,12 +89,11 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 
 router.post('/reset/pending', isSessionUser, tryAsync_CS(async (req, res) =>
 {
-    const user = await getUserdata(req, res);
+    const user = await getUserdata(req, res)
     const token = new Token({ user })
-    console.log(token)
     await token.processReset(req, res)
     await token.save()
-    req.flash('success', 'Check your email');
+    req.flash('success', 'Check your email')
     Redirects_SR.Home.CS(res)
 }))
 
@@ -106,11 +105,11 @@ router.get('/reset/:confirmationCode', verifyTokenReset, tryAsync_CS(async (req,
 
 router.post('/reset', verifyConfirmCode, tryAsync_CS(async (req, res) =>
 {
-    const { confirmationCode, password } = req.body;
-    const token = await Token.findOne({ token: confirmationCode }).populate('user');
-    await Token.deleteOne({ token: confirmationCode });
+    const { confirmationCode, password } = req.body
+    const token = await Token.findOne({ token: confirmationCode }).populate('user')
+    await Token.deleteOne({ token: confirmationCode })
     await token.reset(req, res, confirmationCode, { user: token.user, password })
-    req.flash('success', 'Password reseted!');
+    req.flash('success', 'Password reseted!')
     Redirects_SR.Home.CS(res)
 }))
 

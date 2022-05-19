@@ -3,7 +3,7 @@ import UserContext from '../../components/context/contextUser'
 import Change from '../../components/Change'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import useLoading from '../../components/hooks/useLoading'
-import { getClientUser, determRendering, checkToken, timeout } from "../../utilsCS/_client"
+import { getClientUser, determRendering, checkToken, timeout, getDateDifference } from "../../utilsCS/_client"
 
 function change(props)
 {

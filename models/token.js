@@ -32,7 +32,7 @@ TokenSchema.methods.processReset = async function (req, res)
     return new Promise(async (resolve, reject) =>
     {
         const Token = mongoose.model('Token', TokenSchema);
-        if (await Token.findOne({ email: this.user.email}))
+        if (await Token.findOne({ email: this.user.email }))
         {
             new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
@@ -59,11 +59,17 @@ TokenSchema.methods.reset = async function (req, res, token, { user, password })
 {
     if (token)
     {
-        if (await User.findOne({ username: user.username}))
+        if (Math.abs(date2 - date1) <= process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY)
         {
-            await user.setPassword(password);
+            new userError(...Object.values(errorMessages.delayed)).setup(req, res);
+        }
+        else if (await User.findOne({ username: user.username }))
+        {
+            await user.setPassword(password)
+            user.date.push(new Date())
             await user.save()
         }
+
         else
         {
             new userError(...Object.values(errorMessages.userNotFound)).throw_CS(res)

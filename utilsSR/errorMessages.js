@@ -12,6 +12,7 @@ module.exports = {
     usernameAllreadyUsed: { message: "Username Allready Used", status: 400 },
     userNotFound: { message: "User Not Found", status: 404 },
     likeExists: { message: "User Exists", status: 401 },
-    didNotMatch: { message: "User Did Not Match", status: 401 }
+    didNotMatch: { message: "User Did Not Match", status: 401 },
+    delayed: { message: "Cannot modify now, try later", status: 401 }
 
 }

@@ -26,7 +26,7 @@ function Change(props)
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id } = user;
 
-
+	console.log((new Date()- new Date(date[date.length - 1])))
 
 	const errCheck = (e) =>
 	{
@@ -97,16 +97,21 @@ function Change(props)
 					</div>
 				</Grid>
 			</Grid>
-			{switchLoading(0, () =>
-			(<>
-				<Button
-					type="submit"
-					variant="contained"
-					sx={{ mt: 3, mb: 2 }}
-				>
-					Save
-				</Button>
-			</>))}
+			{Math.abs((new Date()- new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
+				? (<Typography variant="h7" color="text.danger">
+					Please wait some time after the edit
+				</Typography>)
+				: (switchLoading(0, () =>
+				(<>
+					<Button
+						type="submit"
+						variant="contained"
+						sx={{ mt: 3, mb: 2 }}
+					>
+						Save
+					</Button>
+				</>)))
+			}
 		</Box>
 	)
 }
