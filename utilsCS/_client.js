@@ -372,6 +372,20 @@ function getFlash(props)
     return flash;
 }
 
+function checkToken(id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/token/exists`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET, id}
+            )
+        }).then(response => response.json())
+}
+
 module.exports = {
     CropData, uploadFile,
     handleDeclrData,
@@ -380,5 +394,5 @@ module.exports = {
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getAllCount,
-    getLimitedComments, getFlash, getClientUser
+    getLimitedComments, getFlash, getClientUser, checkToken
 }

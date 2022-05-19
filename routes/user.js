@@ -5,9 +5,9 @@ const Pending = require("../models/pending")
 const User = require("../models/user")
 const Token = require("../models/token")
 const { validateRegUser, validateLogUser, isLogged_CS,
-    isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPendingUser,
-    apiSecret, getUsername, verifyTokenUser, verifyUser,
-    verifyConfirmCode, verifyPendingCode, validateUser } = require('../utilsSR/_middlewares')
+    isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
+    apiSecret, getUserdata, verifyTokenReset, isSessionUser,
+    verifyConfirmCode, validateChange, validatePending } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
 {
@@ -21,7 +21,7 @@ router.get('/login', async (req, res) =>
 
 router.get('/profile', isLogged_SR, async (req, res) =>
 {
-    const user = await getUsername(req, res)
+    const user = await getUserdata(req, res)
     app.render(req, res, "/user/profile", { user })
 })
 
@@ -34,7 +34,7 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const user = await getUsername(req, res)
+    const user = await getUserdata(req, res)
     Redirects_SR.Api.sendApi(res, user)
 }))
 
@@ -62,57 +62,73 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.get("/confirm/:confirmationCode", verifyPendingUser, tryAsync_SR(async (req, res) =>
+router.get("/confirm/:confirmationCode", verifyPending, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
     app.render(req, res, "/welcome", { confirmationCode })
 }))
 
-router.post("/confirm", validateUser, tryAsync_SR(async (req, res) =>
+router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
-    const { profile } = req.files;
     const pending = await Pending.findOne({ confirmationCode })
-    const user = new User({
+    const user = new User({ //copy user static
         username: pending.username,
         date: pending.date,
         email: pending.email,
         status: "Active"
     })
 
-    const credentials = { user, password }
-    await User.processRegister(req, res, pending, credentials)
-    console.log("!!!!")
+    await User.processRegister(req, res, pending, { user, password })
     await Pending.findByIdAndDelete(pending._id)
-    console.log("!!!!")
     req.flash('success', 'Successfuly Registered');
     Redirects_SR.Home.CS(res)
 }))
 
 //forgot password page + email
-router.get('/reset/:confirmationCode', verifyTokenUser, tryAsync_CS(async (req, res) =>
-{
-    const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/reset", { confirmationCode })
-}))
 
-router.post('/reset/pending', verifyUser, tryAsync_CS(async (req, res) =>
+router.post('/reset/pending', isSessionUser, tryAsync_CS(async (req, res) =>
 {
-    const user = await getUsername(req, res);
+    const user = await getUserdata(req, res);
     const token = new Token({ user })
-    await token.processPending(req, res)
+    token.typeOf = "Reset"
+    await token.processReset(req, res)
     await token.save()
     req.flash('success', 'Check your email');
     Redirects_SR.Home.CS(res)
 }))
 
+router.get('/reset/:confirmationCode', verifyTokenReset, tryAsync_CS(async (req, res) =>
+{
+    const confirmationCode = req.params.confirmationCode
+    app.render(req, res, "/reset", { confirmationCode })
+}))
+
 router.post('/reset', verifyConfirmCode, tryAsync_CS(async (req, res) =>
 {
     const { confirmationCode, password } = req.body;
-    const token = await Token.findOne({ token: confirmationCode }).populate('user');
+    const token = await Token.findOne({ token: confirmationCode, typeOf: "Reset" }).populate('user');
     await Token.deleteOne({ token: confirmationCode });
-    await token.processReset(req, res, confirmationCode, { user: token.user, password })
+    await token.reset(req, res, confirmationCode, { user: token.user, password })
     req.flash('success', 'Password reseted!');
+    Redirects_SR.Home.CS(res)
+}))
+
+router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
+{//
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/change", { user })
+}))
+
+router.post('/change', isLogged_CS, isSessionUser, validateChange, tryAsync_CS(async (req, res) =>
+{//
+    const { id } = req.body;
+    console.log(id)
+    const user = await User.findById(id);
+    console.log(user)
+    await user.updateChanges(req, res);
+    await user.save()
+    req.flash('success', 'Changed Account Details');
     Redirects_SR.Home.CS(res)
 }))
 
@@ -121,6 +137,13 @@ router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
     const { light } = req.body;
     req.session.light = !light
     Redirects_SR.Api.sendApi(res, !light)
+}))
+
+router.post('/reset/token/exists', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const { id } = req.body;
+    const token = await Token.findOne({ user: id, typeOf: "Reset" });
+    Redirects_SR.Api.sendApi(res, token ? true : false)
 }))
 
 module.exports = router;

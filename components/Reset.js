@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import
 {
     Avatar, Button, CssBaseline,
@@ -9,10 +9,11 @@ import
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
+import TransitionAlerts from './TransitionAlerts'
 
 function Reset(props)
 {
-    const { handleSubmit } = props;
+    const { handleSubmit, alert, switchLoading } = props;
     const [
         PasswordError,
         setPasswordError,
@@ -53,11 +54,11 @@ function Reset(props)
             <Typography component="h1" variant="h5">
                 Please introduce a password
             </Typography>
-
+            {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
             <Box
                 component="form"
                 noValidate
-                sx={{ mt: 3 }}
+                sx={{ mt: 3, width: 400}}
                 onSubmit={errCheck}
             >
                 <Grid container spacing={2}>
@@ -69,7 +70,7 @@ function Reset(props)
                             error={PasswordError}
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="New Password"
                             type="password"
                             id="password"
                             autoComplete="new-password"
@@ -78,15 +79,18 @@ function Reset(props)
                         <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
                     </Grid>
                 </Grid>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                >
-                    Reset Password
-                </Button>
-                <BackLink>Back</BackLink>
+                {switchLoading(0, () =>
+                (<>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Reset
+                    </Button>
+                    <BackLink>Back</BackLink>
+                </>))}
             </Box>
         </Box>
     )

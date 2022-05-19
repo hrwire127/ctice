@@ -109,15 +109,9 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
         }
         else
         {
-            console.log("!!!!")
             const file = await upload_profiles(req.files.profile)
-            console.log(file)
             user.profile = file.url
-            await User.register(user, password, (err, user) => {
-                console.log(user)
-                console.log(err)
-            })
-            console.log("2222")
+            await User.register(user, password)
         }
     }
     else
@@ -126,6 +120,21 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
         Redirects_SR.Error.CS(res)
     }
 }
+
+UserSchema.methods.updateChanges = async function (req, res)
+{
+    const { username } = req.body;
+    const User = mongoose.model('User', UserSchema)
+    if (await User.findOne({ username: username }))
+    {
+        new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+    }
+    else
+    {
+        this.username = username;
+    }
+}
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Welcome from '../components/Welcome'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_client'
@@ -8,7 +8,17 @@ import Reset from '../components/Reset'
 function reset(props)
 {
     const { confirmationCode } = props;
+    const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, 9000);
+    }
 
     const handleSubmit = async (body) =>
     {
@@ -24,10 +34,11 @@ function reset(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
                 })
         })
     };
-    return switchLoading(2, () => <Reset handleSubmit={handleSubmit} />)
+    return switchLoading(2, () => <Reset handleSubmit={handleSubmit} alert={alert} switchLoading={switchLoading} />)
 }
 reset.getInitialProps = async (props) =>
 {

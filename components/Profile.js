@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Button, CssBaseline, Grid, Box, Typography, Container, Link } from '@mui/material';
+import
+    {
+        IconButton, Button,
+        CssBaseline, Grid,
+        Box, Typography,
+        Container, Link
+    } from '@mui/material';
 import { CropData, getDateDifference } from '../utilsCS/_client';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import CakeIcon from '@mui/icons-material/Cake';
+import { Edit, CheckBox, HighlightOff, Cake } from '@mui/icons-material';
+
 function Profile(props)
 {
-    const { resetPassword, user } = props;
-    const { username, status, date, email } = user;
+    const { resetPassword, user, isToken } = props;
+    const { username, status, date, email, profile } = user;
 
     const [diff, setDiff] = useState()
 
@@ -19,20 +24,26 @@ function Profile(props)
 
     return (<Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Typography component="h1" variant="h3">
-            {username}
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: "left", gap: 2, alignItems: "center" }}>
+            <Typography component="h1" variant="h3">
+                {username}
+            </Typography>
+            <IconButton >
+                <Edit />
+            </IconButton>
+        </Box>
+        <img src={profile} />
         <Box sx={{ display: 'flex', justifyContent: "left", gap: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: "left" }}>
                 <Box>
-                    {status === "Active" ? (<CheckBoxIcon color="success" />) : <HighlightOffIcon color="danger" />}
+                    {status === "Active" ? (<CheckBox color="success" />) : <HighlightOff color="danger" />}
                 </Box>
                 <Typography variant="h7" >
                     {status}
                 </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: "left" }}>
-                <CakeIcon sx={{fontSize: 20}}/>
+                <Cake sx={{ fontSize: 20 }} />
                 <Typography variant="h7" >
                     Member for {diff}
                 </Typography>
@@ -47,8 +58,17 @@ function Profile(props)
                 {email}
             </Typography>
         </Grid>
-        {/* <Link onClick={resetPassword}>Reset Password</Link> */}
-    </Container>
+        <Grid item xs={12}>
+            {isToken
+                ? (<Typography variant="h7" color="text.danger">
+                    An email was sent for the password reset
+                </Typography>)
+                : (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
+                    Reset Password
+                </Link>)
+            }
+        </Grid>
+    </Container >
     )
 }
 

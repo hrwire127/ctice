@@ -60,7 +60,7 @@ async function validateDeclr(req, res, next)
     next()
 }
 
-async function validateUser(req, res, next) 
+async function validatePending(req, res, next) 
 {
     let { confirmationCode, password, profile } = req.body
 
@@ -93,6 +93,105 @@ async function validateUser(req, res, next)
     }
 
     req.body.password = password.trim()
+
+    next()
+}
+
+async function validateRegUser(req, res, next) 
+{
+    const { username, email } = req.body;
+    const userSchema = Joi.object({
+        username: Joi.string().required(),
+        email: Joi.string().required()
+    })
+
+    const { error } = userSchema.validate({ username, email })
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new userError(msg, 401).throw_CS(res)
+    }
+
+    const bodyError = inspectUser(username, email)
+
+    if (bodyError) 
+    {
+        return new userError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.username = username.trim()
+    req.body.email = email.trim()
+
+    next()
+
+}
+
+async function validateLogUser(req, res, next) 
+{
+    const { username, password, remember } = req.body;
+
+    const userSchema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        remember: Joi.boolean().required()
+    })
+
+    const { error } = userSchema.validate({ username, password, remember })
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new userError(msg, 401).throw_CS(res)
+    }
+
+    const bodyError = inspectUser(username, undefined, password)
+
+    if (bodyError) 
+    {
+        return new userError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.username = username.trim()
+    req.body.password = password.trim()
+
+    next()
+
+}
+
+async function validateChange(req, res, next)
+{
+    let { username } = req.body
+
+    const declarationSchema = Joi.object({
+        username: Joi.string(),
+    })
+
+    const preparedBody =
+    {
+        username
+    }
+
+    const { error } = declarationSchema.validate(preparedBody)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new userError(msg, 401).throw_CS(res)
+    }
+
+
+    const bodyError = inspectUser(username)
+
+    if (bodyError) 
+    {
+        return new userError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.username = username.trim()
 
     next()
 }
@@ -171,69 +270,7 @@ async function validateApiDate(req, res, next)
     next()
 }
 
-async function validateRegUser(req, res, next) 
-{
-    const { username, email } = req.body;
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        email: Joi.string().required()
-    })
 
-    const { error } = userSchema.validate({ username, email })
-
-    if (error) 
-    {
-        console.log(error)
-        const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
-    }
-
-    const bodyError = inspectUser(username, email)
-
-    if (bodyError) 
-    {
-        return new userError(bodyError, 401).throw_CS(res)
-    }
-
-    req.body.username = username.trim()
-    req.body.email = email.trim()
-
-    next()
-
-}
-
-async function validateLogUser(req, res, next) 
-{
-    const { username, password, remember } = req.body;
-
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        password: Joi.string().required(),
-        remember: Joi.boolean().required()
-    })
-
-    const { error } = userSchema.validate({ username, password, remember })
-
-    if (error) 
-    {
-        console.log(error)
-        const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
-    }
-
-    const bodyError = inspectUser(username, undefined, password)
-
-    if (bodyError) 
-    {
-        return new userError(bodyError, 401).throw_CS(res)
-    }
-
-    req.body.username = username.trim()
-    req.body.password = password.trim()
-
-    next()
-
-}
 
 
 function isLogged_SR(req, res, next)
@@ -288,7 +325,7 @@ function apiSecret(req, res, next)
     next()
 }
 
-function verifyPendingUser(req, res, next) 
+function verifyPending(req, res, next) 
 {
     Pending.findOne({
         confirmationCode: req.params.confirmationCode,
@@ -328,33 +365,53 @@ function verifyPendingCode(req, res, next)
         });
 };
 
-function verifyTokenUser(req, res, next) 
+function verifyToken(req, res)
 {
-    Token.findOne({
-        token: req.params.confirmationCode,
-    })
-        .then(async (token) =>
-        {
-            if (!token)
-            {
-                new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
-            }
-            next()
+    return new Promise((resolve, reject) =>
+    {
+        Token.findOne({
+            token: req.params.confirmationCode,
         })
-        .catch((err) => 
-        {
-            console.log(err)
-            new userError(err.message, err.status).throw_SR(req, res)
-        });
+            .then(async (token) =>
+            {
+                // if (!token) new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+                // if (token.typeOf !== "Reset") new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+                resolve(token)
+            })
+            .catch((err) => 
+            {
+                new userError(err.message, err.status).throw_SR(req, res)
+                reject(err)
+            });
+    })
+}
+
+async function verifyTokenReset(req, res, next) 
+{
+    const token = await verifyToken(req, res);
+    if (!token) new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+    if (token.typeOf !== "Reset") new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+    next()
 };
 
-function verifyUser(req, res, next) 
+async function verifyTokenChange(req, res, next) 
+{
+    const token = await verifyToken(req, res);
+    if (!token) new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+    if (token.typeOf !== "Change") new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
+    next()
+};
+
+function isSessionUser(req, res, next) 
 {
     if (req.session.passport)
     {
         next()
     }
-    new userError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
+    else 
+    {
+        new userError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
+    }
 };
 
 async function verifyConfirmCode(req, res, next)
@@ -366,7 +423,10 @@ async function verifyConfirmCode(req, res, next)
             next()
         }
     }
-    new userError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
+    else 
+    {
+        new userError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
+    }
 }
 
 function isAdmin_SR(req, res, next)
@@ -407,9 +467,22 @@ async function checkCommentUser(req, res, next)
     Redirects_CS.Error.CS(res)
 }
 
-async function getUsername(req, res)
+async function getUserdata(req, res)
 {
-    return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1 })
+    return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
+}
+
+async function isSameUser(req, res, next)
+{
+    const session = await User.findOne({ username: req.session.passport.user }, { username: 1 })
+    if (req.body.id === session._id)
+    {
+        next()
+    }
+    else
+    {
+        new userError(...Object.values(errorMessages.didNotMatch)).throw_SR(req, res)
+    }
 }
 
 // async function checkUser(req, res)
@@ -422,9 +495,10 @@ module.exports = {
     validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR,
     isLogged_CS, tryAsync_CS, tryAsync_SR,
-    apiSecret, verifyPendingUser, isAdmin_SR,
+    apiSecret, verifyPending, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
     validateApiDate, validateComment, checkCommentUser,
-    getUsername, verifyTokenUser, verifyUser, tryAsync_CS,
-    verifyConfirmCode, verifyPendingCode, validateUser
+    getUserdata, verifyTokenReset, isSessionUser, tryAsync_CS,
+    verifyConfirmCode, verifyPendingCode, validatePending,
+    verifyTokenChange, validateChange
 }

@@ -18,7 +18,7 @@ db.once("open", () =>
 const createDeclaration = async () =>
 {
     await Declaration.deleteMany({});
-    const user = await User.findById("62696403a60c0d6ebec55335");
+    const user = await User.findById("628522a8ed3d690e40b1496d");
     for (let i = 0; i < 50; i++)
     {
         const randnum = Math.floor(Math.random() * titles.length);

@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import UserContext from '../../components/context/contextUser'
 import Profile from '../../components/Profile'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getClientUser, determRendering } from "../../utilsCS/_client"
+import { getClientUser, determRendering, checkToken } from "../../utilsCS/_client"
 
 function profile(props)
 {
-    const { user } = props;
+    const { user, isToken } = props;
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
@@ -28,20 +28,27 @@ function profile(props)
             })
     }
 
-    return userCtx && (<Profile user={user} resetPassword={resetPassword}/>)
+
+
+    return userCtx && (<Profile user={user} resetPassword={resetPassword} isToken={isToken} />)
 }
 
 profile.getInitialProps = async (props) =>
 {
-
     return determRendering(props, async () =>
     {
         const user = await getClientUser();
         CS_Redirects.tryResCS(user, window)
-        return { user: user.obj }
-    }, () =>
+        const isToken = await checkToken(user.obj._id)
+        CS_Redirects.tryResCS(isToken, window)
+        return { user: user.obj, isToken: isToken.obj }
+    }, async () =>
     {
-        return { user: JSON.parse(JSON.stringify(props.query.user)) }
+        const user = JSON.parse(JSON.stringify(props.query.user));
+        const isToken = await checkToken(user._id)
+        console.log(isToken)
+        CS_Redirects.tryResSR(isToken, props)
+        return { user, isToken: isToken.obj }
     })
 }
 

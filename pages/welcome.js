@@ -34,7 +34,6 @@ function welcome(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    console.log(res)
                     CS_Redirects.tryResCS(res, window)
                     if (res.err) setError(res.err.message)
                 })
