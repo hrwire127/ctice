@@ -26,17 +26,17 @@ const TokenSchema = new Schema({
     },
     typeOf: {
         type: String,
-        enum: ["Reset", "Change"],
         required: true,
     }
 });
 
-async function process(req, res, typeOf)
+
+TokenSchema.methods.processReset = async function (req, res)
 {
     return new Promise(async (resolve, reject) =>
     {
         const Token = mongoose.model('Token', TokenSchema);
-        if (await Token.findOne({ email: this.user.email, typeOf: typeOf }))
+        if (await Token.findOne({ email: this.user.email}))
         {
             new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
@@ -58,11 +58,12 @@ async function process(req, res, typeOf)
     })
 }
 
-async function modify(req, res, token, { user, password }, typeOf)
+
+TokenSchema.methods.reset = async function (req, res, token, { user, password })
 {
     if (token)
     {
-        if (await User.findOne({ username: user.username, typeOf: typeOf }))
+        if (await User.findOne({ username: user.username}))
         {
             await user.setPassword(password);
             await user.save()
@@ -77,113 +78,6 @@ async function modify(req, res, token, { user, password }, typeOf)
         new userError(...Object.values(errorMessages.noPending)).setup(req, res);
         Redirects_SR.Error.CS(res)
     }
-}
-
-
-TokenSchema.methods.processReset = async function (req, res)
-{
-    // return new Promise(async (resolve, reject) =>
-    // {
-    //     const Token = mongoose.model('Token', TokenSchema);
-    //     if (await Token.findOne({ email: this.user.email, typeOf: "Reset" }))
-    //     {
-    //         new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
-    //         reject();
-    //     }
-    //     else
-    //     {
-    //         nodemailer.sendResetEmail(
-    //             this.user.username,
-    //             this.user.email,
-    //             this.token
-    //         ).then(async (res) =>
-    //         {
-    //             resolve();
-    //         }).catch((err) =>
-    //         {
-    //             reject()
-    //         })
-    //     }
-    // })
-    await process(req, res, "Reset")
-}
-
-
-TokenSchema.methods.reset = async function (req, res, token, { user, password })
-{
-    // if (token)
-    // {
-    //     if (await User.findOne({ username: user.username, typeOf: "Reset" }))
-    //     {
-    //         await user.setPassword(password);
-    //         await user.save()
-    //     }
-    //     else
-    //     {
-    //         new userError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
-    //     }
-    // }
-    // else
-    // {
-    //     new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-    //     Redirects_SR.Error.CS(res)
-    // }
-
-    await process(req, res, token, { user, password }, "Reset")
-}
-
-
-TokenSchema.methods.processChange = async function (req, res)
-{//
-    // return new Promise(async (resolve, reject) =>
-    // {
-    //     const Token = mongoose.model('Token', TokenSchema);
-    //     if (await Token.findOne({ email: this.user.email, typeOf: "Change" }))
-    //     {
-    //         new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
-    //         reject();
-    //     }
-    //     else
-    //     {
-    //         nodemailer.sendResetEmail(
-    //             this.user.username,
-    //             this.user.email,
-    //             this.token
-    //         ).then(async (res) =>
-    //         {
-    //             resolve();
-    //         }).catch((err) =>
-    //         {
-    //             reject()
-    //         })
-    //     }
-    // })
-
-    await process(req, res, "Change")
-}
-
-
-TokenSchema.methods.change = async function (req, res, token, { user, password })
-{//
-    // if (token)
-    // {
-    //     if (await User.findOne({ username: user.username, typeOf: "Change" }))
-    //     {
-    //         await user.setPassword(password);
-    //         await user.save()
-    //     }
-    //     else
-    //     {
-    //         new userError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
-    //     }
-    // }
-    // else
-    // {
-    //     new userError(...Object.values(errorMessages.noPending)).setup(req, res);
-    //     Redirects_SR.Error.CS(res)
-    // }
-    
-    await process(req, res, token, { user, password }, "Change")
 }
 
 const Token = mongoose.model('Token', TokenSchema);

@@ -390,7 +390,6 @@ async function verifyTokenReset(req, res, next)
 {
     const token = await verifyToken(req, res);
     if (!token) new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
-    if (token.typeOf !== "Reset") new userError(...Object.values(errorMessages.tokenExpired)).throw_SR(req, res)
     next()
 };
 

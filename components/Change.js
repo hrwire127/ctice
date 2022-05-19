@@ -23,7 +23,7 @@ function Change(props)
 		usernameValid,
 	] = useFormError(false);
 
-	const { changeAccount, user, isToken, alert, switchLoading } = props;
+	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id } = user;
 
 
@@ -41,7 +41,7 @@ function Change(props)
 		if (usernameValid(username))
 		{
 			setUsernameTrue();
-			changeAccount(data);
+			changeAccDetails(data);
 		}
 		else
 		{
@@ -90,7 +90,7 @@ function Change(props)
 							? (<Typography variant="h7" color="text.danger">
 								An email was sent for the password reset
 							</Typography>)
-							: (<Link sx={{ "&:hover": { cursor: "pointer" } }} >
+							: (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
 								Reset Password
 							</Link>)
 						}

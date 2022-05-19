@@ -29,7 +29,7 @@ function change(props)
         }, 9000);
     }
 
-    const changeAccount = async (body) => 
+    const changeAccDetails = async (body) => 
     {
         loadingWhile(async () =>
         {
@@ -46,7 +46,25 @@ function change(props)
         })
     }
 
-    return userCtx && (<Change user={user} changeAccount={changeAccount} isToken={isToken} switchLoading={switchLoading} />)
+    const resetPassword = async () =>
+    {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/pending`, {
+            method: 'POST',
+        }).then(response => response.json())
+            .then(res =>
+            {
+                CS_Redirects.tryResCS(res, window)
+            })
+    }
+
+    return userCtx && (<Change
+        user={user}
+        changeAccDetails={changeAccDetails}
+        isToken={isToken}
+        switchLoading={switchLoading}
+        resetPassword={resetPassword}
+        alert={alert}
+    />)
 }
 
 change.getInitialProps = async (props) =>

@@ -91,7 +91,7 @@ router.post('/reset/pending', isSessionUser, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res);
     const token = new Token({ user })
-    token.typeOf = "Reset"
+    console.log(token)
     await token.processReset(req, res)
     await token.save()
     req.flash('success', 'Check your email');
@@ -107,7 +107,7 @@ router.get('/reset/:confirmationCode', verifyTokenReset, tryAsync_CS(async (req,
 router.post('/reset', verifyConfirmCode, tryAsync_CS(async (req, res) =>
 {
     const { confirmationCode, password } = req.body;
-    const token = await Token.findOne({ token: confirmationCode, typeOf: "Reset" }).populate('user');
+    const token = await Token.findOne({ token: confirmationCode }).populate('user');
     await Token.deleteOne({ token: confirmationCode });
     await token.reset(req, res, confirmationCode, { user: token.user, password })
     req.flash('success', 'Password reseted!');
@@ -115,17 +115,15 @@ router.post('/reset', verifyConfirmCode, tryAsync_CS(async (req, res) =>
 }))
 
 router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
-{//
+{
     const user = await getUserdata(req, res)
     app.render(req, res, "/user/change", { user })
 }))
 
 router.post('/change', isLogged_CS, isSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
-{//
+{
     const { id } = req.body;
-    console.log(id)
     const user = await User.findById(id);
-    console.log(user)
     await user.updateChanges(req, res);
     await user.save()
     req.flash('success', 'Changed Account Details');
@@ -142,7 +140,7 @@ router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/reset/token/exists', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.body;
-    const token = await Token.findOne({ user: id, typeOf: "Reset" });
+    const token = await Token.findOne({ user: id });
     Redirects_SR.Api.sendApi(res, token ? true : false)
 }))
 
