@@ -20,9 +20,8 @@ function getField(obj, key, alt)
     }
 }
 
-const uploadFile = (e, changeState) =>
+const uploadFile = (file, changeState) =>
 {
-    const file = e.target.files[0];
     file.arrayBuffer().then(data => changeState(
         {
             lastModified: file.lastModified,
@@ -34,6 +33,7 @@ const uploadFile = (e, changeState) =>
         }
     ));
 }
+
 function handleDeclrData(evtTarget, file = undefined, description)
 {
     const data = new FormData(evtTarget);
@@ -381,7 +381,7 @@ function checkToken(id)
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-                { secret: process.env.NEXT_PUBLIC_SECRET, id}
+                { secret: process.env.NEXT_PUBLIC_SECRET, id }
             )
         }).then(response => response.json())
 }
@@ -394,5 +394,5 @@ module.exports = {
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getAllCount,
-    getLimitedComments, getFlash, getClientUser, checkToken
+    getLimitedComments, getFlash, getClientUser, checkToken,
 }

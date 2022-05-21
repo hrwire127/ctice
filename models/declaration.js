@@ -102,15 +102,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
         }
     }).Try()) return Obj;
 
-    if (await new excRule([body.file, files], [hadFile], async () =>
-    {
-        let file = await upload_pdf(files.file)
-        Obj.file = {
-            name: files.file.name,
-            url: file.url,
-            location: file.location
-        }
-    }).Try()) return Obj;
+    inspectChange
 
     if (await new excRule([], [body.file, files, hadFile], async () =>
     { }).Try()) return Obj;

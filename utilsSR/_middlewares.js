@@ -7,7 +7,7 @@ const Token = require("../models/token")
 const Comment = require("../models/comment")
 const User = require("../models/user")
 const Redirects_CS = require("../utilsCS/CS_Redirects")
-const { inspectDecrl, inspectUser, modifyDesc, inspectComment } = require('./_secondary')
+const { inspectDecrl, inspectUser, modifyDesc, inspectComment, inspectChange } = require('./_secondary')
 
 async function validateDeclr(req, res, next) 
 {
@@ -162,15 +162,17 @@ async function validateLogUser(req, res, next)
 
 async function validateChange(req, res, next)
 {
-    let { username } = req.body
+    let { username, profile } = req.body
+    console.log(req.body)
 
     const declarationSchema = Joi.object({
-        username: Joi.string(),
+        username: Joi.string().allow(''),
+        profile: Joi.string()
     })
 
     const preparedBody =
     {
-        username
+        username, profile
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -183,7 +185,7 @@ async function validateChange(req, res, next)
     }
 
 
-    const bodyError = inspectUser(username)
+    const bodyError = inspectChange(username, req.files)
 
     if (bodyError) 
     {
@@ -398,7 +400,7 @@ async function verifyTokenChange(req, res, next)
     next()
 };
 
-function isSessionUser(req, res, next) 
+function matchSessionUser(req, res, next) 
 {
     if (req.session.passport)
     {
@@ -494,7 +496,7 @@ module.exports = {
     apiSecret, verifyPending, isAdmin_SR,
     isAdmin_CS, hasDeclrs, validateApiQuery,
     validateApiDate, validateComment, checkCommentUser,
-    getUserdata, verifyTokenReset, isSessionUser, tryAsync_CS,
+    getUserdata, verifyTokenReset, matchSessionUser, tryAsync_CS,
     verifyConfirmCode, verifyPendingCode, validatePending,
     verifyTokenChange, validateChange
 }

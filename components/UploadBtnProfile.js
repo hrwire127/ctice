@@ -23,7 +23,7 @@ function UploadBtnProfile(props)
                     type="file"
                     id="profile"
                     name="profile"
-                    onChange={(e) => uploadFile(e, changeFile)}
+                    onChange={(e) => uploadFile(e.target.files[0], changeFile)}
                     hidden
                     accept="image/png, image/jpg, image/jpeg"
                 />

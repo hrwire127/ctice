@@ -25,7 +25,7 @@ function inspectComment(content)
 
 }
 
-function inspectUser(username = undefined, email = undefined, password = undefined, file = undefined)
+function inspectUser(username = undefined, email = undefined, password = undefined, Files = undefined)
 {
     if (username)
     {
@@ -49,16 +49,33 @@ function inspectUser(username = undefined, email = undefined, password = undefin
         if (includesRule.getVal()) return includesRule.processMsg()
     }
 
-    if (file)
+    if (Files)
     {
-        const fileRule = new valRule(file.size, Rules.profile_max_size, 0)
+        const fileRule = new valRule(Files.profile.size, Rules.profile_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat = new valRule(file.mimetype, Rules.profile_formats, 5)
+        const fileFormat = new valRule(Files.profile.mimetype, Rules.profile_formats, 5)
         if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 }
 
+function inspectChange(username = undefined, Files = undefined)
+{
+    if (username)
+    {
+        const usernameRule = new valRule(username.length, Rules.username_max_char, 0)
+        if (usernameRule.getVal()) return usernameRule.processMsg()
+    }
+
+    if (Files)
+    {
+        const fileRule = new valRule(Files.profile.size, Rules.profile_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+
+        const fileFormat = new valRule(Files.profile.mimetype, Rules.profile_formats, 5)
+        if (fileFormat.getVal()) return fileFormat.processMsg()
+    }
+}
 function modifyDesc(description)
 {
     let newDesc = description;
@@ -100,4 +117,4 @@ function genToken()
 }
 
 
-module.exports = { inspectDecrl, inspectComment, inspectUser, modifyDesc, genToken }
+module.exports = { inspectDecrl, inspectComment, inspectUser, modifyDesc, genToken, inspectChange }

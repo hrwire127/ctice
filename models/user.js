@@ -6,7 +6,9 @@ const { Rules } = require('../utilsSR/val-Rule')
 const passport = require('passport');
 const errorMessages = require("../utilsSR/errorMessages")
 const Redirects_SR = require('../utilsSR/SR_Redirects')
+const { excRule } = require('../utilsSR/exc-Rule');
 const { upload_profiles } = require('../utilsSR/_tertiary')
+const { cloud } = require('../cloud/storage');
 
 
 const UserSchema = new Schema({
@@ -37,7 +39,8 @@ const UserSchema = new Schema({
     profile:
     {
         type: String,
-        required: true
+        required: true,
+        default: process.env.NEXT_PUBLIC_DEF_PROFILE
     }
 });
 
@@ -122,9 +125,10 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
     }
 }
 
-UserSchema.methods.updateChanges = async function (req, res)
+UserSchema.statics.updateChanges = async function (req, res, user)
 {
-    const { username } = req.body;
+    const { username, id, profile } = req.body;
+
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
     {
@@ -132,9 +136,70 @@ UserSchema.methods.updateChanges = async function (req, res)
     }
     else
     {
-        this.username = username;
-        req.session.passport.user = username
-        this.date.push(new Date())
+        // let Obj = {
+        //     ...user._doc
+        // }
+        console.log("\n")
+        console.log(profile)
+        console.log(req.files)
+        console.log(user.profile)
+        // const user = User.findById(id);
+        if (username && username !== "")
+        {
+            user.username = username
+        }
+
+        user.date.push(new Date())
+
+        if (profile === user.profile)
+        {
+            console.log("1")
+            user.file = user.file;
+            return user;
+        }
+
+        if (await new excRule([req.files, user.profile], [profile], async () =>
+        {
+            console.log("2")
+            let file = await upload_profiles(req.files.profile)
+            if (user.profile !== process.env.NEXT_PUBLIC_DEF_PROFILE)
+            {
+                await cloud.destroy(
+                    user.profile, {}, (res, err) =>
+                {
+                    console.log(res)
+                    console.log(err)
+                }
+                )
+            }
+            user.profile = file.url
+        }).Try()) return user;
+
+        if (await new excRule([], [profile, req.files, user.profile], async () =>
+        {
+            console.log("3")
+        }).Try()) return user;
+
+        if (await new excRule([user.profile], [profile, req.files], async () =>
+        {
+            if (user.profile !== process.env.NEXT_PUBLIC_DEF_PROFILE)
+            {
+                await cloud.destroy(
+                    user.profile, {}, (res, err) =>
+                {
+                    console.log(res)
+                    console.log(err)
+                }
+                )
+            }
+            user.profile = process.env.NEXT_PUBLIC_DEF_PROFILE
+            console.log("4")
+        }).Try()) return user;
+
+        // if (await new excRule([profile, user.profile], [req.files], async () =>
+        // {
+        //     user.file = user.file;
+        // }).Try()) return user;
     }
 }
 

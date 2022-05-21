@@ -8,5 +8,8 @@ module.exports = {
         return config
     }, devIndicators: {
         buildActivity: false
-    }
+    },
+    images: {
+        domains: ['res.cloudinary.com'],
+    },
 }

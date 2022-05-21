@@ -6,9 +6,10 @@ import
 	Grid, Box, Typography, Container, Alert,
 	FormHelperText, Link, Paper
 } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
+import { CheckCircle, FileUpload } from '@mui/icons-material';
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
+import UploadProfile from './UploadProfile'
 
 function Change(props)
 {
@@ -25,28 +26,17 @@ function Change(props)
 
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id } = user;
+	const [image, setImage] = React.useState(profile !== process.env.NEXT_PUBLIC_DEF_PROFILE && profile);
 
-	console.log((new Date()- new Date(date[date.length - 1])))
-
-	const errCheck = (e) =>
+	const errCheck = async (e) =>
 	{
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
 		data.append("id", _id)
 
-		const username = data.get("username");
-		console.log(data)
+		if(image) data.set("profile", image)
 
-
-		if (usernameValid(username))
-		{
-			setUsernameTrue();
-			changeAccDetails(data);
-		}
-		else
-		{
-			setUsernameFalse();
-		}
+		changeAccDetails(data);
 	}
 
 	return (
@@ -58,14 +48,7 @@ function Change(props)
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<img
-						style={{
-							height: "100%",
-							width: "100%",
-							border: "2px solid red",
-							borderRadius: 10,
-						}}
-						src={profile} />
+					<UploadProfile profile={profile} image={image} setImage={setImage} />
 				</Grid>
 				<Grid
 					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}
@@ -97,7 +80,7 @@ function Change(props)
 					</div>
 				</Grid>
 			</Grid>
-			{Math.abs((new Date()- new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
+			{Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
 				? (<Typography variant="h7" color="text.danger">
 					Please wait some time after the edit
 				</Typography>)

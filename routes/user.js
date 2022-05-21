@@ -6,7 +6,7 @@ const User = require("../models/user")
 const Token = require("../models/token")
 const { validateRegUser, validateLogUser, isLogged_CS,
     isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
-    apiSecret, getUserdata, verifyTokenReset, isSessionUser,
+    apiSecret, getUserdata, verifyTokenReset, matchSessionUser,
     verifyConfirmCode, validateChange, validatePending } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
@@ -87,7 +87,7 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 
 //forgot password page + email
 
-router.post('/reset/pending', isSessionUser, tryAsync_CS(async (req, res) =>
+router.post('/reset/pending', matchSessionUser, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     const token = new Token({ user })
@@ -119,12 +119,14 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, isSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/change', isLogged_CS, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.body;
     const user = await User.findById(id);
-    await user.updateChanges(req, res);
-    await user.save()
+    const Obj = await User.updateChanges(req, res, user);
+    console.log(Obj)
+    await User.findByIdAndUpdate(id, Obj)
+    req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details');
     Redirects_SR.Home.CS(res)
 }))
