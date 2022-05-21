@@ -28,6 +28,7 @@ function UploadProfile(props)
         }
     }
 
+
     return (<Box
         onClick={onBtnClick}
         sx={{
@@ -38,7 +39,7 @@ function UploadProfile(props)
             "&:hover": {
                 cursor: "pointer",
                 "& div": {
-                    background: `linear-gradient(to top, rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${image === profile ? image : (image ? URL.createObjectURL(image) : process.env.NEXT_PUBLIC_DEF_PROFILE)}) no-repeat center`,
+                    background: `linear-gradient(to top, rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${image === profile ? image : (image ? URL.createObjectURL(image) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)}) no-repeat center`,
                 },
                 "& svg": {
                     top: "30%",
@@ -47,7 +48,7 @@ function UploadProfile(props)
             "& div": {
                 width: 200,
                 height: 200,
-                background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${image === profile ? image : (image ? URL.createObjectURL(image) : process.env.NEXT_PUBLIC_DEF_PROFILE)}) no-repeat center`,
+                background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${image === profile ? image : (image ? URL.createObjectURL(image) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)}) no-repeat center`,
                 backgroundSize: "cover",
                 borderRadius: 4,
                 borderColor: "primary.main",

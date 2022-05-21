@@ -38,9 +38,15 @@ const UserSchema = new Schema({
     },
     profile:
     {
-        type: String,
-        required: true,
-        default: process.env.NEXT_PUBLIC_DEF_PROFILE
+        url: {
+            default: process.env.NEXT_PUBLIC_DEF_PROFILE_URL,
+            type: String,
+            required: true,
+        },
+        location: {
+            type: String,
+            required: true,
+        }
     }
 });
 
@@ -114,7 +120,7 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
         else
         {
             const file = await upload_profiles(req.files.profile)
-            user.profile = file.url
+            user.profile.url = file.url
             await User.register(user, password)
         }
     }
@@ -142,7 +148,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         console.log("\n")
         console.log(profile)
         console.log(req.files)
-        console.log(user.profile)
+        console.log(user.profile.url)
         // const user = User.findById(id);
         if (username && username !== "")
         {
@@ -151,48 +157,50 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         user.date.push(new Date())
 
-        if (profile === user.profile)
+        if (profile === user.profile.url)
         {
             console.log("1")
             user.file = user.file;
             return user;
         }
 
-        if (await new excRule([req.files, user.profile], [profile], async () =>
+        if (await new excRule([req.files, user.profile.url], [profile], async () =>
         {
             console.log("2")
             let file = await upload_profiles(req.files.profile)
-            if (user.profile !== process.env.NEXT_PUBLIC_DEF_PROFILE)
+            if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(
-                    user.profile, {}, (res, err) =>
+                    user.profile.location, {}, (res, err) =>
                 {
                     console.log(res)
                     console.log(err)
                 }
                 )
             }
-            user.profile = file.url
+            user.profile.url = file.url
+            user.profile.location = file.location
         }).Try()) return user;
 
-        if (await new excRule([], [profile, req.files, user.profile], async () =>
+        if (await new excRule([], [profile, req.files, user.profile.url], async () =>
         {
             console.log("3")
         }).Try()) return user;
 
-        if (await new excRule([user.profile], [profile, req.files], async () =>
+        if (await new excRule([user.profile.url], [profile, req.files], async () =>
         {
-            if (user.profile !== process.env.NEXT_PUBLIC_DEF_PROFILE)
+            if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(
-                    user.profile, {}, (res, err) =>
+                    user.profile.location, {}, (res, err) =>
                 {
                     console.log(res)
                     console.log(err)
                 }
                 )
             }
-            user.profile = process.env.NEXT_PUBLIC_DEF_PROFILE
+            user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+            user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
             console.log("4")
         }).Try()) return user;
 

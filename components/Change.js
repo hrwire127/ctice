@@ -26,7 +26,7 @@ function Change(props)
 
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id } = user;
-	const [image, setImage] = React.useState(profile !== process.env.NEXT_PUBLIC_DEF_PROFILE && profile);
+	const [image, setImage] = React.useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 
 	const errCheck = async (e) =>
 	{
@@ -48,7 +48,7 @@ function Change(props)
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<UploadProfile profile={profile} image={image} setImage={setImage} />
+					<UploadProfile profile={profile.url} image={image} setImage={setImage} />
 				</Grid>
 				<Grid
 					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}

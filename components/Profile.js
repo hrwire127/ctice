@@ -35,7 +35,7 @@ function Profile(props)
                 </IconButton>
             </Link>
         </Box>
-        <img src={profile} />
+        <img src={profile.url} />
         <Box sx={{ display: 'flex', justifyContent: "left", gap: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: "left" }}>
                 <Box>
