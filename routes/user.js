@@ -124,7 +124,6 @@ router.post('/change', isLogged_CS, matchSessionUser, validateChange, tryAsync_C
     const { id } = req.body;
     const user = await User.findById(id);
     const Obj = await User.updateChanges(req, res, user);
-    console.log(Obj)
     await User.findByIdAndUpdate(id, Obj)
     req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details');

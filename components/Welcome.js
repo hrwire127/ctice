@@ -31,7 +31,6 @@ function Welcome(props)
     {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
-        console.log(file)
         if (file) data.append("profile", file)
 
         const password = data.get("password");

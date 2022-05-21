@@ -58,7 +58,8 @@ function DeclrView(props)
     {
         const user = await getClientUser();
         CS_Redirects.tryResCS(user, window)
-        if (user)
+        console.log(user)
+        if (user.obj)
         {
             if (declaration.likes.includes(user.obj._id))
             {

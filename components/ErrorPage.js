@@ -13,9 +13,10 @@ function ErrorPage(props)
             <Typography variant="h6" sx={{ width: "30vw", margin: "auto" }}>{message}</Typography>
             <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                 <Link href="/">
-                    <MuiLink variant="text"
+                    <MuiLink
+                        color="text.tertiary"
+                        variant="text"
                         sx={{
-                            color: "#1976d2",
                             '&:hover': {
                                 cursor: "pointer",
                             }

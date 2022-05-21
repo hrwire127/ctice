@@ -45,7 +45,6 @@ PendingSchema.methods.processPending = async function (req, res)
     return new Promise(async (resolve, reject) =>
     {
         this.confirmationCode = genToken()
-        console.log(User)
         const Pending = mongoose.model('Pending');
         if (await Pending.findOne({ email: this.email })
             || await User.findOne({ email: this.email })

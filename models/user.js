@@ -145,10 +145,6 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         // let Obj = {
         //     ...user._doc
         // }
-        console.log("\n")
-        console.log(profile)
-        console.log(req.files)
-        console.log(user.profile.url)
         // const user = User.findById(id);
         if (username && username !== "")
         {
@@ -159,22 +155,18 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (profile === user.profile.url)
         {
-            console.log("1")
             user.file = user.file;
             return user;
         }
 
         if (await new excRule([req.files, user.profile.url], [profile], async () =>
         {
-            console.log("2")
             let file = await upload_profiles(req.files.profile)
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(
                     user.profile.location, {}, (res, err) =>
                 {
-                    console.log(res)
-                    console.log(err)
                 }
                 )
             }
@@ -184,7 +176,6 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([], [profile, req.files, user.profile.url], async () =>
         {
-            console.log("3")
         }).Try()) return user;
 
         if (await new excRule([user.profile.url], [profile, req.files], async () =>
@@ -194,14 +185,11 @@ UserSchema.statics.updateChanges = async function (req, res, user)
                 await cloud.destroy(
                     user.profile.location, {}, (res, err) =>
                 {
-                    console.log(res)
-                    console.log(err)
                 }
                 )
             }
             user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
             user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
-            console.log("4")
         }).Try()) return user;
 
         // if (await new excRule([profile, user.profile], [req.files], async () =>

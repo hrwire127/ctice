@@ -33,7 +33,6 @@ profile.getInitialProps = async (props) =>
     {
         const user = JSON.parse(JSON.stringify(props.query.user));
         const isToken = await checkToken(user._id)
-        console.log(isToken)
         CS_Redirects.tryResSR(isToken, props)
         return { user, isToken: isToken.obj }
     })

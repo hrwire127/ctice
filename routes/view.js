@@ -15,6 +15,7 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
         .populate("authors", 'email status username')
+    if (!declaration) next(new Error("Not Found", 404))
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
@@ -51,7 +52,7 @@ router.put("/like/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { uid } = req.body;
     const user = await getUserdata(req, res);
-    if(user._id !== uid) Redirects_SR.Error.CS(res)
+    if (user._id !== uid) Redirects_SR.Error.CS(res)
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
     declaration.tryLike(uid, req, res)

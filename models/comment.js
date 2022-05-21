@@ -34,7 +34,6 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
             {
                 if (c === comment._id && author._id === comment._id)
                 {
-                    console.log(i)
                     return i;
                 }
             });
