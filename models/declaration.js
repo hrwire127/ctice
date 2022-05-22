@@ -5,6 +5,7 @@ const userError = require('../utilsSR/userError');
 const errorMessages = require('../utilsSR/errorMessages');
 const { excRule } = require('../utilsSR/exc-Rule');
 const { upload_pdf } = require('../utilsSR/_tertiary')
+const { getUserdata } = require('../utilsSR/_middlewares')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
 const Like = require("./like");
@@ -68,7 +69,6 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
         ...body
     }
 
-
     if (del)
     {
         await new excRule([], [], async () =>
@@ -86,10 +86,10 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
     Obj.date = declaration ? declaration.date : []
     Obj.date.push(new Date())
 
-    Obj.authors = []
+    Obj.authors = declaration ? declaration.authors : []
     Obj.authors.push(await User.findOne({ username: req.session.passport.user }))
 
-    if (await new excRule([body.file, files, hadFile], [], async () =>
+    if (await new excRule([body.file, files, hadFile], [], async () => //regular hadfile
     {
         let file = await upload_pdf(files.file)
         await cloud.destroy(
@@ -102,10 +102,19 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
         }
     }).Try()) return Obj;
 
-    inspectChange
+    if (await new excRule([body.file, files], [hadFile], async () =>
+    {
+        let file = await upload_pdf(files.file)
+        Obj.file = {
+            name: files.file.name,
+            url: file.url,
+            location: file.location
+        }
+    }).Try()) return Obj;
 
     if (await new excRule([], [body.file, files, hadFile], async () =>
-    { }).Try()) return Obj;
+    {
+    }).Try()) return Obj;
 
     if (await new excRule([hadFile], [body.file, files,], async () =>
     {

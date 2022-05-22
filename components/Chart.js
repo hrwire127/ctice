@@ -18,7 +18,7 @@ function getUserChartData(users)
 		var priorDate = new Date(new Date().setDate(today.getDate() - i)).toISOString().substring(2, 10)
 		users.map(el => 
 		{
-			if (el.date.substring(2, 10) === priorDate) 
+			if (el.date[0].substring(2, 10) === priorDate) 
 			{
 				val++;
 			}

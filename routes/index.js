@@ -70,8 +70,14 @@ router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
+    console.log("4")
     const Obj = await Declaration.processObj(req);
+    console.log(Obj)
+    
+    console.log("5")
     const declaration = new Declaration(Obj)
+    console.log("6")
+    console.log(declaration)
     await declaration.save();
     req.flash('success', 'Created Successfuly');
     Redirects_SR.Home.CS(res)

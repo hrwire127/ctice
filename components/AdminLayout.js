@@ -72,7 +72,8 @@ function AdminLayout(props)
                         aria-label="open drawer"
                         onClick={toggleDrawer}
                         sx={{
-                            marginRight: '36px',
+                            mr: 36,
+                            color: "primary",
                             ...(open && { display: 'none' }),
                         }}
                     >

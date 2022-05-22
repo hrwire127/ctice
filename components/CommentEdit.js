@@ -52,7 +52,7 @@ export default function CommentEdit(props)
             handleSubmit(data);
         } else
         {
-            setContentFalse();
+            setContentFalse(); AAAA
         }
     };
 
