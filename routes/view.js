@@ -3,9 +3,11 @@ const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_CS, tryAsync_CS,
-    apiSecret, isAdmin_CS, validateComment,
-    checkCommentUser, getUserdata } = require('../utilsSR/_middlewares')
+const { isLogged_CS, tryAsync_CS,
+    apiSecret, isAdmin_CS,
+    checkCommentUser } = require('../utilsSR/_middlewares')
+const { validateDeclr, validateComment } = require('../utilsSR/_validations')
+const {getUserdata } = require("../utilsSR/_primary")
 
 router.get("/:id", (req, res) =>
 {

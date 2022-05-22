@@ -4,10 +4,12 @@ const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
 const Token = require("../models/token")
-const { validateRegUser, validateLogUser, isLogged_CS,
+const { isLogged_CS,
     isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
-    apiSecret, getUserdata, verifyTokenReset, matchSessionUser,
-    verifyConfirmCode, validateChange, validatePending, isSameUser } = require('../utilsSR/_middlewares')
+    apiSecret, verifyTokenReset, matchSessionUser,
+    verifyConfirmCode, isSameUser } = require('../utilsSR/_middlewares')
+const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/_validations')
+const { getUserdata } = require('../utilsSR/_primary')
 
 router.get('/register', async (req, res) =>
 {
