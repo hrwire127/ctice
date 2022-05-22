@@ -1,7 +1,12 @@
 const { Redirects_SR } = require('./SR_Redirects');
 const nodemailer = require('../config/nodemailer')
 const Declaration = require("../models/declaration");
+const User = require("../models/user");
 
+async function getUserdata(req, res)
+{
+    return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
+}
 
 function getUser(req, res)
 {
@@ -95,5 +100,7 @@ async function limitFilterCount(date, query)
 
 module.exports =
 {
-    getUser, limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitQuery, limitDate
+    getUser, limitNan, limitFilter, 
+    allDateCount, allQueryCount, limitFilterCount, 
+    limitQuery, limitDate, getUserdata,
 }

@@ -4,10 +4,12 @@ const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
 const Token = require("../models/token")
-const { validateRegUser, validateLogUser, isLogged_CS,
+const { isLogged_CS,
     isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
-    apiSecret, getUserdata, verifyTokenReset, matchSessionUser,
-    verifyConfirmCode, validateChange, validatePending } = require('../utilsSR/_middlewares')
+    apiSecret, verifyTokenReset, matchSessionUser,
+    verifyConfirmCode, isSameUser } = require('../utilsSR/_middlewares')
+const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/_validations')
+const { getUserdata } = require('../utilsSR/_primary')
 
 router.get('/register', async (req, res) =>
 {
@@ -119,7 +121,7 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/change', isLogged_CS, isSameUser, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.body;
     const user = await User.findById(id);

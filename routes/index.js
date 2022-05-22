@@ -2,8 +2,23 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_SR, isAdmin_CS, hasDeclrs, validateApiQuery, validateApiDate } = require('../utilsSR/_middlewares')
-const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery } = require('../utilsSR/_primary')
+const {
+    isLogged_SR,
+    isLogged_CS,
+    tryAsync_CS,
+    apiSecret,
+    isAdmin_SR,
+    isAdmin_CS,
+    hasDeclrs, } = require('../utilsSR/_middlewares')
+const { validateDeclr, validateApiQuery, validateApiDate } = require('../utilsSR/_validations')
+const {
+    limitNan,
+    limitFilter,
+    allDateCount,
+    allQueryCount,
+    limitFilterCount,
+    limitDate,
+    limitQuery } = require('../utilsSR/_primary')
 
 
 router.get('/', (req, res) =>
