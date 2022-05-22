@@ -219,7 +219,7 @@ function getDeclrsQuery(query, doclimit)
         })
 }
 
-function getDeclrsDate(date)
+function getDeclrsDate(date, doclimit = 5)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/date/api`, {
         method: 'POST',
@@ -227,7 +227,7 @@ function getDeclrsDate(date)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { date, secret: process.env.NEXT_PUBLIC_SECRET }
+            { date, doclimit, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -296,12 +296,12 @@ async function getDeclrsDateQuery(query, date, doclimit)
     }
     if (query === "")
     {
-        let dateDeclrs = await getDeclrsDate(date)
+        let dateDeclrs = await getDeclrsDate(date, doclimit)
         if (nowindowFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
     let newDeclrs = []
-    let dateDeclrs = await getDeclrsDate(date)
+    let dateDeclrs = await getDeclrsDate(date, doclimit)
     if (nowindowFetchError(dateDeclrs)) return dateDeclrs
     dateDeclrs.obj.forEach((el) =>
     {

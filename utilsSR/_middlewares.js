@@ -16,7 +16,6 @@ async function hasDeclrs(req, res, next)
     next()
 }
 
-
 function isLogged_SR(req, res, next)
 {
     if (!req.isAuthenticated())
@@ -108,25 +107,6 @@ function verifyPendingCode(req, res, next)
             new userError(err.message, err.status).throw_SR(req, res)
         });
 };
-
-function verifyToken(req, res)
-{
-    return new Promise((resolve, reject) =>
-    {
-        Token.findOne({
-            token: req.params.confirmationCode,
-        })
-            .then(async (token) =>
-            {
-                resolve(token)
-            })
-            .catch((err) => 
-            {
-                new userError(err.message, err.status).throw_SR(req, res)
-                reject(err)
-            });
-    })
-}
 
 async function verifyTokenReset(req, res, next) 
 {

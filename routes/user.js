@@ -73,6 +73,7 @@ router.get("/confirm/:confirmationCode", verifyPending, tryAsync_SR(async (req, 
 router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
+    
     const pending = await Pending.findOne({ confirmationCode })
     const user = new User({ //copy user static
         username: pending.username,
@@ -81,6 +82,8 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
         status: "Active"
     })
 
+    console.log(user)
+    console.log(pending)
     await User.processRegister(req, res, pending, { user, password })
     await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');

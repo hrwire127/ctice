@@ -120,7 +120,10 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
         else
         {
             const file = await upload_profiles(req.files.profile)
+            console.log(file)
             user.profile.url = file.url
+            user.profile.location = file.location
+            console.log(user)
             await User.register(user, password)
         }
     }

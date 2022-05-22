@@ -1,7 +1,8 @@
 const { Redirects_SR } = require('./SR_Redirects');
-const nodemailer = require('../config/nodemailer')
 const Declaration = require("../models/declaration");
 const User = require("../models/user");
+const Token = require("../models/token")
+const userError = require('./userError');
 
 async function getUserdata(req, res)
 {
@@ -18,6 +19,24 @@ function getUser(req, res)
     Redirects_SR.Error.CS(res)
 }
 
+function verifyToken(req, res)
+{
+    return new Promise((resolve, reject) =>
+    {
+        Token.findOne({
+            token: req.params.confirmationCode,
+        })
+            .then(async (token) =>
+            {
+                resolve(token)
+            })
+            .catch((err) => 
+            {
+                new userError(err.message, err.status).throw_SR(req, res)
+                reject(err)
+            });
+    })
+}
 async function limitNan(declarations, doclimit)
 {
     return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(doclimit);
@@ -102,5 +121,5 @@ module.exports =
 {
     getUser, limitNan, limitFilter, 
     allDateCount, allQueryCount, limitFilterCount, 
-    limitQuery, limitDate, getUserdata,
+    limitQuery, limitDate, getUserdata, verifyToken
 }

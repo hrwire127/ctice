@@ -77,7 +77,7 @@ async function validatePending(req, res, next)
     }
 
 
-    const bodyError = inspectUser(undefined, undefined, password, req.files.profile)
+    const bodyError = inspectUser(undefined, undefined, password, req.files)
 
     if (bodyError) 
     {

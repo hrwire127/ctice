@@ -13,7 +13,6 @@ import AdminContext from './context/contextAdmin'
 import BackLink from "./BackLink";
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
-import arrow from "../assets/images/arrow.png";
 
 function DeclrView(props)
 {
@@ -56,29 +55,21 @@ function DeclrView(props)
 
     const onLike = async () =>
     {
-        if (likes.includes(user._id))
-        {
-            return
-        }
-        else 
-        {
-            fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(
-                    { secret: process.env.NEXT_PUBLIC_SECRET }
-                )
-            }).then(response => response.json())
-                .then(async res =>
-                {
-                    console.log(res)
-                    CS_Redirects.tryResCS(res, window)
-                    if (!res.redirect) setLikes(res.obj)
-                })
-        }
-
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+                CS_Redirects.tryResCS(res, window)
+                if (!res.redirect) setLikes(res.obj)
+            })
     }
 
 
@@ -176,14 +167,25 @@ function DeclrView(props)
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Box className={classes.Vote}>
-                    {!likes.includes(user._id)
-                        && (<KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
-                    }
-                    {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
-                    <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes.length}
-                    </Typography>
-                    <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
+                    {user
+                        ? (<>
+                            {!likes.includes(user._id)
+                                && (<KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
+                            }
+                            {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
+                            <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
+                                {likes.length}
+                            </Typography>
+                            <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
+                        </>)
+                        : (<>
+                            <KeyboardArrowUp color="tertiary" fontSize="large" className={classes.VoteBtn} />
+                            <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
+                                {likes.length}
+                            </Typography>
+                            <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
+                        </>)}
+
                 </Box>
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
