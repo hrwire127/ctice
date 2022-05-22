@@ -3,7 +3,9 @@ const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { validateDeclr, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS, validateComment, checkCommentUser, getUserdata } = require('../utilsSR/_middlewares')
+const { validateDeclr, isLogged_CS, tryAsync_CS,
+    apiSecret, isAdmin_CS, validateComment,
+    checkCommentUser, getUserdata } = require('../utilsSR/_middlewares')
 
 router.get("/:id", (req, res) =>
 {
@@ -48,14 +50,12 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
     Redirects_SR.Home.CS(res)
 }))
 
-router.put("/like/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+router.put("/like/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, next) =>
 {
-    const { uid } = req.body;
     const user = await getUserdata(req, res);
-    if (user._id !== uid) Redirects_SR.Error.CS(res)
     const { id } = req.params;
     let declaration = await Declaration.findById(id)
-    declaration.tryLike(uid, req, res)
+    declaration.tryLike(user._id, req, res)
     await declaration.save();
     Redirects_SR.Api.sendApi(res, declaration.likes)
 }))

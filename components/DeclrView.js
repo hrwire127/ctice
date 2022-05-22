@@ -17,7 +17,6 @@ import arrow from "../assets/images/arrow.png";
 
 function DeclrView(props)
 {
-
     const {
         declaration,
         onDeclrDelete,
@@ -29,14 +28,15 @@ function DeclrView(props)
         loadMore,
         setComments,
         comments,
-        loadMoreSwitch } = props;
+        loadMoreSwitch,
+        user } = props;
 
     const { title, description, file, date, authors, _id } = declaration;
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
     const [open, setOpen] = React.useState(true);
-    const [likes, setLikes] = React.useState(declaration.likes.length);
+    const [likes, setLikes] = React.useState(declaration.likes);
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
@@ -56,32 +56,27 @@ function DeclrView(props)
 
     const onLike = async () =>
     {
-        const user = await getClientUser();
-        CS_Redirects.tryResCS(user, window)
-        console.log(user)
-        if (user.obj)
+        if (likes.includes(user._id))
         {
-            if (declaration.likes.includes(user.obj._id))
-            {
-                return
-            }
-            else 
-            {
-                fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(
-                        { uid: user.obj._id, secret: process.env.NEXT_PUBLIC_SECRET }
-                    )
-                }).then(response => response.json())
-                    .then(async res =>
-                    {
-                        CS_Redirects.tryResCS(res, window)
-                        if (!res.redirect) setLikes(res.obj.length)
-                    })
-            }
+            return
+        }
+        else 
+        {
+            fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    { secret: process.env.NEXT_PUBLIC_SECRET }
+                )
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    console.log(res)
+                    CS_Redirects.tryResCS(res, window)
+                    if (!res.redirect) setLikes(res.obj)
+                })
         }
 
     }
@@ -181,10 +176,12 @@ function DeclrView(props)
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Box className={classes.Vote}>
-                    <KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />
+                    {!likes.includes(user._id)
+                        && (<KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
+                    }
                     {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
                     <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes}
+                        {likes.length}
                     </Typography>
                     <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
                 </Box>

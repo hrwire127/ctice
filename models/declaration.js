@@ -8,6 +8,7 @@ const { upload_pdf } = require('../utilsSR/_tertiary')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
 const Like = require("./like");
+const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 
 const DeclarationSchema = new Schema({
     title: {
@@ -125,11 +126,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
 DeclarationSchema.methods.tryLike = async function (userId, req, res)
 {
-    if (this.likes.includes(userId)) 
-    {
-        new userError(...Object.values(errorMessages.likeExists)).throw_CS(res)
-    }
-    else
+    if (!this.likes.includes(userId)) 
     {
         this.likes.push(userId);
     }

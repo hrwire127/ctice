@@ -483,12 +483,6 @@ async function isSameUser(req, res, next)
     }
 }
 
-// async function checkUser(req, res)
-// {
-//     if(req.body.u)
-// }
-
-
 module.exports = {
     validateDeclr, validateRegUser,
     validateLogUser, isLogged_SR,
@@ -498,5 +492,5 @@ module.exports = {
     validateApiDate, validateComment, checkCommentUser,
     getUserdata, verifyTokenReset, matchSessionUser, tryAsync_CS,
     verifyConfirmCode, verifyPendingCode, validatePending,
-    verifyTokenChange, validateChange
+    verifyTokenChange, validateChange, isSameUser
 }

@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getLimitedComments, timeout, determRendering, getDeclr, setError } from '../../utilsCS/_client'
+import { getLimitedComments, timeout, determRendering, getDeclr, getClientUser } from '../../utilsCS/_client'
 import useLoading from '../../components/hooks/useLoading'
 
 
 function view(props)                                                                           
 {
-    const { declaration } = props;
+    const { declaration, user } = props;
     const { _id } = declaration;
     const [alert, setAlert] = useState()
     const [comments, setComments] = useState([])
@@ -87,6 +87,7 @@ function view(props)
         switchComment={switchComment}
         commentWhile={commentWhile}
         loadMoreSwitch={loadMoreSwitch}
+        user={user}
     />)
 }
 
@@ -96,14 +97,18 @@ view.getInitialProps = async (props) =>
 
     let declr = await getDeclr(id);
 
+    const user = await getClientUser();
+
     return determRendering(props, () =>
     {
+        CS_Redirects.tryResCS(user, window)
         CS_Redirects.tryResCS(declr, window)
-        return { declaration: declr.obj }
+        return { declaration: declr.obj, user: user.obj }
     }, () =>
     {
+        CS_Redirects.tryResSR(user, props)
         CS_Redirects.tryResSR(declr, props)
-        return { declaration: declr.obj }
+        return { declaration: declr.obj, user: user.obj }
     })
 }
 

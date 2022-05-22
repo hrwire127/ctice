@@ -7,7 +7,7 @@ const Token = require("../models/token")
 const { validateRegUser, validateLogUser, isLogged_CS,
     isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
     apiSecret, getUserdata, verifyTokenReset, matchSessionUser,
-    verifyConfirmCode, validateChange, validatePending } = require('../utilsSR/_middlewares')
+    verifyConfirmCode, validateChange, validatePending, isSameUser } = require('../utilsSR/_middlewares')
 
 router.get('/register', async (req, res) =>
 {
@@ -119,7 +119,7 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/change', isLogged_CS, isSameUser, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.body;
     const user = await User.findById(id);
