@@ -204,8 +204,8 @@ async function isSameUser(req, res, next)
 module.exports = {
     isLogged_SR, isLogged_CS, tryAsync_CS,
     tryAsync_SR, apiSecret, verifyPending,
-    isAdmin_SR, isAdmin_CS, hasDeclrs, 
-    checkCommentUser, verifyTokenReset, matchSessionUser, 
+    isAdmin_SR, isAdmin_CS, hasDeclrs,
+    checkCommentUser, verifyTokenReset, matchSessionUser,
     tryAsync_CS, verifyConfirmCode, verifyPendingCode,
     verifyTokenChange, isSameUser
 }

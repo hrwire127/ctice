@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Typography, IconButton, Avatar, Collapse, Button, Grid } from '@mui/material';
 import { Delete, Build, Close, KeyboardArrowUp, KeyboardArrowDown, Scale } from '@mui/icons-material';
+import { getLimitedComments, timeout, getClientUser } from '../utilsCS/_client'
 import DocumentView from '../components/DocumentView';
 import { CropData } from '../utilsCS/_client';
 import Link from 'next/link'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { getLimitedComments, timeout, getClientUser } from '../utilsCS/_client'
 import useStyles from '../assets/styles/_DeclrView';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import BackLink from "./BackLink";
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
+import Vote from "./Vote";
 
 function DeclrView(props)
 {
@@ -53,25 +54,6 @@ function DeclrView(props)
         })
     }, [])
 
-    const onLike = async () =>
-    {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${_id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-                { secret: process.env.NEXT_PUBLIC_SECRET }
-            )
-        }).then(response => response.json())
-            .then(async res =>
-            {
-                console.log(res)
-                CS_Redirects.tryResCS(res, window)
-                if (!res.redirect) setLikes(res.obj)
-            })
-    }
-
 
     const Placeholder = (
         <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
@@ -82,35 +64,20 @@ function DeclrView(props)
     {
         return (
             <Box className={classes.FullWidth}>
-                {open && (
-                    <Grid container justifyContent="center">
-                        <IconButton
-                            aria-label="close"
-                            color="tertiary"
-                            size="small"
-                            onClick={() =>
-                            {
-                                setOpen(false);
-                            }}
-                        >
-                            <KeyboardArrowUp fontSize="inherit" />
-                        </IconButton>
-                    </Grid>)}
+                <Grid container justifyContent="center">
+                    <IconButton
+                        aria-label="close"
+                        color="tertiary"
+                        size="small"
+                        onClick={() =>
+                        {
+                            setOpen(!open);
+                        }}
+                    >
+                        {open ? (<KeyboardArrowUp fontSize="inherit" />) : (<KeyboardArrowDown fontSize="inherit" />)}
+                    </IconButton>
+                </Grid>
 
-                {!open && (
-                    <Grid container justifyContent="center">
-                        <IconButton
-                            aria-label="close"
-                            color="tertiary"
-                            size="small"
-                            onClick={() =>
-                            {
-                                setOpen(true);
-                            }}
-                        >
-                            <KeyboardArrowDown fontSize="inherit" />
-                        </IconButton>
-                    </Grid>)}
                 <Collapse in={open}>
                     <CommentCreate creatingSwitch={creatingSwitch} alert={alert} handleSubmit={handleSubmit} />
                 </Collapse>
@@ -166,27 +133,7 @@ function DeclrView(props)
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Box className={classes.Vote}>
-                    {user
-                        ? (<>
-                            {!likes.includes(user._id)
-                                && (<KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
-                            }
-                            {/* <img src={arrow.src} alt="up" width={20} height={10} /> */}
-                            <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                                {likes.length}
-                            </Typography>
-                            <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
-                        </>)
-                        : (<>
-                            <KeyboardArrowUp color="tertiary" fontSize="large" className={classes.VoteBtn} />
-                            <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                                {likes.length}
-                            </Typography>
-                            <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
-                        </>)}
-
-                </Box>
+                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id}/>
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>

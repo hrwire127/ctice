@@ -37,6 +37,7 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
+    console.log(user)
     Redirects_SR.Api.sendApi(res, user)
 }))
 
@@ -73,7 +74,7 @@ router.get("/confirm/:confirmationCode", verifyPending, tryAsync_SR(async (req, 
 router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
-    
+
     const pending = await Pending.findOne({ confirmationCode })
     const user = new User({ //copy user static
         username: pending.username,

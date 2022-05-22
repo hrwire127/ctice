@@ -36,20 +36,6 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.line,
         alignSelf: "stretch"
     },
-    Vote: {
-        display: "flex",
-        justifyContent: "top",
-        flexDirection: "column",
-        textAlign: "center",
-    },
-    VoteBtn: {
-        "&:hover": {
-            color: theme.palette.base.main,
-        },
-        fontSize: 55,
-        marginBottom: -10,
-        marginTop: -10,
-    },
     Title: {
         display: "flex",
         justifyContent: "left"
