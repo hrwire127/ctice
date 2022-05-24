@@ -7,14 +7,14 @@ const { isLogged_CS, tryAsync_CS,
     apiSecret, isAdmin_CS,
     checkCommentUser } = require('../utilsSR/_middlewares')
 const { validateDeclr, validateComment } = require('../utilsSR/_validations')
-const {getUserdata } = require("../utilsSR/_primary")
+const { getUserdata } = require("../utilsSR/_primary")
 
 router.get("/:id", (req, res) =>
 {
     app.render(req, res, `/view/${req.params.id}`)
 })
 
-router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
+router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findById(id)
@@ -52,12 +52,14 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
     Redirects_SR.Home.CS(res)
 }))
 
-router.put("/like/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, next) =>
+router.put("/likes/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, next) =>
 {
-    const user = await getUserdata(req, res);
+    const { type } = req.body
     const { id } = req.params;
+    const user = await getUserdata(req, res);
     let declaration = await Declaration.findById(id)
-    declaration.tryLike(user._id, req, res)
+    declaration.tryLike(user._id, type)
+    console.log(declaration)
     await declaration.save();
     Redirects_SR.Api.sendApi(res, declaration.likes)
 }))

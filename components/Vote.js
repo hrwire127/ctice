@@ -6,26 +6,32 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function Vote(props)
 {
-    const { user, likes, setLikes, d_id } = props;
+    const { user, likes, setLikes, d_id, dislikes, setDislikes } = props;
     const classes = useStyles();
 
 
-    const onLike = async () =>
+    const onLike = async (type) =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/like/${d_id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/likes/${d_id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-                { secret: process.env.NEXT_PUBLIC_SECRET }
+                { type, secret: process.env.NEXT_PUBLIC_SECRET }
             )
         }).then(response => response.json())
             .then(async res =>
             {
                 console.log(res)
                 CS_Redirects.tryResCS(res, window)
-                if (!res.redirect) setLikes(res.obj)
+                if (!res.redirect) 
+                {
+                    const likes = res.obj.filter(el => el.typeOf === true)
+                    const dislikes = res.obj.filter(el => el.typeOf === false)
+                    setLikes(likes)
+                    setDislikes(dislikes)
+                }
             })
     }
 
@@ -33,21 +39,24 @@ function Vote(props)
         <Box className={classes.Vote}>
             {user
                 ? (<>
-                    {likes.includes(user._id)
+                    {likes.includes({ user: user._id, typeOf: true })
                         ? (<KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />)
-                        : (<KeyboardArrowUp onClick={onLike} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
+                        : (<KeyboardArrowUp onClick={() => onLike(true)} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
                     }
                     <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes.length}
+                        {likes.length - dislikes.length}
                     </Typography>
-                    <KeyboardArrowDown className={classes.VoteBtn} color="tertiary" />
+                    {likes.includes({ user: user._id, typeOf: false })
+                        ? (<KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />)
+                        : (<KeyboardArrowDown onClick={() => onLike(false)} color="tertiary" fontSize="large" className={classes.VoteBtn} />)
+                    }
                 </>)
                 : (<>
                     <KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />
                     <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes.length}
+                        {likes.length - dislikes.length}
                     </Typography>
-                    <KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn}/>
+                    <KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />
                 </>)}
         </Box>)
 }

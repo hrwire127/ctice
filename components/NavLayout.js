@@ -15,20 +15,21 @@ function NavLayout(props)
         const router = useRouter();
 
         const selected = (<>
-            <ListItemButton className={classes.ItemButton}>
-                <Link href={url}>
+            <Link href={url}>
+                <ListItemButton className={classes.ItemButton}>
                     <ListItemText primary={<Typography color="text.primary" fontWeight="bold">{text}</Typography>} />
-                </Link>
-            </ListItemButton>
+                </ListItemButton>
+            </Link>
             <Box className={classes.Line}>
             </Box>
         </>)
 
-        const basic = (<ListItemButton>
+        const basic = (
             <Link href={url}>
-                <ListItemText primary={<Typography color="text.primary">{text}</Typography>} />
-            </Link >
-        </ListItemButton >)
+                <ListItemButton>
+                    <ListItemText primary={<Typography color="text.primary">{text}</Typography>} />
+                </ListItemButton>
+            </Link >)
 
         if (includes)
         {
@@ -36,7 +37,7 @@ function NavLayout(props)
                 <ListItem key={text} disablePadding>
                     {router.pathname.includes(url)
                         ? selected
-                        : basic
+                        : basic                   
                     }
                 </ListItem >)
         }

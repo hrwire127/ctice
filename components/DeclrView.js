@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Typography, IconButton, Avatar, Collapse, Button, Grid } from '@mui/material';
 import { Delete, Build, Close, KeyboardArrowUp, KeyboardArrowDown, Scale } from '@mui/icons-material';
@@ -32,11 +32,12 @@ function DeclrView(props)
         user } = props;
 
     const { title, description, file, date, authors, _id } = declaration;
-    const userCtx = React.useContext(UserContext);
-    const adminCtx = React.useContext(AdminContext);
+    const userCtx = useContext(UserContext);
+    const adminCtx = useContext(AdminContext);
 
-    const [open, setOpen] = React.useState(true);
-    const [likes, setLikes] = React.useState(declaration.likes);
+    const [open, setOpen] = useState(true);
+    const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
+    const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
@@ -133,7 +134,7 @@ function DeclrView(props)
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id}/>
+                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes}/>
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>

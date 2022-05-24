@@ -37,7 +37,6 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    console.log(user)
     Redirects_SR.Api.sendApi(res, user)
 }))
 
@@ -83,8 +82,6 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
         status: "Active"
     })
 
-    console.log(user)
-    console.log(pending)
     await User.processRegister(req, res, pending, { user, password })
     await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');

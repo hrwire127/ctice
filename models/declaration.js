@@ -1,14 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { Rules } = require('../utilsSR/val-Rule')
-const userError = require('../utilsSR/userError');
-const errorMessages = require('../utilsSR/errorMessages');
 const { excRule } = require('../utilsSR/exc-Rule');
 const { upload_pdf } = require('../utilsSR/_tertiary')
-const { getUserdata } = require('../utilsSR/_middlewares')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
-const Like = require("./like");
 const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 
 const DeclarationSchema = new Schema({
@@ -47,12 +43,19 @@ const DeclarationSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: "Comment"
     },
-    likes: {
-        type: [Schema.Types.ObjectId],
-        default: [],
-        ref: "Like",
-        required: true
-    }
+    likes: [new Schema({
+        typeOf: {
+            type: Boolean,
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        }
+        // type: [Schema.Types.ObjectId],
+        // default: [],
+        // ref: "Like",
+        // required: true
+    }, { _id: false })]
 });
 
 DeclarationSchema.virtual('hasFile').get(function ()
@@ -133,11 +136,48 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
 }
 
-DeclarationSchema.methods.tryLike = async function (userId, req, res)
+DeclarationSchema.methods.tryLike = async function (userId, type)
 {
-    if (!this.likes.includes(userId)) 
+    const True = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true).length;
+    const False = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false).length;
+    console.log(True)
+    console.log(False)
+    if (type)
     {
-        this.likes.push(userId);
+        if (True <= 0) 
+        {
+
+            if (False > 0)
+            {
+                const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false)
+                this.likes.splice(i, 1);
+            }
+            const like = { user: userId, typeOf: true }
+            this.likes.push(like);
+        }
+        else
+        {
+            delete this.likes[{ user: userId, typeOf: true }]
+        }
+    }
+    else
+    {
+        if (False <= 0)
+        {
+            if (True > 0)
+            {
+                const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true);
+                console.log(i)
+                // this.likes.findIndex(el => el.user === userId && el.typeOf === true );
+                this.likes.splice(i, 1);
+            }
+            const like = { user: userId, typeOf: false }
+            this.likes.push(like);
+        }
+        else
+        {
+            delete this.likes[{ user: userId, typeOf: false }]
+        }
     }
 }
 

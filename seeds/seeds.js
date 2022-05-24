@@ -19,7 +19,7 @@ const createDeclaration = async () =>
 {
     await Declaration.deleteMany({});
     const user = await User.findById("628688e92387173d390bd76e");
-    for (let i = 0; i < 3; i++)
+    for (let i = 0; i < 6; i++)
     {
         const randnum = Math.floor(Math.random() * titles.length);
         const declaration = new Declaration({
@@ -33,7 +33,8 @@ const createDeclaration = async () =>
                 location: "ctice/pdfs/A_rrpiog"
             },
             date: [new Date()],
-            authors: [user._id]
+            authors: [user._id],
+            likes: []
         })
         await declaration.save();
     }

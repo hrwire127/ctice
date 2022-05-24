@@ -29,6 +29,7 @@ function login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
+                    console.log(res)
                     if (res.err) setError(res.err.message)
                     else
                     {
