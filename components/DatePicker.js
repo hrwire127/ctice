@@ -57,7 +57,7 @@ function DatePicker(props)
                                 params.inputProps.value = "";
                                 params.error = false;
                             }
-                            return <TextField className={classes.TextField} {...params} />
+                            return <TextField size="small" className={classes.TextField} {...params} />
                         }}
                     />
                 </Stack>

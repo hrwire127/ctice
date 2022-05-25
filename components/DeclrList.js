@@ -30,7 +30,7 @@ function DeclrList(props)
         fullWhile,
         fullSwitch } = props;
     const classes = useStyles();
-    const adminCtx = React.useContext(AdminContext);
+    const adminCtx = React.useContext(AdminContext); 
 
     useEffect(() =>
     {

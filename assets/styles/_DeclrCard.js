@@ -2,15 +2,23 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
     Content: {
-        height: theme.cardHeight                       
+        height: theme.cardHeight,
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center",
+        gap: 10,
     },
     Card: {
-        width: 220,
-        height: 195,
+        width: "80%",
+        height: 55,
         position: 'relative',
         backgroundColor: theme.card,
         color: theme.palette.tertiary.main,
-        backgroundImage: "none"
+        backgroundImage: "none",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 16
     },
     Actions: {
         display: "flex",
@@ -26,7 +34,13 @@ const useStyles = makeStyles((theme) => ({
     Title: {
         fontSize: 16,
         fontWeight: 600,
-        color: theme.palette.primary.main
+        color: theme.palette.info.dark,
+        "&:hover":
+        {
+            cursor: "pointer",
+            textDecoration: "underline",
+            color: theme.palette.text.info
+        },
     },
     Icon: {
         width: 20,

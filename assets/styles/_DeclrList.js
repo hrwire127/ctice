@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
     Bar: {
         display: "flex",
         justifyContent: "space-between",
-        width: "100%",
+        width: "100%", 
         margin: "auto",
         ["@media (max-width:510px)"]: {
             flexWrap: "wrap",
@@ -23,9 +23,11 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 20,
         width: "100%",
         paddingBottom: "50px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, 220px)",
-        justifyContent: "center",
+        // display: "grid",
+        // gridTemplateColumns: "repeat(auto-fill, 220px)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gridGap: "20px",
     },
 }));

@@ -23,6 +23,9 @@ const themeLight = createTheme({
             primary: "#292929",
             tertiary: "#2D5C7F",
             base: "#332FD0",
+            error: "#d32f2f",
+            success: "#2e7d32",
+            info: "#0288d1"
         },
         shadow: "rgba(118, 118, 118, 0.23)",
     },
@@ -39,7 +42,7 @@ const themeLight = createTheme({
     maxPadding: 200,
     minPadding: 30,
     drawerWidth: 170,
-    cardHeight: 155
+    cardHeight: 55
 });
 
 const themeBlack = createTheme({
