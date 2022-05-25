@@ -29,12 +29,11 @@ function login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    console.log(res)
                     if (res.err) setError(res.err.message)
                     else
                     {
                         window.location = (window.location.href !== document.referrer
-                            ? document.referrer
+                            ? "http://localhost:3000/view/628d2f5650d43b525656283f"//document.referrer
                             : process.env.NEXT_PUBLIC_DR_HOST)
                     }
                 })

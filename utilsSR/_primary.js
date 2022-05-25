@@ -6,7 +6,14 @@ const userError = require('./userError');
 
 async function getUserdata(req, res)
 {
-    return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
+    if(req.session.passport)
+    {
+        return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
+    }
+    else
+    {
+        return undefined
+    }
 }
 
 function getUser(req, res)

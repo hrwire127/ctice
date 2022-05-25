@@ -93,23 +93,22 @@ function view(props)
 
 view.getInitialProps = async (props) =>
 {
-    const { id } = props.query;
+    const { id, user } = props.query;
+    console.log(user)
 
     let declr = await getDeclr(id);
 
-    const user = await getClientUser();
-
-    return determRendering(props, () =>
+    return determRendering(props, async () =>
     {
-        CS_Redirects.tryResCS(declr, window)
+        const user = await getClientUser();
+        CS_Redirects.tryResSR(declr, props)
         return { declaration: declr.obj, user: user.obj ? user.obj : undefined }
     }, () =>
     {
-        CS_Redirects.tryResSR(declr, props)
-        return { declaration: declr.obj, user: user.obj ? user.obj : undefined }
+        return { declaration: declr.obj, user }
     })
 }
 
 
 
-export default view                                                                           
+export default view

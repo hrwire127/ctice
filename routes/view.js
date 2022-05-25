@@ -9,10 +9,11 @@ const { isLogged_CS, tryAsync_CS,
 const { validateDeclr, validateComment } = require('../utilsSR/_validations')
 const { getUserdata } = require("../utilsSR/_primary")
 
-router.get("/:id", (req, res) =>
+router.get("/:id", tryAsync_CS(async (req, res) =>
 {
-    app.render(req, res, `/view/${req.params.id}`)
-})
+    const user = await getUserdata(req, res)
+    app.render(req, res, `/view/${req.params.id}`, { user })
+}))
 
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
 {

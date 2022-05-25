@@ -32,7 +32,6 @@ function DeclrView(props)
         user } = props;
 
     const { title, description, file, date, authors, _id } = declaration;
-    const userCtx = useContext(UserContext);
     const adminCtx = useContext(AdminContext);
 
     const [open, setOpen] = useState(true);
@@ -154,7 +153,7 @@ function DeclrView(props)
 
             <Box className={classes.Line} />
 
-            {userCtx ? (<CommentFormCreate />) : (<Typography variant="h6" color="text.base">Please Log in to comment</Typography>)}
+            {user ? (<CommentFormCreate />) : (<Typography variant="h6" color="text.base">Please Log in to comment</Typography>)}
 
             {/* {file ? (<DocumentView file={file} />) : Placeholder} */}
         </Box>

@@ -140,8 +140,6 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
 {
     const True = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true).length;
     const False = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false).length;
-    console.log(True)
-    console.log(False)
     if (type)
     {
         if (True <= 0) 
@@ -157,7 +155,8 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
         }
         else
         {
-            delete this.likes[{ user: userId, typeOf: true }]
+            const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true)
+            this.likes.splice(i, 1);
         }
     }
     else
@@ -167,8 +166,6 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
             if (True > 0)
             {
                 const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true);
-                console.log(i)
-                // this.likes.findIndex(el => el.user === userId && el.typeOf === true );
                 this.likes.splice(i, 1);
             }
             const like = { user: userId, typeOf: false }
@@ -176,7 +173,8 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
         }
         else
         {
-            delete this.likes[{ user: userId, typeOf: false }]
+            const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false)
+            this.likes.splice(i, 1);
         }
     }
 }
