@@ -109,7 +109,7 @@ function DeclrView(props)
 
             <Box className={classes.Paragraph}>
                 <Box display="flex" justifyContent="left" gap={1}>
-                    <Comment /> {comments.length}
+                    <Comment /> {declaration.comments.length}
                 </Box>
 
                 <Box display="flex" justifyContent="left" gap={1}>

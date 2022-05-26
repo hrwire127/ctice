@@ -29,6 +29,7 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { id } = req.params;
     const { comments, type } = req.body;
     console.log(type)
+    console.log(comments.length)
     let declaration;
     if (type === 10)
     {
@@ -54,16 +55,19 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
                     path: 'author'
                 },
             })
-        console.log(declaration.comments)
         declaration.comments
             .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                <
-                b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ?
-                1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length 
-                < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length) ? -1 : 0))
-        declaration.comments.splice(comments.length, process.env.COMMENTS_LOAD_LIMIT)
+                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ? 1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                    ? -1 : 0))
+        // console.log(declaration.comments.slice(comments.length, process.env.COMMENTS_LOAD_LIMIT))
+        // declaration.comments = declaration.comments.slice(comments.length, process.env.COMMENTS_LOAD_LIMIT)
+        declaration.comments.splice(0, comments.length)
+        declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
+
+        // console.log(declaration.comments)
     }
     Redirects_SR.Api.sendApi(res, declaration.comments)
 }))

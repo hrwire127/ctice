@@ -35,8 +35,9 @@ function CommentList(props)
         commentWhile(async () =>
         {
             await timeout(500)
-            const newComments = await getLimitedComments(comments, _id, sort);
+            const newComments = await getLimitedComments([], _id, sort);
             CS_Redirects.tryResCS(newComments, window)
+            console.log(newComments.obj)
             setComments(newComments.obj)
         })
     }, [sort])
