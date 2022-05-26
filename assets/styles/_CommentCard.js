@@ -2,11 +2,8 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
     Card: {
-        width: 220,
-        height: 195,
-        position: 'relative',
-        backgroundColor: theme.card,
-        color: theme.palette.tertiary.main
+        width: "100%",
+        position: 'relative'
     },
     Actions: {
         display: "flex",
@@ -28,7 +25,15 @@ const useStyles = makeStyles((theme) => ({
         width: 20,
         height: 20,
         color: theme.palette.primary.main,
-    }
+    },
+    Line: {
+        width: "100%",
+        height: 2,
+        marginTop: 20,
+        marginBottom: 20,
+        backgroundColor: theme.line,
+        alignSelf: "stretch"
+    },
 }));
 
 export default useStyles;

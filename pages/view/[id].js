@@ -50,7 +50,7 @@ function view(props)
     {
         creatingWhile(async () =>
         {
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/comment/`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/comment`, {
                 method: 'POST',
                 body: body,
             }).then(response => response.json())
@@ -63,13 +63,13 @@ function view(props)
 
     };
 
-    function loadMore(e)
+    function loadMore(e, type)
     {
         e.preventDefault()
         loadMoreWhile(async () =>
         {
             await timeout(500)
-            const newComments = await getLimitedComments(comments, _id);
+            const newComments = await getLimitedComments(comments, _id, type);
             CS_Redirects.tryResCS(newComments, window)
             setComments(comments.concat(newComments.obj));
         })
@@ -94,7 +94,6 @@ function view(props)
 view.getInitialProps = async (props) =>
 {
     const { id, user } = props.query;
-    console.log(user)
 
     let declr = await getDeclr(id);
 

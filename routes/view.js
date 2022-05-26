@@ -27,19 +27,44 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
 router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const { comments } = req.body;
-    const declaration = await Declaration.findById(id)
-        .populate({
-            path: 'comments',
-            populate: {
-                path: 'author'
-            },
-            options: {
-                limit: process.env.COMMENTS_LOAD_LIMIT,
-                sort: { _id: -1 },
-                skip: comments.length,
-            }
-        })
+    const { comments, type } = req.body;
+    console.log(type)
+    let declaration;
+    if (type === 10)
+    {
+        declaration = await Declaration.findById(id)
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: comments.length,
+                }
+            })
+    }
+    else 
+    {
+        declaration = await Declaration.findById(id)
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+            })
+        console.log(declaration.comments)
+        declaration.comments
+            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                <
+                b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ?
+                1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length 
+                < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length) ? -1 : 0))
+        declaration.comments.splice(comments.length, process.env.COMMENTS_LOAD_LIMIT)
+    }
     Redirects_SR.Api.sendApi(res, declaration.comments)
 }))
 
@@ -60,9 +85,19 @@ router.put("/likes/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, ne
     const user = await getUserdata(req, res);
     let declaration = await Declaration.findById(id)
     declaration.tryLike(user._id, type)
-    console.log(declaration)
     await declaration.save();
     Redirects_SR.Api.sendApi(res, declaration.likes)
+}))
+
+router.put("/comments/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, next) =>
+{
+    const { type } = req.body
+    const { id } = req.params;
+    const user = await getUserdata(req, res);
+    let comment = await Comment.findById(id)
+    comment.tryLike(user._id, type)
+    await comment.save();
+    Redirects_SR.Api.sendApi(res, comment.likes)
 }))
 
 router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>

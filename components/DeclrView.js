@@ -1,18 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Typography, IconButton, Avatar, Collapse, Button, Grid } from '@mui/material';
-import { Delete, Build, Close, KeyboardArrowUp, KeyboardArrowDown, Scale } from '@mui/icons-material';
-import { getLimitedComments, timeout, getClientUser } from '../utilsCS/_client'
-import DocumentView from '../components/DocumentView';
+import { Delete, Build, TurnedInNot, KeyboardArrowUp, KeyboardArrowDown, Comment, IosShare } from '@mui/icons-material';
 import { CropData } from '../utilsCS/_client';
-import Link from 'next/link'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useStyles from '../assets/styles/_DeclrView';
-import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
-import BackLink from "./BackLink";
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
+import Link from 'next/link'
 import Vote from "./Vote";
 
 function DeclrView(props)
@@ -43,18 +38,6 @@ function DeclrView(props)
     const editorState = EditorState.createWithContent(convertFromRaw(data))
     // getClientUser
 
-    useEffect(() =>
-    {
-        commentWhile(async () =>
-        {
-            await timeout(500)
-            const newComments = await getLimitedComments(comments, _id);
-            CS_Redirects.tryResCS(newComments, window)
-            setComments(newComments.obj)
-        })
-    }, [])
-
-
     const Placeholder = (
         <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
             No Upload...
@@ -82,21 +65,6 @@ function DeclrView(props)
                     <CommentCreate creatingSwitch={creatingSwitch} alert={alert} handleSubmit={handleSubmit} />
                 </Collapse>
             </Box>)
-    }
-
-    const Comments = () =>
-    {
-        return (switchComment(0, () =>
-        {
-            return comments.length > 0
-                ? (<>
-                    <CommentList comments={comments} id={_id} />
-                    {loadMoreSwitch(0, () => comments.length < declaration.comments.length && comments.length > 0 && (<Button onClick={loadMore}>Load More</Button>))}
-                </>)
-                : (<Typography component="h5" color="text.secondary" variant="h5">
-                    No Comments
-                </Typography>)
-        }))
     }
 
     return (
@@ -133,27 +101,40 @@ function DeclrView(props)
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes}/>
+                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
             </Box>
 
-            <Box className={classes.Line} />
-
             <Box className={classes.Paragraph}>
-                <Typography component="h1" variant="h4">
-                    Comments
-                </Typography>
+                <Box display="flex" justifyContent="left" gap={1}>
+                    <Comment /> {comments.length}
+                </Box>
 
-                <Box display="flex" alignItems="left" flexDirection="column">
-                    <Comments />
+                <Box display="flex" justifyContent="left" gap={1}>
+                    <IosShare />
+                    <TurnedInNot />
                 </Box>
             </Box>
 
             <Box className={classes.Line} />
 
-            {user ? (<CommentFormCreate />) : (<Typography variant="h6" color="text.base">Please Log in to comment</Typography>)}
+            {user ? (<CommentFormCreate />) : (<Typography variant="h6" align="center"><Link href="/user/register">Sign up</Link> or <Link href="/user/login">Log in</Link> to comment</Typography>)}
+
+            <Box display="flex" alignItems="center" flexDirection="column">
+                <CommentList
+                    loadMore={loadMore}
+                    comments={comments}
+                    _id={_id}
+                    user={user}
+                    declaration={declaration}
+                    loadMoreSwitch={loadMoreSwitch}
+                    commentWhile={commentWhile}
+                    setComments={setComments}
+                    switchComment={switchComment}
+                />
+            </Box>
 
             {/* {file ? (<DocumentView file={file} />) : Placeholder} */}
         </Box>

@@ -17,6 +17,15 @@ const CommentSchema = new Schema({
         type: [Date],
         required: true
     },
+    likes: [new Schema({
+        typeOf: {
+            type: Boolean,
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        }
+    }, { _id: false })]
 });
 
 CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
@@ -57,5 +66,49 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
 
 }
 
+CommentSchema.methods.tryLike = async function (userId, type)
+{
+    const True = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true).length;
+    const False = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false).length;
+    if (type)
+    {
+        if (True <= 0) 
+        {
+
+            if (False > 0)
+            {
+                const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false)
+                this.likes.splice(i, 1);
+            }
+            const like = { user: userId, typeOf: true }
+            this.likes.push(like);
+        }
+        else
+        {
+            const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true)
+            this.likes.splice(i, 1);
+        }
+    }
+    else
+    {
+        if (False <= 0)
+        {
+            if (True > 0)
+            {
+                const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true);
+                this.likes.splice(i, 1);
+            }
+            const like = { user: userId, typeOf: false }
+            this.likes.push(like);
+        }
+        else
+        {
+            const i = this.likes.findIndex(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false)
+            this.likes.splice(i, 1);
+        }
+    }
+}
+
 const Comment = mongoose.model('Comment', CommentSchema);
+
 module.exports = Comment;

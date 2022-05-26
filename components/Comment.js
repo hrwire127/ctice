@@ -10,7 +10,7 @@ function Comment(props)
     const [alert, setAlert] = useState()
     const [submitWhile, submitSwitch] = useLoading(false)
 
-    const { comment, id, loadingMoreWhile } = props;
+    const { comment, id, loadingMoreWhile, user } = props;
 
     const setError = (msg) => 
     {
@@ -60,8 +60,19 @@ function Comment(props)
     };
 
     return edit
-        ? (<CommentEdit comment={comment} handleSubmit={handleSubmit} alert={alert} submitSwitch={submitSwitch} />)
-        : (<CommentCard {...comment} edit={edit} setEdit={setEdit} handleDelete={handleDelete} />)
+        ? (<CommentEdit
+            comment={comment}
+            handleSubmit={handleSubmit}
+            alert={alert}
+            submitSwitch={submitSwitch}
+        />)
+        : (<CommentCard
+            {...comment}
+            user={user}
+            edit={edit}
+            setEdit={setEdit}
+            handleDelete={handleDelete}
+        />)
 
 }
 

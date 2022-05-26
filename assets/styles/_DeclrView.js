@@ -11,11 +11,13 @@ const useStyles = makeStyles((theme) => ({
         flex: "1 1 auto !important",
     },
     Paragraph: {
-        padding: "30px",
-        width: "30%",
+        // padding: "30px",
+        // display: "flex",
+        // flexDirection: "column",
+        // gap: "20px",
+        width: "100%",
         display: "flex",
-        flexDirection: "column",
-        gap: "20px",
+        justifyContent: "space-evenly"
     },
     Bar: {
         display: "flex",

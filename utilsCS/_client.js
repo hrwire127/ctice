@@ -345,7 +345,7 @@ function getDateDifference(d2, d1)
     }
 }
 
-async function getLimitedComments(comments, id)
+async function getLimitedComments(comments, id, type)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/api`, {
         method: 'POST',
@@ -353,7 +353,7 @@ async function getLimitedComments(comments, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { comments, secret: process.env.NEXT_PUBLIC_SECRET }
+            { type, comments, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>

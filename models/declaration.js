@@ -51,10 +51,6 @@ const DeclarationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "User",
         }
-        // type: [Schema.Types.ObjectId],
-        // default: [],
-        // ref: "Like",
-        // required: true
     }, { _id: false })]
 });
 
