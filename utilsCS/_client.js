@@ -136,7 +136,7 @@ const LogoutFetch = () =>
 
 async function getDeclrs()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/all/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/loadall/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -168,9 +168,9 @@ async function getDeclr(id)
         })
 }
 
-async function getLimitedDeclrs(declarations, date, query, doclimit = 5, sort) //<===
+async function loadLimitedDeclrs(declarations, date, query, doclimit = 5, sort) 
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/limit/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/loadlimit/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -202,7 +202,7 @@ async function getAllCount(declarations)
         })
 }
 
-function getDeclrsQuery(query, doclimit = 5, sort) //<===
+function getDeclrsQuery(query, doclimit = 5, sort) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/query/api`, {
         method: 'POST',
@@ -219,7 +219,7 @@ function getDeclrsQuery(query, doclimit = 5, sort) //<===
         })
 }
 
-function getDeclrsDate(date, doclimit = 5, sort) //<==
+function getDeclrsDate(date, doclimit = 5, sort) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/date/api`, {
         method: 'POST',
@@ -236,7 +236,7 @@ function getDeclrsDate(date, doclimit = 5, sort) //<==
         })
 }
 
-function getDeclrsAll(date, query, doclimit = 5, sort) //<==
+function getDeclrsAll(date, query, doclimit = 5, sort) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/datequery/api`, {
         method: 'POST',
@@ -286,12 +286,12 @@ async function getCountDateQuery(query, date, sort)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await getAllCount([]) //<===
+        let count = await getAllCount([]) 
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
-    let count = await getCountLimit(query, date, sort) //<===
+    let count = await getCountLimit(query, date, sort) 
     if (nowindowFetchError(count)) return count
     return count.obj;
 }
@@ -300,37 +300,24 @@ async function getDeclrsDateQuery(query, date, doclimit = 5, sort)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await getLimitedDeclrs([], "Invalid", "", doclimit, sort) // \/
+        let count = await loadLimitedDeclrs([], "Invalid", "", doclimit, sort) 
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
     if (date === "Invalid")
     {
-        let queryDeclrs = await getDeclrsQuery(query, doclimit, sort)// \/
+        let queryDeclrs = await getDeclrsQuery(query, doclimit, sort)
         if (nowindowFetchError(queryDeclrs)) return queryDeclrs
         return queryDeclrs.obj;
     }
     if (query === "")
     {
-        let dateDeclrs = await getDeclrsDate(date, doclimit, sort)// \/
+        let dateDeclrs = await getDeclrsDate(date, doclimit, sort)
         if (nowindowFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
-    // let newDeclrs = []
-    // let dateDeclrs = await getDeclrsDate(date, doclimit, sort)// \/
-    // if (nowindowFetchError(dateDeclrs)) return dateDeclrs
-    // dateDeclrs.obj.forEach((el) =>
-    // {
-    //     console.log(el.title)
-    //     if (el.title.includes(query))
-    //     {
-    //         newDeclrs.push(el)
-    //     }
-    // })
-    // console.log(dateDeclrs)
-    // console.log(newDeclrs)
-    // return newDeclrs;
+    
     const newDeclrs = await getDeclrsAll(date, query, doclimit, sort)
     return newDeclrs.obj
 }
@@ -416,6 +403,6 @@ module.exports = {
     getDeclr, getUsers, getDeclrsDate,
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
-    getDateDifference, getLimitedDeclrs, getAllCount,
+    getDateDifference, loadLimitedDeclrs, getAllCount,
     getLimitedComments, getFlash, getClientUser, checkToken
 }

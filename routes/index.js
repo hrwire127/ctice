@@ -31,13 +31,13 @@ router.get('/', (req, res) =>
     app.render(req, res, "/")
 })
 
-router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/loadall/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const declarations = await Declaration.find({})
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/limit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/loadlimit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date, doclimit, sort } = req.body;
     let newDeclarations = [];
@@ -72,7 +72,6 @@ router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, r
 {
     const { query, doclimit, sort } = req.body;
     let declarations = [];
-    console.log("@222@")
     await switchSort(sort, async () =>
     {
         declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(doclimit)
@@ -88,7 +87,6 @@ router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res
 {
     const { date, doclimit, sort } = req.body;
     let declarations = []
-    console.log("@11@")
     await switchSort(sort, async () =>
     {
         declarations = await Declaration.aggregate([
@@ -112,7 +110,6 @@ router.post('/datequery/api', apiSecret, validateApiDate, tryAsync_CS(async (req
 {
     const { date, query, doclimit, sort } = req.body;
     let declarations = []
-    console.log("@@")
     await switchSort(sort, async () =>
     {
         declarations = await Declaration.aggregate([
@@ -149,6 +146,5 @@ router.get("/create", isLogged_SR, isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/create")
 })
-
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering, getLimitedDeclrs, timeout, getAllCount, getFlash } from '../utilsCS/_client'
+import { determRendering, loadLimitedDeclrs, timeout, getAllCount, getFlash } from '../utilsCS/_client'
 import useLoading from '../components/hooks/useLoading'
 
 function index(props)
@@ -18,7 +18,7 @@ function index(props)
         {
             await timeout(500)
             //doclimit --!!!!
-            const newDeclrs = await getLimitedDeclrs(declarations, date, query, 5, sort);
+            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort);
             console.log(newDeclrs)
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));

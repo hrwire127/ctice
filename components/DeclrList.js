@@ -57,8 +57,8 @@ function DeclrList(props)
             //doclimit ---!!!
             const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue, 4, sort);
             const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
-            // CS_Redirects.tryResCS(newDeclrs, window)
-            // CS_Redirects.tryResCS(newQuery, window)
+            CS_Redirects.tryResCS(newDeclrs, window)
+            CS_Redirects.tryResCS(newQuery, window)
             setDeclarations(newDeclrs)
             setCount(newQuery)
         })

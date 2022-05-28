@@ -143,7 +143,7 @@ async function limitDate(date, declarations, doclimit, sort)
 async function limitFilter(query, date, declarations, doclimit, sort)
 {
     let newDeclarations = [];
-    if (sort === 10)
+    await switchSort(sort, async () =>
     {
         const queryDeclarations = await Declaration.find({
             $and: [
@@ -160,8 +160,7 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         })
 
         newDeclarations.splice(doclimit, newDeclarations.length)
-    }
-    else
+    }, async () =>
     {
         const queryDeclarations = await Declaration.find({
             $and: [
@@ -184,7 +183,7 @@ async function limitFilter(query, date, declarations, doclimit, sort)
             }
         })
         newDeclarations.splice(doclimit, newDeclarations.length)
-    }
+    })
 
     return newDeclarations;
 }
