@@ -408,6 +408,7 @@ function checkToken(id)
         }).then(response => response.json())
 }
 
+
 module.exports = {
     CropData, uploadFile,
     handleDeclrData,
@@ -416,5 +417,5 @@ module.exports = {
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, getLimitedDeclrs, getAllCount,
-    getLimitedComments, getFlash, getClientUser, checkToken,
+    getLimitedComments, getFlash, getClientUser, checkToken
 }

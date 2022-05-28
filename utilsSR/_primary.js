@@ -158,7 +158,7 @@ async function limitFilter(query, date, declarations, doclimit, sort)
                 newDeclarations.push(el)
             }
         })
-        
+
         newDeclarations.splice(doclimit, newDeclarations.length)
     }
     else
@@ -213,9 +213,32 @@ async function limitFilterCount(date, query)
     ])
 }
 
+async function switchSort(sort, dateFunc, scoreSort)
+{
+    if (sort === 10)
+    {
+        return dateFunc()
+    }
+    else if (sort === 20)
+    {
+        return scoreSort()
+    }
+}
+
+function sortByScore(declarations)
+{
+    return declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+        < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+        ? 1
+        : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+            < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+            ? -1 : 0))
+}
+
 module.exports =
 {
     getUser, limitNan, limitFilter,
     allDateCount, allQueryCount, limitFilterCount,
-    limitQuery, limitDate, getUserdata, verifyToken
+    limitQuery, limitDate, getUserdata, verifyToken,
+    switchSort, sortByScore
 }
