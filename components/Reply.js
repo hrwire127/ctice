@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
-import CommentCard from './CommentCard';
-import CommentEdit from './CommentEdit';
+import ReplyCard from './ReplyCard';
+import ReplyEdit from './ReplyEdit';
 import useLoading from './hooks/useLoading'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 
-function Comment(props)
+function Reply(props)
 {
     const [edit, setEdit] = useState(false)
     const [alert, setAlert] = useState()
     const [submitWhile, submitSwitch] = useLoading(false)
 
-    const { comment, id, loadingMoreWhile, user, setSortBtn } = props;
+    const { reply, id, loadingMoreWhile, user } = props;
 
     const setError = (msg) => 
     {
@@ -26,7 +26,7 @@ function Comment(props)
     {
         submitWhile(async () =>
         {
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${comment._id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${reply._id}`, {
                 method: 'PUT',
                 body: body,
             }).then(response => response.json())
@@ -47,7 +47,7 @@ function Comment(props)
         submitWhile(async () =>
         {
             await timeout(3000)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${comment._id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${reply._id}`, {
                 method: 'DELETE',
             }).then(response => response.json())
                 .then(async res =>
@@ -59,29 +59,23 @@ function Comment(props)
 
     };
 
-    const changeEdit = (value) =>
-    {
-        setSortBtn(!value)
-        setEdit(value)
-    }
+    console.log(reply)
 
     return edit
-        ? (<CommentEdit
-            comment={comment}
+        ? (<ReplyEdit
+            reply={reply}
             handleSubmit={handleSubmit}
             alert={alert}
             submitSwitch={submitSwitch}
-            setEdit={changeEdit}
         />)
-        : (<CommentCard
-            comment={comment}
+        : (<ReplyCard
+            {...reply}
             user={user}
             edit={edit}
-            setEdit={changeEdit}
+            setEdit={setEdit}
             handleDelete={handleDelete}
-            id={id}
         />)
 
 }
 
-export default Comment
+export default Reply

@@ -28,7 +28,6 @@ function useLoading(initialValue = false)
                     return <Loading full={true} />
                 case 3:
                     return <Loading fullPage={true} />
-
             }
         }
         else

@@ -100,10 +100,12 @@ view.getInitialProps = async (props) =>
     return determRendering(props, async () =>
     {
         const user = await getClientUser();
-        CS_Redirects.tryResSR(declr, props)
+        CS_Redirects.tryResCS(declr, window)
+        CS_Redirects.tryResCS(declr, window)
         return { declaration: declr.obj, user: user.obj ? user.obj : undefined }
     }, () =>
     {
+        CS_Redirects.tryResSR(declr, props)
         return { declaration: declr.obj, user }
     })
 }

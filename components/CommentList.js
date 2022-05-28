@@ -28,6 +28,7 @@ function CommentList(props)
     const [loadingMoreWhile, loadingMoreSwitch] = useLoading(false)
 
     const [sort, setSorting] = React.useState(10);
+    const [isSortBtn, setSortBtn] = React.useState(true);
 
     useEffect(() =>
     {
@@ -46,32 +47,33 @@ function CommentList(props)
         setSorting(e.target.value);
     };
 
-    //comments count
-
     return switchComment(0, () =>
     {
         return <Box className={classes.List}>
-            <Box sx={{ display: 'flex', justifyContent: "right" }}>
-                <FormControl sx={{ width: 120, mt: 2, mb: 2 }}>
-                    <InputLabel id="demo-simple-select-label">Sort</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        label="Sort"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={10}>Date</MenuItem>
-                        <MenuItem value={20}>Score</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
+            {
+                isSortBtn
+                && (<Box sx={{ display: 'flex', justifyContent: "right" }}>
+                    <FormControl sx={{ width: 120, mt: 2, mb: 2 }}>
+                        <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            label="Sort"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={10}>Date</MenuItem>
+                            <MenuItem value={20}>Score</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>)
+            }
             {comments.length > 0
                 ? (<>
                     {
                         loadingMoreSwitch(0, () =>
                         {
-                            return comments.map(c => (<Comment comment={c} id={_id} user={user} key={c._id} loadingMoreWhile={loadingMoreWhile} />))
+                            return comments.map(c => (<Comment setSortBtn={setSortBtn} comment={c} id={_id} user={user} key={c._id} loadingMoreWhile={loadingMoreWhile} />))
                         })
                     }
                     {

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const { excRule } = require('../utilsSR/exc-Rule');
 const User = require("./user");
 
-const CommentSchema = new Schema({
+const ReplySchema = new Schema({
     content: {
         type: String,
         required: true
@@ -25,14 +25,10 @@ const CommentSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "User",
         }
-    }, { _id: false })],
-    replies: [{
-        type: Schema.Types.ObjectId,
-        ref: "Reply",
-    }]
+    }, { _id: false })]
 });
 
-CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
+ReplySchema.statics.processObj = async function (req, comment = undefined, reply = undefined, del = false) 
 {
     let { content } = req.body;
 
@@ -43,9 +39,9 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
         await new excRule([], [], async () =>
         {
             let author = await User.findOne({ username: req.session.passport.user })
-            return declaration.comments.forEach((c, i) =>
+            return comment.comments.forEach((c, i) =>
             {
-                if (c === comment._id && author._id === comment._id)
+                if (c === reply._id && author._id === reply._id)
                 {
                     return i;
                 }
@@ -53,24 +49,22 @@ CommentSchema.statics.processObj = async function (req, declaration = undefined,
         }, true).Try();
     }
 
-    if (await new excRule([content], [comment, declaration], async () =>
+    if (await new excRule([content], [reply, comment], async () =>
     {
         Obj.date = new Date();
         Obj.author = await User.findOne({ username: req.session.passport.user })
     }).Try()) return Obj;
 
-    if (await new excRule([content, comment, declaration], [], async () =>
+    if (await new excRule([content, reply, comment], [], async () =>
     {
-        Obj.date = comment.date
+        Obj.date = reply.date
         Obj.date.push(new Date())
-        Obj.author = comment.author
+        Obj.author = reply.author
 
     }).Try()) return Obj;
-
-
 }
 
-CommentSchema.methods.tryLike = async function (userId, type)
+ReplySchema.methods.tryLike = async function (userId, type)
 {
     const True = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true).length;
     const False = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === false).length;
@@ -113,6 +107,6 @@ CommentSchema.methods.tryLike = async function (userId, type)
     }
 }
 
-const Comment = mongoose.model('Comment', CommentSchema);
+const Reply = mongoose.model('Reply', ReplySchema);
 
-module.exports = Comment;
+module.exports = Reply;

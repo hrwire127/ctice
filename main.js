@@ -36,7 +36,7 @@ const admin = require("./routes/admin")
 
 const User = require('./models/user');
 const userError = require("./utilsSR/userError");
-const {Redirects_SR} = require('./utilsSR/SR_Redirects');
+const { Redirects_SR } = require('./utilsSR/SR_Redirects');
 const sessionConfig = require('./config/session.config')
 
 const fileupload = require("express-fileupload");
@@ -87,7 +87,7 @@ app.prepare().then(() =>
         req.session.error = error;
         Redirects_SR.Error.CS(res)
     })
- 
+
     server.get("/error", (req, res, next) =>
     {
         let error = req.session.error
@@ -98,7 +98,7 @@ app.prepare().then(() =>
 
     server.get("*", (req, res, next) =>
     {
-        return handle(req, res) 
+        return handle(req, res)
     })
 
     server.listen(NEXT_PUBLIC_DR_PORT, e =>

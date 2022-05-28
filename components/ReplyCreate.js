@@ -11,12 +11,13 @@ import
     FormHelperText,
     Link
 } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 
-function CommentEdit(props)
+function ReplyCreate(props)
 {
     const [
         ContentError,
@@ -29,11 +30,9 @@ function CommentEdit(props)
         contentValid,
     ] = useFormError(false);
 
-    const { handleSubmit, alert, submitSwitch, comment, setEdit } = props;
-    const { content, _id } = comment;
-
     const [editorState, setEditorState] = useState();
 
+    const { handleSubmit, alert, creatingSwitch } = props;
     const classes = useStyles()
 
     const errCheck = async (e) =>
@@ -44,6 +43,7 @@ function CommentEdit(props)
         data.append("content", JSON.stringify(editorState));
         // data.append("date", new Date())
 
+        const content = editorState.blocks[0].text;
 
         if (contentValid(content))
         {
@@ -65,12 +65,12 @@ function CommentEdit(props)
                 noValidate
                 className={classes.Form}
             >
+
                 <TextArea
-                    placeholder="Comment"
+                    placeholder="Your Reply"
                     setData={setEditorState}
                     error={ContentError}
                     checkDescKey={checkContentKey}
-                    data={JSON.parse(content)}
                 />
 
                 {alert
@@ -78,28 +78,18 @@ function CommentEdit(props)
                     : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
                 }
 
-                {submitSwitch(0, () =>
+                {creatingSwitch(0, () =>
                 (<Box textAlign='center'>
                     <Button
                         type="submit"
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Finish
-                    </Button>
-                    <Button
-                        variant="text"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={() =>
-                        {
-                            setEdit(false);
-                            setEditorState(JSON.parse(content));
-                        }}>
-                        Cancel
+                        Send
                     </Button>
                 </Box>))}
             </Box>
-        </Box >
+        </Box>
     );
 }
-export default CommentEdit
+export default ReplyCreate

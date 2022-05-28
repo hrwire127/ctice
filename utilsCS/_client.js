@@ -286,12 +286,12 @@ async function getCountDateQuery(query, date, sort)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await getAllCount([]) 
+        let count = await getAllCount([])
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
-    let count = await getCountLimit(query, date, sort) 
+    let count = await getCountLimit(query, date, sort)
     if (nowindowFetchError(count)) return count
     return count.obj;
 }
@@ -300,7 +300,7 @@ async function getDeclrsDateQuery(query, date, doclimit = 5, sort)
 {
     if (query === "" && date === "Invalid")
     {
-        let count = await loadLimitedDeclrs([], "Invalid", "", doclimit, sort) 
+        let count = await loadLimitedDeclrs([], "Invalid", "", doclimit, sort)
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
@@ -317,7 +317,7 @@ async function getDeclrsDateQuery(query, date, doclimit = 5, sort)
         if (nowindowFetchError(dateDeclrs)) return dateDeclrs
         return dateDeclrs.obj;
     }
-    
+
     const newDeclrs = await getDeclrsAll(date, query, doclimit, sort)
     return newDeclrs.obj
 }
@@ -371,6 +371,23 @@ async function getLimitedComments(comments, id, type)
         })
 }
 
+async function getLimitedReplies(replies, cid, id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}/reply/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { replies, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 function getFlash(props)
 {
     let flash = props.res ? props.res.locals.flash[0] : undefined;
@@ -404,5 +421,6 @@ module.exports = {
     LogoutFetch, getDeclrsQuery, getCountDateQuery,
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, loadLimitedDeclrs, getAllCount,
-    getLimitedComments, getFlash, getClientUser, checkToken
+    getLimitedComments, getFlash, getClientUser, checkToken,
+    getLimitedReplies
 }
