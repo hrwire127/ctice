@@ -31,7 +31,7 @@ function ReplyCard(props)
         <Box className={classes.Card}>
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote comment user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>

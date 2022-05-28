@@ -6,12 +6,13 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function Vote(props)
 {
-    const { user, likes, setLikes, d_id, dislikes, setDislikes, comment } = props;
+    const { user, likes, setLikes, d_id, dislikes, setDislikes, comment, reply } = props;
     const classes = useStyles();
 
     const onLike = async (type) =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${comment ? "comments" : "likes"}/${d_id}`, {
+        const collectionName = reply ? "replies" : comment ? "comments" : "likes"
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${collectionName}/${d_id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
