@@ -39,7 +39,7 @@ ReplySchema.statics.processObj = async function (req, comment = undefined, reply
         await new excRule([], [], async () =>
         {
             let author = await User.findOne({ username: req.session.passport.user })
-            return comment.comments.forEach((c, i) =>
+            return comment.replies.forEach((c, i) =>
             {
                 if (c === reply._id && author._id === reply._id)
                 {

@@ -3,6 +3,7 @@ import ReplyCard from './ReplyCard';
 import ReplyEdit from './ReplyEdit';
 import useLoading from './hooks/useLoading'
 import CS_Redirects from '../utilsCS/CS_Redirects'
+import { timeout } from '../utilsCS/_client'
 
 function Reply(props)
 {
@@ -10,7 +11,7 @@ function Reply(props)
     const [alert, setAlert] = useState()
     const [submitWhile, submitSwitch] = useLoading(false)
 
-    const { reply, id, loadingMoreWhile, user } = props;
+    const { reply, id, _id, loadingMoreWhile, user } = props;
 
     const setError = (msg) => 
     {
@@ -26,7 +27,7 @@ function Reply(props)
     {
         submitWhile(async () =>
         {
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${reply._id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/reply/${reply._id}`, {
                 method: 'PUT',
                 body: body,
             }).then(response => response.json())
@@ -47,7 +48,7 @@ function Reply(props)
         submitWhile(async () =>
         {
             await timeout(3000)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${reply._id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${_id}/reply/${reply._id}`, {
                 method: 'DELETE',
             }).then(response => response.json())
                 .then(async res =>
@@ -58,8 +59,6 @@ function Reply(props)
         })
 
     };
-
-    console.log(reply)
 
     return edit
         ? (<ReplyEdit

@@ -11,7 +11,6 @@ import Vote from "./Vote";
 function ReplyCard(props)
 {
     const { _id, content, date, author, setEdit, handleDelete, user } = props;
-    console.log(props)
     const [likes, setLikes] = useState(props.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(props.likes.filter(el => el.typeOf === false));
     const [initDiff, setInitialDiff] = useState()
@@ -38,15 +37,23 @@ function ReplyCard(props)
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: "space-evenly", gap: 1, width: "100%", mt: 2 }}>
-                <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                    Created {initDiff}
-                </Typography>
-                <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                    Edited {diff}
-                </Typography>
-                <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                    {author.username}
-                </Typography>
+                {userCtx === author.username && (
+                    <Box>
+                        <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                        <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                    </Box>
+                )}
+                <Box sx={{ display: 'flex', gap: 1, }}>
+                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
+                        Created {initDiff}
+                    </Typography>
+                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
+                        Edited {diff}
+                    </Typography>
+                    <Typography className={classes.Title} color="text.secondary" gutterBottom>
+                        {author.username}
+                    </Typography>
+                </Box>
             </Box>
         </Box>
     )

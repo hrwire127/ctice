@@ -200,7 +200,7 @@ router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, checkCommentUser, try
     await Reply.findByIdAndDelete(cid)
     await comment.save()
     req.flash('info', 'Deleted Successfuly');
-    Redirects_SR.Home.customCS(res, `${cid}`)
+    Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
 router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>

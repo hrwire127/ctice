@@ -8,7 +8,7 @@ import
 import Reply from './Reply';
 import useStyles from '../assets/styles/_ReplyList';
 import useLoading from './hooks/useLoading'
-import { getLimitedReplies, timeout, getClientUser } from '../utilsCS/_client'
+import { getLimitedReplies, timeout } from '../utilsCS/_client'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function ReplyList(props)
@@ -51,7 +51,8 @@ function ReplyList(props)
                             return replies.map(r => (
                                 <Reply
                                     reply={r}
-                                    id={_id}
+                                    _id={_id}
+                                    id={id}
                                     user={user}
                                     key={r._id}
                                     loadingMoreWhile={loadingMoreWhile}
