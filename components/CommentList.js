@@ -28,7 +28,6 @@ function CommentList(props)
     const [loadingMoreWhile, loadingMoreSwitch] = useLoading(false)
 
     const [sort, setSorting] = React.useState(10);
-    console.log(sort)
 
     useEffect(() =>
     {

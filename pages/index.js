@@ -11,14 +11,15 @@ function index(props)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
-    function loadMore(e, date, query)
+    function loadMore(e, date, query, sort)
     {
         e.preventDefault()
         loadMoreWhile(async () =>
         {
             await timeout(500)
             //doclimit --!!!!
-            const newDeclrs = await getLimitedDeclrs(declarations, date, query, 5);
+            const newDeclrs = await getLimitedDeclrs(declarations, date, query, 5, sort);
+            console.log(newDeclrs)
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })

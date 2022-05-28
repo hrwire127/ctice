@@ -69,8 +69,7 @@ function view(props)
         loadMoreWhile(async () =>
         {
             await timeout(500)
-            const newComments = await getLimitedComments(comments, _id, type);            
-            console.log(newComments.obj)
+            const newComments = await getLimitedComments(comments, _id, type); 
             CS_Redirects.tryResCS(newComments, window)
             setComments(comments.concat(newComments.obj));
         })

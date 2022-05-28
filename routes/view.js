@@ -62,12 +62,9 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
                 : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
                     < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
                     ? -1 : 0))
-        // console.log(declaration.comments.slice(comments.length, process.env.COMMENTS_LOAD_LIMIT))
-        // declaration.comments = declaration.comments.slice(comments.length, process.env.COMMENTS_LOAD_LIMIT)
+                    
         declaration.comments.splice(0, comments.length)
         declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
-
-        // console.log(declaration.comments)
     }
     Redirects_SR.Api.sendApi(res, declaration.comments)
 }))

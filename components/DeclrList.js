@@ -4,7 +4,8 @@ import
     Box, Typography, ButtonGroup, Button, Grid,
     IconButton, AppBar, CssBaseline, Divider, Drawer,
     List, ListItem, ListItemIcon, ListItemText, MailIcon,
-    Toolbar, ListItemButton
+    Toolbar, ListItemButton, MenuItem, FormControl,
+    Select, InputLabel,
 } from '@mui/material';
 import DeclrCard from './DeclrCard';
 import useStyles from '../assets/styles/_DeclrList'
@@ -21,6 +22,7 @@ function DeclrList(props)
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
     const [count, setCount] = useState(props.count);
+    const [sort, setSorting] = React.useState(10);
 
     const { flash,
         loadMore,
@@ -30,7 +32,7 @@ function DeclrList(props)
         fullWhile,
         fullSwitch } = props;
     const classes = useStyles();
-    const adminCtx = React.useContext(AdminContext); 
+    const adminCtx = React.useContext(AdminContext);
 
     useEffect(() =>
     {
@@ -53,16 +55,20 @@ function DeclrList(props)
         {
             await timeout(500)
             //doclimit ---!!!
-            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue, 4);
-            const newQuery = await getCountDateQuery(queryValue, dateValue, 4);
-            CS_Redirects.tryResCS(newDeclrs, window)
-            CS_Redirects.tryResCS(newQuery, window)
+            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue, 4, sort);
+            const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
+            // CS_Redirects.tryResCS(newDeclrs, window)
+            // CS_Redirects.tryResCS(newQuery, window)
             setDeclarations(newDeclrs)
             setCount(newQuery)
         })
 
-    }, [dateValue, queryValue])
+    }, [dateValue, queryValue, sort])
 
+    const handleChange = (e) =>
+    {
+        setSorting(e.target.value);
+    };
 
     const LoadMoreBtn = () =>
     {
@@ -71,7 +77,7 @@ function DeclrList(props)
                 display="flex"
                 justifyContent="center"
             >
-                <Button onClick={(e) => loadMore(e, dateValue, queryValue)}>Load More</Button>
+                <Button onClick={(e) => loadMore(e, dateValue, queryValue, sort)}>Load More</Button>
             </Box>))
 
     }
@@ -93,6 +99,21 @@ function DeclrList(props)
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
+            <Box sx={{ display: 'flex', justifyContent: "right" }}>
+                <FormControl sx={{ width: 120, mt: 2, mb: 2 }}>
+                    <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={sort}
+                        label="Sort"
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={10}>Date</MenuItem>
+                        <MenuItem value={20}>Score</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
             <Box className={classes.Bar}>
                 <Typography variant="h4">
                     Announcements

@@ -34,12 +34,13 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/limit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
 {
-    const { declarations, query, date, doclimit } = req.body;
+    const { declarations, query, date, doclimit, sort } = req.body;
     let newDeclarations = [];
-    if (query === "" && date === "Invalid") newDeclarations = await limitNan(declarations, doclimit)
-    if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit)
-    else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit)
-    else newDeclarations = limitFilter(query, date, declarations, doclimit)
+    if (query === "" && date === "Invalid") newDeclarations = await limitNan(declarations, doclimit, sort)
+    else if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit, sort)
+    else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit, sort)
+    else newDeclarations = await limitFilter(query, date, declarations, doclimit, sort)
+    
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
 
@@ -64,21 +65,85 @@ router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate, try
 
 router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, res) =>
 {
-    const { query, doclimit } = req.body;
-    const declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(doclimit)
+    const { query, doclimit, sort } = req.body;
+    let declarations = [];
+    if (sort === 10) declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(doclimit)
+    else 
+    {
+        declarations = await Declaration.find({ title: { $regex: query, $options: "i" } })
+        //.sort({ _id: -1 }).limit(doclimit)
+        declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+            < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+            ? 1
+            : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                ? -1 : 0))
+        declarations.splice(doclimit, declarations.length)
+    }
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
 router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
 {
-    const { date, doclimit } = req.body;
-    const declarations = await Declaration.aggregate([
-        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-        { $match: { last: date.substring(0, 10) } },
-        { $sort: { _id: -1 } },
-        { $limit: doclimit },
-    ])
+    const { date, doclimit, sort } = req.body;
+    let declarations = []
+    if (sort === 10)
+    {
+        declarations = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
+            { $sort: { _id: -1 } },
+            { $limit: doclimit },
+        ])
+    }
+    else 
+    {
+        declarations = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } }])
+        declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+            < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+            ? 1
+            : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                ? -1 : 0))
+        declarations.splice(doclimit, declarations.length)
+    }
 
+    Redirects_SR.Api.sendApi(res, declarations)
+}))
+
+router.post('/datequery/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
+{
+    const { date, query, doclimit, sort } = req.body;
+    let declarations = []
+    if (sort === 10)
+    {
+        declarations = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
+            { $addFields: { includes: { $regexMatch: { input: "$title", regex: query, options: "i" } } } }, //<====
+            { $match: { includes: true } },
+            { $sort: { _id: -1 } },
+            { $limit: doclimit },
+        ])
+    }
+    else 
+    {
+        declarations = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
+            { $addFields: { includes: { $regexMatch: { input: "$title", regex: query, options: "i" } } } }, //<====
+            { $match: { includes: true } }
+        ])
+        declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+            < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+            ? 1
+            : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                ? -1 : 0))
+        declarations.splice(doclimit, declarations.length)
+    }
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 

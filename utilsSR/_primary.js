@@ -6,7 +6,7 @@ const userError = require('./userError');
 
 async function getUserdata(req, res)
 {
-    if(req.session.passport)
+    if (req.session.passport)
     {
         return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
     }
@@ -44,58 +44,147 @@ function verifyToken(req, res)
             });
     })
 }
-async function limitNan(declarations, doclimit)
+async function limitNan(declarations, doclimit, sort)
 {
-    return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(doclimit);
+    if (sort === 10)
+    {
+        return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(doclimit);
+    }
+    else
+    {
+        let newDeclarations = await Declaration.find({ _id: { $nin: declarations } })
+        newDeclarations
+            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ? 1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                    ? -1 : 0))
+        newDeclarations.splice(doclimit, newDeclarations.length)
+        return newDeclarations;
+    }
 }
-async function limitQuery(query, declarations, doclimit)
+async function limitQuery(query, declarations, doclimit, sort)
 {
-    const queryDeclarations = await Declaration.find({
-        $and: [
-            { _id: { $nin: declarations } },
-            { title: { $regex: query, $options: "i" } }
-        ]
-    }).sort({ _id: -1 }).limit(doclimit)
-    queryDeclarations.slice(0, doclimit)
+    let queryDeclarations = [];
+    if (sort === 10)
+    {
+        queryDeclarations = await Declaration.find({
+            $and: [
+                { _id: { $nin: declarations } },
+                { title: { $regex: query, $options: "i" } }
+            ]
+        }).sort({ _id: -1 }).limit(doclimit)
+        queryDeclarations.splice(doclimit, queryDeclarations.length)
+    }
+    else
+    {
+        queryDeclarations = await Declaration.find({
+            $and: [
+                { _id: { $nin: declarations } },
+                { title: { $regex: query, $options: "i" } }
+            ]
+        })
+        queryDeclarations
+            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ? 1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                    ? -1 : 0))
+        queryDeclarations.splice(doclimit, queryDeclarations.length)
+    }
 
     return queryDeclarations;
 }
 
-async function limitDate(date, declarations, doclimit)
+async function limitDate(date, declarations, doclimit, sort)
 {
     let newDeclarations = [];
-    const queryDeclarations = await Declaration.find({
-        _id: { $nin: declarations }
-    }).sort({ _id: -1 })
-    queryDeclarations.forEach((el) =>
+    if (sort === 10)
     {
-        if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        const queryDeclarations = await Declaration.find({
+            _id: { $nin: declarations }
+        }).sort({ _id: -1 })
+        queryDeclarations.forEach((el) =>
         {
-            newDeclarations.push(el)
-        }
-    })
-    newDeclarations.slice(0, doclimit)
+            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+            {
+                newDeclarations.push(el)
+            }
+        })
+        newDeclarations.splice(doclimit, newDeclarations.length)
+    }
+    else
+    {
+        const queryDeclarations = await Declaration.find({
+            _id: { $nin: declarations }
+        })
+        queryDeclarations
+            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ? 1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                    ? -1 : 0))
+        queryDeclarations.forEach((el) =>
+        {
+            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+            {
+                newDeclarations.push(el)
+            }
+        })
+        newDeclarations.splice(doclimit, newDeclarations.length)
+    }
 
     return newDeclarations;
 }
 
-async function limitFilter(query, date, declarations, doclimit)
+async function limitFilter(query, date, declarations, doclimit, sort)
 {
     let newDeclarations = [];
-    const queryDeclarations = await Declaration.find({
-        $and: [
-            { _id: { $nin: declarations } },
-            { title: { $regex: query, $options: "i" } }
-        ]
-    }).sort({ _id: -1 })
-    queryDeclarations.forEach((el) =>
+    if (sort === 10)
     {
-        if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        const queryDeclarations = await Declaration.find({
+            $and: [
+                { _id: { $nin: declarations } },
+                { title: { $regex: query, $options: "i" } }
+            ]
+        }).sort({ _id: -1 })
+        queryDeclarations.forEach((el) =>
         {
-            newDeclarations.push(el)
-        }
-    })
-    newDeclarations.slice(0, doclimit)
+            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+            {
+                newDeclarations.push(el)
+            }
+        })
+        
+        newDeclarations.splice(doclimit, newDeclarations.length)
+    }
+    else
+    {
+        const queryDeclarations = await Declaration.find({
+            $and: [
+                { _id: { $nin: declarations } },
+                { title: { $regex: query, $options: "i" } }
+            ]
+        })
+        queryDeclarations
+            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                ? 1
+                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                    ? -1 : 0))
+        queryDeclarations.forEach((el) =>
+        {
+            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+            {
+                newDeclarations.push(el)
+            }
+        })
+        newDeclarations.splice(doclimit, newDeclarations.length)
+    }
 
     return newDeclarations;
 }
@@ -126,7 +215,7 @@ async function limitFilterCount(date, query)
 
 module.exports =
 {
-    getUser, limitNan, limitFilter, 
-    allDateCount, allQueryCount, limitFilterCount, 
+    getUser, limitNan, limitFilter,
+    allDateCount, allQueryCount, limitFilterCount,
     limitQuery, limitDate, getUserdata, verifyToken
 }
