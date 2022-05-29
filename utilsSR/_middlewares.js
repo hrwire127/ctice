@@ -178,7 +178,7 @@ function isAdmin_CS(req, res, next)
 
 async function checkCommentUser(req, res, next)
 {
-    let comment = await Comment.findById(req.params.cid).populate({
+    let comment = await Comment.findOne({ _id: req.params.cid, status: "Active" }).populate({
         path: 'author',
     })
     if (comment.author.username === req.session.passport.user)

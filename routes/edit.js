@@ -13,7 +13,7 @@ router.get("/:id", isLogged_SR, isAdmin_CS, async (req, res) =>
 router.post("/:id/api", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id)
+    const declaration = await Declaration.findOne({_id: id, status: "Active"})
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 

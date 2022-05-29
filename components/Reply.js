@@ -72,6 +72,8 @@ function Reply(props)
             {...reply}
             user={user}
             edit={edit}
+            cid={id}
+            id={id}
             setEdit={setEdit}
             handleDelete={handleDelete}
         />)

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const Declaration = require("../models/declaration")
+const Comment = require("../models/comment")
+const Reply = require("../models/reply")
 const User = require("../models/user")
 
 const { titles } = require("./seedHelpers")
@@ -18,6 +20,8 @@ db.once("open", () =>
 const createDeclaration = async () =>
 {
     await Declaration.deleteMany({});
+    await Comment.deleteMany({});
+    await Reply.deleteMany({});
     const user = await User.findById("628688e92387173d390bd76e");
     for (let i = 0; i < 6; i++)
     {
@@ -34,7 +38,8 @@ const createDeclaration = async () =>
             },
             date: [new Date()],
             authors: [user._id],
-            likes: []
+            likes: [],
+            status: "Active"
         })
         await declaration.save();
     }

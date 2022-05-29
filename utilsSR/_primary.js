@@ -48,11 +48,11 @@ async function limitNan(declarations, doclimit, sort)
 {
     if (sort === 10)
     {
-        return await Declaration.find({ _id: { $nin: declarations } }).sort({ _id: -1 }).limit(doclimit);
+        return await Declaration.find({ _id: { $nin: declarations }, status: "Active" }).sort({ _id: -1 }).limit(doclimit);
     }
     else
     {
-        let newDeclarations = await Declaration.find({ _id: { $nin: declarations } })
+        let newDeclarations = await Declaration.find({ _id: { $nin: declarations }, status: "Active" })
         newDeclarations
             .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
                 < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
@@ -72,7 +72,8 @@ async function limitQuery(query, declarations, doclimit, sort)
         queryDeclarations = await Declaration.find({
             $and: [
                 { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } }
+                { title: { $regex: query, $options: "i" } },
+                { status: "Active" }
             ]
         }).sort({ _id: -1 }).limit(doclimit)
         queryDeclarations.splice(doclimit, queryDeclarations.length)
@@ -82,7 +83,8 @@ async function limitQuery(query, declarations, doclimit, sort)
         queryDeclarations = await Declaration.find({
             $and: [
                 { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } }
+                { title: { $regex: query, $options: "i" } },
+                { status: "Active" }
             ]
         })
         queryDeclarations
@@ -104,7 +106,8 @@ async function limitDate(date, declarations, doclimit, sort)
     if (sort === 10)
     {
         const queryDeclarations = await Declaration.find({
-            _id: { $nin: declarations }
+            _id: { $nin: declarations },
+            status: "Active"
         }).sort({ _id: -1 })
         queryDeclarations.forEach((el) =>
         {
@@ -118,7 +121,8 @@ async function limitDate(date, declarations, doclimit, sort)
     else
     {
         const queryDeclarations = await Declaration.find({
-            _id: { $nin: declarations }
+            _id: { $nin: declarations },
+            status: "Active"
         })
         queryDeclarations
             .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
@@ -148,7 +152,8 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         const queryDeclarations = await Declaration.find({
             $and: [
                 { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } }
+                { title: { $regex: query, $options: "i" } },
+                { status: "Active" }
             ]
         }).sort({ _id: -1 })
         queryDeclarations.forEach((el) =>
@@ -165,7 +170,8 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         const queryDeclarations = await Declaration.find({
             $and: [
                 { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } }
+                { title: { $regex: query, $options: "i" } },
+                { status: "Active" }
             ]
         })
         queryDeclarations
@@ -193,13 +199,14 @@ async function allDateCount(date)
     return await Declaration.aggregate([
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
+        { $match: { status: "Active" } },
         { $count: "count" }
     ])
 }
 
 async function allQueryCount(query)
 {
-    return await Declaration.count({ title: { $regex: query, $options: "i" } })
+    return await Declaration.count({ title: { $regex: query, $options: "i" }, status: "Active" })
 }
 
 async function limitFilterCount(date, query)
@@ -208,6 +215,7 @@ async function limitFilterCount(date, query)
         { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
         { $match: { last: date.substring(0, 10) } },
         { $match: { title: { $regex: query, $options: 'i' } } },
+        { $match: { status: "Active" } },
         { $count: "count" }
     ])
 }

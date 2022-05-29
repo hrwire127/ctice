@@ -5,9 +5,10 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton, Grid, Collapse } from '@mui/material'
 import useStyles from "../assets/styles/_CommentCard"
 import { CropData, getDateDifference, getLimitedReplies, timeout } from '../utilsCS/_client';
-import UserContext from './context/contextUser'
-import { Build, Delete, Close, Comment } from '@mui/icons-material';
+import { Build, Delete, Close, Comment, Accessible } from '@mui/icons-material';
 import useLoading from '../components/hooks/useLoading'
+import UserContext from './context/contextUser'
+import AdminContext from './context/contextAdmin'
 import Vote from "./Vote";
 import ReplyCreate from "./ReplyCreate";
 import ReplyList from "./ReplyList"
@@ -16,7 +17,7 @@ import Link from 'next/link'
 function CommentCard(props)
 {
     const { setEdit, handleDelete, user, id } = props;
-    const { _id, content, date, author } = props.comment;
+    const { _id, content, date, author, status } = props.comment;
     const [likes, setLikes] = useState(props.comment.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(props.comment.likes.filter(el => el.typeOf === false));
     const [initDiff, setInitialDiff] = useState()
@@ -29,6 +30,7 @@ function CommentCard(props)
     const [replies, setReplies] = useState([])
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
 
     const data = JSON.parse(content)
     const editorState = EditorState.createWithContent(convertFromRaw(data))
@@ -71,6 +73,23 @@ function CommentCard(props)
         })
     }
 
+    const switchComment = () =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${_id}/disable`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+            })
+    }
+
     useEffect(() =>
     {
         setInitialDiff(getDateDifference(new Date(), new Date(date[0])))
@@ -80,7 +99,7 @@ function CommentCard(props)
     const ReplyFormCreate = () =>
     {
         return (
-            <Box className={classes.FullWidth}>
+            <Box className={classes.FullWidth} sx={status === "Disabled" && { backgroundColor: "gray" }}>
                 <Grid container justifyContent="center">
                     {isReplying ? (
                         <IconButton
@@ -132,6 +151,11 @@ function CommentCard(props)
                     <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
                         Edited {diff}
                     </Typography>
+                    {adminCtx
+                        && (<IconButton size="small" onClick={switchComment}>
+                            <Accessible />
+                        </IconButton>)
+                    }
                 </Box>
                 <Typography className={classes.Title} color="text.secondary" gutterBottom>
                     {author.username}
@@ -147,7 +171,6 @@ function CommentCard(props)
                             </Typography>
                         </Link>
                     </Box>)}
-
 
             <Box display="flex" alignItems="center" flexDirection="column">
                 <ReplyList

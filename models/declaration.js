@@ -51,7 +51,13 @@ const DeclarationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "User",
         }
-    }, { _id: false })]
+    }, { _id: false })],
+    status: {
+        type: String,
+        required: true,
+        enum: ['Disabled', 'Active'],
+        default: 'Active'
+    },
 });
 
 DeclarationSchema.virtual('hasFile').get(function ()

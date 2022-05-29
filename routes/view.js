@@ -19,7 +19,7 @@ router.get("/:id", tryAsync_CS(async (req, res) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id)
+    const declaration = await Declaration.findOne({ _id: id, status: "Active" })
         .populate("authors", 'email status username')
     if (!declaration) next(new Error("Not Found", 404))
     Redirects_SR.Api.sendApi(res, declaration)
@@ -31,40 +31,89 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { comments, type } = req.body;
 
     let declaration;
-    if (type === 10)
-    {
-        declaration = await Declaration.findById(id)
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: comments.length,
-                }
-            })
-    }
-    else 
-    {
-        declaration = await Declaration.findById(id)
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-            })
-        declaration.comments
-            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ? 1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                    ? -1 : 0))
+    const user = await getUserdata(req, res)
 
-        declaration.comments.splice(0, comments.length)
-        declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
+    console.log(user)
+    if (user)
+    {
+        if (user.username === "admin")
+        {
+            if (type === 10)
+            {
+                declaration = await Declaration.findOne({ _id: id })
+                    .populate({
+                        path: 'comments',
+                        populate: {
+                            path: 'author'
+                        },
+                        options: {
+                            limit: process.env.COMMENTS_LOAD_LIMIT,
+                            sort: { _id: -1 },
+                            skip: comments.length,
+                        }
+                    })
+            }
+            else 
+            {
+                declaration = await Declaration.findOne({ _id: id })
+                    .populate({
+                        path: 'comments',
+                        populate: {
+                            path: 'author'
+                        },
+                    })
+                declaration.comments
+                    .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                        < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                        ? 1
+                        : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                            < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                            ? -1 : 0))
+
+                declaration.comments.splice(0, comments.length)
+                declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
+            }
+        }
+    }
+    else
+    {
+        if (type === 10)
+        {
+            declaration = await Declaration.findOne({ _id: id, status: "Active" })
+                .populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'author'
+                    },
+                    match: { status: "Active" },
+                    options: {
+                        limit: process.env.COMMENTS_LOAD_LIMIT,
+                        sort: { _id: -1 },
+                        skip: comments.length,
+                    }
+                })
+        }
+        else 
+        {
+            declaration = await Declaration.findOne({ _id: id, status: "Active" })
+                .populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'author'
+                    },
+                    match: { status: "Active" },
+                })
+            declaration.comments
+                .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+                    < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+                    ? 1
+                    : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+                        < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+                        ? -1 : 0))
+
+            declaration.comments.splice(0, comments.length)
+            declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
+        }
     }
     Redirects_SR.Api.sendApi(res, declaration.comments)
 }))
@@ -74,25 +123,50 @@ router.post("/:id/comment/:cid/reply/api", apiSecret, tryAsync_CS(async (req, re
     const { id, cid } = req.params;
     const { replies } = req.body;
 
-    const comment = await Comment.findById(cid)
-        .populate({
-            path: 'replies',
-            populate: {
-                path: 'author'
-            },
-            options: {
-                limit: process.env.COMMENTS_LOAD_LIMIT,
-                sort: { _id: -1 },
-                skip: replies.length,
-            }
-        })
+
+    const user = await getUserdata(req, res)
+    let comment;
+    if (user)
+    {
+        if (user.username === "admin")
+        {
+            comment = await Comment.findOne({ _id: cid })
+                .populate({
+                    path: 'replies',
+                    populate: {
+                        path: 'author'
+                    },
+                    options: {
+                        limit: process.env.COMMENTS_LOAD_LIMIT,
+                        sort: { _id: -1 },
+                        skip: replies.length,
+                    }
+                })
+        }
+    }
+    else
+    {
+        comment = await Comment.findOne({ _id: cid, status: "Active" })
+            .populate({
+                path: 'replies',
+                populate: {
+                    path: 'author'
+                },
+                match: { status: "Active" },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: replies.length,
+                }
+            })
+    }
     Redirects_SR.Api.sendApi(res, comment.replies)
 }))
 
 router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    let declaration = await Declaration.findById(id)
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     const Obj = await Declaration.processObj(req, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     req.flash('success', 'Edited Successfuly');
@@ -104,7 +178,7 @@ router.put("/likes/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, ne
     const { type } = req.body
     const { id } = req.params;
     const user = await getUserdata(req, res);
-    let declaration = await Declaration.findById(id)
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     declaration.tryLike(user._id, type)
     await declaration.save();
     Redirects_SR.Api.sendApi(res, declaration.likes)
@@ -115,7 +189,7 @@ router.put("/comments/:cid", apiSecret, isLogged_CS, tryAsync_CS(async (req, res
     const { type } = req.body
     const { cid } = req.params;
     const user = await getUserdata(req, res);
-    let comment = await Comment.findById(cid)
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
     comment.tryLike(user._id, type)
     await comment.save();
     Redirects_SR.Api.sendApi(res, comment.likes)
@@ -126,7 +200,7 @@ router.put("/replies/:rid", apiSecret, isLogged_CS, tryAsync_CS(async (req, res,
     const { type } = req.body
     const { rid } = req.params;
     const user = await getUserdata(req, res);
-    let reply = await Reply.findById(rid)
+    let reply = await Reply.findOne({ _id: rid, status: "Active" })
     reply.tryLike(user._id, type)
     await reply.save();
     Redirects_SR.Api.sendApi(res, reply.likes)
@@ -135,7 +209,7 @@ router.put("/replies/:rid", apiSecret, isLogged_CS, tryAsync_CS(async (req, res,
 router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    let declaration = await Declaration.findById(id)
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = new Comment(await Comment.processObj(req))
     declaration.comments.push(comment)
     await declaration.save()
@@ -146,7 +220,7 @@ router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req
 router.post("/:id/comment/:cid/reply", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
-    let comment = await Comment.findById(cid)
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let reply = new Reply(await Reply.processObj(req))
     comment.replies.push(reply)
     await comment.save()
@@ -154,22 +228,51 @@ router.post("/:id/comment/:cid/reply", isLogged_CS, validateComment, tryAsync_CS
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.put("/:id/comment/:cid", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+router.post("/:id/disable", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { id } = req.params;
+    let declaration = await Declaration.findOne({ _id: id })
+    declaration.status = declaration.status === "Active" ? "Disabled" : "Active"
+    await declaration.save()
+    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+}))
+
+router.post("/:id/comment/:cid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
-    let declaration = await Declaration.findById(id)
-    let comment = await Comment.findById(cid)
+    let comment = await Comment.findOne({ _id: cid })
+    comment.status = comment.status === "Active" ? "Disabled" : "Active"
+    await comment.save()
+    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+}))
+
+router.post("/:id/reply/:rid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
+{
+    const { id, rid } = req.params;
+    let reply = await Reply.findOne({ _id: rid })
+    console.log(reply)
+    reply.status = reply.status === "Active" ? "Disabled" : "Active"
+    console.log(reply)
+    await reply.save()
+    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+}))
+
+router.put("/:id/comment/:cid", isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { id, cid } = req.params;
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let Obj = await Comment.processObj(req, declaration, comment)
     await Comment.findByIdAndUpdate(cid, Obj)
     await declaration.save()
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, validateComment, tryAsync_CS(async (req, res) =>
+router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { id, cid, rid } = req.params;
-    let comment = await Comment.findById(cid)
-    let reply = await Reply.findById(rid)
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
+    let reply = await Reply.findOne({ _id: rid, status: "Active" })
     let Obj = await Reply.processObj(req, comment, reply)
     await Reply.findByIdAndUpdate(rid, Obj)
     await comment.save()
@@ -179,8 +282,8 @@ router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, validateComment, tryAsyn
 router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
-    let declaration = await Declaration.findById(id)
-    let comment = await Comment.findById(cid)
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let i = await Comment.processObj(req, declaration, comment, true)
     declaration.comments.splice(i, 1);
     await Comment.findByIdAndDelete(cid)
@@ -192,9 +295,9 @@ router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(as
 router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>
 {
     const { id, cid, rid } = req.params;
-    let declaration = await Declaration.findById(id)
-    let comment = await Comment.findById(cid)
-    let reply = await Reply.findById(rid)
+    let declaration = await Declaration.findOne({ _id: id, status: "Active" })
+    let comment = await Comment.findOne({ _id: cid, status: "Active" })
+    let reply = await Reply.findOne({ _id: rid, status: "Active" })
     let i = await Reply.processObj(req, comment, reply, true)
     comment.replies.splice(i, 1);
     await Reply.findByIdAndDelete(cid)
@@ -206,7 +309,7 @@ router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, checkCommentUser, try
 router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findById(id);
+    const declaration = await Declaration.findOne({ _id: id, status: "Active" })
     await Declaration.processObj(req, declaration, true)
     await Declaration.findByIdAndDelete(id)
     req.flash('info', 'Deleted Successfuly');

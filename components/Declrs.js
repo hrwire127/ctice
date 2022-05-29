@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
-import { RemoveRedEye, Build, Delete } from '@mui/icons-material';
+import { RemoveRedEye, Build, Delete, Accessible } from '@mui/icons-material';
 import Title from './Title';
 import Link from 'next/link';
 import { makeStyles } from '@mui/styles';
@@ -18,9 +18,9 @@ export default function Declrs(props)
     const { declarations, onDelete, noControlls } = props
     const classes = useStyles();
 
-    function createData(id, date, title, file, by, views)
+    function createData(id, date, title, file, status, by, views)
     {
-        return { id, date, title, file, by, views };
+        return { id, date, title, file, status, by, views };
     }
 
 
@@ -31,10 +31,28 @@ export default function Declrs(props)
             el.date[0],
             el.title,
             el.file ? el.file.name : "nothing",
+            el.status,
             el.authors[0],
             2,
         )
     })
+
+    const switchDeclr = (_id) =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/disable`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+            })
+    }
 
     return (
         <>
@@ -45,6 +63,7 @@ export default function Declrs(props)
                         <TableCell>Date</TableCell>
                         <TableCell>Title</TableCell>
                         <TableCell>File</TableCell>
+                        <TableCell>Status</TableCell>
                         <TableCell>By</TableCell>
                         {noControlls
                             ? (<TableCell align="right">Views</TableCell>)
@@ -61,6 +80,7 @@ export default function Declrs(props)
                             <TableCell>{row.date}</TableCell>
                             <TableCell>{row.title}</TableCell>
                             <TableCell>{row.file}</TableCell>
+                            <TableCell>{row.status}</TableCell>
                             <TableCell>{row.by}</TableCell>
                             {noControlls ? (<TableCell align="right">{row.views}</TableCell>) :
                                 (<>
@@ -79,6 +99,9 @@ export default function Declrs(props)
                                             </IconButton>
                                             <IconButton onClick={(e) => onDelete(e, row.id)} sx={{ width: 3, height: 3 }}>
                                                 <Delete color="tertiary" sx={{ fontSize: 20 }} />
+                                            </IconButton>
+                                            <IconButton onClick={() => switchDeclr(row.id)} sx={{ width: 3, height: 3 }}>
+                                                <Accessible color="tertiary" sx={{ fontSize: 20 }} />
                                             </IconButton>
                                         </Box>
                                     </TableCell>

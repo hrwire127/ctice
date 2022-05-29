@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Typography, IconButton, Avatar, Collapse, Button, Grid } from '@mui/material';
-import { Delete, Build, TurnedInNot, KeyboardArrowUp, KeyboardArrowDown, Comment, IosShare } from '@mui/icons-material';
+import
+{
+    Box, Typography,
+    IconButton, Avatar,
+    Collapse, Button, Grid
+} from '@mui/material';
+import
+{
+    Delete, Build,
+    TurnedInNot, KeyboardArrowUp,
+    KeyboardArrowDown, Comment,
+    IosShare, Accessible
+} from '@mui/icons-material';
 import { CropData } from '../utilsCS/_client';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
@@ -37,6 +48,23 @@ function DeclrView(props)
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
     // getClientUser
+
+    const switchDeclr = () =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/disable`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+            })
+    }
 
     const Placeholder = (
         <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
@@ -94,8 +122,11 @@ function DeclrView(props)
                         Last Edited by {authors[authors.length - 1].username}
                     </Typography>
                     )}
-
-
+                {adminCtx
+                    && (<IconButton size="small" onClick={switchDeclr}>
+                        <Accessible />
+                    </IconButton>)
+                }
                 {/* <BackLink>Back</BackLink> */}
             </Box>
             <Box className={classes.Line} />

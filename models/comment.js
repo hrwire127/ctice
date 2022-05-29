@@ -29,7 +29,13 @@ const CommentSchema = new Schema({
     replies: [{
         type: Schema.Types.ObjectId,
         ref: "Reply",
-    }]
+    }],
+    status: {
+        type: String,
+        required: true,
+        enum: ['Disabled', 'Active'],
+        default: 'Active'
+    },
 });
 
 CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 

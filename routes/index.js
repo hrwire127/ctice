@@ -33,7 +33,7 @@ router.get('/', (req, res) =>
 
 router.post('/loadall/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const declarations = await Declaration.find({})
+    const declarations = await Declaration.find({ })
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
@@ -45,13 +45,13 @@ router.post('/loadlimit/api', apiSecret, hasDeclrs, validateApiQuery, validateAp
     else if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit, sort)
     else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit, sort)
     else newDeclarations = await limitFilter(query, date, declarations, doclimit, sort)
-
+    
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
 
 router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const count = await Declaration.count({})
+    const count = await Declaration.count({ status: "Active" })
     Redirects_SR.Api.sendApi(res, count)
 }))
 
@@ -74,10 +74,10 @@ router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, r
     let declarations = [];
     await switchSort(sort, async () =>
     {
-        declarations = await Declaration.find({ title: { $regex: query, $options: "i" } }).sort({ _id: -1 }).limit(doclimit)
+        declarations = await Declaration.find({ title: { $regex: query, $options: "i" }, status: "Active" }).sort({ _id: -1 }).limit(doclimit)
     }, async () =>
     {
-        declarations = sortByScore(await Declaration.find({ title: { $regex: query, $options: "i" } }))
+        declarations = sortByScore(await Declaration.find({ title: { $regex: query, $options: "i" }, status: "Active" }))
         declarations.splice(doclimit, declarations.length)
     })
     Redirects_SR.Api.sendApi(res, declarations)
@@ -92,6 +92,7 @@ router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res
         declarations = await Declaration.aggregate([
             { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
             { $match: { last: date.substring(0, 10) } },
+            { $match: { status: "Active" } },
             { $sort: { _id: -1 } },
             { $limit: doclimit },
         ])
@@ -99,7 +100,9 @@ router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res
     {
         declarations = sortByScore(await Declaration.aggregate([
             { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-            { $match: { last: date.substring(0, 10) } }]))
+            { $match: { last: date.substring(0, 10) } },
+            { $match: { status: "Active" } },
+        ]))
         declarations.splice(doclimit, declarations.length)
     })
 
@@ -117,6 +120,7 @@ router.post('/datequery/api', apiSecret, validateApiDate, tryAsync_CS(async (req
             { $match: { last: date.substring(0, 10) } },
             { $addFields: { includes: { $regexMatch: { input: "$title", regex: query, options: "i" } } } }, //<====
             { $match: { includes: true } },
+            { $match: { status: "Active" } },
             { $sort: { _id: -1 } },
             { $limit: doclimit },
         ])
@@ -126,7 +130,8 @@ router.post('/datequery/api', apiSecret, validateApiDate, tryAsync_CS(async (req
             { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
             { $match: { last: date.substring(0, 10) } },
             { $addFields: { includes: { $regexMatch: { input: "$title", regex: query, options: "i" } } } }, //<====
-            { $match: { includes: true } }
+            { $match: { includes: true } },
+            { $match: { status: "Active" } },
         ]))
         declarations.splice(doclimit, declarations.length)
     })

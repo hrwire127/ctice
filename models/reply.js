@@ -25,7 +25,13 @@ const ReplySchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "User",
         }
-    }, { _id: false })]
+    }, { _id: false })],
+    status: {
+        type: String,
+        required: true,
+        enum: ['Disabled', 'Active'],
+        default: 'Active'
+    },
 });
 
 ReplySchema.statics.processObj = async function (req, comment = undefined, reply = undefined, del = false) 

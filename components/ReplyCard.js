@@ -5,18 +5,20 @@ import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } f
 import useStyles from "../assets/styles/_ReplyCard"
 import { CropData, getDateDifference } from '../utilsCS/_client';
 import UserContext from './context/contextUser'
-import { Build, Delete } from '@mui/icons-material';
+import AdminContext from './context/contextAdmin'
+import { Build, Delete, Accessible } from '@mui/icons-material';
 import Vote from "./Vote";
 
 function ReplyCard(props)
 {
-    const { _id, content, date, author, setEdit, handleDelete, user } = props;
+    const { _id, content, date, author, setEdit, handleDelete, user, id, cid, status } = props;
     const [likes, setLikes] = useState(props.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(props.likes.filter(el => el.typeOf === false));
     const [initDiff, setInitialDiff] = useState()
     const [diff, setDiff] = useState()
     const classes = useStyles();
     const userCtx = React.useContext(UserContext);
+    const adminCtx = React.useContext(AdminContext);
 
     const data = JSON.parse(content)
     const editorState = EditorState.createWithContent(convertFromRaw(data))
@@ -27,8 +29,25 @@ function ReplyCard(props)
         setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
     }, [])
 
+    const switchReply = () =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${_id}/disable`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                console.log(res)
+            })
+    }
+
     return (
-        <Box className={classes.Card}>
+        <Box className={classes.Card} sx={status === "Disabled" && { backgroundColor: "gray" }}>
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
@@ -53,9 +72,14 @@ function ReplyCard(props)
                     <Typography className={classes.Title} color="text.secondary" gutterBottom>
                         {author.username}
                     </Typography>
+                    {adminCtx
+                        && (<IconButton size="small" onClick={switchReply}>
+                            <Accessible />
+                        </IconButton>)
+                    }
                 </Box>
             </Box>
-        </Box>
+        </ Box>
     )
 }
 
