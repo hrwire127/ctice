@@ -27,7 +27,7 @@ function Reply(props)
     {
         submitWhile(async () =>
         {
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/reply/${reply._id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${_id}/reply/${reply._id}`, {
                 method: 'PUT',
                 body: body,
             }).then(response => response.json())
@@ -63,6 +63,7 @@ function Reply(props)
     return edit
         ? (<ReplyEdit
             reply={reply}
+            setEdit={setEdit}
             handleSubmit={handleSubmit}
             alert={alert}
             submitSwitch={submitSwitch}

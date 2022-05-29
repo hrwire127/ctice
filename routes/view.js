@@ -173,7 +173,7 @@ router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, validateComment, tryAsyn
     let Obj = await Reply.processObj(req, comment, reply)
     await Reply.findByIdAndUpdate(rid, Obj)
     await comment.save()
-    Redirects_SR.Home.customCS(res, `${cid}`)
+    Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
 router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>

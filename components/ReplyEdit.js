@@ -29,8 +29,8 @@ function ReplyEdit(props)
         contentValid,
     ] = useFormError(false);
 
-    const { handleSubmit, alert, submitSwitch, comment } = props;
-    const { content, _id } = comment;
+    const { handleSubmit, alert, submitSwitch, reply, setEdit } = props;
+    const { content, _id } = reply;
 
     const [editorState, setEditorState] = useState();
 
@@ -50,50 +50,58 @@ function ReplyEdit(props)
             handleSubmit(data);
         } else
         {
-            setContentFalse(); AAAA
+            setContentFalse();
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Box className={classes.Container}>
-                {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
-                <Box
-                    component="form"
-                    enctype="multipart/form-data"
-                    onSubmit={errCheck}
-                    noValidate
-                    className={classes.Form}
-                >
+        <Box>
 
-                    <TextArea
-                        placeholder="Comment"
-                        setData={setEditorState}
-                        error={ContentError}
-                        checkDescKey={checkContentKey}
-                        data={JSON.parse(content)}
-                    />
+            {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+            <Box
+                component="form"
+                enctype="multipart/form-data"
+                onSubmit={errCheck}
+                noValidate
+                className={classes.Form}
+            >
 
-                    {alert
-                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
-                        : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
-                    }
+                <TextArea
+                    placeholder="Reply"
+                    setData={setEditorState}
+                    error={ContentError}
+                    checkDescKey={checkContentKey}
+                    data={JSON.parse(content)}
+                />
 
-                    {submitSwitch(0, () =>
-                    (<>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Finish
-                        </Button>
-                    </>))}
-                </Box>
+                {alert
+                    ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                    : (<FormHelperText error={ContentError}>{helperContentText}</FormHelperText>)
+                }
+
+                {submitSwitch(0, () =>
+                (<Box textAlign='center'>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Finish
+                    </Button>
+                    <Button
+                        variant="text"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() =>
+                        {
+                            setEdit(false);
+                            setEditorState(JSON.parse(content));
+                        }}>
+                        Cancel
+                    </Button>
+                </Box>))}
+
             </Box>
-        </Container>
+        </Box>
     );
 }
 export default ReplyEdit;
