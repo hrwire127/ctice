@@ -8,7 +8,7 @@ const { isLogged_CS, tryAsync_CS,
     apiSecret, isAdmin_CS,
     checkCommentUser } = require('../utilsSR/_middlewares')
 const { validateDeclr, validateComment, } = require('../utilsSR/_validations')
-const { getUserdata } = require("../utilsSR/_primary")
+const { getUserdata, switchSort, sortByScore, isAdmin, getDeclrDateSort, getCommentDateSort } = require("../utilsSR/_primary")
 
 router.get("/:id", tryAsync_CS(async (req, res) =>
 {
@@ -31,90 +31,19 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { comments, type } = req.body;
 
     let declaration;
-    const user = await getUserdata(req, res)
+    const admin = await isAdmin(req, res)
 
-    console.log(user)
-    if (user)
+    await switchSort(type, async () =>
     {
-        if (user.username === "admin")
-        {
-            if (type === 10)
-            {
-                declaration = await Declaration.findOne({ _id: id })
-                    .populate({
-                        path: 'comments',
-                        populate: {
-                            path: 'author'
-                        },
-                        options: {
-                            limit: process.env.COMMENTS_LOAD_LIMIT,
-                            sort: { _id: -1 },
-                            skip: comments.length,
-                        }
-                    })
-            }
-            else 
-            {
-                declaration = await Declaration.findOne({ _id: id })
-                    .populate({
-                        path: 'comments',
-                        populate: {
-                            path: 'author'
-                        },
-                    })
-                declaration.comments
-                    .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                        < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                        ? 1
-                        : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                            < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                            ? -1 : 0))
-
-                declaration.comments.splice(0, comments.length)
-                declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
-            }
-        }
-    }
-    else
+        declaration = await getDeclrDateSort(id, comments.length, admin)
+    }, async () =>
     {
-        if (type === 10)
-        {
-            declaration = await Declaration.findOne({ _id: id, status: "Active" })
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'author'
-                    },
-                    match: { status: "Active" },
-                    options: {
-                        limit: process.env.COMMENTS_LOAD_LIMIT,
-                        sort: { _id: -1 },
-                        skip: comments.length,
-                    }
-                })
-        }
-        else 
-        {
-            declaration = await Declaration.findOne({ _id: id, status: "Active" })
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'author'
-                    },
-                    match: { status: "Active" },
-                })
-            declaration.comments
-                .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                    < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                    ? 1
-                    : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                        < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                        ? -1 : 0))
+        declaration = await getDeclrScoreSort(id, admin)
+        declaration.comments = sortByScore(declaration.comments)
+        declaration.comments.splice(0, comments.length)
+        declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
+    })
 
-            declaration.comments.splice(0, comments.length)
-            declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
-        }
-    }
     Redirects_SR.Api.sendApi(res, declaration.comments)
 }))
 
@@ -123,43 +52,9 @@ router.post("/:id/comment/:cid/reply/api", apiSecret, tryAsync_CS(async (req, re
     const { id, cid } = req.params;
     const { replies } = req.body;
 
+    const admin = await isAdmin(req, res)
+    const comment = await getCommentDateSort(cid, replies.length, admin)
 
-    const user = await getUserdata(req, res)
-    let comment;
-    if (user)
-    {
-        if (user.username === "admin")
-        {
-            comment = await Comment.findOne({ _id: cid })
-                .populate({
-                    path: 'replies',
-                    populate: {
-                        path: 'author'
-                    },
-                    options: {
-                        limit: process.env.COMMENTS_LOAD_LIMIT,
-                        sort: { _id: -1 },
-                        skip: replies.length,
-                    }
-                })
-        }
-    }
-    else
-    {
-        comment = await Comment.findOne({ _id: cid, status: "Active" })
-            .populate({
-                path: 'replies',
-                populate: {
-                    path: 'author'
-                },
-                match: { status: "Active" },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: replies.length,
-                }
-            })
-    }
     Redirects_SR.Api.sendApi(res, comment.replies)
 }))
 

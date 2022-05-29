@@ -47,7 +47,7 @@ function ReplyCard(props)
     }
 
     return (
-        <Box className={classes.Card} sx={status === "Disabled" && { backgroundColor: "gray" }}>
+        <Box className={classes.Card} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />

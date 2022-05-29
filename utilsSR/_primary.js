@@ -1,5 +1,7 @@
 const { Redirects_SR } = require('./SR_Redirects');
 const Declaration = require("../models/declaration");
+const Comment = require("../models/comment");
+const Reply = require("../models/reply")
 const User = require("../models/user");
 const Token = require("../models/token")
 const userError = require('./userError');
@@ -24,6 +26,19 @@ function getUser(req, res)
         return session.user;
     }
     Redirects_SR.Error.CS(res)
+}
+
+function isAdmin(req, res)
+{
+    if (req.session.passport)
+    {
+        const session = req.session.passport
+        return session.user === "admin";
+    }
+    else
+    {
+        return false
+    }
 }
 
 function verifyToken(req, res)
@@ -242,10 +257,107 @@ function sortByScore(declarations)
             ? -1 : 0))
 }
 
+async function getDeclrDateSort(id, length, status = false)
+{
+    if (status)
+    {
+        return await Declaration.findOne({ _id: id })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: length,
+                }
+            })
+    }
+    else
+    {
+        return await Declaration.findOne({ _id: id, status: "Active" })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+                match: { status: "Active" },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: length,
+                }
+            })
+    }
+}
+
+async function getDeclrScoreSort(id, status = false)
+{
+    if (status)
+    {
+        return await Declaration.findOne({ _id: id })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+            })
+    }
+    else
+    {
+        return await Declaration.findOne({ _id: id, status: "Active" })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author'
+                },
+                match: { status: "Active" },
+            })
+    }
+}
+
+async function getCommentDateSort(id, length, status = false)
+{
+    if (status)
+    {
+        return await Comment.findOne({ _id: id })
+            .populate({
+                path: 'replies',
+                populate: {
+                    path: 'author'
+                },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: length,
+                }
+            })
+    }
+    else
+    {
+        return await Comment.findOne({ _id: id, status: "Active" })
+            .populate({
+                path: 'replies',
+                populate: {
+                    path: 'author'
+                },
+                match: { status: "Active" },
+                options: {
+                    limit: process.env.COMMENTS_LOAD_LIMIT,
+                    sort: { _id: -1 },
+                    skip: length,
+                }
+            })
+    }
+}
+
+
 module.exports =
 {
     getUser, limitNan, limitFilter,
     allDateCount, allQueryCount, limitFilterCount,
     limitQuery, limitDate, getUserdata, verifyToken,
-    switchSort, sortByScore
+    switchSort, sortByScore, isAdmin, getDeclrDateSort,
+    getDeclrScoreSort, getCommentDateSort
 }
