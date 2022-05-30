@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 const Declaration = require("../../models/declaration");
 const { switchSort, sortByScore } = require('./_p_basic')
 
@@ -21,7 +22,7 @@ async function limitQuery(query, declarations, doclimit, sort)
     {
         queryDeclarations = await Declaration.find({
             $and: [
-                { _id: { $nin: declarations } },
+                { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } },
                 { title: { $regex: query, $options: "i" } },
                 { status: "Active" }
             ]
@@ -31,7 +32,7 @@ async function limitQuery(query, declarations, doclimit, sort)
     {
         queryDeclarations = sortByScore(await Declaration.find({
             $and: [
-                { _id: { $nin: declarations } },
+                { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } },
                 { title: { $regex: query, $options: "i" } },
                 { status: "Active" }
             ]
@@ -46,10 +47,11 @@ async function limitDate(date, declarations, doclimit, sort)
     let newDeclarations = [];
     await switchSort(sort, async () =>
     {
-        const queryDeclarations = await Declaration.find({
-            _id: { $nin: declarations },
-            status: "Active"
-        }).sort({ _id: -1 })
+        const queryDeclarations = await Declaration.aggregate([
+            { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+            { $match: { status: "Active" } },
+            { $sort: { _id: -1 } },
+        ])
         queryDeclarations.forEach((el) =>
         {
             if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
@@ -60,10 +62,14 @@ async function limitDate(date, declarations, doclimit, sort)
         newDeclarations.splice(doclimit, newDeclarations.length)
     }, async () =>
     {
-        const queryDeclarations = sortByScore(await Declaration.find({
-            _id: { $nin: declarations },
-            status: "Active"
-        }))
+        // const queryDeclarations = sortByScore(await Declaration.find({
+        //     _id: { $nin: declarations },
+        //     status: "Active"
+        // }))
+        const queryDeclarations = await Declaration.aggregate([
+            { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+            { $match: { status: "Active" } },
+        ])
         queryDeclarations.forEach((el) =>
         {
             if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
@@ -72,7 +78,7 @@ async function limitDate(date, declarations, doclimit, sort)
             }
         })
         newDeclarations.splice(doclimit, newDeclarations.length)
-    }) 
+    })
 
     return newDeclarations;
 }
@@ -82,13 +88,20 @@ async function limitFilter(query, date, declarations, doclimit, sort)
     let newDeclarations = [];
     await switchSort(sort, async () =>
     {
-        const queryDeclarations = await Declaration.find({
-            $and: [
-                { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } },
-                { status: "Active" }
-            ]
-        }).sort({ _id: -1 })
+        // const queryDeclarations = await Declaration.find({
+        //     $and: [
+        //         { _id: { $nin: declarations } },
+        //         { title: { $regex: query, $options: "i" } },
+        //         { status: "Active" }
+        //     ]
+        // }).sort({ _id: -1 })
+        const queryDeclarations = sortByScore(await Declaration.aggregate([
+            { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+            { $match: { title: { $regex: query, $options: 'i' } } },
+            { $match: { status: "Active" } },
+            { $sort: { _id: -1 } },
+        ]))
+
         queryDeclarations.forEach((el) =>
         {
             if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
@@ -100,20 +113,18 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         newDeclarations.splice(doclimit, newDeclarations.length)
     }, async () =>
     {
-        const queryDeclarations = await Declaration.find({
-            $and: [
-                { _id: { $nin: declarations } },
-                { title: { $regex: query, $options: "i" } },
-                { status: "Active" }
-            ]
-        })
-        queryDeclarations
-            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ? 1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                    ? -1 : 0))
+        // const queryDeclarations = sortByScore(await Declaration.find({
+        //     $and: [
+        //         { _id: { $nin: declarations } },
+        //         { title: { $regex: query, $options: "i" } },
+        //         { status: "Active" }
+        //     ]
+        // }))
+        const queryDeclarations = sortByScore(await Declaration.aggregate([
+            { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+            { $match: { title: { $regex: query, $options: 'i' } } },
+            { $match: { status: "Active" } },
+        ]))
         queryDeclarations.forEach((el) =>
         {
             if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 

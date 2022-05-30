@@ -6,7 +6,7 @@ const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
 const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery, } = require('../utilsSR/primary/_p_declrApi')
-const { validateDeclr} = require('../utilsSR/middlewares/_m_validations')
+const { validateDeclr } = require('../utilsSR/middlewares/_m_validations')
 
 
 router.get('/', (req, res) =>
