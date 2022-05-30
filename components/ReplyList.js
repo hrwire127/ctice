@@ -60,7 +60,7 @@ function ReplyList(props)
                         })
                     }
                     {
-                        loadMoreSwitch(0, () => replies.length < comment.replies.length && replies.length > 0 && (<Button onClick={(e) => loadMore(e)}>Load More</Button>))
+                        loadMoreSwitch(0, () => replies.length < comment.replies.length && replies.length > 0 && (<Box textAlign="center"><Button onClick={(e) => loadMore(e)}>Load More</Button></Box>))
                     }
                 </>)
             }

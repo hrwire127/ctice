@@ -77,7 +77,7 @@ function CommentList(props)
                         })
                     }
                     {
-                        loadMoreSwitch(0, () => comments.length < declaration.comments.length && comments.length > 0 && (<Button onClick={(e) => loadMore(e, sort)}>Load More</Button>))
+                        loadMoreSwitch(0, () => comments.length < declaration.comments.length && comments.length > 0 && (<Box textAlign="center"><Button onClick={(e) => loadMore(e, sort)}>Load More</Button></Box>))
                     }
                 </>)
                 : (<Typography align="center" component="h1" color="text.secondary" variant="h5" sx={{ fontWeight: 800 }}>

@@ -17,12 +17,13 @@ import Link from 'next/link'
 function CommentCard(props)
 {
     const { setEdit, handleDelete, user, id } = props;
-    const { _id, content, date, author, status } = props.comment;
+    const { _id, content, date, author } = props.comment;
     const [likes, setLikes] = useState(props.comment.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(props.comment.likes.filter(el => el.typeOf === false));
     const [initDiff, setInitialDiff] = useState()
     const [diff, setDiff] = useState()
     const [isReplying, setReply] = useState(false)
+    const [status, setStatus] = useState(props.comment.status)
     const [alert, setAlert] = useState()
     const [creatingWhile, creatingSwitch] = useLoading(false)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
@@ -87,6 +88,10 @@ function CommentCard(props)
             .then(async res =>
             {
                 console.log(res)
+                if (res.obj === true)
+                {
+                    setStatus(status === "Active" ? "Disabled" : "Active")
+                }
             })
     }
 
@@ -99,7 +104,7 @@ function CommentCard(props)
     const ReplyFormCreate = () =>
     {
         return (
-            <Box className={classes.FullWidth} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
+            <Box className={classes.FullWidth} sx={status === "Disabled" && { backgroundColor: "gray" }}>
                 <Grid container justifyContent="center">
                     {isReplying ? (
                         <IconButton

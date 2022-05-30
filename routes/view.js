@@ -129,7 +129,7 @@ router.post("/:id/disable", apiSecret, isLogged_CS, tryAsync_CS(async (req, res)
     let declaration = await Declaration.findOne({ _id: id })
     declaration.status = declaration.status === "Active" ? "Disabled" : "Active"
     await declaration.save()
-    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 router.post("/:id/comment/:cid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
@@ -138,7 +138,7 @@ router.post("/:id/comment/:cid/disable", apiSecret, isLogged_CS, isAdmin_CS, try
     let comment = await Comment.findOne({ _id: cid })
     comment.status = comment.status === "Active" ? "Disabled" : "Active"
     await comment.save()
-    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 router.post("/:id/reply/:rid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
@@ -149,7 +149,7 @@ router.post("/:id/reply/:rid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAs
     reply.status = reply.status === "Active" ? "Disabled" : "Active"
     console.log(reply)
     await reply.save()
-    Redirects_SR.Api.sendApi(res, { msg: "Success" })
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 router.put("/:id/comment/:cid", isLogged_CS, tryAsync_CS(async (req, res) =>
