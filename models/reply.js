@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const { excRule } = require('../utilsSR/exc-Rule');
+const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const User = require("./user");
 
 const ReplySchema = new Schema({

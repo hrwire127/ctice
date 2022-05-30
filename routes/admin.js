@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { isAdmin_SR } = require('../utilsSR/_middlewares')
+const { isAdmin_SR } = require('../utilsSR/middlewares/_m_user')
 
 router.get("/", isAdmin_SR, (req, res) =>
 {

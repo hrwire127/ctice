@@ -1,37 +1,69 @@
-const { valRule, Rules } = require('./val-Rule');
-const userError = require('./userError');
-const { cloud } = require('../cloud/storage');
 let streamifier = require('streamifier');
+const userError = require('../general/userError');
+const { cloud } = require('../../cloud/storage');
 
-function inspectPdf(file)
+async function switchSort(sort, dateFunc, scoreSort)
 {
-    const maxWidth = new valRule(file.width, Rules.pdf_max_width, 0)
-    if (maxWidth.getVal()) return maxWidth.processMsg()
-
-    const minWidth = new valRule(file.width, Rules.pdf_min_width, 1)
-    if (minWidth.getVal()) return minWidth.processMsg()
-
-    const maxHeight = new valRule(file.height, Rules.pdf_max_height, 0)
-    if (maxHeight.getVal()) return maxHeight.processMsg()
-
-    const minHeight = new valRule(file.height, Rules.pdf_min_height, 1)
-    if (minHeight.getVal()) return minHeight.processMsg()
+    if (sort === 10)
+    {
+        return dateFunc()
+    }
+    else if (sort === 20)
+    {
+        return scoreSort()
+    }
 }
 
-function inspectProfile(file)
+function sortByScore(declarations)
 {
-    const maxWidth = new valRule(file.width, Rules.profile_max_width, 0)
-    if (maxWidth.getVal()) return maxWidth.processMsg()
-
-    const minWidth = new valRule(file.width, Rules.profile_min_width, 1)
-    if (minWidth.getVal()) return minWidth.processMsg()
-
-    const maxHeight = new valRule(file.height, Rules.profile_max_height, 0)
-    if (maxHeight.getVal()) return maxHeight.processMsg()
-
-    const minHeight = new valRule(file.height, Rules.profile_min_height, 1)
-    if (minHeight.getVal()) return minHeight.processMsg()
+    return declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
+        < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
+        ? 1
+        : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
+            < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
+            ? -1 : 0))
 }
+
+function modifyDesc(description)
+{
+    let newDesc = description;
+    for (var i = newDesc.blocks.length - 1; i > 0; i--)
+    {
+        if (newDesc.blocks[i].text === "")
+        {
+            newDesc.blocks = newDesc.blocks.slice(0, i);
+        }
+        else 
+        {
+            break;
+        }
+    }
+    let last = newDesc.blocks.length - 1;
+    for (var i = newDesc.blocks[last].text.length - 1; i > 0; i--)
+    {
+        if (newDesc.blocks[last].text[i] === " ")
+        {
+            newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i);
+        }
+        else 
+        {
+            break;
+        }
+    }
+    return newDesc
+}
+
+function genToken()
+{
+    const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let token = '';
+    for (let i = 0; i < 25; i++)
+    {
+        token += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return token;
+}
+
 
 const upload_pdf = async (file) =>
 {
@@ -121,7 +153,6 @@ function doRemember(req, res, next)
     next();
 }
 
-module.exports = {
-    upload_pdf, doRemember, inspectPdf, inspectProfile, upload_profiles
-}
 
+
+module.exports = { switchSort, sortByScore, modifyDesc, genToken, upload_pdf, doRemember, upload_profiles }

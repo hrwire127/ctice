@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const { Rules } = require('../utilsSR/val-Rule')
-const { excRule } = require('../utilsSR/exc-Rule');
-const { upload_pdf } = require('../utilsSR/_tertiary')
+const Rules = require('../utilsSR/rules/validRules')
+const { excRule } = require('../utilsSR/helpers/exc-Rule');
+const { upload_pdf } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
-const { Redirects_SR } = require('../utilsSR/SR_Redirects');
 
 const DeclarationSchema = new Schema({
     title: {

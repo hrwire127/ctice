@@ -1,5 +1,5 @@
 import CS_Redirects from '../utilsCS/CS_Redirects'
-const { Api_Call, Def_Call } = require('../utilsSR/SR_Redirects')
+const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
 
 const CropData = (data, length) =>
 {

@@ -3,12 +3,15 @@ const { app } = require("../main")
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")
-const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { isLogged_CS, tryAsync_CS,
-    apiSecret, isAdmin_CS,
-    checkCommentUser } = require('../utilsSR/_middlewares')
-const { validateDeclr, validateComment, } = require('../utilsSR/_validations')
-const { getUserdata, switchSort, sortByScore, isAdmin, getDeclrDateSort, getCommentDateSort } = require("../utilsSR/_primary")
+const Redirects_SR = require('../utilsSR/general/SR_Redirects');
+const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
+const { isLogged_CS, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
+const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
+const { validateDeclr, validateComment } = require('../utilsSR/middlewares/_m_validations')
+const { getDeclrDateSort } = require("../utilsSR/primary/_p_declrApi")
+const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
+const { getCommentDateSort, } = require('../utilsSR/primary/_p_commentApi')
+const { getUserdata, existsAdmin } = require('../utilsSR/primary/_p_user')
 
 router.get("/:id", tryAsync_CS(async (req, res) =>
 {
@@ -31,7 +34,7 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
     const { comments, type } = req.body;
 
     let declaration;
-    const admin = await isAdmin(req, res)
+    const admin = await existsAdmin(req, res)
 
     await switchSort(type, async () =>
     {
@@ -52,7 +55,7 @@ router.post("/:id/comment/:cid/reply/api", apiSecret, tryAsync_CS(async (req, re
     const { id, cid } = req.params;
     const { replies } = req.body;
 
-    const admin = await isAdmin(req, res)
+    const admin = await existsAdmin(req, res)
     const comment = await getCommentDateSort(cid, replies.length, admin)
 
     Redirects_SR.Api.sendApi(res, comment.replies)
@@ -174,7 +177,7 @@ router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, tryAsync_CS(async (req, 
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>
+router.delete("/:id/comment/:cid", isLogged_CS, verifyCommentUser, tryAsync_CS(async (req, res) =>
 {
     const { id, cid } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
@@ -187,7 +190,7 @@ router.delete("/:id/comment/:cid", isLogged_CS, checkCommentUser, tryAsync_CS(as
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, checkCommentUser, tryAsync_CS(async (req, res) =>
+router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, verifyCommentUser, tryAsync_CS(async (req, res) =>
 {
     const { id, cid, rid } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })

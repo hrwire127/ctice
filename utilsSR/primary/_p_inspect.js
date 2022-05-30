@@ -1,4 +1,5 @@
-const { valRule, Rules } = require('./val-Rule');
+const { valRule } = require('../helpers/val-Rule');
+const { Rules } = require('../rules/validRules')
 
 function inspectDecrl(title, description, Files) //
 {
@@ -76,45 +77,35 @@ function inspectChange(username = undefined, Files = undefined)
         if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 }
-function modifyDesc(description)
+
+function inspectPdf(file)
 {
-    let newDesc = description;
-    for (var i = newDesc.blocks.length - 1; i > 0; i--)
-    {
-        if (newDesc.blocks[i].text === "")
-        {
-            newDesc.blocks = newDesc.blocks.slice(0, i);
-        }
-        else 
-        {
-            break;
-        }
-    }
-    let last = newDesc.blocks.length - 1;
-    for (var i = newDesc.blocks[last].text.length - 1; i > 0; i--)
-    {
-        if (newDesc.blocks[last].text[i] === " ")
-        {
-            newDesc.blocks[last].text = newDesc.blocks[last].text.slice(0, i);
-        }
-        else 
-        {
-            break;
-        }
-    }
-    return newDesc
+    const maxWidth = new valRule(file.width, Rules.pdf_max_width, 0)
+    if (maxWidth.getVal()) return maxWidth.processMsg()
+
+    const minWidth = new valRule(file.width, Rules.pdf_min_width, 1)
+    if (minWidth.getVal()) return minWidth.processMsg()
+
+    const maxHeight = new valRule(file.height, Rules.pdf_max_height, 0)
+    if (maxHeight.getVal()) return maxHeight.processMsg()
+
+    const minHeight = new valRule(file.height, Rules.pdf_min_height, 1)
+    if (minHeight.getVal()) return minHeight.processMsg()
 }
 
-function genToken()
+function inspectProfile(file)
 {
-    const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let token = '';
-    for (let i = 0; i < 25; i++)
-    {
-        token += characters[Math.floor(Math.random() * characters.length)];
-    }
-    return token;
+    const maxWidth = new valRule(file.width, Rules.profile_max_width, 0)
+    if (maxWidth.getVal()) return maxWidth.processMsg()
+
+    const minWidth = new valRule(file.width, Rules.profile_min_width, 1)
+    if (minWidth.getVal()) return minWidth.processMsg()
+
+    const maxHeight = new valRule(file.height, Rules.profile_max_height, 0)
+    if (maxHeight.getVal()) return maxHeight.processMsg()
+
+    const minHeight = new valRule(file.height, Rules.profile_min_height, 1)
+    if (minHeight.getVal()) return minHeight.processMsg()
 }
 
-
-module.exports = { inspectDecrl, inspectComment, inspectUser, modifyDesc, genToken, inspectChange }
+module.exports = { inspectDecrl, inspectComment, inspectUser, inspectChange, inspectPdf, inspectProfile }

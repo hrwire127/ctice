@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require("passport-local-mongoose")
 const Schema = mongoose.Schema;
-const userError = require('../utilsSR/userError');
-const { Rules } = require('../utilsSR/val-Rule')
+const userError = require('../utilsSR/general/userError');
+const Rules = require('../utilsSR/rules/validRules')
 const passport = require('passport');
-const errorMessages = require("../utilsSR/errorMessages")
-const Redirects_SR = require('../utilsSR/SR_Redirects')
-const { excRule } = require('../utilsSR/exc-Rule');
-const { upload_profiles } = require('../utilsSR/_tertiary')
+const errorMessages = require("../utilsSR/rules/errorMessages")
+const Redirects_SR = require('../utilsSR/general/SR_Redirects')
+const { excRule } = require('../utilsSR/helpers/exc-Rule');
+const { upload_profiles } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 
 

@@ -1,5 +1,4 @@
-const Api_Call = "Api";
-const Def_Call = "Def"
+const { Api_Call, Def_Call } = require('../rules/apiCalls')
 
 class SR_Redirect
 {
@@ -40,4 +39,4 @@ const Redirects_SR = {
 }
 
 
-module.exports = { Redirects_SR, Api_Call, Def_Call };
+module.exports = Redirects_SR;

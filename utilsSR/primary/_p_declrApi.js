@@ -1,88 +1,23 @@
-const { Redirects_SR } = require('./SR_Redirects');
-const Declaration = require("../models/declaration");
-const Comment = require("../models/comment");
-const Reply = require("../models/reply")
-const User = require("../models/user");
-const Token = require("../models/token")
-const userError = require('./userError');
+const Declaration = require("../../models/declaration");
+const { switchSort, sortByScore } = require('./_p_basic')
 
-async function getUserdata(req, res)
-{
-    if (req.session.passport)
-    {
-        return await User.findOne({ username: req.session.passport.user }, { username: 1, email: 1, status: 1, date: 1, profile: 1 })
-    }
-    else
-    {
-        return undefined
-    }
-}
-
-function getUser(req, res)
-{
-    const session = req.session.passport
-    if (session) 
-    {
-        return session.user;
-    }
-    Redirects_SR.Error.CS(res)
-}
-
-function isAdmin(req, res)
-{
-    if (req.session.passport)
-    {
-        const session = req.session.passport
-        return session.user === "admin";
-    }
-    else
-    {
-        return false
-    }
-}
-
-function verifyToken(req, res)
-{
-    return new Promise((resolve, reject) =>
-    {
-        Token.findOne({
-            token: req.params.confirmationCode,
-        })
-            .then(async (token) =>
-            {
-                resolve(token)
-            })
-            .catch((err) => 
-            {
-                new userError(err.message, err.status).throw_SR(req, res)
-                reject(err)
-            });
-    })
-}
 async function limitNan(declarations, doclimit, sort)
 {
-    if (sort === 10)
+    let newDeclarations;
+    await switchSort(sort, async () =>
     {
-        return await Declaration.find({ _id: { $nin: declarations }, status: "Active" }).sort({ _id: -1 }).limit(doclimit);
-    }
-    else
+        newDeclarations = await Declaration.find({ _id: { $nin: declarations }, status: "Active" }).sort({ _id: -1 }).limit(doclimit);
+    }, async () =>
     {
-        let newDeclarations = await Declaration.find({ _id: { $nin: declarations }, status: "Active" })
-        newDeclarations
-            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ? 1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                    ? -1 : 0))
+        newDeclarations = sortByScore(await Declaration.find({ _id: { $nin: declarations }, status: "Active" }))
         newDeclarations.splice(doclimit, newDeclarations.length)
-        return newDeclarations;
-    }
+    })
+    return newDeclarations;
 }
 async function limitQuery(query, declarations, doclimit, sort)
 {
     let queryDeclarations = [];
-    if (sort === 10)
+    await switchSort(sort, async () =>
     {
         queryDeclarations = await Declaration.find({
             $and: [
@@ -92,33 +27,24 @@ async function limitQuery(query, declarations, doclimit, sort)
             ]
         }).sort({ _id: -1 }).limit(doclimit)
         queryDeclarations.splice(doclimit, queryDeclarations.length)
-    }
-    else
+    }, async () =>
     {
-        queryDeclarations = await Declaration.find({
+        queryDeclarations = sortByScore(await Declaration.find({
             $and: [
                 { _id: { $nin: declarations } },
                 { title: { $regex: query, $options: "i" } },
                 { status: "Active" }
             ]
-        })
-        queryDeclarations
-            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ? 1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                    ? -1 : 0))
+        }))
         queryDeclarations.splice(doclimit, queryDeclarations.length)
-    }
-
+    })
     return queryDeclarations;
 }
 
 async function limitDate(date, declarations, doclimit, sort)
 {
     let newDeclarations = [];
-    if (sort === 10)
+    await switchSort(sort, async () =>
     {
         const queryDeclarations = await Declaration.find({
             _id: { $nin: declarations },
@@ -132,20 +58,12 @@ async function limitDate(date, declarations, doclimit, sort)
             }
         })
         newDeclarations.splice(doclimit, newDeclarations.length)
-    }
-    else
+    }, async () =>
     {
-        const queryDeclarations = await Declaration.find({
+        const queryDeclarations = sortByScore(await Declaration.find({
             _id: { $nin: declarations },
             status: "Active"
-        })
-        queryDeclarations
-            .sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-                < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-                ? 1
-                : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-                    < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-                    ? -1 : 0))
+        }))
         queryDeclarations.forEach((el) =>
         {
             if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
@@ -154,7 +72,7 @@ async function limitDate(date, declarations, doclimit, sort)
             }
         })
         newDeclarations.splice(doclimit, newDeclarations.length)
-    }
+    }) 
 
     return newDeclarations;
 }
@@ -235,28 +153,6 @@ async function limitFilterCount(date, query)
     ])
 }
 
-async function switchSort(sort, dateFunc, scoreSort)
-{
-    if (sort === 10)
-    {
-        return dateFunc()
-    }
-    else if (sort === 20)
-    {
-        return scoreSort()
-    }
-}
-
-function sortByScore(declarations)
-{
-    return declarations.sort((a, b) => (a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length
-        < b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length)
-        ? 1
-        : ((b.likes.filter(el => el.typeOf === true).length - b.likes.filter(el => el.typeOf === false).length
-            < a.likes.filter(el => el.typeOf === true).length - a.likes.filter(el => el.typeOf === false).length)
-            ? -1 : 0))
-}
-
 async function getDeclrDateSort(id, length, status = false)
 {
     if (status)
@@ -317,47 +213,9 @@ async function getDeclrScoreSort(id, status = false)
     }
 }
 
-async function getCommentDateSort(id, length, status = false)
-{
-    if (status)
-    {
-        return await Comment.findOne({ _id: id })
-            .populate({
-                path: 'replies',
-                populate: {
-                    path: 'author'
-                },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
-    }
-    else
-    {
-        return await Comment.findOne({ _id: id, status: "Active" })
-            .populate({
-                path: 'replies',
-                populate: {
-                    path: 'author'
-                },
-                match: { status: "Active" },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
-    }
-}
-
-
 module.exports =
 {
-    getUser, limitNan, limitFilter,
+    limitNan, limitFilter, getDeclrScoreSort,
     allDateCount, allQueryCount, limitFilterCount,
-    limitQuery, limitDate, getUserdata, verifyToken,
-    switchSort, sortByScore, isAdmin, getDeclrDateSort,
-    getDeclrScoreSort, getCommentDateSort
+    limitQuery, limitDate, getDeclrDateSort,
 }

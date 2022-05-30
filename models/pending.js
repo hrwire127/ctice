@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const { Rules } = require('../utilsSR/val-Rule')
-const { genToken } = require('../utilsSR/_secondary')
+const Rules = require('../utilsSR/rules/validRules')
+const { genToken } = require('../utilsSR/primary/_p_basic')
 const nodemailer = require('../config/nodemailer')
-const errorMessages = require("../utilsSR/errorMessages")
-const userError = require('../utilsSR/userError');
+const errorMessages = require("../utilsSR/rules/errorMessages")
+const userError = require('../utilsSR/general/userError');
 const User = require("./user");
 
 

@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const { app } = require("../main")
 const Declaration = require("../models/declaration")
-const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const { isLogged_SR, isLogged_CS, tryAsync_CS, apiSecret, isAdmin_CS } = require('../utilsSR/_middlewares')
+const Redirects_SR = require('../utilsSR/general/SR_Redirects');
+const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
+const { isLogged_SR, isLogged_CS, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
 
 router.get("/:id", isLogged_SR, isAdmin_CS, async (req, res) =>
 {

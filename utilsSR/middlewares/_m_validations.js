@@ -1,7 +1,8 @@
-const Joi = require("joi").extend(require('@joi/date'));;
-const { Redirects_SR } = require('./SR_Redirects');
-const userError = require('./userError');
-const { inspectDecrl, inspectUser, modifyDesc, inspectComment, inspectChange } = require('./_secondary')
+const Joi = require("joi").extend(require('@joi/date'));
+const Redirects_SR = require('../general/SR_Redirects');
+const userError = require('../general/userError');
+const { inspectDecrl, inspectUser, inspectComment, inspectChange } = require('../primary/_p_inspect')
+const { modifyDesc} = require('./_m_basic')
 
 async function validateDeclr(req, res, next) 
 {
@@ -48,7 +49,6 @@ async function validateDeclr(req, res, next)
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
-    // req.body.author = getUser(req, res)
 
     next()
 }
@@ -238,29 +238,9 @@ async function validateComment(req, res, next)
     next()
 }
 
-async function validateApiQuery(req, res, next) 
-{
-    const { query } = req.body;
-
-    if (query === undefined || query === null) return Redirects_SR.Api.sendApi(res, [])
-
-    next()
-}
-
-async function validateApiDate(req, res, next) 
-{
-    const { date } = req.body;
-
-    if (!date) return Redirects_SR.Api.sendApi(res, [])
-
-    next()
-}
-
-
 module.exports = {
 
     validateDeclr, validateRegUser,
     validateLogUser, validateChange, 
-    validatePending, validateComment,
-    validateApiQuery, validateApiDate, 
+    validatePending, validateComment
 }

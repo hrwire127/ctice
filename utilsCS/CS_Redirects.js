@@ -1,4 +1,4 @@
-const { Api_Call, Def_Call } = require('../utilsSR/SR_Redirects')
+const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
 
 class CS_Redirect
 {

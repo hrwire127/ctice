@@ -1,15 +1,14 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const { Redirects_SR } = require('../utilsSR/SR_Redirects');
+const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Pending = require("../models/pending")
 const User = require("../models/user")
 const Token = require("../models/token")
-const { isLogged_CS,
-    isLogged_SR, tryAsync_CS, tryAsync_SR, verifyPending,
-    apiSecret, verifyTokenReset, matchSessionUser,
-    verifyConfirmCode, isSameUser } = require('../utilsSR/_middlewares')
-const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/_validations')
-const { getUserdata } = require('../utilsSR/_primary')
+const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
+const { isLogged_SR, isLogged_CS, isSameUser, isSessionReqUser } = require('../utilsSR/middlewares/_m_user')
+const { verifyPending, verifyTokenReset, verifyConfirmCode, } = require('../utilsSR/middlewares/_m_verify')
+const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/middlewares/_m_validations')
+const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 router.get('/register', async (req, res) =>
 {
@@ -90,7 +89,7 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 
 //forgot password page + email
 
-router.post('/reset/pending', matchSessionUser, tryAsync_CS(async (req, res) =>
+router.post('/reset/pending', isSessionReqUser, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     const token = new Token({ user })
@@ -122,7 +121,7 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, isSameUser, matchSessionUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/change', isLogged_CS, isSameUser, isSessionReqUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.body;
     const user = await User.findById(id);

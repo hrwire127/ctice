@@ -1,29 +1,12 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
-const { Redirects_SR } = require('../utilsSR/SR_Redirects');
-const {
-    isLogged_SR,
-    isLogged_CS,
-    tryAsync_CS,
-    apiSecret,
-    isAdmin_SR,
-    isAdmin_CS,
-    hasDeclrs, } = require('../utilsSR/_middlewares')
-const {
-    limitNan,
-    limitFilter,
-    allDateCount,
-    allQueryCount,
-    limitFilterCount,
-    limitDate,
-    limitQuery,
-    switchSort,
-    sortByScore } = require('../utilsSR/_primary')
-const { validateDeclr,
-    validateApiQuery,
-    validateApiDate
-} = require('../utilsSR/_validations')
+const Redirects_SR = require('../utilsSR/general/SR_Redirects');
+const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
+const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
+const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
+const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery, } = require('../utilsSR/primary/_p_declrApi')
+const { validateDeclr} = require('../utilsSR/middlewares/_m_validations')
 
 
 router.get('/', (req, res) =>
@@ -33,11 +16,11 @@ router.get('/', (req, res) =>
 
 router.post('/loadall/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const declarations = await Declaration.find({ })
+    const declarations = await Declaration.find({})
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/loadlimit/api', apiSecret, hasDeclrs, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/loadlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date, doclimit, sort } = req.body;
     let newDeclarations = [];
@@ -45,7 +28,7 @@ router.post('/loadlimit/api', apiSecret, hasDeclrs, validateApiQuery, validateAp
     else if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit, sort)
     else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit, sort)
     else newDeclarations = await limitFilter(query, date, declarations, doclimit, sort)
-    
+
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
 
@@ -55,7 +38,7 @@ router.post('/countall/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, count)
 }))
 
-router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/countlimit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
     let obj = [];
@@ -68,7 +51,7 @@ router.post('/countlimit/api', apiSecret, validateApiQuery, validateApiDate, try
     Redirects_SR.Api.sendApi(res, obj[0].count)
 }))
 
-router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, res) =>
+router.post('/query/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { query, doclimit, sort } = req.body;
     let declarations = [];
@@ -83,7 +66,7 @@ router.post('/query/api', apiSecret, validateApiQuery, tryAsync_CS(async (req, r
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/date/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { date, doclimit, sort } = req.body;
     let declarations = []
@@ -109,7 +92,7 @@ router.post('/date/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res
     Redirects_SR.Api.sendApi(res, declarations)
 }))
 
-router.post('/datequery/api', apiSecret, validateApiDate, tryAsync_CS(async (req, res) =>
+router.post('/datequery/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { date, query, doclimit, sort } = req.body;
     let declarations = []
