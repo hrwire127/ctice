@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 0
     },
     Line: {
-        width: 4,
+        width: 1,
         backgroundColor: theme.palette.primary.main,
         alignSelf: "stretch"
     },
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         width: theme.drawerWidth,
         flexShrink: { sm: 0 },
         height: "100%",
-        borderRight: `2px solid ${theme.line}`,
+        borderRight: `1px solid ${theme.line}`,
         paddingBottom: 24,
         paddingTop: 24,
         zIndex: 0,

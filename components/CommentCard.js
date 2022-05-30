@@ -104,7 +104,7 @@ function CommentCard(props)
     const ReplyFormCreate = () =>
     {
         return (
-            <Box className={classes.FullWidth} sx={status === "Disabled" && { backgroundColor: "gray" }}>
+            <Box className={classes.FullWidth} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
                 <Grid container justifyContent="center">
                     {isReplying ? (
                         <IconButton

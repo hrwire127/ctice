@@ -1,5 +1,5 @@
 const { valRule } = require('../helpers/val-Rule');
-const { Rules } = require('../rules/validRules')
+const Rules = require('../rules/validRules')
 
 function inspectDecrl(title, description, Files) //
 {

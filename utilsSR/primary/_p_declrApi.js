@@ -27,7 +27,7 @@ async function limitQuery(query, declarations, doclimit, sort)
                 { status: "Active" }
             ]
         }).sort({ _id: -1 }).limit(doclimit)
-        queryDeclarations.splice(doclimit, queryDeclarations.length)
+        // queryDeclarations.splice(doclimit, queryDeclarations.length)
     }, async () =>
     {
         queryDeclarations = sortByScore(await Declaration.find({
@@ -36,8 +36,8 @@ async function limitQuery(query, declarations, doclimit, sort)
                 { title: { $regex: query, $options: "i" } },
                 { status: "Active" }
             ]
-        }))
-        queryDeclarations.splice(doclimit, queryDeclarations.length)
+        }).limit(doclimit))
+        // queryDeclarations.splice(doclimit, queryDeclarations.length)
     })
     return queryDeclarations;
 }
@@ -47,37 +47,43 @@ async function limitDate(date, declarations, doclimit, sort)
     let newDeclarations = [];
     await switchSort(sort, async () =>
     {
-        const queryDeclarations = await Declaration.aggregate([
+        newDeclarations = await Declaration.aggregate([
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
             { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
             { $match: { status: "Active" } },
             { $sort: { _id: -1 } },
+            { $limit: doclimit },
         ])
-        queryDeclarations.forEach((el) =>
-        {
-            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
-            {
-                newDeclarations.push(el)
-            }
-        })
-        newDeclarations.splice(doclimit, newDeclarations.length)
+        // queryDeclarations.forEach((el) =>
+        // {
+        //     if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        //     {
+        //         newDeclarations.push(el)
+        //     }
+        // })
+        // newDeclarations.splice(doclimit, newDeclarations.length)
     }, async () =>
     {
         // const queryDeclarations = sortByScore(await Declaration.find({
         //     _id: { $nin: declarations },
         //     status: "Active"
         // }))
-        const queryDeclarations = await Declaration.aggregate([
+        newDeclarations = await Declaration.aggregate([
             { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
             { $match: { status: "Active" } },
+            { $limit: doclimit },
         ])
-        queryDeclarations.forEach((el) =>
-        {
-            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
-            {
-                newDeclarations.push(el)
-            }
-        })
-        newDeclarations.splice(doclimit, newDeclarations.length)
+        // queryDeclarations.forEach((el) =>
+        // {
+        //     if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        //     {
+        //         newDeclarations.push(el)
+        //     }
+        // })
+        // newDeclarations.splice(doclimit, newDeclarations.length)
     })
 
     return newDeclarations;
@@ -95,22 +101,25 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         //         { status: "Active" }
         //     ]
         // }).sort({ _id: -1 })
-        const queryDeclarations = sortByScore(await Declaration.aggregate([
+        newDeclarations = sortByScore(await Declaration.aggregate([
             { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
             { $match: { title: { $regex: query, $options: 'i' } } },
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
             { $match: { status: "Active" } },
             { $sort: { _id: -1 } },
+            { $limit: doclimit },
         ]))
 
-        queryDeclarations.forEach((el) =>
-        {
-            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
-            {
-                newDeclarations.push(el)
-            }
-        })
+        // queryDeclarations.forEach((el) =>
+        // {
+        //     if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        //     {
+        //         newDeclarations.push(el)
+        //     }
+        // })
 
-        newDeclarations.splice(doclimit, newDeclarations.length)
+        // newDeclarations.splice(doclimit, newDeclarations.length)
     }, async () =>
     {
         // const queryDeclarations = sortByScore(await Declaration.find({
@@ -120,19 +129,22 @@ async function limitFilter(query, date, declarations, doclimit, sort)
         //         { status: "Active" }
         //     ]
         // }))
-        const queryDeclarations = sortByScore(await Declaration.aggregate([
+        newDeclarations = sortByScore(await Declaration.aggregate([
             { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
             { $match: { title: { $regex: query, $options: 'i' } } },
+            { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+            { $match: { last: date.substring(0, 10) } },
             { $match: { status: "Active" } },
+            { $limit: doclimit },
         ]))
-        queryDeclarations.forEach((el) =>
-        {
-            if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
-            {
-                newDeclarations.push(el)
-            }
-        })
-        newDeclarations.splice(doclimit, newDeclarations.length)
+        // queryDeclarations.forEach((el) =>
+        // {
+        //     if (el.date[el.date.length - 1].toISOString().substring(0, 10) === date.substring(0, 10)) 
+        //     {
+        //         newDeclarations.push(el)
+        //     }
+        // })
+        // newDeclarations.splice(doclimit, newDeclarations.length)
     })
 
     return newDeclarations;

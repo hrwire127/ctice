@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
     Line: {
         width: "100%",
-        height: 2,
+        height: 1,
         marginTop: 20,
         marginBottom: 20,
         backgroundColor: theme.line,

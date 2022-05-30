@@ -85,8 +85,9 @@ router.post('/date/api', apiSecret, tryAsync_CS(async (req, res) =>
             { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
             { $match: { last: date.substring(0, 10) } },
             { $match: { status: "Active" } },
+            { $limit: doclimit },
         ]))
-        declarations.splice(doclimit, declarations.length)
+        // declarations.splice(doclimit, declarations.length)
     })
 
     Redirects_SR.Api.sendApi(res, declarations)
@@ -115,8 +116,9 @@ router.post('/datequery/api', apiSecret, tryAsync_CS(async (req, res) =>
             { $addFields: { includes: { $regexMatch: { input: "$title", regex: query, options: "i" } } } }, //<====
             { $match: { includes: true } },
             { $match: { status: "Active" } },
+            { $limit: doclimit },
         ]))
-        declarations.splice(doclimit, declarations.length)
+        // declarations.splice(doclimit, declarations.length)
     })
     Redirects_SR.Api.sendApi(res, declarations)
 }))
