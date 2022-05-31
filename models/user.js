@@ -47,9 +47,29 @@ const UserSchema = new Schema({
             type: String,
             required: true,
         }
+    },
+    location:
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        lat: {
+            type: Number,
+            required: true,
+        },
+        long: {
+            type: Number,
+            required: true,
+        }
     }
 });
 
+// {
+//     name: "Soroca, Soroca, Moldova",
+//     lat: 48.157129,
+//     long: 28.299605
+// }
 UserSchema.plugin(passportLocalMongoose);
 
 UserSchema.statics.getSecured = function (users)
@@ -136,7 +156,7 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
 
 UserSchema.statics.updateChanges = async function (req, res, user)
 {
-    const { username, id, profile } = req.body;
+    const { username, id, profile, location } = req.body;
 
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
@@ -145,22 +165,25 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     }
     else
     {
-        // let Obj = {
-        //     ...user._doc
-        // }
-        // const user = User.findById(id);
         if (username && username !== "")
         {
             user.username = username
         }
-
-        user.date.push(new Date())
 
         if (profile === user.profile.url)
         {
             user.file = user.file;
             return user;
         }
+
+        console.log(location)
+
+        if (location)
+        {
+            user.location = JSON.parse(location)
+        }
+
+        user.date.push(new Date())
 
         if (await new excRule([req.files, user.profile.url], [profile], async () =>
         {

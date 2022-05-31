@@ -2,7 +2,7 @@ const Joi = require("joi").extend(require('@joi/date'));
 const Redirects_SR = require('../general/SR_Redirects');
 const userError = require('../general/userError');
 const { inspectDecrl, inspectUser, inspectComment, inspectChange } = require('../primary/_p_inspect')
-const { modifyDesc} = require('./_m_basic')
+const { modifyDesc } = require('./_m_basic')
 
 async function validateDeclr(req, res, next) 
 {
@@ -156,17 +156,22 @@ async function validateLogUser(req, res, next)
 
 async function validateChange(req, res, next)
 {
-    let { username, profile } = req.body
+    let { username, profile, location } = req.body
     console.log(req.body)
 
     const declarationSchema = Joi.object({
         username: Joi.string().allow(''),
-        profile: Joi.string()
+        profile: Joi.string(),
+        location: Joi.object({
+            name: Joi.string().required(),
+            lat: Joi.number().required(),
+            long: Joi.number().required()
+        }),
     })
 
     const preparedBody =
     {
-        username, profile
+        username, profile, location: JSON.parse(location)
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -179,7 +184,7 @@ async function validateChange(req, res, next)
     }
 
 
-    const bodyError = inspectChange(username, req.files)
+    const bodyError = inspectChange(username, req.files, JSON.parse(location))
 
     if (bodyError) 
     {
@@ -241,6 +246,6 @@ async function validateComment(req, res, next)
 module.exports = {
 
     validateDeclr, validateRegUser,
-    validateLogUser, validateChange, 
+    validateLogUser, validateChange,
     validatePending, validateComment
 }

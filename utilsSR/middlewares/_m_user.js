@@ -28,7 +28,7 @@ function isLogged_CS(req, res, next)
     }
 }
 
-function isSessionReqUser(req, res, next) 
+function isSessionReqUser(req, res, next)  //
 {
     if (req.session.passport)
     {
@@ -66,10 +66,11 @@ function isAdmin_CS(req, res, next)
     Redirects_CS.Error.CS(res)
 }
 
-async function isSameUser(req, res, next)
+async function isSameUser(req, res, next) //
 {
     const session = await User.findOne({ username: req.session.passport.user }, { username: 1 })
-    if (req.body.id === session._id)
+
+    if (req.body.id === session._id.valueOf())
     {
         next()
     }

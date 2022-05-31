@@ -13,7 +13,7 @@ import Link from 'next/link'
 function Profile(props)
 {
     const { user, isToken } = props;
-    const { username, status, date, email, profile } = user;
+    const { username, status, date, email, profile, location } = user;
 
     const [diff, setDiff] = useState()
 
@@ -21,7 +21,6 @@ function Profile(props)
     {
         setDiff(getDateDifference(new Date(), new Date(date[0])))
     }, [])
-
 
     return (<Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -59,6 +58,11 @@ function Profile(props)
         <Grid item xs={12}>
             <Typography variant="h7" >
                 {email}
+            </Typography>
+        </Grid>
+        <Grid item xs={12}>
+            <Typography variant="h7" >
+                {location.name}
             </Typography>
         </Grid>
     </Container >

@@ -5,7 +5,7 @@ const Pending = require("../models/pending")
 const User = require("../models/user")
 const Token = require("../models/token")
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
-const { isLogged_SR, isLogged_CS, isSameUser, isSessionReqUser } = require('../utilsSR/middlewares/_m_user')
+const { isLogged_SR, isLogged_CS, isSameUser } = require('../utilsSR/middlewares/_m_user')
 const { verifyPending, verifyTokenReset, verifyConfirmCode, } = require('../utilsSR/middlewares/_m_verify')
 const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/middlewares/_m_validations')
 const { getUserdata } = require('../utilsSR/primary/_p_user')
@@ -89,7 +89,7 @@ router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
 
 //forgot password page + email
 
-router.post('/reset/pending', isSessionReqUser, tryAsync_CS(async (req, res) =>
+router.post('/reset/pending', isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     const token = new Token({ user })
@@ -121,7 +121,7 @@ router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
     app.render(req, res, "/user/change", { user })
 }))
 
-router.post('/change', isLogged_CS, isSameUser, isSessionReqUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/change', isLogged_CS, isSameUser, validateChange, tryAsync_CS(async (req, res, next) =>
 {
     const { id } = req.body;
     const user = await User.findById(id);

@@ -10,6 +10,7 @@ import { CheckCircle, FileUpload } from '@mui/icons-material';
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
 import UploadProfile from './UploadProfile'
+import LocationSearch from "./LocationSearch"
 
 function Change(props)
 {
@@ -24,19 +25,49 @@ function Change(props)
 		usernameValid,
 	] = useFormError(false);
 
+	const [
+		LocationError,
+		setLocationError,
+		helperLocationText,
+		setHelperLocationText,
+		checkLocationKey,
+		setLocationTrue,
+		setLocationFalse,
+		locationValid,
+	] = useFormError(false);
+
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id } = user;
-	const [image, setImage] = React.useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
+	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
+	const [location, setLocation] = useState()
 
 	const errCheck = async (e) =>
 	{
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
 		data.append("id", _id)
+		data.append("location", JSON.stringify(location))
+		// const username = data.get("username");
 
-		if(image) data.set("profile", image)
+		if (image) data.set("profile", image)
 
 		changeAccDetails(data);
+		// if (location && usernameValid(username))
+		// {
+		// 	setUsernameTrue();
+		// 	setLocationTrue();
+		// 	changeAccDetails(data);
+		// } else
+		// {
+		// 	if (!usernameValid(username))
+		// 	{
+		// 		setUsernameFalse();
+		// 	}
+		// 	if (!location)
+		// 	{
+		// 		setLocationFalse();
+		// 	}
+		// }
 	}
 
 	return (
@@ -67,7 +98,13 @@ function Change(props)
 						autoComplete="new-username"
 						onKeyPress={checkUsernameKey}
 					/>
-					<TextField fullWidth label="Location" variant="outlined" />
+					<LocationSearch
+						location={location}
+						setLocation={setLocation}
+						error={LocationError}
+						onKeyPress={checkLocationKey}
+						limit={5}
+					/>
 					<div>
 						{isToken
 							? (<Typography variant="h7" color="text.danger">

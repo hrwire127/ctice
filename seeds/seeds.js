@@ -43,7 +43,16 @@ const createDeclaration = async () =>
         })
         await declaration.save();
     }
-
+    // const users = await User.find({});
+    // users.forEach(async u =>
+    // {
+    //     u.location = {
+    //         name: "Soroca, Soroca, Moldova",
+    //         lat: 48.157129,
+    //         long: 28.299605
+    //     }
+    //     await u.save()
+    // })
 }
 
 
