@@ -20,5 +20,6 @@ module.exports = {
     file_max_name: 20,
     comment_max_blocks: 10,
     file_contains: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice",
-    location_max_chars: 50
+    location_max_chars: 50,
+    bio_max_blocks: 20
 }

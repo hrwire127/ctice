@@ -46,11 +46,9 @@ const createDeclaration = async () =>
     // const users = await User.find({});
     // users.forEach(async u =>
     // {
-    //     u.location = {
-    //         name: "Soroca, Soroca, Moldova",
-    //         lat: 48.157129,
-    //         long: 28.299605
-    //     }
+    //     u.bio = JSON.stringify({
+    //         "blocks": [{ "key": "2q0qn", "text": "1111", "type": "unstyled", "depth": 0, "inlineStyleRanges": [{ "offset": 0, "length": 34, "style": "BOLD" }, { "offset": 12, "length": 22, "style": "ITALIC" }], "entityRanges": [], "data": {} }], "entityMap": {}
+    //     })
     //     await u.save()
     // })
 }

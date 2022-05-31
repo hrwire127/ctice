@@ -18,6 +18,10 @@ const UserSchema = new Schema({
         max: Rules.username_max_char,
         unique: true
     },
+    bio: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -156,7 +160,7 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
 
 UserSchema.statics.updateChanges = async function (req, res, user)
 {
-    const { username, id, profile, location } = req.body;
+    const { username, id, profile, location, bio } = req.body;
 
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
@@ -176,11 +180,14 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             return user;
         }
 
-        console.log(location)
-
         if (location)
         {
             user.location = JSON.parse(location)
+        }
+
+        if (bio)
+        {
+            user.bio = JSON.parse(bio)
         }
 
         user.date.push(new Date())

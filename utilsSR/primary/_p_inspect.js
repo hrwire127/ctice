@@ -60,7 +60,7 @@ function inspectUser(username = undefined, email = undefined, password = undefin
     }
 }
 
-function inspectChange(username = undefined, Files = undefined, location = undefined)
+function inspectChange(username = undefined, Files = undefined, location = undefined, bio = undefined)
 {
     if (username)
     {
@@ -77,10 +77,16 @@ function inspectChange(username = undefined, Files = undefined, location = undef
         if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 
-    if(location)
+    if (location)
     {
         const locationRule = new valRule(location.name.length, Rules.location_max_chars, 0)
         if (locationRule.getVal()) return locationRule.processMsg()
+    }
+
+    if (bio)
+    {
+        const bioRule = new valRule(bio.blocks.length, Rules.bio_max_blocks, 0)
+        if (bioRule.getVal()) return bioRule.processMsg()
     }
 }
 

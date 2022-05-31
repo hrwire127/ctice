@@ -50,7 +50,6 @@ export default function CreateForm(props)
 
     const { handleSubmit, alert, switchLoading } = props;
     const classes = useStyles()
-    const theme = useTheme();
 
     // useEffect(() =>
     // {
@@ -121,7 +120,6 @@ export default function CreateForm(props)
                         : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
                     }
 
-
                     <TextArea
                         styles={classes.Editor}
                         placeholder="Description"
@@ -134,8 +132,6 @@ export default function CreateForm(props)
                         ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
                         : (<FormHelperText error={DescError}>{helperDescText}</FormHelperText>)
                     }
-
-
 
                     <UploadBtnPdf changeFile={changeFile} file={file} />
 

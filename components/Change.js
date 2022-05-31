@@ -7,6 +7,8 @@ import
 	FormHelperText, Link, Paper
 } from '@mui/material';
 import { CheckCircle, FileUpload } from '@mui/icons-material';
+import TextArea from "./TextArea";
+import useStyles from "../assets/styles/_CreateForm";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
 import UploadProfile from './UploadProfile'
@@ -36,38 +38,44 @@ function Change(props)
 		locationValid,
 	] = useFormError(false);
 
+	const [
+		DescError,
+		setDescError,
+		helperDescText,
+		setHelperDescText,
+		checkDescKey,
+		setDescTrue,
+		setDescFalse,
+		descValid,
+	] = useFormError(false);
+
+
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
-	const { username, status, date, email, profile, _id } = user;
+	const { username, status, date, email, profile, _id, bio } = user;
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
-	const [location, setLocation] = useState()
+	const [location, setLocation] = useState(user.location)
+	const [editorState, setEditorState] = useState(JSON.parse(bio));
+	const classes = useStyles()
 
 	const errCheck = async (e) =>
 	{
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
+
+		if (data.get("username") === username) 
+		{
+			data.delete("username")
+		}
 		data.append("id", _id)
 		data.append("location", JSON.stringify(location))
+		data.append("bio", JSON.stringify(editorState))
+
 		// const username = data.get("username");
 
 		if (image) data.set("profile", image)
 
+
 		changeAccDetails(data);
-		// if (location && usernameValid(username))
-		// {
-		// 	setUsernameTrue();
-		// 	setLocationTrue();
-		// 	changeAccDetails(data);
-		// } else
-		// {
-		// 	if (!usernameValid(username))
-		// 	{
-		// 		setUsernameFalse();
-		// 	}
-		// 	if (!location)
-		// 	{
-		// 		setLocationFalse();
-		// 	}
-		// }
 	}
 
 	return (
@@ -90,6 +98,7 @@ function Change(props)
 						margin="normal"
 						inputProps={{ maxLength: 10 }}
 						required
+						defaultValue={username}
 						error={UsernameError}
 						name="username"
 						label="New Username"
@@ -99,7 +108,7 @@ function Change(props)
 						onKeyPress={checkUsernameKey}
 					/>
 					<LocationSearch
-						location={location}
+						defaultLocation={user.location}
 						setLocation={setLocation}
 						error={LocationError}
 						onKeyPress={checkLocationKey}
@@ -115,6 +124,15 @@ function Change(props)
 							</Link>)
 						}
 					</div>
+
+					<TextArea
+						styles={classes.Editor}
+						placeholder="Description"
+						setData={setEditorState}
+						error={DescError}
+						checkDescKey={checkDescKey}
+						data={JSON.parse(bio)}
+					/>
 				</Grid>
 			</Grid>
 			{Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))

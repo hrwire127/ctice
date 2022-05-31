@@ -2,7 +2,7 @@ const Joi = require("joi").extend(require('@joi/date'));
 const Redirects_SR = require('../general/SR_Redirects');
 const userError = require('../general/userError');
 const { inspectDecrl, inspectUser, inspectComment, inspectChange } = require('../primary/_p_inspect')
-const { modifyDesc } = require('./_m_basic')
+const { modifyDesc } = require('../primary/_p_basic')
 
 async function validateDeclr(req, res, next) 
 {
@@ -156,22 +156,34 @@ async function validateLogUser(req, res, next)
 
 async function validateChange(req, res, next)
 {
-    let { username, profile, location } = req.body
+    let { username, profile, location, bio } = req.body
     console.log(req.body)
 
     const declarationSchema = Joi.object({
-        username: Joi.string().allow(''),
+        username: Joi.string(),
         profile: Joi.string(),
         location: Joi.object({
             name: Joi.string().required(),
             lat: Joi.number().required(),
             long: Joi.number().required()
-        }),
+        }).required(),
+        bio: Joi.object({
+            blocks: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required(),
+                text: Joi.string().required().allow(''),
+                type: Joi.string().required(),
+                depth: Joi.number().required(),
+                inlineStyleRanges: Joi.array().required(),
+                entityRanges: Joi.array().required(),
+                data: Joi.object().required()
+            })),
+            entityMap: Joi.object().required()
+        }).required()
     })
 
     const preparedBody =
     {
-        username, profile, location: JSON.parse(location)
+        username, profile, location: JSON.parse(location), bio: JSON.parse(bio)
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -184,14 +196,15 @@ async function validateChange(req, res, next)
     }
 
 
-    const bodyError = inspectChange(username, req.files, JSON.parse(location))
+    const bodyError = inspectChange(username, req.files, JSON.parse(location), JSON.parse(bio))
 
     if (bodyError) 
     {
         return new userError(bodyError, 401).throw_CS(res)
     }
 
-    req.body.username = username.trim()
+    if (req.body.username) req.body.username = username.trim()
+    req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
 
     next()
 }

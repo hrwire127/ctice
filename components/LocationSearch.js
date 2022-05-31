@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import Stack from '@mui/material/Stack';
+import { TextField, Autocomplete, Stack, IconButton } from '@mui/material';
+import { SettingsBackupRestore } from '@mui/icons-material';
+
 
 function LocationSearch(props)
 {
-    const [features, setFeatures] = useState([])
-    const [query, setQuery] = useState("")
+    const { setLocation, error, onKeyPress, limit, defaultLocation } = props
+    const [features, setFeatures] = useState([defaultLocation])
+    const [query, setQuery] = useState(defaultLocation.name)
 
-    const { setLocation, error, onKeyPress, limit } = props
 
     const sendReq = () =>
     {
@@ -24,16 +24,6 @@ function LocationSearch(props)
                         long: el.geometry.coordinates[0]
                     }
                 }))
-                // features.forEach(f =>
-                // {
-                //     console.log(f.name)
-                //     console.log(query)
-                //     console.log("\n")
-                //     if (f.name === query)
-                //     {
-                //         setLocation(f)
-                //     }
-                // })
             })
     }
     return (
@@ -41,6 +31,7 @@ function LocationSearch(props)
             <Autocomplete
                 id="free-solo-demo"
                 freeSolo
+                defaultValue={defaultLocation.name}
                 options={features.map(el => el.name)}
                 onChange={(event, newValue) => 
                 {
@@ -84,7 +75,7 @@ function LocationSearch(props)
                     />
                 }}
             />
-        </Stack>
+        </Stack >
     )
 }
 
