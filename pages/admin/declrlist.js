@@ -33,17 +33,18 @@ function declrlist(props)
         {
             await timeout(500)
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }).then(response => response.json())
-                    .then(async () =>
-                    {
-                        const newDeclrs = await getDeclrs() //to do load more
-                        CS_Redirects.tryResCS(newDeclrs, window)
-                        setDeclrs(newDeclrs.obj)
-                    })
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then(async () =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    const newDeclrs = await getDeclrs() //to do load more
+                    CS_Redirects.tryResCS(newDeclrs, window)
+                    setDeclrs(newDeclrs.obj)
+                })
         })
 
     }

@@ -87,7 +87,7 @@ function CommentCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                console.log(res)
+                CS_Redirects.tryResCS(res, window)
                 if (res.obj === true)
                 {
                     setStatus(status === "Active" ? "Disabled" : "Active")

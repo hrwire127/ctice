@@ -43,14 +43,12 @@ const createDeclaration = async () =>
         })
         await declaration.save();
     }
-    // const users = await User.find({});
-    // users.forEach(async u =>
-    // {
-    //     u.bio = JSON.stringify({
-    //         "blocks": [{ "key": "2q0qn", "text": "1111", "type": "unstyled", "depth": 0, "inlineStyleRanges": [{ "offset": 0, "length": 34, "style": "BOLD" }, { "offset": 12, "length": 22, "style": "ITALIC" }], "entityRanges": [], "data": {} }], "entityMap": {}
-    //     })
-    //     await u.save()
-    // })
+    const users = await User.find({});
+    users.forEach(async u =>
+    {
+        u.bookmarks = []
+        await u.save()
+    })
 }
 
 

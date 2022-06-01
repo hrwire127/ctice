@@ -23,7 +23,6 @@ function Vote(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                console.log(res)
                 CS_Redirects.tryResCS(res, window)
                 if (!res.redirect) 
                 {

@@ -33,6 +33,7 @@ function Reply(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
+                    CS_Redirects.tryResCS(res, window)
                     loadingMoreWhile(() =>
                     {
                         CS_Redirects.tryResCS(res, window)

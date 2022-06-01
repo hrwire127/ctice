@@ -16,6 +16,7 @@ function LocationSearch(props)
             .then(res => res.json())
             .then(async res => 
             {
+                CS_Redirects.tryResCS(res, window)
                 setFeatures(res.features.map(el =>
                 {
                     return {

@@ -69,6 +69,7 @@ export default function Layout(props)
             }).then(response => response.json())
             .then(async res =>
             {
+                CS_Redirects.tryResCS(res, window)
                 setThemeLight(res.obj)
             })
     }

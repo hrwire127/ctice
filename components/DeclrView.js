@@ -11,11 +11,13 @@ import
     Delete, Build,
     TurnedInNot, KeyboardArrowUp,
     KeyboardArrowDown, Comment,
-    IosShare, Accessible
+    IosShare, Accessible, Bookmark
 } from '@mui/icons-material';
+import CS_Redirects from '../utilsCS/CS_Redirects';
 import { CropData } from '../utilsCS/_client';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
+import UserContext from './context/contextUser'
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 import Link from 'next/link'
@@ -39,15 +41,16 @@ function DeclrView(props)
 
     const { title, description, file, date, authors, _id } = declaration;
     const adminCtx = useContext(AdminContext);
+    const userCtx = useContext(UserContext);
 
     const [open, setOpen] = useState(true);
+    const [hasBookmark, setBookmark] = useState(userCtx ? user.bookmarks.includes(_id) : false);
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
     const classes = useStyles();
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
-    // getClientUser
 
     const switchDeclr = () =>
     {
@@ -62,6 +65,27 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
+                CS_Redirects.tryResCS(res, window)
+
+                console.log(res)
+            })
+    }
+
+    const switchBookmark = () =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/bookmark`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET, id: _id }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                CS_Redirects.tryResCS(res, window)
+                setBookmark(!hasBookmark)
                 console.log(res)
             })
     }
@@ -145,7 +169,8 @@ function DeclrView(props)
 
                 <Box display="flex" justifyContent="left" gap={1}>
                     <IosShare />
-                    <TurnedInNot />
+                    {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><Bookmark /></IconButton>)
+                        : (<IconButton onClick={switchBookmark}><TurnedInNot /></IconButton>))}
                 </Box>
             </Box>
 

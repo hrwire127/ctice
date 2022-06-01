@@ -66,14 +66,13 @@ const UserSchema = new Schema({
             type: Number,
             required: true,
         }
-    }
+    },
+    bookmarks: {
+        type: [Schema.Types.ObjectId],
+        ref: "Declaration"
+    },
 });
 
-// {
-//     name: "Soroca, Soroca, Moldova",
-//     lat: 48.157129,
-//     long: 28.299605
-// }
 UserSchema.plugin(passportLocalMongoose);
 
 UserSchema.statics.getSecured = function (users)
@@ -83,7 +82,6 @@ UserSchema.statics.getSecured = function (users)
     delete users.confirmationCode;
     return users;
 }
-
 
 UserSchema.statics.processLogin = async function (req, res, next)
 {
@@ -126,7 +124,6 @@ UserSchema.statics.processLogin = async function (req, res, next)
         })(req, res, next);
     })
 }
-
 
 UserSchema.statics.processRegister = async function (req, res, token, { user, password })
 {
@@ -224,11 +221,18 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
             user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
         }).Try()) return user;
+    }
+}
 
-        // if (await new excRule([profile, user.profile], [req.files], async () =>
-        // {
-        //     user.file = user.file;
-        // }).Try()) return user;
+UserSchema.methods.tryBoookmark = function (declaration)
+{
+    if (this.bookmarks.includes(declaration._id))
+    {
+        this.bookmarks.splice(this.bookmarks.indexOf(declaration._id), 1)
+    }
+    else
+    {
+        this.bookmarks.push(declaration)
     }
 }
 

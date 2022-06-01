@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Pending = require("../models/pending")
+const Declaration = require("../models/declaration")
 const User = require("../models/user")
 const Token = require("../models/token")
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
@@ -36,6 +37,7 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
+    console.log(user)
     Redirects_SR.Api.sendApi(res, user)
 }))
 
@@ -144,6 +146,17 @@ router.post('/reset/token/exists', apiSecret, tryAsync_CS(async (req, res) =>
     const { id } = req.body;
     const token = await Token.findOne({ user: id });
     Redirects_SR.Api.sendApi(res, token ? true : false)
+}))
+
+router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 
+{
+    const { id } = req.body;
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id });
+    const declaration = await Declaration.findOne({ _id: id, status: "Active" });
+    user.tryBoookmark(declaration)
+    await user.save()
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 module.exports = router;
