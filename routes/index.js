@@ -5,7 +5,6 @@ const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
-const { limitNan, limitFilter, limitDate, limitQuery, } = require('../utilsSR/primary/_p_declrApi')
 const { validateDeclr } = require('../utilsSR/middlewares/_m_validations')
 
 router.get('/', (req, res) =>
@@ -36,11 +35,27 @@ router.post('/load/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date, doclimit, sort } = req.body;
+    
     let newDeclarations = [];
-    if (query === "" && date === "Invalid") newDeclarations = await limitNan(declarations, doclimit, sort)
-    else if (date === "Invalid") newDeclarations = await limitQuery(query, declarations, doclimit, sort)
-    else if (query === "") newDeclarations = await limitDate(date, declarations, doclimit, sort)
-    else newDeclarations = await limitFilter(query, date, declarations, doclimit, sort)
+
+    const pipeline = [
+        { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },
+        query !== "" ? { $match: { title: { $regex: query, $options: 'i' } } } : null,
+        date !== "Invalid" ? { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } } : null,
+        date !== "Invalid" ? { $match: { last: date.substring(0, 10) } } : null,
+        { $match: { status: "Active" } },
+        { $sort: { _id: -1 } },
+        sort !== 20 ? { $limit: doclimit } : null,
+    ].filter(x => x !== null)
+
+    await switchSort(sort, async () =>
+    {
+        newDeclarations = await Declaration.aggregate(pipeline)
+    }, async () =>
+    {
+        newDeclarations = sortByScore(await Declaration.aggregate(pipeline))
+        newDeclarations.splice(doclimit, newDeclarations.length)
+    })
 
     Redirects_SR.Api.sendApi(res, newDeclarations)
 }))
@@ -56,13 +71,13 @@ router.post('/count/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     const { query, date } = req.body;
     let obj = [];
     const pipeline = [
-        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+        date !== "Invalid" ? { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } } : null,
         date !== "Invalid" ? { $match: { last: date.substring(0, 10) } } : null,
         query !== "" ? { $match: { title: { $regex: query, $options: 'i' } } } : null,
         { $match: { status: "Active" } },
         { $count: "count" }
     ].filter(x => x !== null)
-    
+
     obj = await Declaration.aggregate(pipeline)
 
     Redirects_SR.Api.sendApi(res, obj.length > 0 ? obj[0].count : 0)
