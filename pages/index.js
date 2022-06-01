@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering, loadLimitedDeclrs, timeout, getAllCount, getFlash } from '../utilsCS/_client'
+import { determRendering, timeout, getFlash } from '../utilsCS/_basic'
+import { loadLimitedDeclrs, getAllCount, } from "../utilsCS/_declr"
 import useLoading from '../components/hooks/useLoading'
 
 function index(props)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Loading from '../Loading'
-import {timeout} from "../../utilsCS/_client"
+import {timeout} from "../../utilsCS/_basic"
 
 function useLoading(initialValue = false)
 {

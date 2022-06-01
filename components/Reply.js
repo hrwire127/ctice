@@ -3,7 +3,7 @@ import ReplyCard from './ReplyCard';
 import ReplyEdit from './ReplyEdit';
 import useLoading from './hooks/useLoading'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { timeout } from '../utilsCS/_client'
+import { timeout } from '../utilsCS/_basic'
 
 function Reply(props)
 {

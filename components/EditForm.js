@@ -3,7 +3,7 @@ import { Avatar, Button, CssBaseline, TextField, Box, Typography, Container, For
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
-import { handleDeclrData } from "../utilsCS/_client";
+import { handleDeclrData } from "../utilsCS/_basic";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'

@@ -4,7 +4,7 @@ import CS_Redirects from '../utilsCS/CS_Redirects';
 import useStyles from "../assets/styles/_DeclrCard"
 import { Box, Typography, Paper, IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
-import { getDateDifference } from '../utilsCS/_client';
+import { getDateDifference } from '../utilsCS/_basic';
 
 function Bookmark(props)
 {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getLimitedComments, timeout, determRendering, getDeclr, getClientUser } from '../../utilsCS/_client'
+import { timeout, determRendering } from '../../utilsCS/_basic'
+import { getLimitedComments, getClientUser, } from '../../utilsCS/_get'
+import { getDeclr, } from "'../../utilsCS/_declr"
 import useLoading from '../../components/hooks/useLoading'
 
 
@@ -69,7 +71,7 @@ function view(props)
         loadMoreWhile(async () =>
         {
             await timeout(500)
-            const newComments = await getLimitedComments(comments, _id, type); 
+            const newComments = await getLimitedComments(comments, _id, type);
             CS_Redirects.tryResCS(newComments, window)
             setComments(comments.concat(newComments.obj));
         })

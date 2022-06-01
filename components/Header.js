@@ -14,7 +14,7 @@ import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { LogoutFetch } from '../utilsCS/_client'
+import { LogoutFetch, } from '../utilsCS/_get'
 import useStyles from "../assets/styles/_Header"
 
 
@@ -108,18 +108,18 @@ function Header(props)
 											}}
 											edge="end"
 										>
-											<ClearIcon color="primary"/>
+											<ClearIcon color="primary" />
 										</IconButton>
 									</InputAdornment>
 							}}
 
 						/>
 						<Box className={classes.Authbar}>
-							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon color="tertiary"/></IconButton></Link>)}
+							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon color="tertiary" /></IconButton></Link>)}
 							{userCtx
 								? (<>
-									<Link href="/user/profile"><IconButton><AccountCircleIcon color="tertiary"/></IconButton></Link>
-									<IconButton onClick={Logout}><LogoutIcon color="tertiary"/></IconButton>
+									<Link href="/user/profile"><IconButton><AccountCircleIcon color="tertiary" /></IconButton></Link>
+									<IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
 								</>)
 								: (<>
 									<Link href="/user/register" className={classes.Auth}>

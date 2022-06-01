@@ -3,7 +3,8 @@ import EditForm from '../../components/EditForm';
 import UserContext from '../../components/context/contextUser'
 import AdminContext from '../../components/context/contextAdmin'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclr, determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_client'
+import { determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_basic'
+import { getDeclr, } from "'../../utilsCS/_declr"
 import useLoading from '../../components/hooks/useLoading'
 
 function edit(props)
@@ -51,7 +52,7 @@ function edit(props)
         })
     };
 
-    return adminCtx && (<EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} switchLoading={switchLoading}/>)
+    return adminCtx && (<EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} switchLoading={switchLoading} />)
 }
 
 edit.getInitialProps = async (props) =>

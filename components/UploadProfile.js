@@ -7,7 +7,7 @@ import
     FormHelperText, Link, Paper
 } from '@mui/material';
 import { CheckCircle, FileUpload, Close } from '@mui/icons-material';
-import { uploadFileUrl } from "../utilsCS/_client";
+import { uploadFileUrl } from "../utilsCS/_basic";
 
 function UploadProfile(props)
 {

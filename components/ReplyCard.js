@@ -3,7 +3,7 @@ import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
 import useStyles from "../assets/styles/_ReplyCard"
-import { CropData, getDateDifference } from '../utilsCS/_client';
+import { CropData, getDateDifference } from '../utilsCS/_basic';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import { Build, Delete, Accessible } from '@mui/icons-material';

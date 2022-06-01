@@ -3,7 +3,7 @@ import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { Box, Typography, Paper } from '@mui/material'
 import useStyles from "../assets/styles/_DeclrCard"
-import { CropData, getDateDifference } from '../utilsCS/_client';
+import { CropData, getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'

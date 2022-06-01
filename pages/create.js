@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CreateForm from "../components/CreateForm"
 import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { timeout } from '../utilsCS/_client'
+import { timeout } from '../utilsCS/_basic'
 import useLoading from '../components/hooks/useLoading'
 
 function create(props)

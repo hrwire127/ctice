@@ -1,7 +1,7 @@
 import React from 'react'
 import ErrorPage from '../components/ErrorPage';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering } from '../utilsCS/_client'
+import { determRendering } from '../utilsCS/_basic'
 
 function error(props)
 {

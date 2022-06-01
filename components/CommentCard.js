@@ -4,7 +4,8 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import { CardActions, Box, Card, CardContent, Button, Typography, IconButton, Grid, Collapse } from '@mui/material'
 import useStyles from "../assets/styles/_CommentCard"
-import { CropData, getDateDifference, getLimitedReplies, timeout } from '../utilsCS/_client';
+import { CropData, getDateDifference, timeout } from '../utilsCS/_basic';
+import { getLimitedReplies, } from '../utilsCS/_get'
 import { Build, Delete, Close, Comment, Accessible } from '@mui/icons-material';
 import useLoading from '../components/hooks/useLoading'
 import UserContext from './context/contextUser'

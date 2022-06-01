@@ -5,7 +5,7 @@ import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import App from 'next/app';
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { determRendering, getGlobals } from '../utilsCS/_client'
+import { determRendering, getGlobals } from '../utilsCS/_basic'
 
 function MyApp({ Component, pageProps, globals })
 {

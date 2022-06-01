@@ -5,7 +5,7 @@ import
     Select, InputLabel, Button,
     Typography
 } from '@mui/material';
-import { getLimitedBookmarks } from '../utilsCS/_client'
+import { getLimitedBookmarks, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
 import Bookmark from "./Bookmark"
@@ -27,7 +27,7 @@ function BookmarkList(props)
             setBookmarks(newBookmarks.obj)
         })
     }, [])
-    
+
     function loadMore(e)
     {
         e.preventDefault()
@@ -43,7 +43,7 @@ function BookmarkList(props)
         {
             loadSwitch(0, () => 
             {
-                return bookmarks.map(b => (<Bookmark key={b._id} {...b}/>))
+                return bookmarks.map(b => (<Bookmark key={b._id} {...b} />))
             })
         }
         {

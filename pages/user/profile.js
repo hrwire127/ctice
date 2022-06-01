@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../components/context/contextUser'
 import Profile from '../../components/Profile'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getClientUser, determRendering, checkToken } from "../../utilsCS/_client"
+import { getClientUser, determRendering, checkToken } from "../../utilsCS/_basic"
+import { getClientUser, } from '../../utilsCS/_get'
 
 function profile(props)
 {

@@ -6,7 +6,7 @@ import
     Box, Typography,
     Container, Link as MuiLink
 } from '@mui/material';
-import { CropData, getDateDifference } from '../utilsCS/_client';
+import { CropData, getDateDifference } from '../utilsCS/_basic';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { Edit, CheckBox, HighlightOff, Cake } from '@mui/icons-material';
 import Link from 'next/link'

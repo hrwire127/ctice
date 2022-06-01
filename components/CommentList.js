@@ -8,7 +8,8 @@ import
 import Comment from './Comment';
 import useStyles from '../assets/styles/_CommentList';
 import useLoading from './hooks/useLoading'
-import { getLimitedComments, timeout, getClientUser } from '../utilsCS/_client'
+import { timeout } from '../utilsCS/_basic'
+import { getLimitedComments, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function CommentList(props)

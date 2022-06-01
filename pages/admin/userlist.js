@@ -1,8 +1,9 @@
-import React, { useEffect} from 'react'
+import React, { useEffect } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, getGlobals, getUsers } from '../../utilsCS/_client'
+import { determRendering, getGlobals } from '../../utilsCS/_basic'
+import { getUsers, } from '../../utilsCS/_get'
 import AdminLayout from "../../components/AdminLayout"
 
 function userlist(props)
@@ -24,7 +25,7 @@ function userlist(props)
     }, [])
 
 
-    return adminCtx ? (<AdminLayout><AdminUsers users={users}/></AdminLayout>) : (<></>)
+    return adminCtx ? (<AdminLayout><AdminUsers users={users} /></AdminLayout>) : (<></>)
 }
 userlist.getInitialProps = async (props) =>
 {

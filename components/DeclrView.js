@@ -14,7 +14,7 @@ import
     IosShare, Accessible, Bookmark
 } from '@mui/icons-material';
 import CS_Redirects from '../utilsCS/CS_Redirects';
-import { CropData } from '../utilsCS/_client';
+import { CropData } from '../utilsCS/_basic';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
 import UserContext from './context/contextUser'

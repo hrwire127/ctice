@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminDeclrs from '../../components/AdminDeclrs';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { getDeclrs, determRendering, timeout } from '../../utilsCS/_client'
+import { determRendering, timeout } from '../../utilsCS/_basic'
+import { getDeclrs } from "'../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
 import useLoading from '../../components/hooks/useLoading'
 

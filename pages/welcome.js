@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Welcome from '../components/Welcome'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_client'
+import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_basic'
 import useLoading from '../components/hooks/useLoading'
 
 

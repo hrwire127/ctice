@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Toolbar, IconButton, Container, Grid, Paper } from '@mui/material';
 import { Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material';
-import { LogoutFetch } from '../utilsCS/_client'
+import { LogoutFetch, } from '../utilsCS/_get'
 import Chart from './Chart';
 import Declrs from './Declrs';
 import Link from 'next/link'
@@ -52,7 +52,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/create"><IconButton><Add color="tertiary"/></IconButton></Link>
+                                        <Link href="/create"><IconButton><Add color="tertiary" /></IconButton></Link>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -64,7 +64,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <IconButton onClick={Logout}><ExitToApp color="tertiary"/></IconButton>
+                                        <IconButton onClick={Logout}><ExitToApp color="tertiary" /></IconButton>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -76,7 +76,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/user/login"><IconButton><Login color="tertiary"/></IconButton></Link>
+                                        <Link href="/user/login"><IconButton><Login color="tertiary" /></IconButton></Link>
                                     </Paper>
                                 </Grid>
                                 <Grid item xs={10} md={4} lg={6}>
@@ -88,7 +88,7 @@ function Dashboard(props)
                                             justifyContent: "center"
                                         }}
                                     >
-                                        <Link href="/user/register"><IconButton><AppRegistration color="tertiary"/></IconButton></Link>
+                                        <Link href="/user/register"><IconButton><AppRegistration color="tertiary" /></IconButton></Link>
                                     </Paper>
                                 </Grid>
                             </Grid>

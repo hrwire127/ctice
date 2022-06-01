@@ -8,7 +8,8 @@ import
 import Reply from './Reply';
 import useStyles from '../assets/styles/_ReplyList';
 import useLoading from './hooks/useLoading'
-import { getLimitedReplies, timeout } from '../utilsCS/_client'
+import { timeout } from '../utilsCS/_basic'
+import { getLimitedReplies, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function ReplyList(props)

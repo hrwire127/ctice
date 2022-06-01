@@ -13,7 +13,8 @@ import AdminContext from './context/contextAdmin'
 import Link from 'next/link'
 import { Add } from "@mui/icons-material"
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { getDeclrsDateQuery, timeout, getCountDateQuery } from "../utilsCS/_client"
+import { timeout } from "../utilsCS/_basic"
+import { getCountDateQuery, getDeclrsDateQuery, } from "../utilsCS/_declr"
 import DatePicker from './DatePicker'
 import TransitionAlerts from './TransitionAlerts'
 
