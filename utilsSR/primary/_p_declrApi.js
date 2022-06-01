@@ -96,32 +96,6 @@ async function limitFilter(query, date, declarations, doclimit, sort)
     return newDeclarations;
 }
 
-async function allDateCount(date)
-{
-    return await Declaration.aggregate([
-        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-        { $match: { last: date.substring(0, 10) } },
-        { $match: { status: "Active" } },
-        { $count: "count" }
-    ])
-}
-
-async function allQueryCount(query)
-{
-    return await Declaration.count({ title: { $regex: query, $options: "i" }, status: "Active" })
-}
-
-async function limitFilterCount(date, query)
-{
-    return await Declaration.aggregate([
-        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
-        { $match: { last: date.substring(0, 10) } },
-        { $match: { title: { $regex: query, $options: 'i' } } },
-        { $match: { status: "Active" } },
-        { $count: "count" }
-    ])
-}
-
 async function getDeclrDateSort(id, length, status = false)
 {
     if (status)
@@ -185,6 +159,5 @@ async function getDeclrScoreSort(id, status = false)
 module.exports =
 {
     limitNan, limitFilter, getDeclrScoreSort,
-    allDateCount, allQueryCount, limitFilterCount,
     limitQuery, limitDate, getDeclrDateSort,
 }

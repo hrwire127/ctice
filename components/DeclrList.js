@@ -57,10 +57,11 @@ function DeclrList(props)
             await timeout(500)
             //doclimit ---!!!
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort)
+            console.log(newDeclrs)
             const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window)
-            setDeclarations(newDeclrs)
+            setDeclarations(newDeclrs.obj)
             setCount(newQuery)
         })
 

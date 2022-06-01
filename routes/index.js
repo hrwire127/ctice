@@ -5,7 +5,7 @@ const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
-const { limitNan, limitFilter, allDateCount, allQueryCount, limitFilterCount, limitDate, limitQuery, } = require('../utilsSR/primary/_p_declrApi')
+const { limitNan, limitFilter,  limitDate, limitQuery, } = require('../utilsSR/primary/_p_declrApi')
 const { validateDeclr } = require('../utilsSR/middlewares/_m_validations')
 
 router.get('/', (req, res) =>
@@ -55,10 +55,18 @@ router.post('/count/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { query, date } = req.body;
     let obj = [];
+    const pipeline = []
+    if (date !== "Invalid") pipeline.concat([
+        { $addFields: { last: { $substr: [{ $last: "$date" }, 0, 10] } } },
+        { $match: { last: date.substring(0, 10) } }
+    ])
 
-    if (query === "") obj = await allDateCount(date)
-    else if (date === "Invalid") obj.push({ count: await allQueryCount(query) })
-    else obj = await limitFilterCount(date, query)
+    if (query !== "") pipeline.push({ $match: { title: { $regex: query, $options: 'i' } } })
+
+    pipeline.push({ $match: { status: "Active" } })
+    pipeline.push({ $count: "count" })
+
+    obj = await Declaration.aggregate(pipeline)
 
     if (obj.length === 0) obj.push({ count: 0 })
     Redirects_SR.Api.sendApi(res, obj[0].count)
