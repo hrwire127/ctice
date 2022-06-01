@@ -3,7 +3,7 @@ import DeclrView from '../../components/DeclrView';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { timeout, determRendering } from '../../utilsCS/_basic'
 import { getLimitedComments, getClientUser, } from '../../utilsCS/_get'
-import { getDeclr, } from "'../../utilsCS/_declr"
+import { getDeclr, } from "../../utilsCS/_declr"
 import useLoading from '../../components/hooks/useLoading'
 
 

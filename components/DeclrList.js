@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { Add } from "@mui/icons-material"
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { timeout } from "../utilsCS/_basic"
-import { getCountDateQuery, getDeclrsDateQuery, } from "../utilsCS/_declr"
+import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
 import DatePicker from './DatePicker'
 import TransitionAlerts from './TransitionAlerts'
 
@@ -56,7 +56,7 @@ function DeclrList(props)
         {
             await timeout(500)
             //doclimit ---!!!
-            const newDeclrs = await getDeclrsDateQuery(queryValue, dateValue, 4, sort);
+            const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort)
             const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window)

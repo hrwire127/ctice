@@ -4,7 +4,7 @@ import Dashboard from '../../components/Dashboard';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering, getGlobals } from '../../utilsCS/_basic'
 import{ getUsers,} from '../../utilsCS/_get'
-import { getDeclrs, } from "'../../utilsCS/_declr"
+import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
 
 function admin(props)
