@@ -7,7 +7,7 @@ function LocationSearch(props)
 {
     const { setLocation, error, onKeyPress, limit, defaultLocation } = props
     const [features, setFeatures] = useState([defaultLocation])
-    const [query, setQuery] = useState(defaultLocation.name)
+    const [query, setQuery] = useState(defaultLocation ? defaultLocation.name : "")
 
 
     const sendReq = () =>

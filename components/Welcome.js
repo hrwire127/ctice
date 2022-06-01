@@ -11,6 +11,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 import UploadBtnProfile from './UploadBtnProfile';
+import LocationSearch from "./LocationSearch"
+import TextArea from "./TextArea";
 
 function Welcome(props)
 {
@@ -25,7 +27,32 @@ function Welcome(props)
         setPasswordFalse,
         passwordValid,
     ] = useFormError(false);
+
+	const [
+		LocationError,
+		setLocationError,
+		helperLocationText,
+		setHelperLocationText,
+		checkLocationKey,
+		setLocationTrue,
+		setLocationFalse,
+		locationValid,
+	] = useFormError(false);
+    
+	const [
+		DescError,
+		setDescError,
+		helperDescText,
+		setHelperDescText,
+		checkDescKey,
+		setDescTrue,
+		setDescFalse,
+		descValid,
+	] = useFormError(false);
+    
     const [file, changeFile] = useState();
+	const [editorState, setEditorState] = useState();
+	const [location, setLocation] = useState(user.location)
 
     const errCheck = (e) =>
     {
@@ -84,6 +111,22 @@ function Welcome(props)
                     </Grid>
                     <Grid item xs={12}>
                         <UploadBtnProfile changeFile={changeFile} file={file} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <LocationSearch
+                            setLocation={setLocation}
+                            error={LocationError}
+                            onKeyPress={checkLocationKey}
+                            limit={5}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextArea
+                            placeholder="Description"
+                            setData={setEditorState}
+                            error={DescError}
+                            checkDescKey={checkDescKey}
+                        />
                     </Grid>
                 </Grid>
 

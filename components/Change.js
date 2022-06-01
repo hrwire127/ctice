@@ -66,6 +66,7 @@ function Change(props)
 		{
 			data.delete("username")
 		}
+		console.log(location)
 		data.append("id", _id)
 		data.append("location", JSON.stringify(location))
 		data.append("bio", JSON.stringify(editorState))
@@ -75,7 +76,7 @@ function Change(props)
 		if (image) data.set("profile", image)
 
 
-		changeAccDetails(data);
+		// changeAccDetails(data);
 	}
 
 	return (
