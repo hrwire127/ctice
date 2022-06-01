@@ -38,7 +38,7 @@ function DeclrView(props)
         comments,
         loadMoreSwitch,
         user } = props;
-
+    
     const { title, description, file, date, authors, _id } = declaration;
     const adminCtx = useContext(AdminContext);
     const userCtx = useContext(UserContext);

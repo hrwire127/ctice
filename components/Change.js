@@ -51,11 +51,13 @@ function Change(props)
 
 
 	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
-	const { username, status, date, email, profile, _id, bio } = user;
+	const { username, status, date, email, profile, _id, bio, connections } = user;
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 	const classes = useStyles()
+
+	console.log(user)
 
 	const errCheck = async (e) =>
 	{
@@ -66,7 +68,7 @@ function Change(props)
 		{
 			data.delete("username")
 		}
-		console.log(location)
+
 		data.append("id", _id)
 		data.append("location", JSON.stringify(location))
 		data.append("bio", JSON.stringify(editorState))
@@ -75,8 +77,7 @@ function Change(props)
 
 		if (image) data.set("profile", image)
 
-
-		// changeAccDetails(data);
+		changeAccDetails(data);
 	}
 
 	return (
@@ -133,6 +134,36 @@ function Change(props)
 						error={DescError}
 						checkDescKey={checkDescKey}
 						data={JSON.parse(bio)}
+					/>
+					<TextField
+						fullWidth
+						variant="outlined"
+						margin="normal"
+						defaultValue={connections ? connections.twitter : ""}
+						name="twitter"
+						label="Twitter Link"
+						type="twitter"
+						id="twitter"
+					/>
+					<TextField
+						fullWidth
+						variant="outlined"
+						margin="normal"
+						defaultValue={connections ? connections.facebook : ""}
+						name="facebook"
+						label="Facebook Link"
+						type="facebook"
+						id="facebook"
+					/>
+					<TextField
+						fullWidth
+						variant="outlined"
+						margin="normal"
+						defaultValue={connections && connections.linkedin}
+						name="linkedin"
+						label="Linkedin Link"
+						type="linkedin"
+						id="linkedin"
 					/>
 				</Grid>
 			</Grid>

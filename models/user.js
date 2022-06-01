@@ -71,6 +71,17 @@ const UserSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: "Declaration"
     },
+    connections: {
+        twitter: {
+            type: "String",
+        },
+        facebook: {
+            type: "String",
+        },
+        linkedin: {
+            type: "String",
+        },
+    }
 });
 
 UserSchema.plugin(passportLocalMongoose);
@@ -157,7 +168,7 @@ UserSchema.statics.processRegister = async function (req, res, token, { user, pa
 
 UserSchema.statics.updateChanges = async function (req, res, user)
 {
-    const { username, id, profile, location, bio } = req.body;
+    const { username, id, profile, location, bio, facebook, linkedin, twitter } = req.body;
 
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
@@ -187,6 +198,14 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             user.bio = JSON.parse(bio)
         }
 
+        user.connections = {}
+
+        if(facebook) user.connections.facebook = facebook
+        if(twitter) user.connections.twitter = twitter
+        if(linkedin) user.connections.linkedin = linkedin
+
+        console.log(user)
+
         user.date.push(new Date())
 
         if (await new excRule([req.files, user.profile.url], [profile], async () =>
@@ -195,19 +214,17 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(
-                    user.profile.location, {}, (res, err) =>
-                {
-                }
+                    user.profile.location
                 )
             }
             user.profile.url = file.url
             user.profile.location = file.location
         }).Try()) return user;
-
+        
         if (await new excRule([], [profile, req.files, user.profile.url], async () =>
         {
         }).Try()) return user;
-
+        
         if (await new excRule([user.profile.url], [profile, req.files], async () =>
         {
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)

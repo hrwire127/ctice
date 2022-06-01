@@ -156,7 +156,7 @@ async function validateLogUser(req, res, next)
 
 async function validateChange(req, res, next)
 {
-    let { username, profile, location, bio } = req.body
+    let { username, profile, location, bio, facebook, linkedin, twitter } = req.body
     console.log(req.body)
 
     const declarationSchema = Joi.object({
@@ -178,12 +178,21 @@ async function validateChange(req, res, next)
                 data: Joi.object().required()
             })),
             entityMap: Joi.object().required()
-        }).required()
+        }).required(),
+        connections: Joi.object({
+            facebook: Joi.string(),
+            linkedin: Joi.string(),
+            twitter: Joi.string()
+        })
     })
 
     const preparedBody =
     {
-        username, profile, location: JSON.parse(location), bio: JSON.parse(bio)
+        username,
+        profile,
+        location: JSON.parse(location),
+        bio: JSON.parse(bio),
+        connections: { facebook, linkedin, twitter }
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -196,7 +205,7 @@ async function validateChange(req, res, next)
     }
 
 
-    const bodyError = inspectChange(username, req.files, JSON.parse(location), JSON.parse(bio))
+    const bodyError = inspectChange(username, req.files, JSON.parse(location), JSON.parse(bio), { facebook, linkedin, twitter })
 
     if (bodyError) 
     {

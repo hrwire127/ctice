@@ -21,5 +21,8 @@ module.exports = {
     comment_max_blocks: 10,
     file_contains: "https://res.cloudinary.com/dnu6yyl9d/image/upload/v1645538236/ctice",
     location_max_chars: 50,
-    bio_max_blocks: 20
+    bio_max_blocks: 20,
+    facebook_connection_includes: "facebook.com",
+    twitter_connection_includes: "twitter.com",
+    linkedin_connection_includes: "linkedin.com",
 }

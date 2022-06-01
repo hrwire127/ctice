@@ -28,31 +28,31 @@ function Welcome(props)
         passwordValid,
     ] = useFormError(false);
 
-	const [
-		LocationError,
-		setLocationError,
-		helperLocationText,
-		setHelperLocationText,
-		checkLocationKey,
-		setLocationTrue,
-		setLocationFalse,
-		locationValid,
-	] = useFormError(false);
-    
-	const [
-		DescError,
-		setDescError,
-		helperDescText,
-		setHelperDescText,
-		checkDescKey,
-		setDescTrue,
-		setDescFalse,
-		descValid,
-	] = useFormError(false);
-    
+    const [
+        LocationError,
+        setLocationError,
+        helperLocationText,
+        setHelperLocationText,
+        checkLocationKey,
+        setLocationTrue,
+        setLocationFalse,
+        locationValid,
+    ] = useFormError(false);
+
+    const [
+        DescError,
+        setDescError,
+        helperDescText,
+        setHelperDescText,
+        checkDescKey,
+        setDescTrue,
+        setDescFalse,
+        descValid,
+    ] = useFormError(false);
+
     const [file, changeFile] = useState();
-	const [editorState, setEditorState] = useState();
-	const [location, setLocation] = useState(user.location)
+    const [editorState, setEditorState] = useState();
+    const [location, setLocation] = useState(user.location)
 
     const errCheck = (e) =>
     {
@@ -126,6 +126,39 @@ function Welcome(props)
                             setData={setEditorState}
                             error={DescError}
                             checkDescKey={checkDescKey}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                            name="twitter"
+                            label="Twitter Link"
+                            type="twitter"
+                            id="twitter"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                            name="facebook"
+                            label="Facebook Link"
+                            type="facebook"
+                            id="facebook"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                            name="linkedin"
+                            label="Linkedin Link"
+                            type="linkedin"
+                            id="linkedin"
                         />
                     </Grid>
                 </Grid>

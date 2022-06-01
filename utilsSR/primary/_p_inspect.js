@@ -60,7 +60,7 @@ function inspectUser(username = undefined, email = undefined, password = undefin
     }
 }
 
-function inspectChange(username = undefined, Files = undefined, location = undefined, bio = undefined)
+function inspectChange(username = undefined, Files = undefined, location = undefined, bio = undefined, connections = undefined)
 {
     if (username)
     {
@@ -87,6 +87,20 @@ function inspectChange(username = undefined, Files = undefined, location = undef
     {
         const bioRule = new valRule(bio.blocks.length, Rules.bio_max_blocks, 0)
         if (bioRule.getVal()) return bioRule.processMsg()
+    }
+
+    if (connections)
+    {
+        const { facebook, linkedin, twitter } = connections
+        
+        const facebookFormat = new valRule(facebook, Rules.facebook_connection_includes, 4)
+        if (facebookFormat.getVal()) return facebookFormat.processMsg()
+
+        const twitterFormat = new valRule(twitter, Rules.twitter_connection_includes, 4)
+        if (twitterFormat.getVal()) return twitterFormat.processMsg()
+        
+        const linkedinFormat = new valRule(linkedin, Rules.linkedin_connection_includes, 4)
+        if (linkedinFormat.getVal()) return linkedinFormat.processMsg()
     }
 }
 
