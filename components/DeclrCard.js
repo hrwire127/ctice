@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
-import { CardActions, Box, Card, CardContent, Button, Typography, IconButton, Paper } from '@mui/material'
-import { Build, Visibility } from '@mui/icons-material';
+import { Box, Typography, Paper } from '@mui/material'
 import useStyles from "../assets/styles/_DeclrCard"
 import { CropData, getDateDifference } from '../utilsCS/_client';
 import Link from 'next/link'

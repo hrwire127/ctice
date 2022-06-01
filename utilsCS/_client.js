@@ -412,6 +412,23 @@ function checkToken(id)
         }).then(response => response.json())
 }
 
+function getLimitedBookmarks(bookmarks, id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { bookmarks, id, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 
 module.exports = {
     CropData, uploadFile,
@@ -422,5 +439,5 @@ module.exports = {
     getDeclrsDateQuery, timeout, getField,
     getDateDifference, loadLimitedDeclrs, getAllCount,
     getLimitedComments, getFlash, getClientUser, checkToken,
-    getLimitedReplies
+    getLimitedReplies, getLimitedBookmarks
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../components/context/contextUser'
 import Profile from '../../components/Profile'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
@@ -8,6 +8,7 @@ function profile(props)
 {
     const { user, isToken } = props;
     const userCtx = useContext(UserContext);
+    const [bookmarks, setBookmarks] = useState([])
 
     useEffect(() =>
     {
@@ -17,7 +18,12 @@ function profile(props)
         }
     }, [])
 
-    return userCtx && (<Profile user={user} isToken={isToken} />)
+    return userCtx && (<Profile
+        user={user}
+        isToken={isToken}
+        bookmarks={bookmarks}
+        setBookmarks={setBookmarks}
+    />)
 }
 
 profile.getInitialProps = async (props) =>

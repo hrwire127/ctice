@@ -37,7 +37,6 @@ router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    console.log(user)
     Redirects_SR.Api.sendApi(res, user)
 }))
 
@@ -157,6 +156,20 @@ router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
     user.tryBoookmark(declaration)
     await user.save()
     Redirects_SR.Api.sendApi(res, true)
+}))
+
+router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, isSameUser, tryAsync_CS(async (req, res) =>
+{
+    const { id, bookmarks } = req.body;
+    const user = await User.findOne({ _id: id }).populate({
+        path: 'bookmarks',
+        options: {
+            limit: process.env.COMMENTS_LOAD_LIMIT,
+            sort: { _id: -1 },
+            skip: bookmarks.length,
+        }
+    })
+    Redirects_SR.Api.sendApi(res, user.bookmarks)
 }))
 
 module.exports = router;

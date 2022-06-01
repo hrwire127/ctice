@@ -7,12 +7,14 @@ import
     Container, Link as MuiLink
 } from '@mui/material';
 import { CropData, getDateDifference } from '../utilsCS/_client';
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import { Edit, CheckBox, HighlightOff, Cake } from '@mui/icons-material';
 import Link from 'next/link'
+import BookmarkList from "./BookmarkList"
 
 function Profile(props)
 {
-    const { user, isToken } = props;
+    const { user, isToken, bookmarks, setBookmarks} = props;
     const { username, status, date, email, profile, location } = user;
 
     const [diff, setDiff] = useState()
@@ -20,7 +22,9 @@ function Profile(props)
     useEffect(() =>
     {
         setDiff(getDateDifference(new Date(), new Date(date[0])))
+
     }, [])
+
 
     return (<Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -29,7 +33,7 @@ function Profile(props)
                 {username}
             </Typography>
             <Link href="/user/change">
-                <IconButton >
+                <IconButton>
                     <Edit />
                 </IconButton>
             </Link>
@@ -65,8 +69,8 @@ function Profile(props)
                 {location.name}
             </Typography>
         </Grid>
-    </Container >
-    )
+        <BookmarkList user={user} bookmarks={bookmarks} setBookmarks={setBookmarks}/>
+    </Container>)
 }
 
 export default Profile

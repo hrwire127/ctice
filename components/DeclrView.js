@@ -52,7 +52,7 @@ function DeclrView(props)
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 
-    const switchDeclr = () =>
+    const switchDeclr = (_id) =>
     {
         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/disable`, {
             method: 'POST',
