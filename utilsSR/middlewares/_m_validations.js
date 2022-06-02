@@ -1,6 +1,6 @@
 const Joi = require("joi").extend(require('@joi/date'));
 const Redirects_SR = require('../general/SR_Redirects');
-const userError = require('../general/userError');
+const UserError = require('../general/UserError');
 const { inspectDecrl, inspectUser, inspectComment, inspectChange } = require('../primary/_p_inspect')
 const { modifyDesc } = require('../primary/_p_basic')
 
@@ -36,7 +36,7 @@ async function validateDeclr(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
 
@@ -44,7 +44,7 @@ async function validateDeclr(req, res, next)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     req.body.title = title.trim()
@@ -53,7 +53,7 @@ async function validateDeclr(req, res, next)
     next()
 }
 
-async function validatePending(req, res, next) 
+async function validateRegUser(req, res, next) 
 {
     let { confirmationCode, password, profile } = req.body
 
@@ -74,7 +74,7 @@ async function validatePending(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
 
@@ -82,7 +82,7 @@ async function validatePending(req, res, next)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     req.body.password = password.trim()
@@ -90,7 +90,7 @@ async function validatePending(req, res, next)
     next()
 }
 
-async function validateRegUser(req, res, next) 
+async function validatePendingUser(req, res, next) 
 {
     const { username, email } = req.body;
     const userSchema = Joi.object({
@@ -104,14 +104,14 @@ async function validateRegUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
     const bodyError = inspectUser(username, email)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     req.body.username = username.trim()
@@ -137,14 +137,14 @@ async function validateLogUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
     const bodyError = inspectUser(username, undefined, password)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     req.body.username = username.trim()
@@ -201,7 +201,7 @@ async function validateChange(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
 
@@ -209,7 +209,7 @@ async function validateChange(req, res, next)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     if (req.body.username) req.body.username = username.trim()
@@ -249,7 +249,7 @@ async function validateComment(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new userError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
 
 
@@ -257,7 +257,7 @@ async function validateComment(req, res, next)
 
     if (bodyError) 
     {
-        return new userError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401).throw_CS(res)
     }
 
     req.body.content = JSON.stringify(modifyDesc(JSON.parse(content)))
@@ -267,7 +267,7 @@ async function validateComment(req, res, next)
 
 module.exports = {
 
-    validateDeclr, validateRegUser,
+    validateDeclr, validatePendingUser,
     validateLogUser, validateChange,
-    validatePending, validateComment
+    validateRegUser, validateComment
 }

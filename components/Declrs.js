@@ -39,7 +39,7 @@ export default function Declrs(props)
 
     const switchDeclr = (_id) =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/disable`, {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/switchstatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

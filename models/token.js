@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const { genToken } = require('../utilsSR/primary/_p_basic')
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("../utilsSR/rules/errorMessages")
-const userError = require('../utilsSR/general/userError');
+const UserError = require('../utilsSR/general/UserError');
 const User = require("./user");
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 
@@ -34,7 +34,7 @@ TokenSchema.methods.processReset = async function (req, res)
         const Token = mongoose.model('Token', TokenSchema);
         if (await Token.findOne({ email: this.user.email }))
         {
-            new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
         }
         else
@@ -55,30 +55,24 @@ TokenSchema.methods.processReset = async function (req, res)
 }
 
 
-TokenSchema.methods.reset = async function (req, res, token, { user, password })
+TokenSchema.methods.resetPassword = async function (req, res, token, { user, password })
 {
     if (token)
     {
-        // if (Math.abs(date2 - date1) <= process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY)
-        // {
-        //     new userError(...Object.values(errorMessages.delayed)).setup(req, res);
-        // }
-        // else 
         if (await User.findOne({ username: user.username }))
         {
             await user.setPassword(password)
             user.date.push(new Date())
             await user.save()
         }
-
         else
         {
-            new userError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
         }
     }
     else
     {
-        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
+        new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
         Redirects_SR.Error.CS(res)
     }
 }

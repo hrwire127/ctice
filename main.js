@@ -35,7 +35,7 @@ const user = require("./routes/user")
 const admin = require("./routes/admin")
 
 const User = require('./models/user');
-const userError = require("./utilsSR/general/userError");
+const UserError = require("./utilsSR/general/UserError");
 const Redirects_SR = require('./utilsSR/general/SR_Redirects');
 const sessionConfig = require('./config/session.config')
 
@@ -81,17 +81,20 @@ app.prepare().then(() =>
 
     server.use((err, req, res, next) =>
     {
+        const { type } = req.body;
+        console.log(type)
         console.log("AA")
         console.log(err)
-        const error = new userError(err.message, err.status)
+        const error = new UserError(err.message, err.status)
         req.session.error = error;
-        Redirects_SR.Error.CS(res)
+        if (type === 0) Redirects_SR.Error.SR(res)
+        else Redirects_SR.Error.CS(res)
     })
 
     server.get("/error", (req, res, next) =>
     {
         let error = req.session.error
-        if (!error) error = new userError();
+        if (!error) error = new UserError();
         res.status(error.status)
         app.render(req, res, "/error", { error })
     })

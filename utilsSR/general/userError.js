@@ -1,4 +1,4 @@
-class userError extends Error
+class UserError extends Error
 {
     constructor(message = "Something went wrong", status = 500)
     {
@@ -27,4 +27,4 @@ class userError extends Error
     }
 }
 
-module.exports = userError;
+module.exports = UserError;

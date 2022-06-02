@@ -14,7 +14,7 @@ import BookmarkList from "./BookmarkList"
 
 function Profile(props)
 {
-    const { user, isToken, bookmarks, setBookmarks} = props;
+    const { user, isResetToken, bookmarks, setBookmarks} = props;
     const { username, status, date, email, profile, location } = user;
 
     const [diff, setDiff] = useState()

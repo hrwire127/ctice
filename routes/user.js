@@ -6,9 +6,9 @@ const Declaration = require("../models/declaration")
 const User = require("../models/user")
 const Token = require("../models/token")
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
-const { isLogged_SR, isLogged_CS, isSameUser } = require('../utilsSR/middlewares/_m_user')
-const { verifyPending, verifyTokenReset, verifyConfirmCode, } = require('../utilsSR/middlewares/_m_verify')
-const { validateRegUser, validateLogUser, validatePending, validateChange } = require('../utilsSR/middlewares/_m_validations')
+const { isLogged_SR, isLogged_CS, isSameUser, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
+const { verifyPendingCode, verifyResetToken, } = require('../utilsSR/middlewares/_m_verify')
+const { validatePendingUser, validateLogUser, validateRegUser, validateChange } = require('../utilsSR/middlewares/_m_validations')
 const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 router.get('/register', async (req, res) =>
@@ -27,11 +27,28 @@ router.get('/profile', isLogged_SR, async (req, res) =>
     app.render(req, res, "/user/profile", { user })
 })
 
-router.post('/all/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.get('/change', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
-    const users = await User.find({});
-    const securedUsers = User.getSecured(users)
-    Redirects_SR.Api.sendApi(res, securedUsers)
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/change", { user })
+}))
+
+router.get("/pending/:confirmationCode", verifyPendingCode, tryAsync_SR(async (req, res) =>
+{
+    const confirmationCode = req.params.confirmationCode
+    app.render(req, res, "/welcome", { confirmationCode })
+}))
+
+router.get('/reset/:confirmationCode', verifyResetToken, tryAsync_SR(async (req, res) =>
+{
+    const confirmationCode = req.params.confirmationCode
+    app.render(req, res, "/reset", { confirmationCode })
+}))
+
+router.post('/all/api', apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
+{
+    const users = User.getSecured(await User.find({}))
+    Redirects_SR.Api.sendApi(res, users)
 }))
 
 router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -40,7 +57,7 @@ router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, user)
 }))
 
-router.post('/register', validateRegUser, tryAsync_CS(async (req, res) =>
+router.post('/pending', validatePendingUser, tryAsync_CS(async (req, res) =>
 {
     const pending = new Pending(req.body)
     await pending.processPending(req, res)
@@ -54,7 +71,6 @@ router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
     await User.processLogin(req, res, next);
     req.flash('success', 'Welcome Back');
     Redirects_SR.Home.CS(res)
-
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
@@ -64,33 +80,19 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.get("/confirm/:confirmationCode", verifyPending, tryAsync_SR(async (req, res) =>
-{
-    const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/welcome", { confirmationCode })
-}))
-
-router.post("/confirm", validatePending, tryAsync_SR(async (req, res) =>
+router.post("/register", validateRegUser, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
 
     const pending = await Pending.findOne({ confirmationCode })
-    const user = new User({ //copy user static
-        username: pending.username,
-        date: [pending.date],
-        email: pending.email,
-        status: "Active"
-    })
 
-    await User.processRegister(req, res, pending, { user, password })
+    await User.processRegister(req, res, { pending, password })
     await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');
     Redirects_SR.Home.CS(res)
 }))
 
-//forgot password page + email
-
-router.post('/reset/pending', isLogged_CS, tryAsync_CS(async (req, res) =>
+router.post('/reset/send', isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     const token = new Token({ user })
@@ -100,51 +102,32 @@ router.post('/reset/pending', isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.get('/reset/:confirmationCode', verifyTokenReset, tryAsync_CS(async (req, res) =>
-{
-    const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/reset", { confirmationCode })
-}))
-
-router.post('/reset', verifyConfirmCode, tryAsync_CS(async (req, res) =>
+router.post('/reset', verifyResetToken, tryAsync_CS(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
     const token = await Token.findOne({ token: confirmationCode }).populate('user')
     await Token.deleteOne({ token: confirmationCode })
-    await token.reset(req, res, confirmationCode, { user: token.user, password })
+    await token.resetPassword(req, res, confirmationCode, { user: token.user, password })
     req.flash('success', 'Password reseted!')
     Redirects_SR.Home.CS(res)
 }))
 
-router.get('/change', isLogged_SR, tryAsync_CS(async (req, res) =>
-{
-    const user = await getUserdata(req, res)
-    app.render(req, res, "/user/change", { user })
-}))
-
-router.post('/change', isLogged_CS, isSameUser, validateChange, tryAsync_CS(async (req, res, next) =>
+router.post('/reset/exists', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.body;
-    const user = await User.findById(id);
+    const token = await Token.findOne({ user: id });
+    Redirects_SR.Api.sendApi(res, token ? true : false)
+}))
+
+router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res, next) =>
+{
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id });
     const Obj = await User.updateChanges(req, res, user);
     await User.findByIdAndUpdate(id, Obj)
     req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details');
     Redirects_SR.Home.CS(res)
-}))
-
-router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
-{
-    const { light } = req.body;
-    req.session.light = !light
-    Redirects_SR.Api.sendApi(res, !light)
-}))
-
-router.post('/reset/token/exists', apiSecret, tryAsync_CS(async (req, res) =>
-{
-    const { id } = req.body;
-    const token = await Token.findOne({ user: id });
-    Redirects_SR.Api.sendApi(res, token ? true : false)
 }))
 
 router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 
@@ -158,10 +141,11 @@ router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, true)
 }))
 
-router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, isSameUser, tryAsync_CS(async (req, res) =>
+router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const { id, bookmarks } = req.body;
-    const user = await User.findOne({ _id: id }).populate({
+    const { bookmarks } = req.body;
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id }).populate({
         path: 'bookmarks',
         options: {
             limit: process.env.COMMENTS_LOAD_LIMIT,
@@ -170,6 +154,13 @@ router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, isSameUser, tryAsync_C
         }
     })
     Redirects_SR.Api.sendApi(res, user.bookmarks)
+}))
+
+router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
+{
+    const { light } = req.body;
+    req.session.light = !light
+    Redirects_SR.Api.sendApi(res, !light)
 }))
 
 module.exports = router;

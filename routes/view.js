@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const { app } = require("../main")
+const UserError = require('../utilsSR/general/UserError')
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
-const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
+const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_CS, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
 const { validateDeclr, validateComment } = require('../utilsSR/middlewares/_m_validations')
@@ -13,18 +14,23 @@ const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
 const { getCommentDateSort, } = require('../utilsSR/primary/_p_commentApi')
 const { getUserdata, existsAdmin } = require('../utilsSR/primary/_p_user')
 
-router.get("/:id", tryAsync_CS(async (req, res) =>
+router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
+    const { id } = req.params;
     const user = await getUserdata(req, res)
-    app.render(req, res, `/view/${req.params.id}`, { user })
+
+    await Declaration.findOne({ _id: id, status: "Active" })
+        .then(() => app.render(req, res, `/view/${id}`, { user }))
+        .catch(err =>
+        {
+            throw new UserError("Not Found", 404)
+        })
 }))
 
-router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res, next) =>
+router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findOne({ _id: id, status: "Active" })
-        .populate("authors", 'email status username')
-    if (!declaration) next(new Error("Not Found", 404))
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 
@@ -42,9 +48,6 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
     }, async () =>
     {
         declaration = await getDeclrScoreSort(id, admin)
-        declaration.comments = sortByScore(declaration.comments)
-        declaration.comments.splice(0, comments.length)
-        declaration.comments.splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length)
     })
 
     Redirects_SR.Api.sendApi(res, declaration.comments)
@@ -52,7 +55,7 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post("/:id/comment/:cid/reply/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
-    const { id, cid } = req.params;
+    const { cid } = req.params;
     const { replies } = req.body;
 
     const admin = await existsAdmin(req, res)
@@ -126,7 +129,7 @@ router.post("/:id/comment/:cid/reply", isLogged_CS, validateComment, tryAsync_CS
     Redirects_SR.Home.customCS(res, `${id}`)
 }))
 
-router.post("/:id/disable", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+router.post("/:id/switchstatus", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     let declaration = await Declaration.findOne({ _id: id })
@@ -135,18 +138,18 @@ router.post("/:id/disable", apiSecret, isLogged_CS, tryAsync_CS(async (req, res)
     Redirects_SR.Api.sendApi(res, true)
 }))
 
-router.post("/:id/comment/:cid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
+router.post("/:id/comment/:cid/switchstatus", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
-    const { id, cid } = req.params;
+    const { cid } = req.params;
     let comment = await Comment.findOne({ _id: cid })
     comment.status = comment.status === "Active" ? "Disabled" : "Active"
     await comment.save()
     Redirects_SR.Api.sendApi(res, true)
 }))
 
-router.post("/:id/reply/:rid/disable", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
+router.post("/:id/reply/:rid/switchstatus", apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
-    const { id, rid } = req.params;
+    const { rid } = req.params;
     let reply = await Reply.findOne({ _id: rid })
     console.log(reply)
     reply.status = reply.status === "Active" ? "Disabled" : "Active"

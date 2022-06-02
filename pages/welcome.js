@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Welcome from '../components/Welcome'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { loadingWhile, timeout, isToken, determRendering } from '../utilsCS/_basic'
+import { loadingWhile, timeout, isResetToken, determRendering } from '../utilsCS/_basic'
 import useLoading from '../components/hooks/useLoading'
 
 
@@ -28,7 +28,7 @@ function welcome(props)
         loadingWhile(async () =>
         {
             timeout(5000)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/confirm`, {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/register`, {
                 method: 'POST',
                 body: body,
             }).then(response => response.json())

@@ -31,7 +31,7 @@ function ReplyCard(props)
 
     const switchReply = () =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${_id}/disable`, {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${_id}/switchstatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

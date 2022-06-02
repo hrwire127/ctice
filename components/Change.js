@@ -50,14 +50,12 @@ function Change(props)
 	] = useFormError(false);
 
 
-	const { changeAccDetails, user, isToken, alert, switchLoading, resetPassword } = props;
+	const { changeAccDetails, user, isResetToken, alert, switchLoading, resetPassword } = props;
 	const { username, status, date, email, profile, _id, bio, connections } = user;
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 	const classes = useStyles()
-
-	console.log(user)
 
 	const errCheck = async (e) =>
 	{
@@ -69,11 +67,8 @@ function Change(props)
 			data.delete("username")
 		}
 
-		data.append("id", _id)
 		data.append("location", JSON.stringify(location))
 		data.append("bio", JSON.stringify(editorState))
-
-		// const username = data.get("username");
 
 		if (image) data.set("profile", image)
 
@@ -117,7 +112,7 @@ function Change(props)
 						limit={5}
 					/>
 					<div>
-						{isToken
+						{isResetToken
 							? (<Typography variant="h7" color="text.danger">
 								An email was sent for the password reset
 							</Typography>)

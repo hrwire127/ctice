@@ -77,7 +77,7 @@ function CommentCard(props)
 
     const switchComment = () =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${_id}/disable`, {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${_id}/switchstatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

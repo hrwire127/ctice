@@ -1,5 +1,5 @@
 const Redirects_SR = require('../general/SR_Redirects');
-const userError = require('../general/userError');
+const UserError = require('../general/UserError');
 
 function tryAsync_SR(func)
 {
@@ -7,7 +7,8 @@ function tryAsync_SR(func)
     {
         func(req, res, next).catch(err =>
         {
-            new userError(err.message, err.status).throw_SR(req, res)
+            req.type = 0
+            new UserError(err.message, err.status).throw_SR(req, res)
         })
     }
 }
@@ -16,6 +17,7 @@ function tryAsync_CS(func)
 {
     return function (req, res, next)
     {
+        req.type = 1
         func(req, res, next).catch(err => next(err))
     }
 }

@@ -1,38 +1,21 @@
 const Comment = require("../../models/comment");
 
-async function getCommentDateSort(id, length, status = false)
+async function getCommentDateSort(id, length, admin = false)
 {
-    if (status)
-    {
-        return await Comment.findOne({ _id: id })
-            .populate({
-                path: 'replies',
-                populate: {
-                    path: 'author'
-                },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
+    const findPip = admin ? { _id: id } : { _id: id, status: "Active" }
+    const populatePip = {
+        path: 'replies',
+        populate: {
+            path: 'author'
+        },
     }
-    else
-    {
-        return await Comment.findOne({ _id: id, status: "Active" })
-            .populate({
-                path: 'replies',
-                populate: {
-                    path: 'author'
-                },
-                match: { status: "Active" },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
+    if (admin) populatePip.match = { status: "Active" }
+    populatePip.options = {
+        limit: process.env.COMMENTS_LOAD_LIMIT,
+        sort: { _id: -1 },
+        skip: length,
     }
+    return await Comment.findOne(findPip).populate(populatePip)
 }
 
 module.exports = { getCommentDateSort }

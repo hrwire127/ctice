@@ -21,7 +21,7 @@ function register(props)
 	{
 		loadingWhile(async () =>
 		{
-			await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/register`, {
+			await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/pending`, {
 				method: 'POST',
 				body: body,
 			}).then(response => response.json())

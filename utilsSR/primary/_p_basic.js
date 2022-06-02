@@ -1,5 +1,5 @@
 let streamifier = require('streamifier');
-const userError = require('../general/userError');
+const UserError = require('../general/UserError');
 const { cloud } = require('../../cloud/storage');
 
 async function switchSort(sort, dateFunc, scoreSort)
@@ -93,7 +93,7 @@ const upload_pdf = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new userError(invalid, 400)
+        throw new UserError(invalid, 400)
     }
 
     return {
@@ -130,7 +130,7 @@ const upload_profiles = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new userError(invalid, 400)
+        throw new UserError(invalid, 400)
     }
 
     return {

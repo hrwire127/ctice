@@ -50,7 +50,7 @@ function handleDeclrData(evtTarget, file = undefined, description)
     return { data, title: title_, description: description_ }
 }
 
-function isToken(confirmationCode, func, res)
+function isResetToken(confirmationCode, func, res)
 {
     if (confirmationCode)
     {
@@ -143,7 +143,7 @@ function getFlash(props)
 
 function checkToken(id)
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/token/exists`,
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/exists`,
         {
             method: 'POST',
             headers: {
@@ -157,7 +157,7 @@ function checkToken(id)
 
 module.exports = {
     CropData, uploadFile,
-    handleDeclrData, isToken,
+    handleDeclrData, isResetToken,
     determRendering, getGlobals,
     timeout, getField,
     getDateDifference, getFlash,

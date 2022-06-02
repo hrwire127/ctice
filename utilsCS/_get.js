@@ -1,5 +1,3 @@
-const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
-
 async function getLimitedComments(comments, id, type)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/api`, {

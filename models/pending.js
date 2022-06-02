@@ -4,7 +4,7 @@ const Rules = require('../utilsSR/rules/validRules')
 const { genToken } = require('../utilsSR/primary/_p_basic')
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("../utilsSR/rules/errorMessages")
-const userError = require('../utilsSR/general/userError');
+const UserError = require('../utilsSR/general/UserError');
 const User = require("./user");
 
 
@@ -47,18 +47,14 @@ PendingSchema.methods.processPending = async function (req, res)
         this.confirmationCode = genToken()
         const Pending = mongoose.model('Pending');
         if (await Pending.findOne({ email: this.email })
-            || await User.findOne({ email: this.email })
-        )
+            || await User.findOne({ email: this.email }))
         {
-            new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
             reject();
         }
-        else if (
-            // await Pending.findOne({ username: this.username }) || 
-            await User.findOne({ username: this.username })
-        )
+        else if (await User.findOne({ username: this.username }))
         {
-            new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
             reject();
         }
         else

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require("passport-local-mongoose")
 const Schema = mongoose.Schema;
-const userError = require('../utilsSR/general/userError');
+const UserError = require('../utilsSR/general/UserError');
 const Rules = require('../utilsSR/rules/validRules')
 const passport = require('passport');
 const errorMessages = require("../utilsSR/rules/errorMessages")
@@ -90,7 +90,6 @@ UserSchema.statics.getSecured = function (users)
 {
     delete users.hash;
     delete users.salt;
-    delete users.confirmationCode;
     return users;
 }
 
@@ -102,19 +101,19 @@ UserSchema.statics.processLogin = async function (req, res, next)
         {
             if (err)
             {
-                new userError(err.message, err.status).throw_CS(res);
+                new UserError(err.message, err.status).throw_CS(res);
                 reject()
             }
             else if (!user) 
             {
-                new userError(info.message, 404).throw_CS(res);
+                new UserError(info.message, 404).throw_CS(res);
                 reject()
             }
             else
             {
                 if (user.status !== "Active")
                 {
-                    new userError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
+                    new UserError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
                     reject()
                 }
                 const remember = JSON.parse(req.body.remember)
@@ -136,32 +135,48 @@ UserSchema.statics.processLogin = async function (req, res, next)
     })
 }
 
-UserSchema.statics.processRegister = async function (req, res, token, { user, password })
+UserSchema.statics.processRegister = async function (req, res, { pending, password })
 {
+    const { files, body } = req
+    const { bio, location, facebook, linkedin, twitter } = body
     const User = mongoose.model('User', UserSchema)
-    if (token)
+    if (pending)
     {
-        if (await User.findOne({ email: user.email }))
+        if (await User.findOne({ email: pending.email }))
         {
-            new userError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
         }
-        else if (await User.findOne({ username: user.username }))
+        else if (await User.findOne({ username: pending.username }))
         {
-            new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+            new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
         }
         else
         {
-            const file = await upload_profiles(req.files.profile)
-            console.log(file)
-            user.profile.url = file.url
-            user.profile.location = file.location
-            console.log(user)
+            const file = await upload_profiles(files.profile)
+            const user = new User({
+                username: pending.username,
+                date: [pending.date],
+                email: pending.email,
+                status: "Active",
+                profile: {
+                    url: file.url,
+                    location: file.location
+                },
+                bio,
+                location,
+                connections
+            })
+
+            if (facebook) user.connections.facebook = facebook
+            if (twitter) user.connections.twitter = twitter
+            if (linkedin) user.connections.linkedin = linkedin
+
             await User.register(user, password)
         }
     }
     else
     {
-        new userError(...Object.values(errorMessages.noPending)).setup(req, res);
+        new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
         Redirects_SR.Error.CS(res)
     }
 }
@@ -173,7 +188,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
     {
-        new userError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+        new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
     else
     {
@@ -200,9 +215,9 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         user.connections = {}
 
-        if(facebook) user.connections.facebook = facebook
-        if(twitter) user.connections.twitter = twitter
-        if(linkedin) user.connections.linkedin = linkedin
+        if (facebook) user.connections.facebook = facebook
+        if (twitter) user.connections.twitter = twitter
+        if (linkedin) user.connections.linkedin = linkedin
 
         console.log(user)
 
@@ -220,11 +235,11 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             user.profile.url = file.url
             user.profile.location = file.location
         }).Try()) return user;
-        
+
         if (await new excRule([], [profile, req.files, user.profile.url], async () =>
         {
         }).Try()) return user;
-        
+
         if (await new excRule([user.profile.url], [profile, req.files], async () =>
         {
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)

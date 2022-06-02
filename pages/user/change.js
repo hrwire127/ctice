@@ -8,7 +8,7 @@ import { getClientUser, } from '../../utilsCS/_get'
 
 function change(props)
 {
-    const { user, isToken } = props;
+    const { user, isResetToken } = props;
     const userCtx = useContext(UserContext);
     const [alert, setAlert] = useState()
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -49,7 +49,7 @@ function change(props)
 
     const resetPassword = async () =>
     {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/pending`, {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/send`, {
             method: 'POST',
         }).then(response => response.json())
             .then(res =>
@@ -61,7 +61,7 @@ function change(props)
     return userCtx && (<Change
         user={user}
         changeAccDetails={changeAccDetails}
-        isToken={isToken}
+        isResetToken={isResetToken}
         switchLoading={switchLoading}
         resetPassword={resetPassword}
         alert={alert}
@@ -74,16 +74,16 @@ change.getInitialProps = async (props) =>
     {
         const user = await getClientUser();
         CS_Redirects.tryResCS(user, window)
-        const isToken = await checkToken(user.obj._id)
-        CS_Redirects.tryResCS(isToken, window)
-        return { user: user.obj, isToken: isToken.obj }
+        const isResetToken = await checkToken(user.obj._id)
+        CS_Redirects.tryResCS(isResetToken, window)
+        return { user: user.obj, isResetToken: isResetToken.obj }
     }, async () =>
     {
         const user = JSON.parse(JSON.stringify(props.query.user));
-        const isToken = await checkToken(user._id)
+        const isResetToken = await checkToken(user._id)
 
-        CS_Redirects.tryResSR(isToken, props)
-        return { user, isToken: isToken.obj }
+        CS_Redirects.tryResSR(isResetToken, props)
+        return { user, isResetToken: isResetToken.obj }
     })
 }
 

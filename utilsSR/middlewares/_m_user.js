@@ -1,5 +1,5 @@
 const Redirects_SR = require('../general/SR_Redirects');
-const userError = require('../general/userError');
+const UserError = require('../general/UserError');
 const errorMessages = require('../rules/errorMessages');
 const User = require("../../models/user")
 const Redirects_CS = require("../../utilsCS/CS_Redirects")
@@ -36,7 +36,7 @@ function isSessionReqUser(req, res, next)  //
     }
     else 
     {
-        new userError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
+        new UserError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
     }
 };
 
@@ -50,7 +50,7 @@ function isAdmin_SR(req, res, next)
             return next()
         }
     }
-    new userError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
+    new UserError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
 
 function isAdmin_CS(req, res, next)
@@ -76,7 +76,7 @@ async function isSameUser(req, res, next) //
     }
     else
     {
-        new userError(...Object.values(errorMessages.didNotMatch)).throw_SR(req, res)
+        new UserError(...Object.values(errorMessages.didNotMatch)).throw_SR(req, res)
     }
 }
 

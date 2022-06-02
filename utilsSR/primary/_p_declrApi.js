@@ -2,67 +2,42 @@ const mongoose = require("mongoose")
 const Declaration = require("../../models/declaration");
 const { switchSort, sortByScore } = require('./_p_basic')
 
-async function getDeclrDateSort(id, length, status = false)
+async function getDeclrDateSort(id, length, admin = false)
 {
-    if (status)
-    {
-        return await Declaration.findOne({ _id: id })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
+    const findPip = admin ? { _id: id } : { _id: id, status: "Active" }
+    const populatePip = {
+        path: 'comments',
+        populate: {
+            path: 'author'
+        }
     }
-    else
-    {
-        return await Declaration.findOne({ _id: id, status: "Active" })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-                match: { status: "Active" },
-                options: {
-                    limit: process.env.COMMENTS_LOAD_LIMIT,
-                    sort: { _id: -1 },
-                    skip: length,
-                }
-            })
+    if (admin) populatePip.match = { status: "Active" }
+    populatePip.options = {
+        limit: process.env.COMMENTS_LOAD_LIMIT,
+        sort: { _id: -1 },
+        skip: length,
     }
+    return await Declaration.findOne(findPip).populate(populatePip)
 }
 
-async function getDeclrScoreSort(id, status = false)
+async function getDeclrScoreSort(id, admin = false)
 {
-    if (status)
-    {
-        return await Declaration.findOne({ _id: id })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-            })
+    const findPip = admin ? { _id: id } : { _id: id, status: "Active" }
+    const populatePip = {
+        path: 'comments',
+        populate: {
+            path: 'author'
+        },
     }
-    else
-    {
-        return await Declaration.findOne({ _id: id, status: "Active" })
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'author'
-                },
-                match: { status: "Active" },
-            })
-    }
+    if (admin) populatePip.match = { status: "Active" }
+    const declaration = await Declaration.findOne(findPip).populate(populatePip);
+    declaration.comments = sortByScore(declaration.comments
+        .splice(0, comments.length)
+        .splice(process.env.COMMENTS_LOAD_LIMIT, declaration.comments.length))
+    return declaration;
 }
 
 module.exports =
 {
-    getDeclrScoreSort, getDeclrDateSort,
+    getDeclrScoreSort, getDeclrDateSort
 }
