@@ -1,37 +1,50 @@
-import React, { useState, useEffect } from 'react'
-import 'draft-js/dist/Draft.css';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
-import { CardActions, Box, Card, CardContent, Button, Typography, IconButton } from '@mui/material'
+import React, { useState, useContext } from 'react'
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { Box, Typography, IconButton } from '@mui/material'
+import { Build, Delete, Accessible } from '@mui/icons-material';
 import useStyles from "../assets/styles/_ReplyCard"
-import { CropData, getDateDifference } from '../utilsCS/_basic';
+import { getDateDifference } from '../utilsCS/_basic';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
-import { Build, Delete, Accessible } from '@mui/icons-material';
+import 'draft-js/dist/Draft.css';
 import Vote from "./Vote";
 
 function ReplyCard(props)
 {
-    const { _id, content, date, author, setEdit, handleDelete, user, id, cid, status } = props;
-    const [likes, setLikes] = useState(props.likes.filter(el => el.typeOf === true));
-    const [dislikes, setDislikes] = useState(props.likes.filter(el => el.typeOf === false));
-    const [initDiff, setInitialDiff] = useState()
-    const [diff, setDiff] = useState()
-    const classes = useStyles();
-    const userCtx = React.useContext(UserContext);
-    const adminCtx = React.useContext(AdminContext);
+    const { setEdit, user, id, cid, reply } = props;
+    const { _id: rid, content, date, author } = reply;
+
+    const [likes, setLikes] = useState(reply.likes.filter(el => el.typeOf === true));
+    const [dislikes, setDislikes] = useState(reply.likes.filter(el => el.typeOf === false));
+
+    const userCtx = useContext(UserContext);
+    const adminCtx = useContext(AdminContext);
 
     const data = JSON.parse(content)
     const editorState = EditorState.createWithContent(convertFromRaw(data))
+    const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
+    const initdiff = getDateDifference(new Date(), new Date(date[0]))
+    const classes = useStyles();
 
-    useEffect(() =>
+    const handleDelete = async () =>
     {
-        setInitialDiff(getDateDifference(new Date(), new Date(date[0])))
-        setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
-    }, [])
+        submitWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}/reply/${rid}`, {
+                method: 'DELETE',
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+
+    };
 
     const switchReply = () =>
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${_id}/switchstatus`, {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/reply/${rid}/switchstatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +54,7 @@ function ReplyCard(props)
             )
         }).then(response => response.json())
             .then(async res =>
-            { 
+            {
                 CS_Redirects.tryResCS(res, window)
                 console.log(res)
             })
@@ -51,7 +64,7 @@ function ReplyCard(props)
         <Box className={classes.Card} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={rid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
@@ -65,7 +78,7 @@ function ReplyCard(props)
                 )}
                 <Box sx={{ display: 'flex', gap: 1, }}>
                     <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                        Created {initDiff}
+                        Created {initdiff}
                     </Typography>
                     <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
                         Edited {diff}

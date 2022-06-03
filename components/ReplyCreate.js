@@ -1,39 +1,51 @@
 import React, { useState } from "react";
 import
 {
-    Avatar,
     Button,
-    CssBaseline,
-    TextField,
     Box,
-    Typography,
-    Container,
     FormHelperText,
-    Link
 } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
+import Rules from "../utilsCS/clientRules"
 
 function ReplyCreate(props)
 {
-    const [
-        ContentError,
-        setContentError,
-        helperContentText,
-        setHelperContentText,
-        checkContentKey,
-        setContentTrue,
-        setContentFalse,
-        contentValid,
-    ] = useFormError(false);
+    const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
+    const [alert, setAlert] = useState()
     const [editorState, setEditorState] = useState();
+    const [creatingWhile, creatingSwitch] = useLoading(false)
 
-    const { handleSubmit, alert, creatingSwitch } = props;
+    const { id, cid } = props;
     const classes = useStyles()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        creatingWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}/reply`, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+    };
 
     const errCheck = async (e) =>
     {

@@ -10,7 +10,6 @@ export default function TransitionAlerts(props)
 {
     const { type, children } = props;
     const [flash, setflash] = useState(children)
-    // const [open, setOpen] = React.useState(true);
 
     useEffect(() =>
     {

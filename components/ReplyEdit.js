@@ -1,40 +1,50 @@
 import React, { useState } from "react";
-import
-{
-    Avatar,
-    Button,
-    CssBaseline,
-    TextField,
-    Box,
-    Typography,
-    Container,
-    FormHelperText,
-    Link
-} from "@mui/material";
+import { Button, Box, FormHelperText, } from "@mui/material";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
+import useLoading from './hooks/useLoading'
+import Rules from '../utilsCS/clientRules'
 
 function ReplyEdit(props)
 {
-    const [
-        ContentError,
-        setContentError,
-        helperContentText,
-        setHelperContentText,
-        checkContentKey,
-        setContentTrue,
-        setContentFalse,
-        contentValid,
-    ] = useFormError(false);
+    const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-    const { handleSubmit, alert, submitSwitch, reply, setEdit } = props;
-    const { content, _id } = reply;
+    const { reply, setEdit } = props;
+    const { content, _id: rid  } = reply;
 
+    const [alert, setAlert] = useState()
+    const [submitWhile, submitSwitch] = useLoading(false)
     const [editorState, setEditorState] = useState();
 
     const classes = useStyles()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        submitWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}/reply/${rid}`, {
+                method: 'PUT',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+
+    };
 
     const errCheck = async (e) =>
     {

@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminDeclrs from '../../components/AdminDeclrs';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering, timeout } from '../../utilsCS/_basic'
 import { getDeclrs } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
-import useLoading from '../../components/hooks/useLoading'
 
 function declrlist(props)
 {
-    const [declarations, setDeclrs] = useState(props.declarations)
-
-    const [loadingWhile, switchLoading] = useLoading(false)
-    let adminCtx = React.useContext(AdminContext);
+    let adminCtx = useContext(AdminContext);
 
     useEffect(() =>
     {
@@ -27,30 +23,7 @@ function declrlist(props)
         }
     }, [])
 
-    const onDelete = async (e, id) =>                                                                           
-    {
-        e.preventDefault();
-        loadingWhile(async () =>
-        {
-            await timeout(500)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => response.json())
-                .then(async () =>
-                {
-                    CS_Redirects.tryResCS(res, window)
-                    const newDeclrs = await getDeclrs() //to do load more
-                    CS_Redirects.tryResCS(newDeclrs, window)
-                    setDeclrs(newDeclrs.obj)
-                })
-        })
-
-    }
-
-    return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations} switchLoading={switchLoading} onDelete={onDelete} /></AdminLayout>) : (<></>)
+    return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations} /></AdminLayout>) : (<></>)
 }
 declrlist.getInitialProps = async (props) =>
 {

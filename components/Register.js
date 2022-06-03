@@ -5,32 +5,43 @@ import Link from 'next/link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import useLoading from './hooks/useLoading'
+import Rules from "../utilsCS/clientRules"
 
 
 function Register(props)
 {
-    const [
-        UsernameError,
-        setUsernameError,
-        helperUsernameText,
-        setHelperUsernameText,
-        checkUsernameKey,
-        setUsernameTrue,
-        setUsernameFalse,
-        usernameValid,
-    ] = useFormError(false);
-    const [
-        EmailError,
-        setEmailError,
-        helperEmailText,
-        setHelperEmailText,
-        checkEmailKey,
-        setEmailTrue,
-        setEmailFalse,
-        emailValid,
-    ] = useFormError(false);
+    const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
+    const [EmailError, , helperEmailText, , checkEmailKey, setEmailTrue, setEmailFalse, emailValid,] = useFormError(false);
 
-    const { handleSubmit, alert, switchLoading } = props;
+    const [alert, setAlert] = useState()
+    const [submitWhile, submitLoading] = useLoading(false)
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        submitWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/pending`, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window);
+                    if (res.err) setError(res.err.message)
+                })
+        })
+    };
 
     const errCheck = (e) =>
     {
@@ -123,7 +134,7 @@ function Register(props)
                             }
                         </Grid>
                     </Grid>
-                    {switchLoading(0, () =>
+                    {submitLoading(0, () =>
                     (<>
                         <Button
                             type="submit"

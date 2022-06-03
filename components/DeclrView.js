@@ -3,15 +3,15 @@ import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import
 {
     Box, Typography,
-    IconButton, Avatar,
-    Collapse, Button, Grid
+    IconButton,
+    Collapse, Grid
 } from '@mui/material';
 import
 {
     Delete, Build,
     TurnedInNot, KeyboardArrowUp,
     KeyboardArrowDown, Comment,
-    IosShare, Accessible, Bookmark
+    IosShare, Accessible, BookmarkCard
 } from '@mui/icons-material';
 import CS_Redirects from '../utilsCS/CS_Redirects';
 import { CropData } from '../utilsCS/_basic';
@@ -22,39 +22,44 @@ import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 import Link from 'next/link'
 import Vote from "./Vote";
+import useLoading from './hooks/useLoading'
+import Rules from "../utilsCS/clientRules"
+import TransitionAlerts from './TransitionAlerts'
 
 function DeclrView(props)
 {
-    const {
-        declaration,
-        onDeclrDelete,
-        creatingSwitch,
-        alert,
-        handleSubmit,
-        commentWhile,
-        switchComment,
-        loadMore,
-        setComments,
-        comments,
-        loadMoreSwitch,
-        user } = props;
-    
-    const { title, description, file, date, authors, _id } = declaration;
-    const adminCtx = useContext(AdminContext);
-    const userCtx = useContext(UserContext);
+    const { declaration, user } = props;
+    const { title, description, file, date, authors, _id: id } = declaration;
 
-    const [open, setOpen] = useState(true);
-    const [hasBookmark, setBookmark] = useState(userCtx ? user.bookmarks.includes(_id) : false);
+    const [delalert, setDelAlert] = useState()
+    const [comments, setComments] = useState([])
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
-    const classes = useStyles();
+    const [hasBookmark, setBookmark] = useState(userCtx ? user.bookmarks.includes(id) : false);
+    const [formOpen, setFormOpen] = useState(true);
+
+    const [fullWhile, fullSwitch] = useLoading(false)
+
+    const adminCtx = useContext(AdminContext);
+    const userCtx = useContext(UserContext);
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
 
-    const switchDeclr = (_id) =>
+    const classes = useStyles();
+
+    const setDelError = (msg) =>  
     {
-        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}/switchstatus`, {
+        setDelAlert(msg)
+        setTimeout(() =>
+        {
+            setDelAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const switchStatus = () =>
+    {
+        fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/switchstatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,21 +84,34 @@ function DeclrView(props)
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-                { secret: process.env.NEXT_PUBLIC_SECRET, id: _id }
+                { secret: process.env.NEXT_PUBLIC_SECRET, id }
             )
         }).then(response => response.json())
             .then(async res =>
             {
                 CS_Redirects.tryResCS(res, window)
                 setBookmark(!hasBookmark)
-                console.log(res)
             })
     }
 
-    const Placeholder = (
-        <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
-            No Upload...
-        </Typography>)
+    const onDeclrDelete = async (e) =>                                                                           
+    {
+        e.preventDefault();
+        fullWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setDelError(res.err.message)
+                })
+        })
+    }
 
     const CommentFormCreate = () =>
     {
@@ -106,21 +124,24 @@ function DeclrView(props)
                         size="small"
                         onClick={() =>
                         {
-                            setOpen(!open);
+                            setFormOpen(!formOpen);
                         }}
                     >
-                        {open ? (<KeyboardArrowUp fontSize="inherit" />) : (<KeyboardArrowDown fontSize="inherit" />)}
+                        {formOpen
+                            ? (<KeyboardArrowUp fontSize="inherit" />)
+                            : (<KeyboardArrowDown fontSize="inherit" />)}
                     </IconButton>
                 </Grid>
 
-                <Collapse in={open}>
-                    <CommentCreate creatingSwitch={creatingSwitch} alert={alert} handleSubmit={handleSubmit} />
+                <Collapse in={formOpen}>
+                    <CommentCreate id={id} />
                 </Collapse>
             </Box>)
     }
 
-    return (
-        <Box>
+    return fullSwitch(2, () => (
+        <>
+            {delalert && (<TransitionAlerts type="error">{delalert}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Box className={classes.Title}>
                     <Typography variant="h4" color="text.default">
@@ -128,7 +149,7 @@ function DeclrView(props)
                     </Typography>
                     {adminCtx && (
                         <>
-                            <Link href={`/edit/${_id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
+                            <Link href={`/edit/${id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
                             <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete color="tertiary" /></IconButton></Link>
                         </>
                     )}
@@ -147,16 +168,16 @@ function DeclrView(props)
                     </Typography>
                     )}
                 {adminCtx
-                    && (<IconButton size="small" onClick={switchDeclr}>
+                    && (<IconButton size="small" onClick={switchStatus}>
                         <Accessible />
-                    </IconButton>)
-                }
+                    </IconButton>)}
                 {/* <BackLink>Back</BackLink> */}
             </Box>
+
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote user={user} likes={likes} setLikes={setLikes} d_id={_id} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
@@ -169,31 +190,36 @@ function DeclrView(props)
 
                 <Box display="flex" justifyContent="left" gap={1}>
                     <IosShare />
-                    {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><Bookmark /></IconButton>)
+                    {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><BookmarkCard /></IconButton>)
                         : (<IconButton onClick={switchBookmark}><TurnedInNot /></IconButton>))}
                 </Box>
             </Box>
 
             <Box className={classes.Line} />
 
-            {user ? (<CommentFormCreate />) : (<Typography variant="h6" align="center"><Link href="/user/register">Sign up</Link> or <Link href="/user/login">Log in</Link> to comment</Typography>)}
+            {user ? (<CommentFormCreate />)
+                : (<Typography variant="h6" align="center">
+                    <Link href="/user/register">
+                        Sign up
+                    </Link>
+                    or <Link href="/user/login">
+                        Log in
+                    </Link>
+                    to comment
+                </Typography>)}
 
-            <Box display="flex" alignItems="center" flexDirection="column">
-                <CommentList
-                    loadMore={loadMore}
-                    comments={comments}
-                    _id={_id}
-                    user={user}
-                    declaration={declaration}
-                    loadMoreSwitch={loadMoreSwitch}
-                    commentWhile={commentWhile}
-                    setComments={setComments}
-                    switchComment={switchComment}
-                />
-            </Box>
+            <CommentList
+                comments={comments}
+                declaration={declaration}
+                user={user}
+                setComments={setComments}
+            />
 
-            {/* {file ? (<DocumentView file={file} />) : Placeholder} */}
-        </Box>
-    )
+            {/* {file ? (<DocumentView file={file} />) 
+            : (<Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
+                No Upload...
+            </Typography>)} */}
+        </>
+    ))
 }
 export default DeclrView;

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
-import Dashboard from '../../components/Dashboard';
+import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, getGlobals } from '../../utilsCS/_basic'
+import { determRendering } from '../../utilsCS/_basic'
 import{ getUsers,} from '../../utilsCS/_get'
 import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
@@ -11,7 +11,8 @@ function admin(props)
 {
     const { users, declarations } = props;
 
-    let adminCtx = React.useContext(AdminContext);
+    let adminCtx = useContext(AdminContext);
+
     useEffect(() =>
     {
         if (props.isAdmin)
@@ -26,7 +27,7 @@ function admin(props)
     }, [])
 
 
-    return adminCtx ? (<AdminLayout><Dashboard declarations={declarations} users={users} /></AdminLayout>) : (<></>)
+    return adminCtx ? (<AdminLayout><AdminIndex declarations={declarations} users={users} /></AdminLayout>) : (<></>)
 }
 
 admin.getInitialProps = async (props) =>

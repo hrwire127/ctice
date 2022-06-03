@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
@@ -10,7 +10,8 @@ function userlist(props)
 {
     const { users } = props;
 
-    let adminCtx = React.useContext(AdminContext);
+    let adminCtx = useContext(AdminContext);
+
     useEffect(() =>
     {
         if (props.isAdmin)

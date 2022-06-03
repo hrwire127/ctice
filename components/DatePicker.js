@@ -2,16 +2,14 @@ import * as React from 'react';
 import { Stack, TextField, IconButton, Box } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import useStyles from '../assets/styles/_DatePicker';
 
 function DatePicker(props)
 {
-    const { setTime } = props;
-    const [value, setValue] = React.useState("Invalid");
+    const { setTime, value } = props;
+    
     const maxDate = new Date();
     const minDate = new Date('2020-01-01');
     const classes = useStyles();
@@ -21,20 +19,17 @@ function DatePicker(props)
         if (newValue === "Invalid" || !newValue)
         {
             setTime("Invalid")
-            setValue("Invalid");
         }
         else
         {
             if (new Date().toDateString() === newValue.toDateString())
             {
                 setTime("Invalid")
-                setValue("Invalid");
                 return;
             }
             else 
             {
                 setTime(newValue)
-                setValue(newValue);
             }
         }
     };

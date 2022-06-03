@@ -2,16 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../components/context/contextUser'
 import Change from '../../components/Change'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import useLoading from '../../components/hooks/useLoading'
-import { determRendering, checkToken, timeout, getDateDifference } from "../../utilsCS/_basic"
+import { determRendering, checkToken } from "../../utilsCS/_basic"
 import { getClientUser, } from '../../utilsCS/_get'
 
 function change(props)
 {
     const { user, isResetToken } = props;
     const userCtx = useContext(UserContext);
-    const [alert, setAlert] = useState()
-    const [loadingWhile, switchLoading] = useLoading(false)
 
     useEffect(() =>
     {
@@ -21,50 +18,9 @@ function change(props)
         }
     }, [])
 
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, 9000);
-    }
-
-    const changeAccDetails = async (body) => 
-    {
-        loadingWhile(async () =>
-        {
-            timeout(5000)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/change`, {
-                method: 'POST',
-                body,
-            }).then(response => response.json())
-                .then(async res =>
-                {
-                    CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
-                })
-        })
-    }
-
-    const resetPassword = async () =>
-    {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/send`, {
-            method: 'POST',
-        }).then(response => response.json())
-            .then(res =>
-            {
-                CS_Redirects.tryResCS(res, window)
-            })
-    }
-
     return userCtx && (<Change
         user={user}
-        changeAccDetails={changeAccDetails}
         isResetToken={isResetToken}
-        switchLoading={switchLoading}
-        resetPassword={resetPassword}
-        alert={alert}
     />)
 }
 

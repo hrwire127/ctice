@@ -8,7 +8,7 @@ import Loading from "../components/Loading"
 import Router from "next/router";
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
-import NavLayout from './NavLayout'
+import Navigation from './Navigation'
 import { makeStyles } from '@mui/styles'
 import { StyledEngineProvider } from '@mui/material/styles';
 
@@ -100,7 +100,7 @@ export default function Layout(props)
                                     >
                                         {props.children.props.noNav
                                             ? (<>{props.children}</>)
-                                            : (<NavLayout>{props.children}</NavLayout>)}
+                                            : (<Navigation>{props.children}</Navigation>)}
 
                                     </Box>)
                                 }

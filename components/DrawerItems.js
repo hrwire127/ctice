@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import DashboardIcon from '@mui/icons-material/AdminIndex';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -15,7 +15,7 @@ const mainDrawerItems = (
       <ListItemIcon>
         <DashboardIcon color="tertiary" />
       </ListItemIcon>
-      <Link href="/admin/"><ListItemText primary="Dashboard" /></Link>
+      <Link href="/admin/"><ListItemText primary="AdminIndex" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

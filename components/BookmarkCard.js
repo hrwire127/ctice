@@ -6,7 +6,7 @@ import { Box, Typography, Paper, IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { getDateDifference } from '../utilsCS/_basic';
 
-function Bookmark(props)
+function BookmarkCard(props)
 {
     const { title, _id, date } = props;
     const [likes, setLikes] = useState(props.likes.filter(el => el.typeOf === true));
@@ -58,4 +58,4 @@ function Bookmark(props)
 }
 
 
-export default Bookmark
+export default BookmarkCard

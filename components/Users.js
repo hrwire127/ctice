@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
         }
     }
 }));
-export default function Users(props)
+function Users(props)
 {
 	const { users } = props
 	const classes = useStyles();
@@ -59,3 +59,4 @@ export default function Users(props)
 		</>
 	);
 }
+export default Users

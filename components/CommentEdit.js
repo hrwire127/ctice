@@ -15,26 +15,49 @@ import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
+import Rules from "../utilsCS/clientRules"
+import useLoading from './hooks/useLoading'
 
 function CommentEdit(props)
 {
-    const [
-        ContentError,
-        setContentError,
-        helperContentText,
-        setHelperContentText,
-        checkContentKey,
-        setContentTrue,
-        setContentFalse,
-        contentValid,
-    ] = useFormError(false);
+    const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-    const { handleSubmit, alert, submitSwitch, comment, setEdit } = props;
-    const { content, _id } = comment;
-
+    const [alert, setAlert] = useState()
     const [editorState, setEditorState] = useState();
+    const [submitWhile, submitSwitch] = useLoading(false)
+
+    const { comment, setEdit, id, fullWhile } = props;
+    const { content, _id: cid } = comment;
 
     const classes = useStyles()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        submitWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}`, {
+                method: 'PUT',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    fullWhile(() =>
+                    {
+                        CS_Redirects.tryResCS(res, window)
+                        if (res.err) setError(res.err.message)
+                    })
+                })
+        })
+    };
 
     const errCheck = async (e) =>
     {
@@ -56,7 +79,7 @@ function CommentEdit(props)
     };
 
     return (
-        <Box>
+        <>
             {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
             <Box
                 component="form"
@@ -99,7 +122,7 @@ function CommentEdit(props)
                     </Button>
                 </Box>))}
             </Box>
-        </Box >
+        </>
     );
 }
 export default CommentEdit

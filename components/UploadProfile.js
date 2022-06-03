@@ -9,7 +9,7 @@ import
 import { CheckCircle, FileUpload, Close } from '@mui/icons-material';
 import { uploadFileUrl } from "../utilsCS/_basic";
 
-function UploadProfile(props)
+function UploadIconProfile(props)
 {
     const { profile, image, setImage } = props;
 
@@ -102,4 +102,4 @@ function UploadProfile(props)
 }
 
 
-export default UploadProfile
+export default UploadIconProfile

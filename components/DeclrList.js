@@ -1,39 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import
 {
-    Box, Typography, ButtonGroup, Button, Grid,
-    IconButton, AppBar, CssBaseline, Divider, Drawer,
-    List, ListItem, ListItemIcon, ListItemText, MailIcon,
-    Toolbar, ListItemButton, MenuItem, FormControl,
+    Box, Typography, ButtonGroup, Button,
+    IconButton, MenuItem, FormControl,
     Select, InputLabel,
 } from '@mui/material';
-import DeclrCard from './DeclrCard';
+import { Add } from "@mui/icons-material"
 import useStyles from '../assets/styles/_DeclrList'
 import AdminContext from './context/contextAdmin'
-import Link from 'next/link'
-import { Add } from "@mui/icons-material"
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { timeout } from "../utilsCS/_basic"
-import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
 import DatePicker from './DatePicker'
+import DeclrCard from './DeclrCard';
+import Link from 'next/link'
 import TransitionAlerts from './TransitionAlerts'
+import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
+import Sort from './Sort'
+import useLoading from './hooks/useLoading'
 
 function DeclrList(props)
 {
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
+    const [declarations, setDeclarations] = useState();
     const [count, setCount] = useState(props.count);
-    const [sort, setSorting] = React.useState(10);
+    const [sort, setSorting] = useState(10);
+    const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
+    const [fullWhile, fullSwitch] = useLoading(true)
 
-    const { flash,
-        loadMore,
-        declarations,
-        setDeclarations,
-        loadMoreSwitch,
-        fullWhile,
-        fullSwitch } = props;
+    const { flash } = props;
     const classes = useStyles();
-    const adminCtx = React.useContext(AdminContext);
+    const adminCtx = useContext(AdminContext);
 
     useEffect(() =>
     {
@@ -54,10 +50,8 @@ function DeclrList(props)
     {
         fullWhile(async () =>
         {
-            await timeout(500)
             //doclimit ---!!!
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort)
-            console.log(newDeclrs)
             const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
             CS_Redirects.tryResCS(newDeclrs, window)
             CS_Redirects.tryResCS(newQuery, window)
@@ -67,7 +61,19 @@ function DeclrList(props)
 
     }, [dateValue, queryValue, sort])
 
-    const handleChange = (e) =>
+    function loadMore(e, date, query, sort)
+    {
+        e.preventDefault()
+        loadMoreWhile(async () =>
+        {
+            //doclimit --!!!!
+            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort);
+            CS_Redirects.tryResCS(newDeclrs, window)
+            setDeclarations(declarations.concat(newDeclrs.obj));
+        })
+    }
+
+    const handleSort = (e) =>
     {
         setSorting(e.target.value);
     };
@@ -101,21 +107,7 @@ function DeclrList(props)
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
-            <Box sx={{ display: 'flex', justifyContent: "right" }}>
-                <FormControl sx={{ width: 120, mt: 2, mb: 2 }}>
-                    <InputLabel id="demo-simple-select-label">Sort</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        label="Sort"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={10}>Date</MenuItem>
-                        <MenuItem value={20}>Score</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
+            <Sort handleSort={handleSort} sort={sort} />
             <Box className={classes.Bar}>
                 <Typography variant="h4">
                     Announcements
@@ -126,7 +118,7 @@ function DeclrList(props)
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
                 </Box>
-                <DatePicker setTime={setDate} />
+                <DatePicker setTime={setDate} value={dateValue} />
             </Box>
             <Declrs />
         </>

@@ -9,7 +9,6 @@ function profile(props)
 {
     const { user, isResetToken } = props;
     const userCtx = useContext(UserContext);
-    const [bookmarks, setBookmarks] = useState([])
 
     useEffect(() =>
     {
@@ -22,8 +21,6 @@ function profile(props)
     return userCtx && (<Profile
         user={user}
         isResetToken={isResetToken}
-        bookmarks={bookmarks}
-        setBookmarks={setBookmarks}
     />)
 }
 

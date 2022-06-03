@@ -6,20 +6,21 @@ import Chart from './Chart';
 import Declrs from './Declrs';
 import Link from 'next/link'
 
-function Dashboard(props)
+function AdminIndex(props)
 {
+    const { users, declarations } = props;
+
     const Logout = async () =>
     {
         const res = await LogoutFetch()
         CS_Redirects.tryResCS(res, window)
     }
-    const { users, declarations } = props;
+
     return (
         <>
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid container spacing={3}>
-                    {/* Chart */}
                     <Grid item xs={12} md={8} lg={9}>
                         <Paper
                             sx={{
@@ -32,7 +33,6 @@ function Dashboard(props)
                             <Chart users={users} />
                         </Paper>
                     </Grid>
-                    {/* Recent Deposits */}
                     <Grid item xs={10} md={4} lg={3}>
                         <Paper
                             sx={{
@@ -94,7 +94,6 @@ function Dashboard(props)
                             </Grid>
                         </Paper>
                     </Grid>
-                    {/* Recent Orders */}
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <Declrs declarations={declarations.slice(0, process.env.DOCS_LOAD_LIMIT)} noControlls />
@@ -111,4 +110,4 @@ function Dashboard(props)
     )
 }
 
-export default Dashboard
+export default AdminIndex

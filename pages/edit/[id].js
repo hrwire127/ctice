@@ -10,22 +10,8 @@ import useLoading from '../../components/hooks/useLoading'
 function edit(props)
 {
     const { declaration } = props;
-    const { _id } = declaration;
 
-    const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
-
-    const [alert, setAlert] = useState()
-    const [loadingWhile, switchLoading] = useLoading(false)
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, 9000);
-    }
 
     useEffect(() =>
     {
@@ -35,24 +21,7 @@ function edit(props)
         }
     }, [])
 
-    const handleSubmit = async (body) =>
-    {
-        loadingWhile(async () =>
-        {
-            await timeout(500)
-            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${_id}`, {
-                method: 'PUT',
-                body: body,
-            }).then(response => response.json())
-                .then(async res =>
-                {
-                    CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
-                })
-        })
-    };
-
-    return adminCtx && (<EditForm handleSubmit={handleSubmit} declaration={declaration} alert={alert} switchLoading={switchLoading} />)
+    return adminCtx && (<EditForm declaration={declaration} />)
 }
 
 edit.getInitialProps = async (props) =>

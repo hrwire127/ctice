@@ -1,58 +1,64 @@
 import React, { useState } from 'react'
 import
 {
-    Avatar, Button, CssBaseline,
-    TextField, FormControlLabel, Checkbox,
-    Grid, Box, Typography, Container, Alert,
+    Avatar, Button,
+    TextField,
+    Grid, Box, Typography,
     FormHelperText
 } from '@mui/material';
-import TransitionAlerts from './TransitionAlerts'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useFormError from "./hooks/useFormError";
-import BackLink from "./BackLink";
+import TransitionAlerts from './TransitionAlerts'
 import UploadBtnProfile from './UploadBtnProfile';
+import useFormError from "./hooks/useFormError";
 import LocationSearch from "./LocationSearch"
 import TextArea from "./TextArea";
+import BackLink from "./BackLink";
+import useStyles from "../assets/styles/_Welcome"
+import Rules from "../utilsCS/clientRules"
+import useLoading from '../components/hooks/useLoading'
 
 function Welcome(props)
 {
-    const { handleSubmit, alert, switchLoading } = props;
-    const [
-        PasswordError,
-        setPasswordError,
-        helperPasswordText,
-        setHelperPasswordText,
-        checkPasswordKey,
-        setPasswordTrue,
-        setPasswordFalse,
-        passwordValid,
-    ] = useFormError(false);
+    const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
+    const [LocationError, , , , checkLocationKey,] = useFormError(false);
+    const [DescError, , , , checkDescKey,] = useFormError(false);
 
-    const [
-        LocationError,
-        setLocationError,
-        helperLocationText,
-        setHelperLocationText,
-        checkLocationKey,
-        setLocationTrue,
-        setLocationFalse,
-        locationValid,
-    ] = useFormError(false);
-
-    const [
-        DescError,
-        setDescError,
-        helperDescText,
-        setHelperDescText,
-        checkDescKey,
-        setDescTrue,
-        setDescFalse,
-        descValid,
-    ] = useFormError(false);
-
+    const { confirmationCode } = props
+    
+    const [alert, setAlert] = useState()
+    const [loadingWhile, loadingSwitch] = useLoading(false)
     const [file, changeFile] = useState();
     const [editorState, setEditorState] = useState();
     const [location, setLocation] = useState(user.location)
+
+    const classes = useStyles()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        body.append("confirmationCode", confirmationCode)
+
+        loadingWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/register`, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+    };
 
     const errCheck = (e) =>
     {
@@ -72,13 +78,8 @@ function Welcome(props)
             setPasswordFalse();
         }
     }
-    return (
-        <Box sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-        }}>
+    return loadingSwitch(0, () => (
+        <Box className={classes.Container}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                 <LockOutlinedIcon />
             </Avatar>
@@ -163,7 +164,7 @@ function Welcome(props)
                     </Grid>
                 </Grid>
 
-                {switchLoading(0, () =>
+                {loadingSwitch(0, () =>
                 (<>
                     <Button
                         type="submit"
@@ -177,7 +178,7 @@ function Welcome(props)
                 </>))}
             </Box>
         </Box>
-    )
+    ))
 }
 
 export default Welcome

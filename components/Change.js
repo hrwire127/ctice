@@ -11,52 +11,67 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
-import UploadProfile from './UploadProfile'
+import UploadIconProfile from './UploadIconProfile'
 import LocationSearch from "./LocationSearch"
+import useLoading from './hooks/useLoading'
+import Rules from "../utilsCS/clientRules"
 
 function Change(props)
 {
-	const [
-		UsernameError,
-		setUsernameError,
-		helperUsernameText,
-		setHelperUsernameText,
-		checkUsernameKey,
-		setUsernameTrue,
-		setUsernameFalse,
-		usernameValid,
-	] = useFormError(false);
+	const [UsernameError, , , , checkUsernameKey] = useFormError(false);
 
-	const [
-		LocationError,
-		setLocationError,
-		helperLocationText,
-		setHelperLocationText,
-		checkLocationKey,
-		setLocationTrue,
-		setLocationFalse,
-		locationValid,
-	] = useFormError(false);
+	const [LocationError, , , , checkLocationKey] = useFormError(false);
 
-	const [
-		DescError,
-		setDescError,
-		helperDescText,
-		setHelperDescText,
-		checkDescKey,
-		setDescTrue,
-		setDescFalse,
-		descValid,
-	] = useFormError(false);
+	const [DescError, , , , checkDescKey] = useFormError(false);
 
+	const { user, isResetToken } = props;
+	const { username, date, profile, bio, connections } = user;
 
-	const { changeAccDetails, user, isResetToken, alert, switchLoading, resetPassword } = props;
-	const { username, status, date, email, profile, _id, bio, connections } = user;
+	const [alert, setAlert] = useState()
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
+
+	const [submitWhile, submitSwitch] = useLoading(false)
+
+	const isDelayed = Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
 	const classes = useStyles()
 
+	const setError = (msg) => 
+	{
+		setAlert(msg)
+		setTimeout(() =>
+		{
+			setAlert()
+		}, Rules.form_message_delay);
+	}
+
+	const resetPassword = async () =>
+	{
+		await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/send`, {
+			method: 'POST',
+		}).then(response => response.json())
+			.then(res =>
+			{
+				CS_Redirects.tryResCS(res, window)
+			})
+	}
+
+	const handleSubmit = async (body) => 
+	{
+		submitWhile(async () =>
+		{
+			await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/change`, {
+				method: 'POST',
+				body,
+			}).then(response => response.json())
+				.then(async res =>
+				{
+					CS_Redirects.tryResCS(res, window)
+					if (res.err) setError(res.err.message)
+				})
+		})
+	}
 	const errCheck = async (e) =>
 	{
 		e.preventDefault();
@@ -72,7 +87,7 @@ function Change(props)
 
 		if (image) data.set("profile", image)
 
-		changeAccDetails(data);
+		handleSubmit(data);
 	}
 
 	return (
@@ -84,7 +99,7 @@ function Change(props)
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<UploadProfile profile={profile.url} image={image} setImage={setImage} />
+					<UploadIconProfile profile={profile.url} image={image} setImage={setImage} />
 				</Grid>
 				<Grid
 					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}
@@ -162,11 +177,11 @@ function Change(props)
 					/>
 				</Grid>
 			</Grid>
-			{Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
+			{isDelayed
 				? (<Typography variant="h7" color="text.danger">
 					Please wait some time after the edit
 				</Typography>)
-				: (switchLoading(0, () =>
+				: (submitSwitch(0, () =>
 				(<>
 					<Button
 						type="submit"

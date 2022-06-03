@@ -1,29 +1,49 @@
 import React, { useState } from 'react'
-import
-{
-    Avatar, Button, CssBaseline,
-    TextField, FormControlLabel, Checkbox,
-    Grid, Box, Typography, Container, Alert,
-    FormHelperText
-} from '@mui/material';
+import { Avatar, Button, TextField, Grid, Box, Typography, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
-import BackLink from "./BackLink";
 import TransitionAlerts from './TransitionAlerts'
+import BackLink from "./BackLink";
+import useStyles from "../assets/styles/_Reset"
 
 function Reset(props)
 {
-    const { handleSubmit, alert, switchLoading } = props;
-    const [
-        PasswordError,
-        setPasswordError,
-        helperPasswordText,
-        setHelperPasswordText,
-        checkPasswordKey,
-        setPasswordTrue,
-        setPasswordFalse,
-        passwordValid,
-    ] = useFormError(false);
+    const { confirmationCode } = props
+
+    const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
+
+    const [alert, setAlert] = useState()
+    const [loadingWhile, switchLoading] = useLoading(false)
+
+    const classes = useStyles()
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        body.append("confirmationCode", confirmationCode)
+
+        loadingWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset`, {
+                method: 'POST',
+                body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+    };
+
     const errCheck = (e) =>
     {
         e.preventDefault();
@@ -42,12 +62,7 @@ function Reset(props)
         }
     }
     return (
-        <Box sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-        }}>
+        <Box className={classes.Container}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                 <LockOutlinedIcon />
             </Avatar>
@@ -58,7 +73,7 @@ function Reset(props)
             <Box
                 component="form"
                 noValidate
-                sx={{ mt: 3, width: 400}}
+                sx={{ mt: 3, width: 400 }}
                 onSubmit={errCheck}
             >
                 <Grid container spacing={2}>

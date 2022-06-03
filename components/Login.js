@@ -1,38 +1,54 @@
 import React, { useState } from 'react';
 import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 import useStyles from '../assets/styles/_Login'
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import useLoading from './hooks/useLoading'
 
 function Login(props)
 {
-    const [
-        UsernameError,
-        setUsernameError,
-        helperUsernameText,
-        setHelperUsernameText,
-        checkUsernameKey,
-        setUsernameTrue,
-        setUsernameFalse,
-        usernameValid,
-    ] = useFormError(false);
-    const [
-        PasswordError,
-        setPasswordError,
-        helperPasswordText,
-        setHelperPasswordText,
-        checkPasswordKey,
-        setPasswordTrue,
-        setPasswordFalse,
-        passwordValid,
-    ] = useFormError(false);
+    const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
+    const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
+
+    const [alert, setAlert] = useState()
     const [remember, setRemember] = useState(false)
-    const { handleSubmit, alert, switchLoading } = props;
+    const [loadingWhile, switchLoading] = useLoading(false)
 
     const classes = useStyles();
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, 9000);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        loadingWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                    else
+                    {
+                        window.location = (window.location.href !== document.referrer
+                            ? document.referrer
+                            : process.env.NEXT_PUBLIC_DR_HOST)
+                    }
+                })
+        })
+    };
 
     const errCheck = (e) =>
     {

@@ -9,9 +9,7 @@ import
     Typography,
     Container,
     FormHelperText,
-    Link
 } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
@@ -20,35 +18,16 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
-import { useTheme } from '@mui/styles';
 
 export default function CreateForm(props)
 {
-    const [
-        TitleError,
-        setTitleError,
-        helperTitleText,
-        setHelperTitleText,
-        checkTitleKey,
-        setTitleTrue,
-        setTitleFalse,
-        titleValid,
-    ] = useFormError(false);
-    const [
-        DescError,
-        setDescError,
-        helperDescText,
-        setHelperDescText,
-        checkDescKey,
-        setDescTrue,
-        setDescFalse,
-        descValid,
-    ] = useFormError(false);
+    const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid,] = useFormError(false);
+    const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
 
-    const [file, changeFile] = useState();
     const [editorState, setEditorState] = useState();
+    const [file, changeFile] = useState();
 
-    const { handleSubmit, alert, switchLoading } = props;
+    const { handleSubmit, alert, loadingSwitch } = props;
     const classes = useStyles()
 
     // useEffect(() =>
@@ -135,7 +114,7 @@ export default function CreateForm(props)
 
                     <UploadBtnPdf changeFile={changeFile} file={file} />
 
-                    {switchLoading(0, () =>
+                    {loadingSwitch(0, () =>
                     (<>
                         <Button
                             type="submit"

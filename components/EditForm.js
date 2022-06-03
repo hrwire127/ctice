@@ -9,20 +9,49 @@ import useStyles from "../assets/styles/_EditForm"
 import TextArea from './TextArea'
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
+import Rules from "../utilsCS/clientRules"
 
 
 function EditForm(props)
 {
-    const [TitleError, setTitleError, helperTitleText, setHelperTitleText, checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
-    const [DescError, setDescError, helperDescText, setHelperDescText, checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
+    const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
+    const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration, handleSubmit, alert, switchLoading } = props;
-    const { title, description, _id } = declaration;
+    const { declaration } = props;
+    const { title, description, _id: id } = declaration;
 
     const [file, changeFile] = useState(declaration.file);
     const [editorState, setEditorState] = useState();
 
+    const [alert, setAlert] = useState()
+    const [submitWhile, submitLoading] = useLoading(false)
+
     const classes = useStyles();
+
+    const setError = (msg) => 
+    {
+        setAlert(msg)
+        setTimeout(() =>
+        {
+            setAlert()
+        }, Rules.form_message_delay);
+    }
+
+    const handleSubmit = async (body) =>
+    {
+        submitWhile(async () =>
+        {
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}`, {
+                method: 'PUT',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setError(res.err.message)
+                })
+        })
+    };
 
     const errCheck = (e) =>
     {
@@ -97,7 +126,7 @@ function EditForm(props)
                     }
 
                     <UploadBtnPdf changeFile={changeFile} file={file} />
-                    {switchLoading(0, () => (
+                    {submitLoading(0, () => (
                         <>
                             <Button
                                 type="submit"

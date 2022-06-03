@@ -4,9 +4,8 @@ import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
 
-function NavLayout(props)
+function Navigation(props)
 {
-
     const classes = useStyles();
 
     const Item = (props) =>
@@ -81,4 +80,4 @@ function NavLayout(props)
     )
 }
 
-export default NavLayout
+export default Navigation
