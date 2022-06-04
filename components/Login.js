@@ -6,6 +6,7 @@ import BackLink from "./BackLink";
 import useStyles from '../assets/styles/_Login'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from './hooks/useLoading'
+import Rules from "../utilsCS/clientRules"
 
 function Login(props)
 {
@@ -25,7 +26,7 @@ function Login(props)
         setTimeout(() =>
         {
             setAlert()
-        }, 9000);
+        }, Rules.form_message_delay);
     }
 
     const handleSubmit = async (body) =>

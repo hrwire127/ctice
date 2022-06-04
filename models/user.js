@@ -49,22 +49,18 @@ const UserSchema = new Schema({
         },
         location: {
             type: String,
-            required: true,
         }
     },
     location:
     {
         name: {
             type: String,
-            required: true,
         },
         lat: {
             type: Number,
-            required: true,
         },
         long: {
             type: Number,
-            required: true,
         }
     },
     bookmarks: {
@@ -152,26 +148,34 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
         }
         else
         {
-            const file = await upload_profiles(files.profile)
-            const user = new User({
-                username: pending.username,
-                date: [pending.date],
-                email: pending.email,
-                status: "Active",
-                profile: {
-                    url: file.url,
-                    location: file.location
-                },
-                bio,
-                location,
-                connections
-            })
+            try
+            {
+                const file = files ? await upload_profiles(files.profile) : null
 
-            if (facebook) user.connections.facebook = facebook
-            if (twitter) user.connections.twitter = twitter
-            if (linkedin) user.connections.linkedin = linkedin
+                const user = new User({
+                    username: pending.username,
+                    date: [pending.date],
+                    email: pending.email,
+                    status: "Active",
+                    profile: {
+                        url: file ? file.url : undefined,
+                        location: file ? file.location : undefined
+                    },
+                    bio,
+                    location,
+                    connections: { facebook, linkedin, twitter }
+                })
 
-            await User.register(user, password)
+                if (facebook) user.connections.facebook = facebook
+                if (twitter) user.connections.twitter = twitter
+                if (linkedin) user.connections.linkedin = linkedin
+
+                await User.register(user, password)
+            }
+            catch (err) 
+            {
+                console.log(err)
+            }
         }
     }
     else
@@ -220,10 +224,13 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         if (linkedin) user.connections.linkedin = linkedin
 
         console.log(user)
+        console.log(req.files)
+        console.log(user.profile.location)
+        console.log(profile)
 
         user.date.push(new Date())
 
-        if (await new excRule([req.files, user.profile.url], [profile], async () =>
+        if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
             let file = await upload_profiles(req.files.profile)
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
@@ -232,15 +239,15 @@ UserSchema.statics.updateChanges = async function (req, res, user)
                     user.profile.location
                 )
             }
-            user.profile.url = file.url
+            user.profile.location = file.location
             user.profile.location = file.location
         }).Try()) return user;
 
-        if (await new excRule([], [profile, req.files, user.profile.url], async () =>
+        if (await new excRule([], [profile, req.files, user.profile.location], async () =>
         {
         }).Try()) return user;
 
-        if (await new excRule([user.profile.url], [profile, req.files], async () =>
+        if (await new excRule([user.profile.location], [profile, req.files], async () =>
         {
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
@@ -251,7 +258,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
                 )
             }
             user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
-            user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
+            // user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
         }).Try()) return user;
     }
 }

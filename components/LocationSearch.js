@@ -6,7 +6,7 @@ import { SettingsBackupRestore } from '@mui/icons-material';
 function LocationSearch(props)
 {
     const { setLocation, error, onKeyPress, limit, defaultLocation } = props
-    const [features, setFeatures] = useState([defaultLocation])
+    const [features, setFeatures] = useState(defaultLocation ? [defaultLocation] : [])
     const [query, setQuery] = useState(defaultLocation ? defaultLocation.name : "")
 
 
@@ -32,18 +32,14 @@ function LocationSearch(props)
             <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                defaultValue={defaultLocation.name}
+                defaultValue={defaultLocation ? defaultLocation.name : ""}
                 options={features.map(el => el.name)}
                 onChange={(event, newValue) => 
                 {
                     features.every(f =>
                     {
-                        console.log(f.name)
-                        console.log(newValue)
-                        console.log("\n")
                         if (f.name === newValue)
                         {
-                            console.log(true)
                             setLocation(f)
                             return false;
                         }

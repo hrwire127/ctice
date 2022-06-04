@@ -28,7 +28,7 @@ const PendingSchema = new Schema({
     expireAt: {
         type: Date,
         default: Date.now,
-        expires: 120,
+        expires: 1920,
         required: true
     },
     date:

@@ -22,7 +22,7 @@ module.exports.sendRegisterEmail = function (name, email, confirmationCode)
 			html: `<h1>Email Confirmation</h1>
             <h2>Hello ${name}</h2>
             <p>Thank you for registrating. Please confirm your email by clicking on the following link</p>
-            <a href=${process.env.NEXT_PUBLIC_DR_HOST}/user/confirm/${confirmationCode}> Click here</a>
+            <a href=${process.env.NEXT_PUBLIC_DR_HOST}/user/pending/${confirmationCode}> Click here</a>
             </div>`,
 		}).then(res =>
 		{

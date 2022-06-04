@@ -28,7 +28,7 @@ function verifyPendingCode(req, res, next)
 function verifyPendingCode(req, res, next) 
 {
     Pending.findOne({
-        confirmationCode: req.body.confirmationCode,
+        confirmationCode: req.params.confirmationCode,
     })
         .then(async (pending) =>
         {

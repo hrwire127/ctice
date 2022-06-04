@@ -89,20 +89,27 @@ function inspectChange(username = undefined, Files = undefined, location = undef
         if (bioRule.getVal()) return bioRule.processMsg()
     }
 
-    if (connections)
+    const { facebook, linkedin, twitter } = connections
+
+    if (facebook)
     {
-        const { facebook, linkedin, twitter } = connections
-        
         const facebookFormat = new valRule(facebook, Rules.facebook_connection_includes, 4)
         if (facebookFormat.getVal()) return facebookFormat.processMsg()
+    }
 
+    if (linkedin)
+    {
         const twitterFormat = new valRule(twitter, Rules.twitter_connection_includes, 4)
         if (twitterFormat.getVal()) return twitterFormat.processMsg()
-        
+    }
+
+    if (twitter)
+    {
         const linkedinFormat = new valRule(linkedin, Rules.linkedin_connection_includes, 4)
         if (linkedinFormat.getVal()) return linkedinFormat.processMsg()
     }
 }
+
 
 function inspectPdf(file)
 {

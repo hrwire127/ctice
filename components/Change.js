@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import
 {
-	Avatar, Button, CssBaseline,
-	TextField, FormControlLabel, Checkbox,
-	Grid, Box, Typography, Container, Alert,
-	FormHelperText, Link, Paper
+	Button, TextField,
+	Grid, Box, Typography, Link
 } from '@mui/material';
-import { CheckCircle, FileUpload } from '@mui/icons-material';
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
-import UploadIconProfile from './UploadIconProfile'
+import UploadProfile from './UploadProfile'
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
@@ -29,7 +27,7 @@ function Change(props)
 
 	const [alert, setAlert] = useState()
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
-	const [location, setLocation] = useState(user.location)
+	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 
 	const [submitWhile, submitSwitch] = useLoading(false)
@@ -82,7 +80,7 @@ function Change(props)
 			data.delete("username")
 		}
 
-		data.append("location", JSON.stringify(location))
+		if (location) data.append("location", JSON.stringify(location))
 		data.append("bio", JSON.stringify(editorState))
 
 		if (image) data.set("profile", image)
@@ -99,7 +97,7 @@ function Change(props)
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<UploadIconProfile profile={profile.url} image={image} setImage={setImage} />
+					<UploadProfile profile={profile.url} image={image} setImage={setImage} />
 				</Grid>
 				<Grid
 					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}

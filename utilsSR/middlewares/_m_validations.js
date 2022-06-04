@@ -55,17 +55,45 @@ async function validateDeclr(req, res, next)
 
 async function validateRegUser(req, res, next) 
 {
-    let { confirmationCode, password, profile } = req.body
+    let { confirmationCode, password, profile, location, bio, facebook, linkedin, twitter } = req.body
 
+    console.log(req.body)
     const declarationSchema = Joi.object({
         confirmationCode: Joi.string().required(),
         password: Joi.string().required(),
-        profile: Joi.string().required(),
+        profile: Joi.string(),
+        location: Joi.object({
+            name: Joi.string().required(),
+            lat: Joi.number().required(),
+            long: Joi.number().required()
+        }),
+        bio: Joi.object({
+            blocks: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required(),
+                text: Joi.string().required().allow(''),
+                type: Joi.string().required(),
+                depth: Joi.number().required(),
+                inlineStyleRanges: Joi.array().required(),
+                entityRanges: Joi.array().required(),
+                data: Joi.object().required()
+            })),
+            entityMap: Joi.object().required()
+        }),
+        connections: Joi.object({
+            facebook: Joi.string().allow(''),
+            linkedin: Joi.string().allow(''),
+            twitter: Joi.string().allow('')
+        })
     })
 
     const preparedBody =
     {
-        confirmationCode, password, profile
+        confirmationCode,
+        password,
+        profile,
+        location: location ? JSON.parse(location) : undefined,
+        bio: JSON.parse(bio),
+        connections: { facebook, linkedin, twitter }
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -78,14 +106,26 @@ async function validateRegUser(req, res, next)
     }
 
 
-    const bodyError = inspectUser(undefined, undefined, password, req.files)
+    const userError = inspectUser(undefined, undefined, password, req.files)
+    const bodyError = inspectChange(undefined, undefined,
+        location ? JSON.parse(location) : undefined,
+        JSON.parse(bio),
+        { facebook, linkedin, twitter })
+
+    if (userError) 
+    {
+        return new UserError(bodyError, 401).throw_CS(res)
+    }
 
     if (bodyError) 
     {
         return new UserError(bodyError, 401).throw_CS(res)
     }
 
+    console.log("1")
     req.body.password = password.trim()
+    if (req.body.bio) req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
+
 
     next()
 }
@@ -166,7 +206,7 @@ async function validateChange(req, res, next)
             name: Joi.string().required(),
             lat: Joi.number().required(),
             long: Joi.number().required()
-        }).required(),
+        }),
         bio: Joi.object({
             blocks: Joi.array().items(Joi.object().keys({
                 key: Joi.string().required(),
@@ -178,11 +218,11 @@ async function validateChange(req, res, next)
                 data: Joi.object().required()
             })),
             entityMap: Joi.object().required()
-        }).required(),
+        }),
         connections: Joi.object({
-            facebook: Joi.string(),
-            linkedin: Joi.string(),
-            twitter: Joi.string()
+            facebook: Joi.string().allow(''),
+            linkedin: Joi.string().allow(''),
+            twitter: Joi.string().allow('')
         })
     })
 
@@ -190,7 +230,7 @@ async function validateChange(req, res, next)
     {
         username,
         profile,
-        location: JSON.parse(location),
+        location: location ? JSON.parse(location) : undefined,
         bio: JSON.parse(bio),
         connections: { facebook, linkedin, twitter }
     }
@@ -204,8 +244,11 @@ async function validateChange(req, res, next)
         return new UserError(msg, 401).throw_CS(res)
     }
 
-
-    const bodyError = inspectChange(username, req.files, JSON.parse(location), JSON.parse(bio), { facebook, linkedin, twitter })
+    const bodyError = inspectChange(username,
+        req.files,
+        location ? JSON.parse(location) : undefined,
+        JSON.parse(bio),
+        { facebook, linkedin, twitter })
 
     if (bodyError) 
     {
@@ -213,14 +256,14 @@ async function validateChange(req, res, next)
     }
 
     if (req.body.username) req.body.username = username.trim()
-    req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
+    if (req.body.bio) req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
 
     next()
 }
 
 async function validateComment(req, res, next)
 {
-    let { content, date } = req.body
+    let { content } = req.body
 
     const commentSchema = Joi.object({
         content: Joi.object({

@@ -1,8 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, Alert, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Link from 'next/link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 import CS_Redirects from '../utilsCS/CS_Redirects'

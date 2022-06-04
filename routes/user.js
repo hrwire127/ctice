@@ -84,8 +84,10 @@ router.post("/register", validateRegUser, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
 
+    console.log("2")
     const pending = await Pending.findOne({ confirmationCode })
 
+    console.log("3")
     await User.processRegister(req, res, { pending, password })
     await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');
@@ -124,7 +126,7 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
     const userdata = await getUserdata(req, res)
     const user = await User.findOne({ _id: userdata._id });
     const Obj = await User.updateChanges(req, res, user);
-    await User.findByIdAndUpdate(id, Obj)
+    await User.findByIdAndUpdate(user._id , Obj)
     req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details');
     Redirects_SR.Home.CS(res)

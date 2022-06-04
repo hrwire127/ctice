@@ -8,11 +8,12 @@ import
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TransitionAlerts from './TransitionAlerts'
-import UploadBtnProfile from './UploadBtnProfile';
+import UploadBtnProfile from './UploadProfile';
 import useFormError from "./hooks/useFormError";
 import LocationSearch from "./LocationSearch"
 import TextArea from "./TextArea";
 import BackLink from "./BackLink";
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import useStyles from "../assets/styles/_Welcome"
 import Rules from "../utilsCS/clientRules"
 import useLoading from '../components/hooks/useLoading'
@@ -24,12 +25,12 @@ function Welcome(props)
     const [DescError, , , , checkDescKey,] = useFormError(false);
 
     const { confirmationCode } = props
-    
+
     const [alert, setAlert] = useState()
     const [loadingWhile, loadingSwitch] = useLoading(false)
-    const [file, changeFile] = useState();
+    const [image, changeImage] = useState();
     const [editorState, setEditorState] = useState();
-    const [location, setLocation] = useState(user.location)
+    const [location, setLocation] = useState()
 
     const classes = useStyles()
 
@@ -64,19 +65,13 @@ function Welcome(props)
     {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
-        if (file) data.append("profile", file)
 
-        const password = data.get("password");
+        if (location) data.append("location", JSON.stringify(location))
+        data.append("bio", JSON.stringify(editorState))
 
-        if (passwordValid(password))
-        {
-            setPasswordTrue();
-            handleSubmit(data);
-        }
-        else
-        {
-            setPasswordFalse();
-        }
+        if (image) data.append("profile", image)
+
+        handleSubmit(data);
     }
     return loadingSwitch(0, () => (
         <Box className={classes.Container}>
@@ -94,7 +89,7 @@ function Welcome(props)
                 onSubmit={errCheck}
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <TextField
                             margin="normal"
                             inputProps={{ maxLength: 10 }}
@@ -110,10 +105,10 @@ function Welcome(props)
                         />
                         <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
                     </Grid>
-                    <Grid item xs={12}>
-                        <UploadBtnProfile changeFile={changeFile} file={file} />
+                    <Grid item xs={4}>
+                        <UploadBtnProfile changeFile={changeImage} file={image} />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <LocationSearch
                             setLocation={setLocation}
                             error={LocationError}
@@ -121,7 +116,7 @@ function Welcome(props)
                             limit={5}
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <TextArea
                             placeholder="Description"
                             setData={setEditorState}
@@ -129,7 +124,7 @@ function Welcome(props)
                             checkDescKey={checkDescKey}
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -140,7 +135,7 @@ function Welcome(props)
                             id="twitter"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -151,7 +146,7 @@ function Welcome(props)
                             id="facebook"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -168,7 +163,6 @@ function Welcome(props)
                 (<>
                     <Button
                         type="submit"
-                        fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >

@@ -59,7 +59,7 @@ function Profile(props)
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="h7" >
-                    {location.name}
+                    {location && location.name}
                 </Typography>
             </Grid>
             <BookmarkList user={user} />
