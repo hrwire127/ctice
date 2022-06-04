@@ -187,7 +187,7 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
 
 UserSchema.statics.updateChanges = async function (req, res, user)
 {
-    const { username, id, profile, location, bio, facebook, linkedin, twitter } = req.body;
+    const { username, profile, location, bio, facebook, linkedin, twitter } = req.body;
 
     const User = mongoose.model('User', UserSchema)
     if (await User.findOne({ username: username }))
@@ -223,11 +223,6 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         if (twitter) user.connections.twitter = twitter
         if (linkedin) user.connections.linkedin = linkedin
 
-        console.log(user)
-        console.log(req.files)
-        console.log(user.profile.location)
-        console.log(profile)
-
         user.date.push(new Date())
 
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
@@ -251,11 +246,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         {
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
-                await cloud.destroy(
-                    user.profile.location, {}, (res, err) =>
-                {
-                }
-                )
+                await cloud.destroy(user.profile.location)
             }
             user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
             // user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION

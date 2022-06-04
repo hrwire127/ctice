@@ -122,7 +122,6 @@ async function validateRegUser(req, res, next)
         return new UserError(bodyError, 401).throw_CS(res)
     }
 
-    console.log("1")
     req.body.password = password.trim()
     if (req.body.bio) req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
 
@@ -231,7 +230,7 @@ async function validateChange(req, res, next)
         username,
         profile,
         location: location ? JSON.parse(location) : undefined,
-        bio: JSON.parse(bio),
+        bio: bio ? JSON.parse(bio) : undefined,
         connections: { facebook, linkedin, twitter }
     }
 
@@ -247,7 +246,7 @@ async function validateChange(req, res, next)
     const bodyError = inspectChange(username,
         req.files,
         location ? JSON.parse(location) : undefined,
-        JSON.parse(bio),
+        bio ? JSON.parse(bio) : undefined,
         { facebook, linkedin, twitter })
 
     if (bodyError) 
