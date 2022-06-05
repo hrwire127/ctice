@@ -7,3 +7,8 @@ function login(props)
 }
 
 export default login
+
+login.getInitialProps = async (props) =>
+{
+    return { nav: "Home" }
+}

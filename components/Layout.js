@@ -6,9 +6,11 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import Loading from "../components/Loading"
 import Router from "next/router";
+import CS_Redirects from '../utilsCS/CS_Redirects';
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
-import Navigation from './Navigation'
+import HomeNavigation from './HomeNavigation'
+import UserNavigation from './UserNavigation'
 import { makeStyles } from '@mui/styles'
 import { StyledEngineProvider } from '@mui/material/styles';
 
@@ -98,10 +100,12 @@ export default function Layout(props)
                                     </Box>)
                                     : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
                                     >
-                                        {props.children.props.noNav
-                                            ? (<>{props.children}</>)
-                                            : (<Navigation>{props.children}</Navigation>)}
-
+                                        {props.children.props.nav
+                                            ? props.children.props.nav === "Home"
+                                                ? (<HomeNavigation>{props.children}</HomeNavigation>)
+                                                : (<UserNavigation>{props.children}</UserNavigation>)
+                                            : (<>{props.children}</>)
+                                        }
                                     </Box>)
                                 }
                             </main>)

@@ -26,6 +26,7 @@ function Change(props)
 	const { username, date, profile, bio, connections } = user;
 
 	const [alert, setAlert] = useState()
+	const [flash, setFlash] = useState()
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
@@ -35,12 +36,21 @@ function Change(props)
 	const isDelayed = Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
 	const classes = useStyles()
 
-	const setError = (msg) => 
+	const setError = (msg) =>
 	{
 		setAlert(msg)
 		setTimeout(() =>
 		{
 			setAlert()
+		}, Rules.form_message_delay);
+	}
+
+	const setMessage = (obj) =>
+	{
+		setFlash(obj)
+		setTimeout(() =>
+		{
+			setFlash()
 		}, Rules.form_message_delay);
 	}
 
@@ -55,7 +65,7 @@ function Change(props)
 			})
 	}
 
-	const handleSubmit = async (body) => 
+	const handleSubmit = async (body) =>
 	{
 		submitWhile(async () =>
 		{
@@ -66,7 +76,14 @@ function Change(props)
 				.then(async res =>
 				{
 					CS_Redirects.tryResCS(res, window)
-					if (res.err) setError(res.err.message)
+					if(res.err)
+					{
+						setError(err)
+					}
+					else
+					{
+						setMessage(res.obj)
+					}
 				})
 		})
 	}
@@ -75,7 +92,7 @@ function Change(props)
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
 
-		if (data.get("username") === username) 
+		if (data.get("username") === username)
 		{
 			data.delete("username")
 		}
@@ -94,8 +111,9 @@ function Change(props)
 			component="form"
 			noValidate
 		>
+			{flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
-			<Grid container spacing={2}>
+			<Grid container spacing={2} sx={{ mb: 2 }}>
 				<Grid item xs={4}>
 					<UploadProfile profile={profile.url} image={image} setImage={setImage} />
 				</Grid>
@@ -107,11 +125,10 @@ function Change(props)
 						variant="outlined"
 						margin="normal"
 						inputProps={{ maxLength: 10 }}
-						required
 						defaultValue={username}
 						error={UsernameError}
 						name="username"
-						label="New Username"
+						label="Username"
 						type="username"
 						id="username"
 						autoComplete="new-username"
@@ -134,63 +151,68 @@ function Change(props)
 							</Link>)
 						}
 					</div>
-
-					<TextArea
-						styles={classes.Editor}
-						placeholder="Description"
-						setData={setEditorState}
-						error={DescError}
-						checkDescKey={checkDescKey}
-						data={JSON.parse(bio)}
-					/>
-					<TextField
-						fullWidth
-						variant="outlined"
-						margin="normal"
-						defaultValue={connections ? connections.twitter : ""}
-						name="twitter"
-						label="Twitter Link"
-						type="twitter"
-						id="twitter"
-					/>
-					<TextField
-						fullWidth
-						variant="outlined"
-						margin="normal"
-						defaultValue={connections ? connections.facebook : ""}
-						name="facebook"
-						label="Facebook Link"
-						type="facebook"
-						id="facebook"
-					/>
-					<TextField
-						fullWidth
-						variant="outlined"
-						margin="normal"
-						defaultValue={connections && connections.linkedin}
-						name="linkedin"
-						label="Linkedin Link"
-						type="linkedin"
-						id="linkedin"
-					/>
 				</Grid>
 			</Grid>
-			{isDelayed
-				? (<Typography variant="h7" color="text.danger">
-					Please wait some time after the edit
-				</Typography>)
-				: (submitSwitch(0, () =>
-				(<>
-					<Button
-						type="submit"
-						variant="contained"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						Save
-					</Button>
-				</>)))
-			}
-		</Box>
+			<TextArea
+				styles={classes.Editor}
+				placeholder="Description"
+				setData={setEditorState}
+				error={DescError}
+				checkDescKey={checkDescKey}
+				data={JSON.parse(bio)}
+			/>
+
+			<Box sx={{ display: 'flex', justifyContent: "space-between", mt: 2 }}>
+				<TextField
+					fullWidth
+					variant="outlined"
+					margin="normal"
+					defaultValue={connections ? connections.twitter : ""}
+					name="twitter"
+					label="Twitter Link"
+					type="twitter"
+					id="twitter"
+				/>
+				<TextField
+					fullWidth
+					variant="outlined"
+					margin="normal"
+					defaultValue={connections ? connections.facebook : ""}
+					name="facebook"
+					label="Facebook Link"
+					type="facebook"
+					id="facebook"
+				/>
+				<TextField
+					fullWidth
+					variant="outlined"
+					margin="normal"
+					defaultValue={connections && connections.linkedin}
+					name="linkedin"
+					label="Linkedin Link"
+					type="linkedin"
+					id="linkedin"
+				/>
+			</Box>
+
+			<Box sx={{ textAlign: "center" }}>
+				{isDelayed
+					? (<Typography variant="h7" color="text.danger">
+						Please wait some time after the edit
+					</Typography>)
+					: (submitSwitch(0, () =>
+					(<>
+						<Button
+							type="submit"
+							variant="contained"
+							sx={{ mt: 3, mb: 2 }}
+						>
+							Save
+						</Button>
+					</>)))
+				}
+			</Box>
+		</Box >
 	)
 }
 

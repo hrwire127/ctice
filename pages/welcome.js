@@ -20,7 +20,7 @@ welcome.getInitialProps = async (props) =>
     {
         const { confirmationCode } = props.query;
 
-        return { confirmationCode }
+        return { confirmationCode, nav: "Home" }
     })
 }
 export default welcome

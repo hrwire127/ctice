@@ -214,7 +214,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (bio)
         {
-            user.bio = JSON.parse(bio)
+            user.bio = bio
         }
 
         user.connections = {}
@@ -251,6 +251,8 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
             // user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
         }).Try()) return user;
+
+        return user;
     }
 }
 

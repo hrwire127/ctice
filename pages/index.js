@@ -18,16 +18,16 @@ function index(props)
 index.getInitialProps = async (props) =>
 {
     const count = await getAllCount();
-    const flash = getFlash(props)
+    const flash = await getFlash(props)
 
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(count, window)
-        return { flash, count: count.obj }
+        return { flash, count: count.obj, nav: "Home"  }
     }, () =>
     {
         CS_Redirects.tryResSR(count, props)
-        return { flash, count: count.obj }
+        return { flash, count: count.obj, nav: "Home"  }
     })
 }
 

@@ -26,11 +26,11 @@ view.getInitialProps = async (props) =>
     {
         const user = await getClientUser();
         CS_Redirects.tryResCS(declr, window)
-        return { declaration: declr.obj, user: user.obj ? user.obj : undefined }
+        return { declaration: declr.obj, user: user.obj ? user.obj : undefined, nav: "Home" }
     }, () =>
     {
         CS_Redirects.tryResSR(declr, props)
-        return { declaration: declr.obj, user }
+        return { declaration: declr.obj, user, nav: "Home" }
     })
 }
 

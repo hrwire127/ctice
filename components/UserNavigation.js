@@ -1,21 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, ButtonGroup, Button, Grid, IconButton, AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, MailIcon, Toolbar, ListItemButton } from '@mui/material';
+import { Box, Typography, IconButton, CssBaseline, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
+import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material';
 
-function Navigation(props)
+function UserNavigation(props)
 {
     const classes = useStyles();
 
     const Item = (props) =>
     {
-        const { text, url, includes } = props
+        const { text, url, includes, icon } = props
         const router = useRouter();
+
+        const ItemIcon = () =>
+        {
+            switch (icon)
+            {
+                case "Info":
+                    return <Info />
+                case "Customs":
+                    return <Palette />
+                case "Edit":
+                    return <Edit />
+                case "Bookmarks":
+                    return <Bookmarks />
+            }
+        }
 
         const selected = (<>
             <Link href={url}>
                 <ListItemButton className={classes.ItemButton}>
+                    <ListItemIcon>
+                        <ItemIcon />
+                    </ListItemIcon>
                     <ListItemText primary={<Typography color="text.primary" fontWeight="bold">{text}</Typography>} />
                 </ListItemButton>
             </Link>
@@ -26,6 +45,9 @@ function Navigation(props)
         const basic = (
             <Link href={url}>
                 <ListItemButton>
+                    <ListItemIcon>
+                        <ItemIcon />
+                    </ListItemIcon>
                     <ListItemText primary={<Typography color="text.primary">{text}</Typography>} />
                 </ListItemButton>
             </Link >)
@@ -36,7 +58,7 @@ function Navigation(props)
                 <ListItem key={text} disablePadding>
                     {router.pathname.includes(url)
                         ? selected
-                        : basic                   
+                        : basic
                     }
                 </ListItem >)
         }
@@ -54,9 +76,10 @@ function Navigation(props)
 
     const drawer = (
         <List className={classes.DrawerList}>
-            <Item text="Home" url="/" />
-            <Item text="Login" url="/user/login" />
-            <Item text="Profile" url="/user/profile" />
+            <Item text="Info" url="/user/profile" icon="Info" />
+            <Item text="Edit" url="/user/profile/edit" icon="Edit" />
+            <Item text="Bookmarks" url="/user/profile/bookmarks" icon="Bookmarks" />
+            <Item text="Customs" url="/user/profile/customs" icon="Customs" />
         </List>
     );
 
@@ -68,6 +91,13 @@ function Navigation(props)
                 className={classes.Drawer}
                 aria-label="mailbox folders"
             >
+                <Box display="flex" justifyContent="center">
+                    <Link href="/">
+                        <IconButton>
+                            <Close />
+                        </IconButton>
+                    </Link>
+                </Box>
                 {drawer}
             </Box>
             <Box
@@ -80,4 +110,4 @@ function Navigation(props)
     )
 }
 
-export default Navigation
+export default UserNavigation

@@ -33,11 +33,11 @@ edit.getInitialProps = async (props) =>
     return determRendering(props, () =>
     {
         CS_Redirects.tryResCS(declr, window)
-        return { declaration: declr.obj }
+        return { declaration: declr.obj, nav: "Home" }
     }, () =>
     {
         CS_Redirects.tryResSR(declr, props)
-        return { declaration: declr.obj }
+        return { declaration: declr.obj, nav: "Home" }
     })
 }
 

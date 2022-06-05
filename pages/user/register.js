@@ -7,3 +7,8 @@ function register(props)
 }
 
 export default register
+
+register.getInitialProps = async (props) =>
+{
+    return { nav: "Home" }
+}

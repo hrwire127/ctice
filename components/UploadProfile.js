@@ -32,7 +32,8 @@ function UploadIconProfile(props)
     return (<Box
         onClick={onBtnClick}
         sx={{
-            width: "100%",
+            width: 200,
+            height: 200,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -46,8 +47,8 @@ function UploadIconProfile(props)
                 }
             },
             "& div": {
-                width: 200,
-                height: 200,
+                width: "200%",
+                height: "100%",
                 background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${image === profile ? image : (image ? URL.createObjectURL(image) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)}) no-repeat center`,
                 backgroundSize: "cover",
                 borderRadius: 4,

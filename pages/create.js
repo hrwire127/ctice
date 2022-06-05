@@ -48,3 +48,8 @@ function create(props)
 }
 
 export default create
+
+create.getInitialProps = async (props) =>
+{
+    return { nav: "Home" }
+}

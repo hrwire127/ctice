@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import UserContext from '../../components/context/contextUser'
-import Change from '../../components/Change'
-import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, checkToken } from "../../utilsCS/_basic"
-import { getClientUser, } from '../../utilsCS/_get'
+import UserContext from '../../../components/context/contextUser'
+import Profile from '../../../components/Profile'
+import CS_Redirects from '../../../utilsCS/CS_Redirects'
+import { determRendering, checkToken } from "../../../utilsCS/_basic"
+import { getClientUser, } from '../../../utilsCS/_get'
 
-function change(props)
+function customs(props)
 {
     const { user, isResetToken } = props;
     const userCtx = useContext(UserContext);
@@ -18,13 +18,13 @@ function change(props)
         }
     }, [])
 
-    return userCtx && (<Change
-        user={user}
-        isResetToken={isResetToken}
-    />)
+    return userCtx && (
+        <div>
+            customs
+        </div>)
 }
 
-change.getInitialProps = async (props) =>
+customs.getInitialProps = async (props) =>
 {
     return determRendering(props, async () =>
     {
@@ -32,15 +32,15 @@ change.getInitialProps = async (props) =>
         CS_Redirects.tryResCS(user, window)
         const isResetToken = await checkToken(user.obj._id)
         CS_Redirects.tryResCS(isResetToken, window)
-        return { user: user.obj, isResetToken: isResetToken.obj }
+        return { user: user.obj, isResetToken: isResetToken.obj, nav: "Profile" }
     }, async () =>
     {
         const user = JSON.parse(JSON.stringify(props.query.user));
         const isResetToken = await checkToken(user._id)
-
         CS_Redirects.tryResSR(isResetToken, props)
-        return { user, isResetToken: isResetToken.obj }
+        return { user, isResetToken: isResetToken.obj, nav: "Profile" }
     })
 }
 
-export default change
+
+export default customs

@@ -27,11 +27,23 @@ router.get('/profile', isLogged_SR, async (req, res) =>
     app.render(req, res, "/user/profile", { user })
 })
 
-router.get('/change', isLogged_SR, tryAsync_SR(async (req, res) =>
+router.get('/profile/edit', isLogged_SR, async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    app.render(req, res, "/user/change", { user })
-}))
+    app.render(req, res, "/user/profile/edit", { user })
+})
+
+router.get('/profile/customs', isLogged_SR, async (req, res) =>
+{
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/customs", { user })
+})
+
+router.get('/profile/bookmarks', isLogged_SR, async (req, res) =>
+{
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/bookmarks", { user })
+})
 
 router.get("/pending/:confirmationCode", verifyPendingCode, tryAsync_SR(async (req, res) =>
 {
@@ -84,10 +96,8 @@ router.post("/register", validateRegUser, tryAsync_SR(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
 
-    console.log("2")
     const pending = await Pending.findOne({ confirmationCode })
 
-    console.log("3")
     await User.processRegister(req, res, { pending, password })
     await Pending.findByIdAndDelete(pending._id)
     req.flash('success', 'Successfuly Registered');
@@ -128,8 +138,9 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
     const Obj = await User.updateChanges(req, res, user);
     await User.findByIdAndUpdate(user._id , Obj)
     req.session.passport.user = Obj.username
-    req.flash('success', 'Changed Account Details');
-    Redirects_SR.Home.CS(res)
+    req.flash('success', 'Changed Account Details!');
+    console.log(req.flash)
+    Redirects_SR.Api.sendApi(res, req.session.flash[0] )
 }))
 
 router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { getLimitedBookmarks, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
@@ -35,21 +35,23 @@ function BookmarkList(props)
         })
     }
 
-    return (<Box className={classes.List}>
-        {
-            fullSwitch(0, () => 
+    return user.bookmarks.length > 1
+        ? (<Box className={classes.List}>
             {
-                return bookmarks.map(b => (<BookmarkCard key={b._id} {...b} />))
-            })
-        }
-        {
-            loadMoreSwitch(0, () => bookmarks.length < user.bookmarks.length
-                && bookmarks.length > 0
-                && (<Box textAlign="center">
-                    <Button onClick={(e) => loadMore(e)}>Load More</Button>
-                </Box>))
-        }
-    </Box>)
+                fullSwitch(0, () => 
+                {
+                    return bookmarks.map(b => (<BookmarkCard key={b._id} {...b} />))
+                })
+            }
+            {
+                loadMoreSwitch(0, () => bookmarks.length < user.bookmarks.length
+                    && bookmarks.length > 0
+                    && (<Box textAlign="center">
+                        <Button onClick={(e) => loadMore(e)}>Load More</Button>
+                    </Box>))
+            }
+        </Box>)
+        : (<Typography align="center" variant="h4" color="text.secondary">Nothing</Typography>)
 }
 
 

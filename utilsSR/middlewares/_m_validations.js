@@ -196,7 +196,6 @@ async function validateLogUser(req, res, next)
 async function validateChange(req, res, next)
 {
     let { username, profile, location, bio, facebook, linkedin, twitter } = req.body
-    console.log(req.body)
 
     const declarationSchema = Joi.object({
         username: Joi.string(),

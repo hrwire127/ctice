@@ -21,7 +21,7 @@ error.getInitialProps = (props) =>
         CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
     }, () =>
     {
-        return { error, noNav: true }
+        return { error }
     })
 }
 

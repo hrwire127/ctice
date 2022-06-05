@@ -16,7 +16,7 @@ function LocationSearch(props)
             .then(res => res.json())
             .then(async res => 
             {
-                CS_Redirects.tryResCS(res, window)
+                console.log(res)
                 setFeatures(res.features.map(el =>
                 {
                     return {
@@ -28,7 +28,7 @@ function LocationSearch(props)
             })
     }
     return (
-        <Stack spacing={2} sx={{ width: 300 }}>
+        <Stack spacing={2} sx={{ width: 300, width: "100%" }}>
             <Autocomplete
                 id="free-solo-demo"
                 freeSolo
@@ -51,6 +51,7 @@ function LocationSearch(props)
                 renderInput={(params) => 
                 {
                     return <TextField
+                        fullWidth
                         {...params}
                         label="Location"
                         error={error}
