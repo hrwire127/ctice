@@ -3,6 +3,8 @@ import { Box } from '@mui/material'
 import Header from './Header'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
+import StyleContext from './context/contextStyle'
+import SortContext from './context/contextSort'
 import Loading from "../components/Loading"
 import Router from "next/router";
 import CS_Redirects from '../utilsCS/CS_Redirects';
@@ -17,7 +19,8 @@ export default function Layout(props)
     const { globals } = props;
     const [loading, setLoading] = useState(false);
     const [light, setThemeLight] = useState(globals.lightTheme);
-
+    const [style, setStyle] = useState(globals.style);
+    const [sort, setSorting] = useState(globals.sort);
 
     useEffect(() =>
     {
@@ -55,68 +58,59 @@ export default function Layout(props)
         }
     }, [userCtx, adminCtx]);
 
-    const toggleTheme = async () =>
-    {
-        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/theme`,
-            {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(
-                    { light, secret: process.env.NEXT_PUBLIC_SECRET }
-                )
-            }).then(response => response.json())
-            .then(async res =>
-            {
-                CS_Redirects.tryResCS(res, window)
-                setThemeLight(res.obj)
-            })
-    }
-
     let childrenwprops = props.children;
 
     if (React.isValidElement(props.children))
     {
-        childrenwprops = React.cloneElement(props.children, { ...props.children.props, light, setThemeLight });
+        childrenwprops = React.cloneElement(props.children, {
+            ...props.children.props,
+            light,
+            setThemeLight,
+            setStyle,
+            setSorting
+        });
     }
 
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
                 <ThemeProvider theme={light ? themeLight : themeBlack}>
-                    <StyledEngineProvider injectFirst>
-                        {loading
-                            ? (
-                                <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
-                                    <Loading fullPage={true} />
-                                </Box>
-                            )
-                            : (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
+                    <StyleContext.Provider value={style}>
+                        <SortContext.Provider value={sort}>
+                            <StyledEngineProvider injectFirst>
+                                {loading
+                                    ? (
+                                        <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
+                                            <Loading fullPage={true} />
+                                        </Box>
+                                    )
+                                    : (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                        {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
 
-                                {childrenwprops.props.noHeader && adminCtx
-                                    ? (<Box sx={
-                                        { margin: 0, flex: 1, backgroundColor: "background.default" }
-                                    }
-                                    >
-                                        {childrenwprops}
-                                    </Box>)
-                                    : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
-                                    >
-                                        {childrenwprops.props.nav
-                                            ? childrenwprops.props.nav === "Home"
-                                                ? (<HomeNavigation>{childrenwprops}</HomeNavigation>)
-                                                : (<UserNavigation>{childrenwprops}</UserNavigation>)
-                                            : (<>{childrenwprops}</>)
+                                        {childrenwprops.props.noHeader && adminCtx
+                                            ? (<Box sx={
+                                                { margin: 0, flex: 1, backgroundColor: "background.default" }
+                                            }
+                                            >
+                                                {childrenwprops}
+                                            </Box>)
+                                            : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
+                                            >
+                                                {childrenwprops.props.nav
+                                                    ? childrenwprops.props.nav === "Home"
+                                                        ? (<HomeNavigation>{childrenwprops}</HomeNavigation>)
+                                                        : (<UserNavigation>{childrenwprops}</UserNavigation>)
+                                                    : (<>{childrenwprops}</>)
+                                                }
+                                            </Box>)
                                         }
-                                    </Box>)
+                                    </main>)
                                 }
-                            </main>)
-                        }
-                    </StyledEngineProvider>
+                            </StyledEngineProvider>
+                        </SortContext.Provider>
+                    </StyleContext.Provider>
                 </ThemeProvider>
             </AdminContext.Provider>
-        </UserContext.Provider>
+        </UserContext.Provider >
     )
 } 

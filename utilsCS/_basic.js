@@ -1,4 +1,6 @@
 const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
+import { sortScore, sortDate } from '../components/context/sortEnum'
+import { styleFull, styleCompact } from '../components/context/styleEnum'
 
 const CropData = (data, length) =>
 {
@@ -80,10 +82,14 @@ function getGlobals(context)
     let isUser;
     let isAdmin = false;
     let lightTheme = true;
+    let style = styleFull;
+    let sort = sortDate;
     if (context.req.session.passport) isUser = context.req.session.passport.user
-    if (context.req.session.light !== undefined) lightTheme = context.req.session.light
+    if (context.req.session.light) lightTheme = context.req.session.light
+    if (context.req.session.style) style = context.req.session.style
+    if (context.req.session.sort) sort = context.req.session.sort
     isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
-    return { isUser, isAdmin, lightTheme }
+    return { isUser, isAdmin, lightTheme, style, sort }
 }
 
 function nowindowFetchError(res)

@@ -4,6 +4,7 @@ import
     Box, MenuItem, FormControl,
     Select, InputLabel,
 } from '@mui/material';
+import { sortScore, sortDate } from './context/sortEnum'
 
 function Sort(props)
 {
@@ -19,8 +20,8 @@ function Sort(props)
                 label="Sort"
                 onChange={handleSort}
             >
-                <MenuItem value={10}>Date</MenuItem>
-                <MenuItem value={20}>Score</MenuItem>
+                <MenuItem value={sortDate}>Date</MenuItem>
+                <MenuItem value={sortScore}>Score</MenuItem>
             </Select>
         </FormControl>
     </Box>)

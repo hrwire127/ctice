@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import { Box, Typography, Paper } from '@mui/material'
-import useStyles from "../assets/styles/_DeclrCard"
-import { CropData, getDateDifference } from '../utilsCS/_basic';
+import useStyles from "../assets/styles/_DeclrCardCompact"
+import { getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
 
-function DeclrCard(props) 
+function DeclrCardCompact(props) 
 {
     const { title, _id, description, date } = props;
 
@@ -34,4 +34,4 @@ function DeclrCard(props)
     )
 }
 
-export default DeclrCard
+export default DeclrCardCompact

@@ -4,11 +4,11 @@ const { cloud } = require('../../cloud/storage');
 
 async function switchSort(sort, dateFunc, scoreSort)
 {
-    if (sort === 10)
+    if (sort === "date")
     {
         return dateFunc()
     }
-    else if (sort === 20)
+    else if (sort === "score")
     {
         return scoreSort()
     }

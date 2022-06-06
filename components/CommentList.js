@@ -6,6 +6,7 @@ import
     Typography
 } from '@mui/material';
 import Comment from './Comment';
+import SortContext from './context/contextSort'
 import useStyles from '../assets/styles/_CommentList';
 import useLoading from './hooks/useLoading'
 import { getLimitedComments } from '../utilsCS/_get'
@@ -13,7 +14,9 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function CommentList(props)
 {
-    const [sort, setSorting] = useState(10);
+    const sortCtx = React.useContext(SortContext);
+    
+    const [sort, setSorting] = useState(sortCtx);
     const [isSortBtn, setSortBtn] = useState(true);
 
     const [fullWhile, fullSwitch] = useLoading(false)

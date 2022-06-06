@@ -7,7 +7,9 @@ import Customs from '../../../components/Customs'
 
 function customs(props)
 {
-    const { user, isResetToken, light, setThemeLight } = props;
+    const { user, isResetToken, light,
+        setThemeLight, setSorting: setSortCtx, setStyle: setStyleCtx } = props;
+    console.log(props)
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
@@ -18,7 +20,13 @@ function customs(props)
         }
     }, [])
 
-    return userCtx && (<Customs user={user} light={light} setThemeLight={setThemeLight} />)
+    return userCtx && (<Customs
+        user={user}
+        light={light}
+        setThemeLight={setThemeLight}
+        setStyleCtx={setStyleCtx}
+        setSortCtx={setSortCtx}
+    />)
 }
 
 customs.getInitialProps = async (props) =>

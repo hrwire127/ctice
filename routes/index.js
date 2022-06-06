@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
+const mongoose = require('mongoose')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
@@ -45,7 +46,7 @@ router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
         date !== "Invalid" ? { $match: { last: date.substring(0, 10) } } : null,
         { $match: { status: "Active" } },
         { $sort: { _id: -1 } },
-        sort !== 20 ? { $limit: doclimit } : null,
+        sort !== "score" ? { $limit: doclimit } : null,
     ].filter(x => x !== null)
 
     await switchSort(sort, async () =>

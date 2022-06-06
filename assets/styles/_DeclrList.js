@@ -4,21 +4,21 @@ const useStyles = makeStyles((theme) => ({
     Bar: {
         display: "flex",
         justifyContent: "space-between",
-        width: "100%", 
+        width: "100%",
         margin: "auto",
         ["@media (max-width:510px)"]: {
             flexWrap: "wrap",
             justifyContent: "center"
         },
         "& button": {
-			color: theme.palette.tertiary.main
+            color: theme.palette.tertiary.main
         }
     },
     Grid: {
         margin: "auto!important",
         width: "90vw!important",
     },
-    List: {
+    ListCompact: {
         margin: "auto",
         marginTop: 20,
         width: "100%",
@@ -28,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        gridGap: "20px",
+    },
+    ListFull: {
+        margin: "auto",
+        marginTop: 20,
+        width: "100%",
+        paddingBottom: "50px",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, 220px)",
+        justifyContent: "center",
         gridGap: "20px",
     },
 }));

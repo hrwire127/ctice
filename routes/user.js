@@ -136,11 +136,11 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
     const userdata = await getUserdata(req, res)
     const user = await User.findOne({ _id: userdata._id });
     const Obj = await User.updateChanges(req, res, user);
-    await User.findByIdAndUpdate(user._id , Obj)
+    await User.findByIdAndUpdate(user._id, Obj)
     req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details!');
     console.log(req.flash)
-    Redirects_SR.Api.sendApi(res, req.session.flash[0] )
+    Redirects_SR.Api.sendApi(res, req.session.flash[0])
 }))
 
 router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 
@@ -169,11 +169,25 @@ router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req
     Redirects_SR.Api.sendApi(res, user.bookmarks)
 }))
 
-router.post('/theme', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/theme', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
     const { light } = req.body;
     req.session.light = !light
     Redirects_SR.Api.sendApi(res, !light)
+}))
+
+router.post('/style', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { newStyle } = req.body;
+    req.session.style = newStyle
+    Redirects_SR.Api.sendApi(res, newStyle)
+}))
+
+router.post('/sort', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { newSort } = req.body;
+    req.session.sort = newSort
+    Redirects_SR.Api.sendApi(res, newSort)
 }))
 
 module.exports = router;

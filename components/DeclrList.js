@@ -2,34 +2,41 @@ import React, { useState, useEffect, useContext } from 'react';
 import
 {
     Box, Typography, ButtonGroup, Button,
-    IconButton, MenuItem, FormControl,
-    Select, InputLabel,
+    IconButton,
 } from '@mui/material';
 import { Add } from "@mui/icons-material"
 import useStyles from '../assets/styles/_DeclrList'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import DatePicker from './DatePicker'
-import DeclrCard from './DeclrCard';
+import DeclrCardCompact from './DeclrCardCompact';
+import DeclrCardFull from './DeclrCardFull';
 import Link from 'next/link'
 import TransitionAlerts from './TransitionAlerts'
 import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
+import { styleCompact, styleFull } from './context/styleEnum';
 import Sort from './Sort'
+import StyleContext from './context/contextStyle'
+import SortContext from './context/contextSort'
 import useLoading from './hooks/useLoading'
 
 function DeclrList(props)
 {
+    const { flash } = props;
+    const classes = useStyles();
+    const adminCtx = useContext(AdminContext);
+    const sortCtx = useContext(SortContext);
+    const styleCtx = useContext(StyleContext);
+    console.log(styleCtx)
+
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
     const [declarations, setDeclarations] = useState();
     const [count, setCount] = useState(props.count);
-    const [sort, setSorting] = useState(10);
+    const [sort, setSorting] = useState(sortCtx);
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
-    const { flash } = props;
-    const classes = useStyles();
-    const adminCtx = useContext(AdminContext);
 
     useEffect(() =>
     {
@@ -94,10 +101,14 @@ function DeclrList(props)
     {
         return (fullSwitch(0, () => declarations.length > 0
             ? (<>
-                <Box className={classes.List}>
-                    {declarations.map(d => (
-                        <DeclrCard {...d} key={d._id} />
-                    ))}
+                <Box className={styleCtx === styleFull ? classes.ListFull : classes.ListCompact}>
+                    {declarations.map(d => 
+                    {
+                        return styleCtx === styleFull
+                            ? (<DeclrCardFull {...d} key={d._id} />)
+                            : (<DeclrCardCompact {...d} key={d._id} />)
+                    }
+                    )}
                 </Box>
                 <LoadMoreBtn />
             </>)
