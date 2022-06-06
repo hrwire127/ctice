@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
-import Footer from './Footer'
 import Header from './Header'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -11,7 +10,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
 import HomeNavigation from './HomeNavigation'
 import UserNavigation from './UserNavigation'
-import { makeStyles } from '@mui/styles'
 import { StyledEngineProvider } from '@mui/material/styles';
 
 export default function Layout(props)
@@ -76,6 +74,13 @@ export default function Layout(props)
             })
     }
 
+    let childrenwprops = props.children;
+
+    if (React.isValidElement(props.children))
+    {
+        childrenwprops = React.cloneElement(props.children, { ...props.children.props, light, setThemeLight });
+    }
+
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
@@ -87,24 +92,23 @@ export default function Layout(props)
                                     <Loading fullPage={true} />
                                 </Box>
                             )
-                            :
-                            (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                                {props.children.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" toggleTheme={toggleTheme} />)}
+                            : (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
 
-                                {props.children.props.noHeader && adminCtx
+                                {childrenwprops.props.noHeader && adminCtx
                                     ? (<Box sx={
                                         { margin: 0, flex: 1, backgroundColor: "background.default" }
                                     }
                                     >
-                                        {props.children}
+                                        {childrenwprops}
                                     </Box>)
                                     : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
                                     >
-                                        {props.children.props.nav
-                                            ? props.children.props.nav === "Home"
-                                                ? (<HomeNavigation>{props.children}</HomeNavigation>)
-                                                : (<UserNavigation>{props.children}</UserNavigation>)
-                                            : (<>{props.children}</>)
+                                        {childrenwprops.props.nav
+                                            ? childrenwprops.props.nav === "Home"
+                                                ? (<HomeNavigation>{childrenwprops}</HomeNavigation>)
+                                                : (<UserNavigation>{childrenwprops}</UserNavigation>)
+                                            : (<>{childrenwprops}</>)
                                         }
                                     </Box>)
                                 }

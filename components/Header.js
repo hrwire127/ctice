@@ -22,17 +22,13 @@ function Header(props)
 {
 	const userCtx = React.useContext(UserContext);
 	const adminCtx = React.useContext(AdminContext);
-	const { sections, title, toggleTheme } = props;
+	const { sections, title } = props;
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [inputValue, setInputValue] = React.useState("");
 	const open = Boolean(anchorEl);
 
-	const handleClick = (e) =>
-	{
-		setAnchorEl(e.currentTarget);
-	};
 
 	const handleClose = () =>
 	{
@@ -131,7 +127,6 @@ function Header(props)
 								</>)
 							}
 						</Box>
-						<Button onClick={toggleTheme}>Theme</Button>
 					</Box>
 				</Toolbar>
 			</Box >

@@ -194,6 +194,10 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     {
         new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
+    else if(Math.abs(user.getDateDiffMS() < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
+    {
+        new UserError(...Object.values(errorMessages.delayed)).throw_CS(res)
+    }
     else
     {
         if (username && username !== "")
@@ -266,6 +270,11 @@ UserSchema.methods.tryBoookmark = function (declaration)
     {
         this.bookmarks.push(declaration)
     }
+}
+
+UserSchema.methods.getDateDiffMS = function ()
+{
+    return new Date() - this.date[this.date.length - 1]
 }
 
 const User = mongoose.model('User', UserSchema);

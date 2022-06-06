@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import
 {
 	Button, TextField,
@@ -27,14 +27,24 @@ function Change(props)
 
 	const [alert, setAlert] = useState()
 	const [flash, setFlash] = useState()
+	const [isDelayed, setIsDelay] = useState(Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY)))
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 
 	const [submitWhile, submitSwitch] = useLoading(false)
 
-	const isDelayed = Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
 	const classes = useStyles()
+	let delay = Math.abs((process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY - (new Date() - new Date(date[date.length - 1]))));
+
+	const setDelay = () =>
+	{
+		setIsDelay(true)
+		setTimeout(() =>
+		{
+			setIsDelay(false)
+		}, process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY);
+	}
 
 	const setError = (msg) =>
 	{
@@ -76,13 +86,14 @@ function Change(props)
 				.then(async res =>
 				{
 					CS_Redirects.tryResCS(res, window)
-					if(res.err)
+					if (res.err)
 					{
 						setError(err)
 					}
 					else
 					{
 						setMessage(res.obj)
+						setDelay()
 					}
 				})
 		})
@@ -198,7 +209,7 @@ function Change(props)
 			<Box sx={{ textAlign: "center" }}>
 				{isDelayed
 					? (<Typography variant="h7" color="text.danger">
-						Please wait some time after the edit
+						Please wait some time after the edit, {Math.round(delay / 1000)} seconds remained
 					</Typography>)
 					: (submitSwitch(0, () =>
 					(<>

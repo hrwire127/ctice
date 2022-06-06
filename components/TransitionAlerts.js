@@ -12,7 +12,6 @@ export default function TransitionAlerts(props)
 
     useEffect(() =>
     {
-        console.log("1")
         if(children === flash)
         {
             setflash(flash)

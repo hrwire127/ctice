@@ -44,6 +44,7 @@ function Login(props)
                     else
                     {
                         window.location = (window.location.href !== document.referrer
+                            && window.location.href !== process.env.NEXT_PUBLIC_DR_HOST + "/error"
                             ? document.referrer
                             : process.env.NEXT_PUBLIC_DR_HOST)
                     }

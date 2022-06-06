@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../../components/context/contextUser'
-import Profile from '../../../components/Profile'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'
+import Customs from '../../../components/Customs'
 
 function customs(props)
 {
-    const { user, isResetToken } = props;
+    const { user, isResetToken, light, setThemeLight } = props;
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
@@ -18,10 +18,7 @@ function customs(props)
         }
     }, [])
 
-    return userCtx && (
-        <div>
-            customs
-        </div>)
+    return userCtx && (<Customs user={user} light={light} setThemeLight={setThemeLight} />)
 }
 
 customs.getInitialProps = async (props) =>
