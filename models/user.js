@@ -43,7 +43,7 @@ const UserSchema = new Schema({
     profile:
     {
         url: {
-            default: process.env.NEXT_PUBLIC_DEF_PROFILE_URL,
+            default: process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1,
             type: String,
             required: true,
         },
@@ -77,7 +77,15 @@ const UserSchema = new Schema({
         linkedin: {
             type: "String",
         },
-    }
+    },
+    gallery: [{
+        content: {
+            type: String
+        },
+        name: {
+            type: String
+        }
+    }]
 });
 
 UserSchema.plugin(passportLocalMongoose);
@@ -194,7 +202,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     {
         new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
-    else if(Math.abs(user.getDateDiffMS() < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
+    else if (Math.abs(user.getDateDiffMS() < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
     {
         new UserError(...Object.values(errorMessages.delayed)).throw_CS(res)
     }
@@ -252,7 +260,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
             {
                 await cloud.destroy(user.profile.location)
             }
-            user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+            user.profile.url = process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1
             // user.profile.location = process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION
         }).Try()) return user;
 

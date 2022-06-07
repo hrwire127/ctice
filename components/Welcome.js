@@ -8,7 +8,7 @@ import
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TransitionAlerts from './TransitionAlerts'
-import UploadBtnProfile from './UploadProfile';
+import UploadProfile from './UploadProfile';
 import useFormError from "./hooks/useFormError";
 import LocationSearch from "./LocationSearch"
 import TextArea from "./TextArea";
@@ -106,7 +106,7 @@ function Welcome(props)
                         <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
                     </Grid>
                     <Grid item xs={4}>
-                        <UploadBtnProfile changeFile={changeImage} file={image} />
+                        <UploadProfile changeFile={changeImage} file={image} />
                     </Grid>
                     <Grid item xs={4}>
                         <LocationSearch

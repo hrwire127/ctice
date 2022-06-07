@@ -42,7 +42,7 @@ function Header(props)
 	}
 
 	return (
-		<React.Fragment>
+		<>
 			<Box className={classes.Total}>
 				<Box className={classes.RedBar} />
 				<Toolbar className={classes.Toolbar}>
@@ -130,7 +130,7 @@ function Header(props)
 					</Box>
 				</Toolbar>
 			</Box >
-		</React.Fragment >
+		</>
 	);
 }
 

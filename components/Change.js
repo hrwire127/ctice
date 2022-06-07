@@ -13,6 +13,7 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
+import UploadWindow from './UploadWindow';
 
 function Change(props)
 {
@@ -26,9 +27,12 @@ function Change(props)
 	const { username, date, profile, bio, connections } = user;
 
 	const [alert, setAlert] = useState()
+	const [windowAlert, setWindowAlert] = useState()
 	const [flash, setFlash] = useState()
+	const [isOpen, setOpen] = useState(false)
 	const [isDelayed, setIsDelay] = useState(Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY)))
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
+	const [gallery, setgallery] = useState([])
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 
@@ -36,6 +40,48 @@ function Change(props)
 
 	const classes = useStyles()
 	let delay = Math.abs((process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY - (new Date() - new Date(date[date.length - 1]))));
+
+	const setGallery = (files) =>
+	{
+		let newGallery = []
+		console.log(files)
+		Array.from(files).forEach(i =>
+		{
+			let exists = null;
+			if (gallery.length > 20) 
+			{
+				setWindowError("Exceeded max 20 length")
+				return
+			}
+			gallery.forEach(f =>
+			{
+				if (f.name === i.name)
+				{
+					exists = true
+				}
+			})
+			if (!exists)
+			{
+				newGallery.push({ content: i, name: i.name })
+			}
+			else
+			{
+				setWindowError(`[${i.name}] exists`)
+				return
+			}
+		})
+		setgallery(gallery.concat(newGallery))
+	}
+
+	const galleryDelete = (i) =>
+	{
+		const index = gallery.findIndex(f => f.name === i.name)
+		console.log(index)
+		const newGallery = [...gallery]
+		newGallery.splice(index, 1)
+		console.log(newGallery)
+		setgallery(newGallery)
+	}
 
 	const setDelay = () =>
 	{
@@ -55,6 +101,14 @@ function Change(props)
 		}, Rules.form_message_delay);
 	}
 
+	const setWindowError = (msg) =>
+	{
+		setWindowAlert(msg)
+		setTimeout(() =>
+		{
+			setWindowAlert()
+		}, Rules.form_message_delay);
+	}
 	const setMessage = (obj) =>
 	{
 		setFlash(obj)
@@ -126,7 +180,17 @@ function Change(props)
 			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
 			<Grid container spacing={2} sx={{ mb: 2 }}>
 				<Grid item xs={4}>
-					<UploadProfile profile={profile.url} image={image} setImage={setImage} />
+					<UploadProfile profile={profile.url} image={image} setImage={setImage} setOpen={setOpen} />
+					{isOpen && (<UploadWindow
+						windowAlert={windowAlert}
+						galleryDelete={galleryDelete}
+						profile={profile.url}
+						image={image}
+						setImage={setImage}
+						setOpen={setOpen}
+						setGallery={setGallery}
+						gallery={gallery}
+					/>)}
 				</Grid>
 				<Grid
 					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}

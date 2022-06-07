@@ -104,6 +104,7 @@ export default function Layout(props)
                                                 }
                                             </Box>)
                                         }
+                                        <div className="cover" stle={{}}></div>
                                     </main>)
                                 }
                             </StyledEngineProvider>

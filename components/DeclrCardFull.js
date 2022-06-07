@@ -15,6 +15,7 @@ function DeclrCardFull(props)
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
+    const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
 
     return (
         <Card className={classes.Card}>
@@ -28,7 +29,7 @@ function DeclrCardFull(props)
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                    {date[date.length - 1]}
+                    {diff} ago
                 </Typography>
             </CardActions>
         </Card>

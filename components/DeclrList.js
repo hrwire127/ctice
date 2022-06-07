@@ -27,7 +27,6 @@ function DeclrList(props)
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
     const styleCtx = useContext(StyleContext);
-    console.log(styleCtx)
 
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");

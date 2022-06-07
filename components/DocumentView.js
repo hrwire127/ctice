@@ -22,7 +22,7 @@ function DocumentView(props)
     const { file } = props;
 
     const Failed = (
-        <Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
+        <Typography variant="h4" component="h5"xsx={{ marginTop: 10 }}>
             Failed To Load...
         </Typography>)
 

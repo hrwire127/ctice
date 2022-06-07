@@ -43,12 +43,12 @@ const createDeclaration = async () =>
         })
         await declaration.save();
     }
-    const users = await User.find({});
-    users.forEach(async u =>
-    {
-        u.bookmarks = []
-        await u.save()
-    })
+    // const users = await User.find({});
+    // users.forEach(async u =>
+    // {
+    //     u.gallery = []
+    //     await u.save()
+    // })
 }
 
 
