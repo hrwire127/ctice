@@ -6,14 +6,14 @@ import GalleryUpload from './GalleryUpload'
 
 function GalleryList(props)
 {
-    const { gallery, setGallery, image, setImage, galleryDelete } = props
+    const { gallery, setGalleryFiles, image, setImage, galleryDelete } = props
 
     const classes = useStyles(props)()
 
     return (
         <Box className={classes.SelectionsFull}>
             <Box className={classes.SelectionsGrid}>
-                <GalleryUpload setGallery={setGallery} gallery={gallery} />
+                <GalleryUpload setGalleryFiles={setGalleryFiles} gallery={gallery} />
                 {gallery.map((p, i) => <GalleryCard key={i} setImage={setImage} image={p} checked={image === p ? true : false} galleryDelete={galleryDelete}/>)}
             </Box>
         </Box>

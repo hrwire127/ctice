@@ -77,7 +77,7 @@ const UserSchema = new Schema({
         linkedin: {
             type: "String",
         },
-    }, 
+    },
     gallery: [new Schema({
         content: {
             type: String
@@ -108,7 +108,7 @@ UserSchema.statics.processLogin = async function (req, res, next)
         {
             if (err)
             {
-                throw  new UserError(err.message, err.status).throw_CS(res);
+                throw new UserError(err.message, err.status).throw_CS(res);
             }
             else if (!user) 
             {
@@ -182,7 +182,6 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
     else
     {
         throw new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
-        Redirects_SR.Error.CS(res)
     }
 }
 
@@ -285,7 +284,8 @@ UserSchema.methods.getDateDiffMS = function ()
 
 UserSchema.methods.processGalery = async function (files, res)
 {
-    if (Object.keys(files).length > process.env.NEXT_PUBLIC_EDITS_LENGTH)
+    console.log(files)
+    if (files && Object.keys(files).length > process.env.NEXT_PUBLIC_EDITS_LENGTH)
     {
         throw new UserError(...Object.values(errorMessages.tooManyImages)).throw_CS(res)
     }
@@ -293,14 +293,19 @@ UserSchema.methods.processGalery = async function (files, res)
     for (let o of this.gallery)
     {
         await cloud.destroy(
-            o.location
+            o.content
         )
     }
 
-    for (let f of Object.keys(files))
+    this.gallery = []
+
+    if (files)
     {
-        const file = await upload_galeries(files[f], res)
-        this.gallery.push({ location: file.folder, name: file.name, content: file.url })
+        for (let f of Object.keys(files))
+        {
+            const file = await upload_galeries(files[f], res)
+            this.gallery.push({ name: file.name, content: file.content })
+        }
     }
 }
 

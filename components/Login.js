@@ -13,7 +13,6 @@ function Login(props)
     const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
     const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
-
     const [alert, setAlert] = useState()
     const [remember, setRemember] = useState(false)
     const [loadingWhile, switchLoading] = useLoading(false)

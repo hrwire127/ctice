@@ -1,13 +1,6 @@
 import React, { useRef } from 'react'
-import
-{
-    Avatar, Button, CssBaseline,
-    TextField, FormControlLabel, Checkbox,
-    Grid, Box, Typography, Container, Alert,
-    FormHelperText, Link, Paper
-} from '@mui/material';
-import { CheckCircle, FileUpload, Close } from '@mui/icons-material';
-import { uploadFileUrl } from "../utilsCS/_basic";
+import { Box, } from '@mui/material';
+import { FileUpload } from '@mui/icons-material';
 import useStyles from '../assets/styles/_UploadProfile'
 
 function UploadIconProfile(props)
@@ -33,10 +26,7 @@ function UploadIconProfile(props)
             id="profile"
             name="profile"
             ref={inputFileRef}
-            onChange={(e) => 
-            {
-                setImage(e.target.files[0])
-            }}
+            onChange={e => setImage(e.target.files[0])}
             hidden
             accept="image/png, image/jpg, image/jpeg"
         />

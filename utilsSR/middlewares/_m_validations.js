@@ -320,7 +320,7 @@ async function validateGallery(req, res, next)
             mv: Joi.function().required()
         }))
 
-    const { error } = declarationSchema.validate(Array.from(req.files))
+    const { error } = declarationSchema.validate(req.files ? Array.from(req.files) : undefined)
 
     if (error) 
     {

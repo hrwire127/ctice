@@ -4,7 +4,7 @@ import { Add } from "@mui/icons-material"
 
 function GalleryUpload(props)
 {
-    const { setGallery, gallery } = props
+    const { setGalleryFiles, gallery } = props
 
     const inputFileRef = useRef(null);
 
@@ -39,7 +39,7 @@ function GalleryUpload(props)
             multiple
             onChange={(e) => 
             {
-                setGallery(e.target.files)
+                setGalleryFiles(e.target.files)
             }}
             hidden
             accept="image/png, image/jpg, image/jpeg"

@@ -163,6 +163,7 @@ const upload_galeries = async (file, svres) =>
         streamifier.createReadStream(file.data).pipe(cld_upload_stream);
     });
     const invalid = await inspectGallery(res);
+    console.log(res)
     if (invalid)
     {
         await cloud.destroy(
@@ -173,7 +174,7 @@ const upload_galeries = async (file, svres) =>
 
     return {
         name: res.url,
-        location: res.public_id
+        content: res.public_id
     }
 }
 

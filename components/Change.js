@@ -13,26 +13,17 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
-import UploadWindow from './UploadWindow';
+import ProfileWindow from './ProfileWindow';
 
 function Change(props)
 {
-	const [, , , , checkUsernameKey] = useFormError(false);
-
-	const [, , , , checkLocationKey] = useFormError(false);
-
-	const [, , , , checkDescKey] = useFormError(false);
-
 	const { user, isResetToken } = props;
 	const { username, date, profile, bio, connections } = user;
 
-	const [alert, setAlert] = useState()
-	const [windowAlert, setWindowAlert] = useState()
 	const [flash, setFlash] = useState()
 	const [isOpen, setOpen] = useState(false)
 	const [delay, setDelay] = useState(0)
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
-	const [gallery, setgallery] = useState([])
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 
@@ -46,67 +37,23 @@ function Change(props)
 		setDelay(diff > 0 ? diff : 0)
 	}, [])
 
-
 	useEffect(() =>
 	{
 		delay > 0 && setTimeout(() => setDelay(delay - 1), 1000);
 	}, [delay]);
 
-	const setGallery = (files) =>
-	{
-		let newGallery = []
-		Array.from(files).forEach(i =>
-		{
-			let exists = null;
-			gallery.forEach(f =>
-			{
-				if (f.name === i.name)
-				{
-					exists = true
-				}
-			})
-			if (!exists)
-			{
-				newGallery.push({ content: i, name: i.name })
-			}
-			else
-			{
-				setWindowError(`[${i.name}] exists`)
-				return
-			}
-		})
-		setgallery(gallery.concat(newGallery))
-	}
-
-	const galleryDelete = (i) =>
-	{
-		const index = gallery.findIndex(f => f.name === i.name)
-		const newGallery = [...gallery]
-		newGallery.splice(index, 1)
-		setgallery(newGallery)
-	}
-
 	const setError = (msg) =>
 	{
-		setAlert(msg)
+		setAlert({ type: "error", message: msg })
 		setTimeout(() =>
 		{
 			setAlert()
 		}, Rules.form_message_delay);
 	}
 
-	const setWindowError = (msg) =>
+	const setMessage = (msg) =>
 	{
-		setWindowAlert(msg)
-		setTimeout(() =>
-		{
-			setWindowAlert()
-		}, Rules.form_message_delay);
-	}
-
-	const setMessage = (obj) =>
-	{
-		setFlash(obj)
+		setFlash({ message: msg, type: "success" })
 		setTimeout(() =>
 		{
 			setFlash()
@@ -141,9 +88,8 @@ function Change(props)
 					}
 					else
 					{
-						setMessage(res.obj)
+						setMessage(res.obj.message)
 						setDelay(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000)
-						// setDelayState()
 					}
 				})
 		})
@@ -173,20 +119,18 @@ function Change(props)
 			noValidate
 		>
 			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
-			{alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
 			<Grid container spacing={2} sx={{ mb: 2 }}>
 				<Grid item xs={4}>
-					<UploadProfile profile={profile.url} image={image} setImage={setImage} setOpen={setOpen} />
-					{isOpen && (<UploadWindow
-						windowAlert={windowAlert}
-						setWindowAlert={setWindowAlert}
-						galleryDelete={galleryDelete}
+					<UploadProfile
 						profile={profile.url}
 						image={image}
 						setImage={setImage}
 						setOpen={setOpen}
-						setGallery={setGallery}
-						gallery={gallery}
+					/>
+					{isOpen && (<ProfileWindow
+						image={image}
+						setImage={setImage}
+						setOpen={setOpen}
 					/>)}
 				</Grid>
 				<Grid
@@ -198,19 +142,17 @@ function Change(props)
 						margin="normal"
 						inputProps={{ maxLength: 10 }}
 						defaultValue={username}
-						error={alert}
+						error={flash && flash.type === "error"}
 						name="username"
 						label="Username"
 						type="username"
 						id="username"
 						autoComplete="new-username"
-						onKeyPress={checkUsernameKey}
 					/>
 					<LocationSearch
 						defaultLocation={user.location}
 						setLocation={setLocation}
-						error={alert}
-						onKeyPress={checkLocationKey}
+						error={flash && flash.type === "error"}
 						limit={5}
 					/>
 					<div>
@@ -229,8 +171,7 @@ function Change(props)
 				styles={classes.Editor}
 				placeholder="Description"
 				setData={setEditorState}
-				error={alert}
-				checkDescKey={checkDescKey}
+				error={flash && flash.type === "error"}
 				data={JSON.parse(bio)}
 			/>
 
@@ -244,7 +185,7 @@ function Change(props)
 					label="Twitter Link"
 					type="twitter"
 					id="twitter"
-					error={alert}
+					error={flash && flash.type === "error"}
 				/>
 				<TextField
 					fullWidth
@@ -255,7 +196,7 @@ function Change(props)
 					label="Facebook Link"
 					type="facebook"
 					id="facebook"
-					error={alert}
+					error={flash && flash.type === "error"}
 				/>
 				<TextField
 					fullWidth
@@ -266,7 +207,7 @@ function Change(props)
 					label="Linkedin Link"
 					type="linkedin"
 					id="linkedin"
-					error={alert}
+					error={flash && flash.type === "error"}
 				/>
 			</Box>
 
