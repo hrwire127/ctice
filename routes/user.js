@@ -155,17 +155,52 @@ router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 
 router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const { bookmarks } = req.body;
+    const { bookmarks, doclimit } = req.body;
     const userdata = await getUserdata(req, res)
+    console.log(userdata._id)
     const user = await User.findOne({ _id: userdata._id }).populate({
         path: 'bookmarks',
         options: {
-            limit: process.env.COMMENTS_LOAD_LIMIT,
+            limit: doclimit,
             sort: { _id: -1 },
             skip: bookmarks.length,
         }
     })
+    console.log(user.bookmarks)
     Redirects_SR.Api.sendApi(res, user.bookmarks)
+}))
+
+router.post('/:id/bookmarks/load/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { bookmarks, query, doclimit } = req.body;
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id }).populate(
+        'bookmarks',
+        null,
+        {
+            title: { $regex: query, $options: 'i' },
+            limit: doclimit,
+            sort: { _id: -1 },
+            skip: bookmarks.length,
+        }
+    )
+    Redirects_SR.Api.sendApi(res, user.bookmarks)
+}))
+
+router.post('/:id/bookmarks/count/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { query } = req.body;
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id }).populate(
+        'bookmarks',
+        null,
+        {
+            title: { $regex: query, $options: 'i' },
+        }
+    )
+    console.log(query)
+    console.log(user.bookmarks)
+    Redirects_SR.Api.sendApi(res, user.bookmarks.length)
 }))
 
 router.post('/theme', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>

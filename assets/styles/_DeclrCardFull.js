@@ -2,7 +2,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
     Content: {
-        height: theme.cardHeight                       
+        height: theme.cardHeight
     },
     Card: {
         width: 220,
@@ -32,6 +32,14 @@ const useStyles = makeStyles((theme) => ({
         width: 20,
         height: 20,
         color: theme.text
+    },
+    Upper: {
+        height: 160,
+    },
+    Top:
+    {
+        display: "flex",
+        justifyContent: "space-between"
     }
 }))
 

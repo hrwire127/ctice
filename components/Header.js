@@ -1,13 +1,10 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useContext } from 'react';
 import
 {
 	Toolbar, Button, IconButton,
-	Typography, InputBase, Box, TextField, Menu,
-	MenuItem, InputAdornment
+	Box, Menu, MenuItem,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import ClearIcon from '@mui/icons-material/Clear';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Link from 'next/link';
@@ -20,15 +17,13 @@ import useStyles from "../assets/styles/_Header"
 
 function Header(props)
 {
-	const userCtx = React.useContext(UserContext);
-	const adminCtx = React.useContext(AdminContext);
+	const userCtx = useContext(UserContext);
+	const adminCtx = useContext(AdminContext);
 	const { sections, title } = props;
 	const classes = useStyles();
 
-	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [inputValue, setInputValue] = React.useState("");
+	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
-
 
 	const handleClose = () =>
 	{
@@ -87,29 +82,6 @@ function Header(props)
 						))}
 					</Toolbar>
 					<Box className={classes.Tools}>
-						<TextField
-							className={`${classes.Search} search-query`}
-							variant="standard"
-							placeholder="Search…"
-							value={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
-							InputProps={{
-								endAdornment:
-									<InputAdornment position="end" sx={inputValue === "" ? { display: "none" } : {}}>
-										<IconButton
-											className="query-clear"
-											onClick={() =>
-											{
-												setInputValue("")
-											}}
-											edge="end"
-										>
-											<ClearIcon color="primary" />
-										</IconButton>
-									</InputAdornment>
-							}}
-
-						/>
 						<Box className={classes.Authbar}>
 							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon color="tertiary" /></IconButton></Link>)}
 							{userCtx

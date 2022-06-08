@@ -77,8 +77,8 @@ const UserSchema = new Schema({
         linkedin: {
             type: "String",
         },
-    },
-    gallery: [{
+    }, 
+    gallery: [new Schema({
         content: {
             type: String
         },
@@ -88,7 +88,7 @@ const UserSchema = new Schema({
         name: {
             type: String
         },
-    }]
+    }, { _id: false })]
 });
 
 UserSchema.plugin(passportLocalMongoose);

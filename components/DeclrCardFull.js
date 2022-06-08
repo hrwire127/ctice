@@ -3,10 +3,8 @@ import 'draft-js/dist/Draft.css';
 import useStyles from "../assets/styles/_DeclrCardFull"
 import { CropData, getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
-import { Build, Visibility } from '@mui/icons-material';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, CardActions, Card, CardContent, Typography, IconButton } from '@mui/material'
-import UserContext from './context/contextUser'
+import { Box, CardActions, Card, CardContent, Typography } from '@mui/material'
 
 function DeclrCardFull(props) 
 {
@@ -21,15 +19,17 @@ function DeclrCardFull(props)
 
     return (
         <Card className={classes.Card}>
-            <CardContent sx={{ height: 160 }}>
-                <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                    <Link href={`/view/${id}`}>
-                        {title}
-                    </Link>
+            <CardContent className={classes.Upper}>
+                <Box className={classes.Top}>
+                    <Typography className={classes.Title} color="text.secondary" gutterBottom>
+                        <Link href={`/view/${id}`}>
+                            {title}
+                        </Link>
+                    </Typography>
                     <Typography color={likes.length === dislikes.length ? "text.default" : (likes.length > dislikes.length ? "text.success" : "text.error")} variant="h6">
                         {likes.length - dislikes.length}
                     </Typography>
-                </Typography>
+                </Box>
                 <Editor editorKey="editor" readOnly={true} editorState={editorState} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>

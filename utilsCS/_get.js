@@ -32,7 +32,7 @@ async function getLimitedReplies(replies, cid, id)
         })
 }
 
-function getLimitedBookmarks(bookmarks, id)
+function getLimitedBookmarks(bookmarks, doclimit, id)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/api`, {
         method: 'POST',
@@ -40,7 +40,7 @@ function getLimitedBookmarks(bookmarks, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { bookmarks, id, secret: process.env.NEXT_PUBLIC_SECRET }
+            { bookmarks, id, doclimit, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -50,6 +50,38 @@ function getLimitedBookmarks(bookmarks, id)
 }
 
 
+function loadLimitedBookmarks(bookmarks, query, doclimit, id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/load/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { bookmarks, doclimit, query, id, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+function countLimitedBookmarks(query, id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/count/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { query, id, secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
 async function getUsers()
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/all/api`, {
@@ -100,5 +132,6 @@ const LogoutFetch = () =>
 
 module.exports = {
     getLimitedComments, getLimitedReplies, getLimitedBookmarks,
-    getClientUser, getUsers, LogoutFetch,
+    getClientUser, getUsers, LogoutFetch, loadLimitedBookmarks,
+    countLimitedBookmarks
 }

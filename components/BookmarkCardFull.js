@@ -40,14 +40,16 @@ function BookmarkCardFull(props)
     return (
         <Card className={classes.Card}>
             <CardContent sx={{ height: 160 }}>
-                <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                    <Link href={`/view/${id}`}>
-                        {title}
-                    </Link>
+                <Box className={classes.Top}>
+                    <Typography className={classes.Title} color="text.secondary" gutterBottom>
+                        <Link href={`/view/${id}`}>
+                            {title}
+                        </Link>
+                    </Typography>
                     <Typography color={likes.length === dislikes.length ? "text.default" : (likes.length > dislikes.length ? "text.success" : "text.error")} variant="h6">
                         {likes.length - dislikes.length}
                     </Typography>
-                </Typography>
+                </Box>
                 <Editor editorKey="editor" readOnly={true} editorState={editorState} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>

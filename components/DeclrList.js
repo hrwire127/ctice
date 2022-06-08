@@ -19,6 +19,7 @@ import Sort from './Sort'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
 import useLoading from './hooks/useLoading'
+import Search from './Search'
 
 function DeclrList(props)
 {
@@ -37,32 +38,17 @@ function DeclrList(props)
     const [fullWhile, fullSwitch] = useLoading(true)
 
 
-    useEffect(() =>
-    {
-        const element = document.querySelector('.search-query')
-        var inputNodes = element.getElementsByTagName('INPUT');
-        inputNodes[0].addEventListener('input', async () => 
-        {
-            setQuery(inputNodes[0].value)
-        })
-        const btn = document.querySelector('.query-clear')
-        btn.onclick = function (e)  
-        {
-            setQuery("")
-        }
-    }, [])
-
     useEffect(async () =>
     {
         fullWhile(async () =>
         {
             //doclimit ---!!!
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort)
-            const newQuery = await getCountDateQuery(queryValue, dateValue, 4, sort);
+            const newCount = await getCountDateQuery(queryValue, dateValue, sort);
             CS_Redirects.tryResCS(newDeclrs, window)
-            CS_Redirects.tryResCS(newQuery, window)
+            CS_Redirects.tryResCS(newCount, window)
             setDeclarations(newDeclrs.obj)
-            setCount(newQuery)
+            setCount(newCount)
         })
 
     }, [dateValue, queryValue, sort])
@@ -117,6 +103,7 @@ function DeclrList(props)
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
+            <Search query={queryValue} setQuery={setQuery} />
             <Sort handleSort={handleSort} sort={sort} />
             <Box className={classes.Bar}>
                 <Typography variant="h4">

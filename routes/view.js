@@ -18,7 +18,8 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
     const { id } = req.params;
     const user = await getUserdata(req, res)
-
+    
+    //reload not working
     await Declaration.findOne({ _id: id, status: "Active" })
         .then(() => app.render(req, res, `/view/${id}`, { user }))
         .catch(err =>
