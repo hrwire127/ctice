@@ -3,7 +3,7 @@ import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
-import useAlertMsg from './hooks/useAlertMsg'
+import useAlertMsg from '../componentshooks/useAlertMsg'
 
 function index(props)
 {

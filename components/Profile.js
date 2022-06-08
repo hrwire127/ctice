@@ -8,6 +8,7 @@ import
 import { getDateDifference } from '../utilsCS/_basic';
 import { CheckBox, HighlightOff, Cake, LocationOn, Twitter, LinkedIn, Facebook, Email } from '@mui/icons-material';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import useStyles from '../assets/styles/_Profile';
 
 function Profile(props)
 {
@@ -16,6 +17,8 @@ function Profile(props)
 
     const diff = getDateDifference(new Date(), new Date(date[0]))
     const editorState = JSON.parse(bio).blocks[0].text !== "" ? EditorState.createWithContent(convertFromRaw(JSON.parse(bio))) : undefined
+
+    const classes = useStyles()
 
     return (
         <>
@@ -57,12 +60,7 @@ function Profile(props)
                 <Typography variant="h2" align="center">
                     About Me
                 </Typography>
-                <Paper sx={{
-                    width: "100%",
-                    height: 250,
-                    padding: 2,
-                    overflowY: "auto"
-                }} >
+                <Paper className={classes.TextArea}>
                     {editorState && (<Editor editorKey="editor" readOnly={true} editorState={editorState} />)}
                 </Paper>
             </Box>
