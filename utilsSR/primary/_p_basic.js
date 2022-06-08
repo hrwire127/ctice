@@ -94,7 +94,7 @@ const upload_pdf = async (file, svres) =>
         await cloud.destroy(
             res.public_id,
         )
-        new UserError(invalid, 400).throw_CS(svres)
+        throw new UserError(invalid, 400).throw_CS(svres)
     }
 
     return {
@@ -131,7 +131,7 @@ const upload_profiles = async (file, svres) =>
         await cloud.destroy(
             res.public_id,
         )
-        new UserError(invalid, 400).throw_CS(svres)
+        throw new UserError(invalid, 400).throw_CS(svres)
     }
 
     return {

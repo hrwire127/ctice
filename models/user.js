@@ -108,20 +108,17 @@ UserSchema.statics.processLogin = async function (req, res, next)
         {
             if (err)
             {
-                new UserError(err.message, err.status).throw_CS(res);
-                reject()
+                throw  new UserError(err.message, err.status).throw_CS(res);
             }
             else if (!user) 
             {
-                new UserError(info.message, 404).throw_CS(res);
-                reject()
+                throw new UserError(info.message, 404).throw_CS(res);
             }
             else
             {
                 if (user.status !== "Active")
                 {
-                    new UserError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
-                    reject()
+                    throw new UserError(...Object.values(errorMessages.disabledUser)).throw_CS(res);
                 }
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
@@ -151,11 +148,11 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
     {
         if (await User.findOne({ email: pending.email }))
         {
-            new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
+            throw new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
         }
         else if (await User.findOne({ username: pending.username }))
         {
-            new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+            throw new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
         }
         else
         {
@@ -184,7 +181,7 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
     }
     else
     {
-        new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
+        throw new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
         Redirects_SR.Error.CS(res)
     }
 }
@@ -197,11 +194,11 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
     if (await User.findOne({ username }))
     {
-        new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
+        throw new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
     else if (Math.abs(user.getDateDiffMS() < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
     {
-        new UserError(...Object.values(errorMessages.delayed)).throw_CS(res)
+        throw new UserError(...Object.values(errorMessages.delayed)).throw_CS(res)
     }
     else
     {
@@ -233,7 +230,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (user.date.length >= ValRules.dates_length)
         {
-            new UserError(...Object.values(errorMessages.tooManyEdits)).throw_CS(res)
+            throw new UserError(...Object.values(errorMessages.tooManyEdits)).throw_CS(res)
         }
 
         user.date.push(new Date())
@@ -290,7 +287,7 @@ UserSchema.methods.processGalery = async function (files, res)
 {
     if (Object.keys(files).length > process.env.NEXT_PUBLIC_EDITS_LENGTH)
     {
-        new UserError(...Object.values(errorMessages.tooManyImages)).throw_CS(res)
+        throw new UserError(...Object.values(errorMessages.tooManyImages)).throw_CS(res)
     }
 
     for (let o of this.gallery)

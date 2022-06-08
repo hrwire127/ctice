@@ -14,13 +14,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
             }
             next()
         })
         .catch((err) => 
         {
-            new UserError(err.message, err.status).throw_SR(req, res)
+            throw new UserError(err.message, err.status).throw_SR(req, res)
         });
 };
 
@@ -33,13 +33,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
             }
             next()
         })
         .catch((err) => 
         {
-            new UserError(err.message, err.status).throw_SR(req, res)
+            throw new UserError(err.message, err.status).throw_SR(req, res)
         });
 };
 
@@ -57,7 +57,7 @@ async function verifyResetToken(req, res, next)
             })
             .catch((err) => 
             {
-                new UserError(err.message, err.status).throw_SR(req, res)
+                throw new UserError(err.message, err.status).throw_SR(req, res)
                 reject(err)
             });
     }
@@ -70,7 +70,7 @@ async function verifyResetToken(req, res, next)
     }
     else
     {
-        new UserError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
+        throw new UserError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
     }
 };
 

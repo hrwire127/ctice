@@ -139,7 +139,7 @@ function DeclrView(props)
 
     return fullSwitch(2, () => (
         <>
-            {delalert && (<TransitionAlerts type="error">{delalert}</TransitionAlerts>)}
+            {delalert && (<TransitionAlerts type="error" setFlash={setDelAlert}>{delalert}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Box className={classes.Title}>
                     <Typography variant="h4" color="text.default">

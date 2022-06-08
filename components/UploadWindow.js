@@ -114,6 +114,7 @@ function UploadWindow(props)
                     anchor="left"
                 >
                     <UploadProfileWind
+                        setWindowAlert={setWindowAlert}
                         windowAlert={windowAlert}
                         setImage={setImage}
                         image={image}

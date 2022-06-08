@@ -34,8 +34,7 @@ TokenSchema.methods.processReset = async function (req, res)
         const Token = mongoose.model('Token', TokenSchema);
         if (await Token.findOne({ email: this.user.email }))
         {
-            new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
-            reject();
+            throw new UserError(...Object.values(errorMessages.emailAllreadyUsed)).throw_CS(res)
         }
         else
         {
@@ -67,7 +66,7 @@ TokenSchema.methods.resetPassword = async function (req, res, token, { user, pas
         }
         else
         {
-            new UserError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
+            throw new UserError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
         }
     }
     else

@@ -7,12 +7,13 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function TransitionAlerts(props)
 {
-    const { type, children } = props;
+    const { type, setFlash, children } = props;
     const [flash, setflash] = useState(children)
 
     useEffect(() =>
     {
-        if(children === flash)
+        console.log("!")
+        if (children === flash)
         {
             setflash(flash)
         }
@@ -31,6 +32,7 @@ export default function TransitionAlerts(props)
                             onClick={() =>
                             {
                                 setflash()
+                                setFlash()
                             }}
                         >
                             <CloseIcon fontSize="inherit" />

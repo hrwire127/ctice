@@ -69,7 +69,7 @@ function ReplyCreate(props)
 
     return (
         <Box>
-            {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
             <Box
                 component="form"
                 enctype="multipart/form-data"

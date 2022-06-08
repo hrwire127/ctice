@@ -9,6 +9,12 @@ function inspectDecrl(title, description, Files) //
     const descRule = new valRule(description.blocks.length, Rules.desc_max_blocks, 0)
     if (descRule.getVal()) return descRule.processMsg()
 
+    for (let b of description.blocks)
+    {
+        const charRule = new valRule(b.text.length, Rules.block_max_chars, 0)
+        if (charRule.getVal()) return charRule.processMsg()
+    }
+
     if (Files)
     {
         const fileRule = new valRule(Files.file.size, Rules.pdf_max_size, 0)
@@ -85,8 +91,16 @@ function inspectChange(username = undefined, Files = undefined, location = undef
 
     if (bio)
     {
+        console.log(bio.blocks)
+        console.log(bio.blocks.length)
         const bioRule = new valRule(bio.blocks.length, Rules.bio_max_blocks, 0)
         if (bioRule.getVal()) return bioRule.processMsg()
+
+        for (let b of bio.blocks)
+        {
+            const charRule = new valRule(b.text.length, Rules.block_max_chars, 0)
+            if (charRule.getVal()) return charRule.processMsg()
+        }
     }
 
     const { facebook, linkedin, twitter } = connections

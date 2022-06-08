@@ -26,5 +26,6 @@ module.exports = {
     twitter_connection_includes: "twitter.com",
     linkedin_connection_includes: "linkedin.com",
     gallery_length: 20,
-    dates_length: 100
+    dates_length: 100,
+    block_max_chars: 1000
 }

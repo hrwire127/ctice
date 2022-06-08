@@ -69,7 +69,7 @@ function Reset(props)
             <Typography component="h1" variant="h5">
                 Please introduce a password
             </Typography>
-            {alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
             <Box
                 component="form"
                 noValidate

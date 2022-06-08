@@ -17,11 +17,11 @@ import UploadWindow from './UploadWindow';
 
 function Change(props)
 {
-	const [UsernameError, , , , checkUsernameKey] = useFormError(false);
+	const [, , , , checkUsernameKey] = useFormError(false);
 
-	const [LocationError, , , , checkLocationKey] = useFormError(false);
+	const [, , , , checkLocationKey] = useFormError(false);
 
-	const [DescError, , , , checkDescKey] = useFormError(false);
+	const [, , , , checkDescKey] = useFormError(false);
 
 	const { user, isResetToken } = props;
 	const { username, date, profile, bio, connections } = user;
@@ -40,11 +40,12 @@ function Change(props)
 
 	const classes = useStyles()
 
-	useEffect(() => {
+	useEffect(() =>
+	{
 		const diff = Math.round(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000 - (new Date() - new Date(date[date.length - 1])) / 1000)
 		setDelay(diff > 0 ? diff : 0)
 	}, [])
-	
+
 
 	useEffect(() =>
 	{
@@ -88,37 +89,28 @@ function Change(props)
 	const setError = (msg) =>
 	{
 		setAlert(msg)
-		return () =>
+		setTimeout(() =>
 		{
-			setTimeout(() =>
-			{
-				setAlert()
-			}, Rules.form_message_delay);
-		};
+			setAlert()
+		}, Rules.form_message_delay);
 	}
 
 	const setWindowError = (msg) =>
 	{
 		setWindowAlert(msg)
-		return () =>
+		setTimeout(() =>
 		{
-			setTimeout(() =>
-			{
-				setWindowAlert()
-			}, Rules.form_message_delay);
-		};
+			setWindowAlert()
+		}, Rules.form_message_delay);
 	}
 
 	const setMessage = (obj) =>
 	{
 		setFlash(obj)
-		return () =>
+		setTimeout(() =>
 		{
-			setTimeout(() =>
-			{
-				setFlash()
-			}, Rules.form_message_delay);
-		};
+			setFlash()
+		}, Rules.form_message_delay);
 	}
 
 	const resetPassword = async () =>
@@ -145,7 +137,7 @@ function Change(props)
 					CS_Redirects.tryResCS(res, window)
 					if (res.err)
 					{
-						setError(err)
+						setError(res.err.message)
 					}
 					else
 					{
@@ -180,8 +172,8 @@ function Change(props)
 			component="form"
 			noValidate
 		>
-			{flash && (<TransitionAlerts type={flash.type}>{flash.message}</TransitionAlerts>)}
-			{alert && (<TransitionAlerts type="error">{alert}</TransitionAlerts>)}
+			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
+			{alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
 			<Grid container spacing={2} sx={{ mb: 2 }}>
 				<Grid item xs={4}>
 					<UploadProfile profile={profile.url} image={image} setImage={setImage} setOpen={setOpen} />
@@ -206,7 +198,7 @@ function Change(props)
 						margin="normal"
 						inputProps={{ maxLength: 10 }}
 						defaultValue={username}
-						error={UsernameError}
+						error={alert}
 						name="username"
 						label="Username"
 						type="username"
@@ -217,7 +209,7 @@ function Change(props)
 					<LocationSearch
 						defaultLocation={user.location}
 						setLocation={setLocation}
-						error={LocationError}
+						error={alert}
 						onKeyPress={checkLocationKey}
 						limit={5}
 					/>
@@ -237,7 +229,7 @@ function Change(props)
 				styles={classes.Editor}
 				placeholder="Description"
 				setData={setEditorState}
-				error={DescError}
+				error={alert}
 				checkDescKey={checkDescKey}
 				data={JSON.parse(bio)}
 			/>
@@ -252,6 +244,7 @@ function Change(props)
 					label="Twitter Link"
 					type="twitter"
 					id="twitter"
+					error={alert}
 				/>
 				<TextField
 					fullWidth
@@ -262,6 +255,7 @@ function Change(props)
 					label="Facebook Link"
 					type="facebook"
 					id="facebook"
+					error={alert}
 				/>
 				<TextField
 					fullWidth
@@ -272,6 +266,7 @@ function Change(props)
 					label="Linkedin Link"
 					type="linkedin"
 					id="linkedin"
+					error={alert}
 				/>
 			</Box>
 

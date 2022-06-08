@@ -305,7 +305,7 @@ async function validateComment(req, res, next)
     next()
 }
 
-async function validateGallery(req, res, next) 
+async function validateGallery(req, res, next)
 {
     const declarationSchema = Joi.array().items(
         Joi.object().keys({

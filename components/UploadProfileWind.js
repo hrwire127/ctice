@@ -12,7 +12,7 @@ import TransitionAlerts from './TransitionAlerts'
 
 function UploadProfileWind(props)
 {
-    const { setImage, image, setGallery, gallery, windowAlert } = props
+    const { setImage, image, setGallery, gallery, windowAlert, setWindowAlert } = props
 
     const inputFileRef = useRef(null);
     const classes = useStyles(props)()
@@ -30,7 +30,7 @@ function UploadProfileWind(props)
 
     return (
         <Box className={classes.Upload}>
-            {windowAlert && (<TransitionAlerts type="error">{windowAlert}</TransitionAlerts>)}
+            {windowAlert && (<TransitionAlerts type="error" setFlash={setWindowAlert}>{windowAlert}</TransitionAlerts>)}
             <Button
                 color="success"
                 variant="contained"

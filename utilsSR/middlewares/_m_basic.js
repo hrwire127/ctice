@@ -8,7 +8,7 @@ function tryAsync_SR(func)
         func(req, res, next).catch(err =>
         {
             req.type = 0
-            new UserError(err.message, err.status).throw_SR(req, res)
+            throw new UserError(err.message, err.status).throw_SR(req, res)
         })
     }
 }
