@@ -1,3 +1,5 @@
+const ValRules = require('./validRules')
+
 module.exports = {
     default: { message: "Something went wrong", status: 500 },
     disabledUser: { message: "Accound Disabled", status: 401 },
@@ -13,6 +15,8 @@ module.exports = {
     userNotFound: { message: "User Not Found", status: 404 },
     likeExists: { message: "User Exists", status: 401 },
     didNotMatch: { message: "User Did Not Match", status: 400 },
-    delayed: { message: "Cannot modify now, try later", status: 401 }
+    delayed: { message: "Cannot modify now, try later", status: 401 },
+    tooManyEdits: { message: `Exceeded the max times of changes (${ValRules.dates_length})`, status: 401 },
+    tooManyImages: { message: `Exceeded the max size of the gallery (${ValRules.gallery_length})`, status: 401 }
 
 }

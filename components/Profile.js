@@ -57,7 +57,12 @@ function Profile(props)
                 <Typography variant="h2" align="center">
                     About Me
                 </Typography>
-                <Paper sx={{ width: "100%", minHeight: 250, padding: 2 }} >
+                <Paper sx={{
+                    width: "100%",
+                    height: 250,
+                    padding: 2,
+                    overflowY: "auto"
+                }} >
                     {editorState && (<Editor editorKey="editor" readOnly={true} editorState={editorState} />)}
                 </Paper>
             </Box>

@@ -30,7 +30,7 @@ function Change(props)
 	const [windowAlert, setWindowAlert] = useState()
 	const [flash, setFlash] = useState()
 	const [isOpen, setOpen] = useState(false)
-	const [isDelayed, setIsDelay] = useState(Math.abs((new Date() - new Date(date[date.length - 1]) < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY)))
+	const [delay, setDelay] = useState(0)
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [gallery, setgallery] = useState([])
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
@@ -39,7 +39,17 @@ function Change(props)
 	const [submitWhile, submitSwitch] = useLoading(false)
 
 	const classes = useStyles()
-	let delay = Math.abs((process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY - (new Date() - new Date(date[date.length - 1]))));
+
+	useEffect(() => {
+		const diff = Math.round(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000 - (new Date() - new Date(date[date.length - 1])) / 1000)
+		setDelay(diff > 0 ? diff : 0)
+	}, [])
+	
+
+	useEffect(() =>
+	{
+		delay > 0 && setTimeout(() => setDelay(delay - 1), 1000);
+	}, [delay]);
 
 	const setGallery = (files) =>
 	{
@@ -47,11 +57,6 @@ function Change(props)
 		Array.from(files).forEach(i =>
 		{
 			let exists = null;
-			if (gallery.length > 20) 
-			{
-				setWindowError("Exceeded max 20 length")
-				return
-			}
 			gallery.forEach(f =>
 			{
 				if (f.name === i.name)
@@ -65,7 +70,7 @@ function Change(props)
 			}
 			else
 			{
-				setWindowError( `[${i.name}] exists`)
+				setWindowError(`[${i.name}] exists`)
 				return
 			}
 		})
@@ -80,40 +85,40 @@ function Change(props)
 		setgallery(newGallery)
 	}
 
-	const setDelay = () =>
-	{
-		setIsDelay(true)
-		setTimeout(() =>
-		{
-			setIsDelay(false)
-		}, process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY);
-	}
-
 	const setError = (msg) =>
 	{
 		setAlert(msg)
-		setTimeout(() =>
+		return () =>
 		{
-			setAlert()
-		}, Rules.form_message_delay);
+			setTimeout(() =>
+			{
+				setAlert()
+			}, Rules.form_message_delay);
+		};
 	}
 
 	const setWindowError = (msg) =>
 	{
 		setWindowAlert(msg)
-		setTimeout(() =>
+		return () =>
 		{
-			setWindowAlert()
-		}, Rules.form_message_delay);
+			setTimeout(() =>
+			{
+				setWindowAlert()
+			}, Rules.form_message_delay);
+		};
 	}
 
 	const setMessage = (obj) =>
 	{
 		setFlash(obj)
-		setTimeout(() =>
+		return () =>
 		{
-			setFlash()
-		}, Rules.form_message_delay);
+			setTimeout(() =>
+			{
+				setFlash()
+			}, Rules.form_message_delay);
+		};
 	}
 
 	const resetPassword = async () =>
@@ -145,7 +150,8 @@ function Change(props)
 					else
 					{
 						setMessage(res.obj)
-						setDelay()
+						setDelay(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000)
+						// setDelayState()
 					}
 				})
 		})
@@ -270,9 +276,9 @@ function Change(props)
 			</Box>
 
 			<Box sx={{ textAlign: "center" }}>
-				{isDelayed
+				{delay > 0
 					? (<Typography variant="h7" color="text.danger">
-						Please wait some time after the edit, {Math.round(delay / 1000)} seconds remained
+						Please wait some time after the edit, {delay} seconds remained
 					</Typography>)
 					: (submitSwitch(0, () =>
 					(<>

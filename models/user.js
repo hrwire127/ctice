@@ -9,7 +9,7 @@ const Redirects_SR = require('../utilsSR/general/SR_Redirects')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const { upload_profiles, upload_galeries } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
-
+const ValRules = require('../utilsSR/rules/validRules')
 
 const UserSchema = new Schema({
     username: {
@@ -37,7 +37,7 @@ const UserSchema = new Schema({
     date:
     {
         type: [Date],
-        default: new Date(),
+        default: [new Date()],
         required: true
     },
     profile:
@@ -87,7 +87,7 @@ const UserSchema = new Schema({
         },
         name: {
             type: String
-        }
+        },
     }]
 });
 
@@ -194,7 +194,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     const { username, profile, location, bio, facebook, linkedin, twitter } = req.body;
 
     const User = mongoose.model('User', UserSchema)
-    
+
     if (await User.findOne({ username }))
     {
         new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
@@ -205,27 +205,20 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     }
     else
     {
-        console.log("!!!")
         if (username && username !== "")
         {
             user.username = username
         }
 
-        console.log("!!!")
         if (profile === user.profile.url)
         {
             user.file = user.file;
         }
 
-        console.log("!!!")
         if (location)
         {
             user.location = JSON.parse(location)
         }
-
-        console.log("!!!")
-        console.log(req.body)
-        console.log(bio)
 
         if (bio)
         {
@@ -238,10 +231,13 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         if (twitter) user.connections.twitter = twitter
         if (linkedin) user.connections.linkedin = linkedin
 
+        if (user.date.length >= ValRules.dates_length)
+        {
+            new UserError(...Object.values(errorMessages.tooManyEdits)).throw_CS(res)
+        }
+
         user.date.push(new Date())
 
-
-        console.log(user)
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
             let file = await upload_profiles(req.files.profile)
@@ -292,6 +288,11 @@ UserSchema.methods.getDateDiffMS = function ()
 
 UserSchema.methods.processGalery = async function (files, res)
 {
+    if (Object.keys(files).length > process.env.NEXT_PUBLIC_EDITS_LENGTH)
+    {
+        new UserError(...Object.values(errorMessages.tooManyImages)).throw_CS(res)
+    }
+
     for (let o of this.gallery)
     {
         await cloud.destroy(

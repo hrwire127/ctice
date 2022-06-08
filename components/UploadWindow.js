@@ -62,7 +62,6 @@ function UploadWindow(props)
                 .then(async res =>
                 {
                     if (res.err) setWindowAlert(res.err.message)
-                    // CS_Redirects.tryResCS(res, window)
                 })
         })
     }
