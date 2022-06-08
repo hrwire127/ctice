@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, Typography } from '@mui/material';
 import { getLimitedBookmarks, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
-import BookmarkCard from "./BookmarkCard"
+import BookmarkCardCompact from "./BookmarkCardCompact"
+import BookmarkCardFull from "./BookmarkCardFull"
 import useStyles from "../assets/styles/_DeclrList"
+import StyleContext from './context/contextStyle'
+import { styleCompact, styleFull } from './context/styleEnum';
 
 function BookmarkList(props)
 {
@@ -12,6 +15,7 @@ function BookmarkList(props)
     const [bookmarks, setBookmarks] = useState([])
     const [fullWhile, fullSwitch] = useLoading(false)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
+    const styleCtx = useContext(StyleContext);
     const classes = useStyles();
 
     useEffect(() =>
@@ -40,7 +44,9 @@ function BookmarkList(props)
             {
                 fullSwitch(0, () => 
                 {
-                    return bookmarks.map(b => (<BookmarkCard key={b._id} {...b} />))
+                    return bookmarks.map(b => styleCtx === styleFull ? (
+                        <BookmarkCardCompact key={b._id} {...b} />)
+                        : (<BookmarkCardFull key={b._id} {...b} />))
                 })
             }
             {

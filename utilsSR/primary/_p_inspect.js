@@ -162,7 +162,7 @@ function inspectGallery(file = undefined)
         const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat = new valRule(file.format, Rules.profile_formats, 4)
+        const fileFormat = new valRule(file.format, Rules.profile_formats, 5)
         if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 }

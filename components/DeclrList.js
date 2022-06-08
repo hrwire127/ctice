@@ -22,7 +22,7 @@ import useLoading from './hooks/useLoading'
 
 function DeclrList(props)
 {
-    const { flash } = props;
+    const { flash, setFlash } = props;
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);

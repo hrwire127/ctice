@@ -6,12 +6,14 @@ import { getAllCount, } from "../utilsCS/_declr"
 
 function index(props)
 {
-    const { flash, count } = props;
+    const { count } = props;
+    const [flash, setFlash] = useState(props.flash)
 
     return (
         <DeclrList
             count={count}
             flash={flash}
+            setFlash={setFlash}
         />)
 }
 

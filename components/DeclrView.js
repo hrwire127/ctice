@@ -11,7 +11,7 @@ import
     Delete, Build,
     TurnedInNot, KeyboardArrowUp,
     KeyboardArrowDown, Comment,
-    IosShare, Accessible, BookmarkCard
+    IosShare, Accessible, BookmarkCardCompact
 } from '@mui/icons-material';
 import CS_Redirects from '../utilsCS/CS_Redirects';
 import { CropData } from '../utilsCS/_basic';
@@ -188,7 +188,7 @@ function DeclrView(props)
 
                 <Box display="flex" justifyContent="left" gap={1}>
                     <IosShare />
-                    {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><BookmarkCard /></IconButton>)
+                    {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><BookmarkCardCompact /></IconButton>)
                         : (<IconButton onClick={switchBookmark}><TurnedInNot /></IconButton>))}
                 </Box>
             </Box>

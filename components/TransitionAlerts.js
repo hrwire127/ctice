@@ -12,7 +12,6 @@ export default function TransitionAlerts(props)
 
     useEffect(() =>
     {
-        console.log("!")
         if (children === flash)
         {
             setflash(flash)
@@ -32,7 +31,10 @@ export default function TransitionAlerts(props)
                             onClick={() =>
                             {
                                 setflash()
-                                setFlash()
+                                setTimeout(() =>
+                                {
+                                    setFlash()
+                                }, 1000);
                             }}
                         >
                             <CloseIcon fontSize="inherit" />

@@ -12,7 +12,6 @@ import useLoading from './hooks/useLoading'
 import UploadProfileWind from './UploadProfileWind'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 
-const drawerWidth = 280;
 
 function UploadWindow(props)
 {
@@ -101,9 +100,9 @@ function UploadWindow(props)
                 </Box>
                 <Box
                     sx={{
-                        width: drawerWidth,
+                        width: theme =>  theme.windowDrawerWidth,
                         '& .MuiDrawer-paper': {
-                            width: drawerWidth,
+                            width: theme =>  theme.windowDrawerWidth,
                             boxSizing: 'border-box',
                         },
                         display: "flex",

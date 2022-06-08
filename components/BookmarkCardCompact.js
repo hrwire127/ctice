@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import CS_Redirects from '../utilsCS/CS_Redirects';
-import useStyles from "../assets/styles/_DeclrCard"
+import useStyles from "../assets/styles/_DeclrCardCompact"
 import { Box, Typography, Paper, IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { getDateDifference } from '../utilsCS/_basic';
 
-function BookmarkCard(props)
+function BookmarkCardCompact(props)
 {
-    const { title, _id, date } = props;
-    const [likes, setLikes] = useState(props.likes.filter(el => el.typeOf === true));
-    const [dislikes, setDislikes] = useState(props.likes.filter(el => el.typeOf === false));
-    const classes = useStyles();
-    const [diff, setDiff] = useState()
+    const { title, _id: id, date } = props;
     const [bookmarked, setBookmark] = useState(true)
 
-    useEffect(() =>
-    {
-        setDiff(getDateDifference(new Date(), new Date(date[date.length - 1])))
-    }, [])
+    const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
+    const likes = props.likes.filter(el => el.typeOf === true)
+    const dislikes = props.likes.filter(el => el.typeOf === false)
+    const classes = useStyles();
 
     const switchBookmark = () =>
     {
@@ -28,7 +24,7 @@ function BookmarkCard(props)
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(
-                { secret: process.env.NEXT_PUBLIC_SECRET, id: _id }
+                { secret: process.env.NEXT_PUBLIC_SECRET, id }
             )
         }).then(response => response.json())
             .then(async res =>
@@ -43,7 +39,7 @@ function BookmarkCard(props)
             <Typography color={likes.length === dislikes.length ? "text.default" : (likes.length > dislikes.length ? "text.success" : "text.error")} variant="h6">
                 {likes.length - dislikes.length}
             </Typography>
-            <Link href={`/view/${_id}`}>
+            <Link href={`/view/${id}`}>
                 <Typography className={classes.Title}>
                     {title}
                 </Typography>
@@ -58,4 +54,4 @@ function BookmarkCard(props)
 }
 
 
-export default BookmarkCard
+export default BookmarkCardCompact
