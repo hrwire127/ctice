@@ -157,7 +157,6 @@ router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req
 {
     const { bookmarks, doclimit } = req.body;
     const userdata = await getUserdata(req, res)
-    console.log(userdata._id)
     const user = await User.findOne({ _id: userdata._id }).populate({
         path: 'bookmarks',
         options: {
@@ -166,7 +165,6 @@ router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req
             skip: bookmarks.length,
         }
     })
-    console.log(user.bookmarks)
     Redirects_SR.Api.sendApi(res, user.bookmarks)
 }))
 
@@ -198,8 +196,6 @@ router.post('/:id/bookmarks/count/api', apiSecret, isLogged_CS, tryAsync_CS(asyn
             title: { $regex: query, $options: 'i' },
         }
     )
-    console.log(query)
-    console.log(user.bookmarks)
     Redirects_SR.Api.sendApi(res, user.bookmarks.length)
 }))
 

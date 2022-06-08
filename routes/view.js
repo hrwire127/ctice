@@ -19,11 +19,11 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
     const { id } = req.params;
     const user = await getUserdata(req, res)
     
-    //reload not working
-    await Declaration.findOne({ _id: id, status: "Active" })
+    await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
         .then(() => app.render(req, res, `/view/${id}`, { user }))
         .catch(err =>
         {
+            console.log(err)
             throw new UserError("Not Found", 404)
         })
 }))
@@ -31,7 +31,7 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const declaration = await Declaration.findOne({ _id: id, status: "Active" })
+    const declaration = await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
     Redirects_SR.Api.sendApi(res, declaration)
 }))
 

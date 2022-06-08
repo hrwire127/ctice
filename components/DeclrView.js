@@ -31,6 +31,11 @@ function DeclrView(props)
     const { declaration, user } = props;
     const { title, description, file, date, authors, _id: id } = declaration;
 
+    console.log(declaration)
+
+    const adminCtx = useContext(AdminContext);
+    const userCtx = useContext(UserContext);
+
     const [delalert, setDelAlert] = useState()
     const [comments, setComments] = useState([])
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
@@ -40,8 +45,6 @@ function DeclrView(props)
 
     const [fullWhile, fullSwitch] = useLoading(false)
 
-    const adminCtx = useContext(AdminContext);
-    const userCtx = useContext(UserContext);
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))

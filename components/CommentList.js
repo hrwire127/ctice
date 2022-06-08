@@ -68,8 +68,8 @@ function CommentList(props)
                             label="Sort"
                             onChange={handleChange}
                         >
-                            <MenuItem value={10}>Date</MenuItem>
-                            <MenuItem value={20}>Score</MenuItem>
+                            <MenuItem value={"date"}>Date</MenuItem>
+                            <MenuItem value={"score"}>Score</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>)}
