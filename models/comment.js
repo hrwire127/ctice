@@ -38,7 +38,7 @@ const CommentSchema = new Schema({
     },
 });
 
-CommentSchema.statics.processObj = async function (req, declaration = undefined, comment = undefined, del = false) 
+CommentSchema.statics.processObj = async function (req, res, declaration = undefined, comment = undefined, del = false) 
 {
     let { content } = req.body;
 

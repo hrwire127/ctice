@@ -8,7 +8,7 @@ const Token = require("../models/token")
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isSameUser, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyPendingCode, verifyResetToken, } = require('../utilsSR/middlewares/_m_verify')
-const { validatePendingUser, validateLogUser, validateRegUser, validateChange } = require('../utilsSR/middlewares/_m_validations')
+const { validatePendingUser, validateLogUser, validateRegUser, validateChange, validateGallery } = require('../utilsSR/middlewares/_m_validations')
 const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 router.get('/register', async (req, res) =>
@@ -139,7 +139,6 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
     await User.findByIdAndUpdate(user._id, Obj)
     req.session.passport.user = Obj.username
     req.flash('success', 'Changed Account Details!');
-    console.log(req.flash)
     Redirects_SR.Api.sendApi(res, req.session.flash[0])
 }))
 
@@ -188,6 +187,15 @@ router.post('/sort', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
     const { newSort } = req.body;
     req.session.sort = newSort
     Redirects_SR.Api.sendApi(res, newSort)
+}))
+
+router.post('/gallery', isLogged_CS, validateGallery, tryAsync_CS(async (req, res) =>
+{
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id, status: "Active" })
+    await user.processGalery(req.files, res)
+    await user.save()
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 module.exports = router;

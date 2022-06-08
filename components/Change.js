@@ -44,7 +44,6 @@ function Change(props)
 	const setGallery = (files) =>
 	{
 		let newGallery = []
-		console.log(files)
 		Array.from(files).forEach(i =>
 		{
 			let exists = null;
@@ -66,7 +65,7 @@ function Change(props)
 			}
 			else
 			{
-				setWindowError(`[${i.name}] exists`)
+				setWindowError( `[${i.name}] exists`)
 				return
 			}
 		})
@@ -76,10 +75,8 @@ function Change(props)
 	const galleryDelete = (i) =>
 	{
 		const index = gallery.findIndex(f => f.name === i.name)
-		console.log(index)
 		const newGallery = [...gallery]
 		newGallery.splice(index, 1)
-		console.log(newGallery)
 		setgallery(newGallery)
 	}
 
@@ -109,6 +106,7 @@ function Change(props)
 			setWindowAlert()
 		}, Rules.form_message_delay);
 	}
+
 	const setMessage = (obj) =>
 	{
 		setFlash(obj)
@@ -183,6 +181,7 @@ function Change(props)
 					<UploadProfile profile={profile.url} image={image} setImage={setImage} setOpen={setOpen} />
 					{isOpen && (<UploadWindow
 						windowAlert={windowAlert}
+						setWindowAlert={setWindowAlert}
 						galleryDelete={galleryDelete}
 						profile={profile.url}
 						image={image}

@@ -68,7 +68,7 @@ router.put("/:id", isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (re
 {
     const { id } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
-    const Obj = await Declaration.processObj(req, declaration);
+    const Obj = await Declaration.processObj(req, res, declaration);
     await Declaration.findByIdAndUpdate(id, Obj)
     req.flash('success', 'Edited Successfuly');
     Redirects_SR.Home.CS(res)
@@ -111,7 +111,7 @@ router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req
 {
     const { id } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
-    let comment = new Comment(await Comment.processObj(req))
+    let comment = new Comment(await Comment.processObj(req, res))
     declaration.comments.push(comment)
     await declaration.save()
     await comment.save()
@@ -122,7 +122,7 @@ router.post("/:id/comment/:cid/reply", isLogged_CS, validateComment, tryAsync_CS
 {
     const { id, cid } = req.params;
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
-    let reply = new Reply(await Reply.processObj(req))
+    let reply = new Reply(await Reply.processObj(req, res))
     comment.replies.push(reply)
     await comment.save()
     await reply.save()
@@ -151,9 +151,7 @@ router.post("/:id/reply/:rid/switchstatus", apiSecret, isLogged_CS, isAdmin_CS, 
 {
     const { rid } = req.params;
     let reply = await Reply.findOne({ _id: rid })
-    console.log(reply)
     reply.status = reply.status === "Active" ? "Disabled" : "Active"
-    console.log(reply)
     await reply.save()
     Redirects_SR.Api.sendApi(res, true)
 }))
@@ -163,7 +161,7 @@ router.put("/:id/comment/:cid", isLogged_CS, tryAsync_CS(async (req, res) =>
     const { id, cid } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
-    let Obj = await Comment.processObj(req, declaration, comment)
+    let Obj = await Comment.processObj(req, res, declaration, comment)
     await Comment.findByIdAndUpdate(cid, Obj)
     await declaration.save()
     Redirects_SR.Home.customCS(res, `${id}`)
@@ -174,7 +172,7 @@ router.put("/:id/comment/:cid/reply/:rid", isLogged_CS, tryAsync_CS(async (req, 
     const { id, cid, rid } = req.params;
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let reply = await Reply.findOne({ _id: rid, status: "Active" })
-    let Obj = await Reply.processObj(req, comment, reply)
+    let Obj = await Reply.processObj(req, res, comment, reply)
     await Reply.findByIdAndUpdate(rid, Obj)
     await comment.save()
     Redirects_SR.Home.customCS(res, `${id}`)
@@ -185,7 +183,7 @@ router.delete("/:id/comment/:cid", isLogged_CS, verifyCommentUser, tryAsync_CS(a
     const { id, cid } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
-    let i = await Comment.processObj(req, declaration, comment, true)
+    let i = await Comment.processObj(req, res, declaration, comment, true)
     declaration.comments.splice(i, 1);
     await Comment.findByIdAndDelete(cid)
     await declaration.save()
@@ -199,7 +197,7 @@ router.delete("/:id/comment/:cid/reply/:rid", isLogged_CS, verifyCommentUser, tr
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let reply = await Reply.findOne({ _id: rid, status: "Active" })
-    let i = await Reply.processObj(req, comment, reply, true)
+    let i = await Reply.processObj(req, res, comment, reply, true)
     comment.replies.splice(i, 1);
     await Reply.findByIdAndDelete(cid)
     await comment.save()
@@ -211,7 +209,7 @@ router.delete("/:id", isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
     const declaration = await Declaration.findOne({ _id: id, status: "Active" })
-    await Declaration.processObj(req, declaration, true)
+    await Declaration.processObj(req, res, declaration, true)
     await Declaration.findByIdAndDelete(id)
     req.flash('info', 'Deleted Successfuly');
     Redirects_SR.Home.CS(res)

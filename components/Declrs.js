@@ -51,7 +51,6 @@ export default function Declrs(props)
             .then(async res =>
             {
                 CS_Redirects.tryResCS(res, window)
-                console.log(res)
             })
     }
 

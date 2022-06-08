@@ -8,20 +8,24 @@ import { Close, Save } from '@mui/icons-material';
 import useStyles from '../assets/styles/_UploadWind';
 import SelectionsList from './SelectionsList'
 import GalleryList from "./GalleryList"
+import useLoading from './hooks/useLoading'
 import UploadProfileWind from './UploadProfileWind'
+import CS_Redirects from '../utilsCS/CS_Redirects'
 
 const drawerWidth = 280;
 
 function UploadWindow(props)
 {
-    const { setOpen, profile, windowAlert, image, setImage, setGallery, gallery, galleryDelete } = props
+    const { setOpen, profile, windowAlert, setWindowAlert, image, setImage, setGallery, gallery, galleryDelete } = props
 
     const selections = [
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1,
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_2,
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_3,
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_4,
+
     ]
+    const [submitWhile, submitSwitch] = useLoading(false)
 
     const classes = useStyles(props)();
 
@@ -41,9 +45,26 @@ function UploadWindow(props)
         }
     }, [])
 
-    const handleSubmit = () =>
+    const handleSubmit = async () =>
     {
+        const body = new FormData()
 
+        submitWhile(async () =>
+        {
+            for (let f of gallery)
+            {
+                body.set(f.name, f.content)
+            }
+            await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/gallery`, {
+                method: 'POST',
+                body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    if (res.err) setWindowAlert(res.err.message)
+                    // CS_Redirects.tryResCS(res, window)
+                })
+        })
     }
 
     const onWindowClick = () =>
@@ -68,12 +89,16 @@ function UploadWindow(props)
                         justifyContent: "right"
                     }}
                 >
-                    <IconButton onClick={handleSubmit}>
-                        <Save color="primary"/>
-                    </IconButton>
-                    <IconButton onClick={onWindowClick}>
-                        <Close />
-                    </IconButton>
+                    {submitSwitch(2, () => (
+                        <>
+                            <IconButton onClick={handleSubmit}>
+                                <Save color="primary" />
+                            </IconButton>
+                            <IconButton onClick={onWindowClick}>
+                                <Close />
+                            </IconButton>
+                        </>
+                    ))}
                 </Box>
                 <Box
                     sx={{

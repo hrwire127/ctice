@@ -7,7 +7,7 @@ const passport = require('passport');
 const errorMessages = require("../utilsSR/rules/errorMessages")
 const Redirects_SR = require('../utilsSR/general/SR_Redirects')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
-const { upload_profiles } = require('../utilsSR/primary/_p_basic')
+const { upload_profiles, upload_galeries } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 
 
@@ -80,6 +80,9 @@ const UserSchema = new Schema({
     },
     gallery: [{
         content: {
+            type: String
+        },
+        location: {
             type: String
         },
         name: {
@@ -156,34 +159,27 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
         }
         else
         {
-            try
-            {
-                const file = files ? await upload_profiles(files.profile) : null
+            const file = files ? await upload_profiles(files.profile) : null
 
-                const user = new User({
-                    username: pending.username,
-                    date: [pending.date],
-                    email: pending.email,
-                    status: "Active",
-                    profile: {
-                        url: file ? file.url : undefined,
-                        location: file ? file.location : undefined
-                    },
-                    bio,
-                    location,
-                    connections: { facebook, linkedin, twitter }
-                })
+            const user = new User({
+                username: pending.username,
+                date: [pending.date],
+                email: pending.email,
+                status: "Active",
+                profile: {
+                    url: file ? file.url : undefined,
+                    location: file ? file.location : undefined
+                },
+                bio,
+                location,
+                connections: { facebook, linkedin, twitter }
+            })
 
-                if (facebook) user.connections.facebook = facebook
-                if (twitter) user.connections.twitter = twitter
-                if (linkedin) user.connections.linkedin = linkedin
+            if (facebook) user.connections.facebook = facebook
+            if (twitter) user.connections.twitter = twitter
+            if (linkedin) user.connections.linkedin = linkedin
 
-                await User.register(user, password)
-            }
-            catch (err) 
-            {
-                console.log(err)
-            }
+            await User.register(user, password)
         }
     }
     else
@@ -198,7 +194,8 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     const { username, profile, location, bio, facebook, linkedin, twitter } = req.body;
 
     const User = mongoose.model('User', UserSchema)
-    if (await User.findOne({ username: username }))
+    
+    if (await User.findOne({ username }))
     {
         new UserError(...Object.values(errorMessages.usernameAllreadyUsed)).throw_CS(res)
     }
@@ -208,21 +205,27 @@ UserSchema.statics.updateChanges = async function (req, res, user)
     }
     else
     {
+        console.log("!!!")
         if (username && username !== "")
         {
             user.username = username
         }
 
+        console.log("!!!")
         if (profile === user.profile.url)
         {
             user.file = user.file;
-            return user;
         }
 
+        console.log("!!!")
         if (location)
         {
             user.location = JSON.parse(location)
         }
+
+        console.log("!!!")
+        console.log(req.body)
+        console.log(bio)
 
         if (bio)
         {
@@ -237,6 +240,8 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         user.date.push(new Date())
 
+
+        console.log(user)
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
             let file = await upload_profiles(req.files.profile)
@@ -283,6 +288,22 @@ UserSchema.methods.tryBoookmark = function (declaration)
 UserSchema.methods.getDateDiffMS = function ()
 {
     return new Date() - this.date[this.date.length - 1]
+}
+
+UserSchema.methods.processGalery = async function (files, res)
+{
+    for (let o of this.gallery)
+    {
+        await cloud.destroy(
+            o.location
+        )
+    }
+
+    for (let f of Object.keys(files))
+    {
+        const file = await upload_galeries(files[f], res)
+        this.gallery.push({ location: file.folder, name: file.name, content: file.url })
+    }
 }
 
 const User = mongoose.model('User', UserSchema);

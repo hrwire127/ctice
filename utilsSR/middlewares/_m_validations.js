@@ -1,7 +1,7 @@
 const Joi = require("joi").extend(require('@joi/date'));
 const Redirects_SR = require('../general/SR_Redirects');
 const UserError = require('../general/UserError');
-const { inspectDecrl, inspectUser, inspectComment, inspectChange } = require('../primary/_p_inspect')
+const { inspectDecrl, inspectUser, inspectComment, inspectChange, inspectGallery } = require('../primary/_p_inspect')
 const { modifyDesc } = require('../primary/_p_basic')
 
 async function validateDeclr(req, res, next) 
@@ -57,7 +57,6 @@ async function validateRegUser(req, res, next)
 {
     let { confirmationCode, password, profile, location, bio, facebook, linkedin, twitter } = req.body
 
-    console.log(req.body)
     const declarationSchema = Joi.object({
         confirmationCode: Joi.string().required(),
         password: Joi.string().required(),
@@ -306,9 +305,36 @@ async function validateComment(req, res, next)
     next()
 }
 
+async function validateGallery(req, res, next) 
+{
+    const declarationSchema = Joi.array().items(
+        Joi.object().keys({
+            name: Joi.string().required(),
+            data: Joi.any().required(),
+            size: Joi.number().required(),
+            encoding: Joi.string().required(),
+            tempFilePath: Joi.string().required(),
+            truncated: Joi.boolean().required(),
+            mimetype: Joi.string().required(),
+            md5: Joi.string().required(),
+            mv: Joi.function().required()
+        }))
+
+    const { error } = declarationSchema.validate(Array.from(req.files))
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new UserError(msg, 401).throw_CS(res)
+    }
+    next()
+}
+
 module.exports = {
 
     validateDeclr, validatePendingUser,
     validateLogUser, validateChange,
-    validateRegUser, validateComment
+    validateRegUser, validateComment,
+    validateGallery
 }

@@ -34,7 +34,7 @@ const ReplySchema = new Schema({
     },
 });
 
-ReplySchema.statics.processObj = async function (req, comment = undefined, reply = undefined, del = false) 
+ReplySchema.statics.processObj = async function (req,res, comment = undefined, reply = undefined, del = false) 
 {
     let { content } = req.body;
 

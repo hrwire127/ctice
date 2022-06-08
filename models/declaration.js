@@ -64,7 +64,7 @@ DeclarationSchema.virtual('hasFile').get(function ()
     return this.file['url'] !== undefined;
 })
 
-DeclarationSchema.statics.processObj = async function (req, declaration = undefined, del = false) 
+DeclarationSchema.statics.processObj = async function (req, res,declaration = undefined, del = false) 
 {
     let { body, files } = req;
 
@@ -96,7 +96,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
     if (await new excRule([body.file, files, hadFile], [], async () => //regular hadfile
     {
-        let file = await upload_pdf(files.file)
+        let file = await upload_pdf(files.file, res)
         await cloud.destroy(
             declaration.file.location,
         )
@@ -109,7 +109,7 @@ DeclarationSchema.statics.processObj = async function (req, declaration = undefi
 
     if (await new excRule([body.file, files], [hadFile], async () =>
     {
-        let file = await upload_pdf(files.file)
+        let file = await upload_pdf(files.file, res)
         Obj.file = {
             name: files.file.name,
             url: file.url,

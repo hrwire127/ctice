@@ -20,7 +20,6 @@ function verifyPendingCode(req, res, next)
         })
         .catch((err) => 
         {
-            console.log(err)
             new UserError(err.message, err.status).throw_SR(req, res)
         });
 };
@@ -40,7 +39,6 @@ function verifyPendingCode(req, res, next)
         })
         .catch((err) => 
         {
-            console.log(err)
             new UserError(err.message, err.status).throw_SR(req, res)
         });
 };

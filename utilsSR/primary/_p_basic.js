@@ -1,6 +1,7 @@
 let streamifier = require('streamifier');
 const UserError = require('../general/UserError');
 const { cloud } = require('../../cloud/storage');
+const { inspectPdf, inspectProfile, inspectGallery } = require('../../utilsSR/primary/_p_inspect')
 
 async function switchSort(sort, dateFunc, scoreSort)
 {
@@ -65,7 +66,7 @@ function genToken()
 }
 
 
-const upload_pdf = async (file) =>
+const upload_pdf = async (file, svres) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -93,7 +94,7 @@ const upload_pdf = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        new UserError(invalid, 400).throw_CS(svres)
     }
 
     return {
@@ -102,7 +103,7 @@ const upload_pdf = async (file) =>
     }
 }
 
-const upload_profiles = async (file) =>
+const upload_profiles = async (file, svres) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -130,11 +131,48 @@ const upload_profiles = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        new UserError(invalid, 400).throw_CS(svres)
     }
 
     return {
         url: res.url,
+        location: res.public_id
+    }
+}
+
+const upload_galeries = async (file, svres) =>
+{
+    const res = await new Promise((resolve, reject) =>
+    {
+        let cld_upload_stream = cloud.upload_stream(
+            {
+                folder: process.env.CLOUD_FOLDER_GALERIES,
+            },
+            function (err, res)
+            {
+                if (res)
+                {
+                    resolve(res);
+                } else
+                {
+                    reject(err);
+                }
+            }
+        );
+
+        streamifier.createReadStream(file.data).pipe(cld_upload_stream);
+    });
+    const invalid = await inspectGallery(res);
+    if (invalid)
+    {
+        await cloud.destroy(
+            res.public_id,
+        )
+        throw new UserError(invalid, 400).throw_CS(svres)
+    }
+
+    return {
+        name: res.url,
         location: res.public_id
     }
 }
@@ -145,7 +183,7 @@ function doRemember(req, res, next)
     if (req.body.doRemember)
     {
         req.session.cookie.maxAge = 1000 * 60 * 3;
-    } 
+    }
     else
     {
         req.session.cookie.expires = false;
@@ -155,4 +193,4 @@ function doRemember(req, res, next)
 
 
 
-module.exports = { switchSort, sortByScore, modifyDesc, genToken, upload_pdf, doRemember, upload_profiles }
+module.exports = { switchSort, sortByScore, modifyDesc, genToken, upload_pdf, doRemember, upload_profiles, upload_galeries }

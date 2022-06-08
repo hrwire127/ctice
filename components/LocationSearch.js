@@ -16,7 +16,6 @@ function LocationSearch(props)
             .then(res => res.json())
             .then(async res => 
             {
-                console.log(res)
                 setFeatures(res.features.map(el =>
                 {
                     return {
@@ -46,7 +45,6 @@ function LocationSearch(props)
                         setLocation()
                         return true;
                     })
-                    // console.log(event, newValue);
                 }}
                 renderInput={(params) => 
                 {

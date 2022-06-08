@@ -141,4 +141,16 @@ function inspectProfile(file)
     if (minHeight.getVal()) return minHeight.processMsg()
 }
 
-module.exports = { inspectDecrl, inspectComment, inspectUser, inspectChange, inspectPdf, inspectProfile }
+function inspectGallery(file = undefined)
+{
+    if (file)
+    {
+        const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+
+        const fileFormat = new valRule(file.format, Rules.profile_formats, 4)
+        if (fileFormat.getVal()) return fileFormat.processMsg()
+    }
+}
+
+module.exports = { inspectDecrl, inspectComment, inspectUser, inspectChange, inspectPdf, inspectProfile, inspectGallery }

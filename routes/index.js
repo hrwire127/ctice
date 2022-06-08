@@ -20,7 +20,7 @@ router.get("/create", isLogged_SR, isAdmin_SR, (req, res) =>
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>
 {
-    const Obj = await Declaration.processObj(req);
+    const Obj = await Declaration.processObj(req, res);
     const declaration = new Declaration(Obj)
     await declaration.save();
     req.flash('success', 'Created Successfuly');
