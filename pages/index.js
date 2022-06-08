@@ -3,11 +3,12 @@ import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
+import useAlertMsg from './hooks/useAlertMsg'
 
 function index(props)
 {
     const { count } = props;
-    const [flash, setFlash] = useState(props.flash)
+	const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
 
     return (
         <DeclrList

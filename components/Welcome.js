@@ -26,22 +26,13 @@ function Welcome(props)
 
     const { confirmationCode } = props
 
-    const [alert, setAlert] = useState()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, loadingSwitch] = useLoading(false)
     const [image, changeImage] = useState();
     const [editorState, setEditorState] = useState();
     const [location, setLocation] = useState()
 
     const classes = useStyles()
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -56,7 +47,7 @@ function Welcome(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
     };

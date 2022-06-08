@@ -7,26 +7,18 @@ import useStyles from '../assets/styles/_Login'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
+import useAlertMsg from './hooks/useAlertMsg'
 
 function Login(props)
 {
     const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
     const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [remember, setRemember] = useState(false)
     const [loadingWhile, switchLoading] = useLoading(false)
 
     const classes = useStyles();
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -39,7 +31,7 @@ function Login(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                     else
                     {
                         window.location = (window.location.href !== document.referrer

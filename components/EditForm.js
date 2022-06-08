@@ -10,6 +10,7 @@ import TextArea from './TextArea'
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import Rules from "../utilsCS/clientRules"
+import useAlertMsg from './hooks/useAlertMsg'
 
 
 function EditForm(props)
@@ -23,19 +24,10 @@ function EditForm(props)
     const [file, changeFile] = useState(declaration.file);
     const [editorState, setEditorState] = useState();
 
-    const [alert, setAlert] = useState()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitLoading] = useLoading(false)
 
     const classes = useStyles();
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -48,7 +40,7 @@ function EditForm(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
     };

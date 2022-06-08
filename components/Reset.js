@@ -12,19 +12,10 @@ function Reset(props)
 
     const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, switchLoading] = useLoading(false)
 
     const classes = useStyles()
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -39,7 +30,7 @@ function Reset(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
     };

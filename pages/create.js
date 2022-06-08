@@ -4,23 +4,14 @@ import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
+import useAlertMsg from './hooks/useAlertMsg'
 
 function create(props)
 {
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, loadingSwitch] = useLoading(false)
 
     let adminCtx = useContext(AdminContext);
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
-
 
     useEffect(() =>
     {
@@ -38,13 +29,13 @@ function create(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
 
     };
 
-    return adminCtx && (<CreateForm handleSubmit={handleSubmit} alert={alert} loadingSwitch={loadingSwitch} />)
+    return adminCtx && (<CreateForm setAlert={setAlert} handleSubmit={handleSubmit} alert={alert} loadingSwitch={loadingSwitch} />)
 }
 
 export default create

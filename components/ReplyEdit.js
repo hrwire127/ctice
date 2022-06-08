@@ -14,20 +14,11 @@ function ReplyEdit(props)
     const { reply, setEdit } = props;
     const { content, _id: rid  } = reply;
 
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
     const [editorState, setEditorState] = useState();
 
     const classes = useStyles()
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -40,7 +31,7 @@ function ReplyEdit(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
 

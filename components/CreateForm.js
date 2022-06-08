@@ -27,7 +27,7 @@ export default function CreateForm(props)
     const [editorState, setEditorState] = useState();
     const [file, changeFile] = useState();
 
-    const { handleSubmit, alert, loadingSwitch } = props;
+    const { handleSubmit, alert, setAlert, loadingSwitch } = props;
     const classes = useStyles()
 
     // useEffect(() =>

@@ -284,7 +284,6 @@ UserSchema.methods.getDateDiffMS = function ()
 
 UserSchema.methods.processGalery = async function (files, res)
 {
-    console.log(files)
     if (files && Object.keys(files).length > process.env.NEXT_PUBLIC_EDITS_LENGTH)
     {
         throw new UserError(...Object.values(errorMessages.tooManyImages)).throw_CS(res)

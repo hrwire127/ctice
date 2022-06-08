@@ -14,31 +14,22 @@ import
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
-import Rules from "../utilsCS/clientRules"
 import useStyles from "../assets/styles/_CreateForm";
 import useLoading from './hooks/useLoading'
+import useAlertMsg from './hooks/useAlertMsg'
 
 
 function CommentCreate(props)
 {
     const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [editorState, setEditorState] = useState();
 
     const [creatingWhile, creatingSwitch] = useLoading(false)
 
     const { id } = props;
     const classes = useStyles()
-
-    const setError = (msg) =>  
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -51,7 +42,7 @@ function CommentCreate(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window)
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
     }

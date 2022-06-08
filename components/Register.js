@@ -13,17 +13,8 @@ function Register(props)
     const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
     const [EmailError, , helperEmailText, , checkEmailKey, setEmailTrue, setEmailFalse, emailValid,] = useFormError(false);
 
-    const [alert, setAlert] = useState()
+	const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitLoading] = useLoading(false)
-
-    const setError = (msg) => 
-    {
-        setAlert(msg)
-        setTimeout(() =>
-        {
-            setAlert()
-        }, Rules.form_message_delay);
-    }
 
     const handleSubmit = async (body) =>
     {
@@ -36,7 +27,7 @@ function Register(props)
                 .then(async res =>
                 {
                     CS_Redirects.tryResCS(res, window);
-                    if (res.err) setError(res.err.message)
+                    if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
     };

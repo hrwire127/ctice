@@ -12,17 +12,20 @@ import UploadProfile from './UploadProfile'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
-import Rules from "../utilsCS/clientRules"
 import ProfileWindow from './ProfileWindow';
+import useAlertMsg from './hooks/useAlertMsg'
+import useTimer from './hooks/useTimer'
 
 function Change(props)
 {
 	const { user, isResetToken } = props;
 	const { username, date, profile, bio, connections } = user;
 
-	const [flash, setFlash] = useState()
+	const [DescError, , , , checkDescKey] = useFormError(false);
+
+	const [setFlashMsg, flash, setFlash] = useAlertMsg()
+	const [updateTimer, delay, startTimer] = useTimer(0)
 	const [isOpen, setOpen] = useState(false)
-	const [delay, setDelay] = useState(0)
 	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
@@ -34,31 +37,13 @@ function Change(props)
 	useEffect(() =>
 	{
 		const diff = Math.round(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000 - (new Date() - new Date(date[date.length - 1])) / 1000)
-		setDelay(diff > 0 ? diff : 0)
+		startTimer(diff > 0 ? diff : 0)
 	}, [])
 
 	useEffect(() =>
 	{
-		delay > 0 && setTimeout(() => setDelay(delay - 1), 1000);
+		return updateTimer()
 	}, [delay]);
-
-	const setError = (msg) =>
-	{
-		setAlert({ type: "error", message: msg })
-		setTimeout(() =>
-		{
-			setAlert()
-		}, Rules.form_message_delay);
-	}
-
-	const setMessage = (msg) =>
-	{
-		setFlash({ message: msg, type: "success" })
-		setTimeout(() =>
-		{
-			setFlash()
-		}, Rules.form_message_delay);
-	}
 
 	const resetPassword = async () =>
 	{
@@ -84,12 +69,12 @@ function Change(props)
 					CS_Redirects.tryResCS(res, window)
 					if (res.err)
 					{
-						setError(res.err.message)
+						setFlashMsg(res.err.message, "error")
 					}
 					else
 					{
-						setMessage(res.obj.message)
-						setDelay(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000)
+						setFlashMsg(res.obj.message, "success")
+						startTimer(process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY / 1000)
 					}
 				})
 		})
@@ -173,6 +158,7 @@ function Change(props)
 				setData={setEditorState}
 				error={flash && flash.type === "error"}
 				data={JSON.parse(bio)}
+				checkDescKey={checkDescKey}
 			/>
 
 			<Box sx={{ display: 'flex', justifyContent: "space-between", mt: 2 }}>
