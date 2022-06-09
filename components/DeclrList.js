@@ -100,6 +100,7 @@ function DeclrList(props)
             : (<Typography align="center" variant="h5" component="h6" color="text.secondary">Nothing</Typography>)))
     }
 
+
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}

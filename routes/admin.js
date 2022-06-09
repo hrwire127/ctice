@@ -17,4 +17,9 @@ router.get("/userlist", isAdmin_SR, (req, res) =>
     app.render(req, res, "/admin/userlist")
 })
 
+router.get("/banner", isAdmin_SR, (req, res) =>
+{
+    app.render(req, res, "/admin/banner")
+})
+
 module.exports = router;

@@ -3,9 +3,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/AdminIndex';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Link from 'next/link';
 
@@ -28,6 +29,12 @@ const mainDrawerItems = (
         <PeopleIcon color="tertiary"/>
       </ListItemIcon>
       <Link href="/admin/userlist"><ListItemText primary="Users" /></Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <ViewCarouselIcon color="tertiary"/>
+      </ListItemIcon>
+      <Link href="/admin/banner"><ListItemText primary="Create Banner" /></Link>
     </ListItemButton>
   </React.Fragment>
 );
