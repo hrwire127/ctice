@@ -15,7 +15,8 @@ function index(props)
             count={count}
             flash={flash}
             setFlash={setFlash}
-        />)
+        />
+        )
 }
 
 index.getInitialProps = async (props) =>

@@ -5,7 +5,7 @@ import
     CssBaseline, Divider, IconButton
 } from '@mui/material'
 import { Close, Save } from '@mui/icons-material';
-import useStyles from '../assets/styles/_UploadWind';
+import useStyles from '../assets/styles/_ProfileWindow';
 import SelectionsList from './SelectionsList'
 import GalleryList from "./GalleryList"
 import useLoading from './hooks/useLoading'

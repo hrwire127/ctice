@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     Drawer: {
         width: theme.drawerWidth,
         flexShrink: { sm: 0 },
-        height: "100%",
         borderRight: `1px solid ${theme.line}`,
         paddingBottom: 24,
         paddingTop: 24,
@@ -37,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: 24,
         width: theme.drawerWidth
+    },
+    Banners: {
+        display: "flex",
+        flexDirection: "column",
     }
 }))
 

@@ -18,6 +18,7 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
+import useLoading from '../components/hooks/useLoading'
 
 export default function CreateForm(props)
 {
@@ -26,8 +27,10 @@ export default function CreateForm(props)
 
     const [editorState, setEditorState] = useState();
     const [file, changeFile] = useState();
+    
+    const [loadingWhile, loadingSwitch] = useLoading(false)
 
-    const { handleSubmit, alert, setAlert, loadingSwitch } = props;
+    const { alert, setAlert } = props;
     const classes = useStyles()
 
     // useEffect(() =>
@@ -38,6 +41,22 @@ export default function CreateForm(props)
     //       }, false);
     // }, [])
 
+
+    const handleSubmit = async (body) =>
+    {
+        loadingWhile(async () =>
+        {
+            await fetch(process.env.NEXT_PUBLIC_DR_HOST, {
+                method: 'POST',
+                body: body,
+            }).then(response => response.json())
+                .then(async res =>
+                {
+                    CS_Redirects.tryResCS(res, window)
+                    if (res.err) setAlertMsg(res.err.message, "error")
+                })
+        })
+    };
 
     const errCheck = async (e) =>
     {

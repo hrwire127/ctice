@@ -1,39 +1,38 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import
 {
 	Toolbar, Button, IconButton,
-	Box, Menu, MenuItem,
+	Box, Menu, MenuItem, Badge,
+	ClickAwayListener
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Mail, Logout as LogoutIcon, Notifications, AssignmentInd, AccountCircle, } from "@mui/icons-material"
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { LogoutFetch, } from '../utilsCS/_get'
 import useStyles from "../assets/styles/_Header"
+import NotifWindow from './NotifWindow'
 
 
 function Header(props)
 {
 	const userCtx = useContext(UserContext);
 	const adminCtx = useContext(AdminContext);
-	const { sections, title } = props;
+	const { sections, title = "ctice" } = props;
+
 	const classes = useStyles();
 
-	const [anchorEl, setAnchorEl] = useState(null);
-	const open = Boolean(anchorEl);
+	const [notifOpen, setNotifOpen] = useState(false);
 
-	const handleClose = () =>
-	{
-		setAnchorEl(null);
-	};
 
 	const Logout = async () =>
 	{
 		const res = await LogoutFetch()
-		CS_Redirects.tryResCS(res, window)
+		if (typeof window !== "undefined")
+		{
+			CS_Redirects.tryResCS(res, window)
+		}
 	}
 
 	return (
@@ -41,22 +40,6 @@ function Header(props)
 			<Box className={classes.Total}>
 				<Box className={classes.RedBar} />
 				<Toolbar className={classes.Toolbar}>
-					<div>
-						<Menu
-							id="basic-menu"
-							anchorEl={anchorEl}
-							open={open}
-							onClose={handleClose}
-							MenuListProps={{
-								'aria-labelledby': 'basic-button',
-							}}
-							className={classes.DropDown}
-						>
-							<MenuItem color="primary" onClick={handleClose}>Profile</MenuItem>
-							<MenuItem color="primary" onClick={handleClose}>My account</MenuItem>
-							<MenuItem color="primary" onClick={handleClose}>Logout</MenuItem>
-						</Menu>
-					</div>
 					<Box sx={{ height: "100%", display: "flex", alignItems: "center" }}>
 						<a href="/" className={classes.Brand}>
 							{title}
@@ -67,26 +50,33 @@ function Header(props)
 						variant="dense"
 						className={classes.List}
 					>
-						{sections.map(section => (
-							<Link
-								color="inherit"
-								noWrap
-								key={section.title}
-								variant="body2"
-								href={section.url}
-								underline="none"
-								sx={{ p: 1, flexShrink: 0 }}
-							>
-								{section.title}
-							</Link>
-						))}
 					</Toolbar>
 					<Box className={classes.Tools}>
 						<Box className={classes.Authbar}>
-							{adminCtx && (<Link href="/admin"><IconButton><AssignmentIndIcon color="tertiary" /></IconButton></Link>)}
+							{adminCtx && (<Link href="/admin"><IconButton><AssignmentInd color="tertiary" /></IconButton></Link>)}
 							{userCtx
 								? (<>
-									<Link href="/user/profile"><IconButton><AccountCircleIcon color="tertiary" /></IconButton></Link>
+									<Box
+									// onBlur={() => setNotifOpen(false)}
+									>
+										<IconButton
+											// onFocus={() => setNotifOpen(!notifOpen)}
+											onClick={() => setNotifOpen(!notifOpen)}
+										>
+											<Badge badgeContent={4} color="secondary">
+												<Notifications color="tertiary" />
+											</Badge>
+										</IconButton>
+										{notifOpen && (<NotifWindow notifications={[
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
+											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" }
+										]} />)}
+									</Box>
+									<Link href="/user/profile"><IconButton><AccountCircle color="tertiary" /></IconButton></Link>
 									<IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
 								</>)
 								: (<>

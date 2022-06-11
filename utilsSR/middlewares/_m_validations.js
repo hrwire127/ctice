@@ -1,5 +1,4 @@
 const Joi = require("joi").extend(require('@joi/date'));
-const Redirects_SR = require('../general/SR_Redirects');
 const UserError = require('../general/UserError');
 const { inspectDecrl, inspectUser, inspectComment, inspectChange, inspectGallery } = require('../primary/_p_inspect')
 const { modifyDesc } = require('../primary/_p_basic')
@@ -331,10 +330,50 @@ async function validateGallery(req, res, next)
     next()
 }
 
+async function validateBanner(req, res, next)
+{
+    const declarationSchema = Joi.object({
+        content: Joi.string().required(),
+        date: Joi.date().iso()
+    })
+
+    const { error } = declarationSchema.validate(req.body)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new UserError(msg, 401).throw_CS(res)
+    }
+
+    next()
+}
+
+async function validateNotification(req, res, next)
+{
+    const notificationSchema = Joi.object({
+        content: Joi.string().required(),
+        banner: Joi.string(),
+        date: Joi.date().iso()
+    })
+
+    const { error } = notificationSchema.validate(req.body)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new UserError(msg, 401).throw_CS(res)
+    }
+
+    next()
+}
+
 module.exports = {
 
     validateDeclr, validatePendingUser,
     validateLogUser, validateChange,
     validateRegUser, validateComment,
-    validateGallery
+    validateGallery, validateBanner,
+    validateNotification
 }

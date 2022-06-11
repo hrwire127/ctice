@@ -2,7 +2,6 @@ const Redirects_SR = require('../general/SR_Redirects');
 const UserError = require('../general/UserError');
 const errorMessages = require('../rules/errorMessages');
 const User = require("../../models/user")
-const Redirects_CS = require("../../utilsCS/CS_Redirects")
 
 function isLogged_SR(req, res, next)
 {
@@ -45,7 +44,6 @@ function isAdmin_SR(req, res, next)
     const session = req.session.passport
     if (session) 
     {
-        console.log(session)
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
         {
             return next()
@@ -57,6 +55,7 @@ function isAdmin_SR(req, res, next)
 function isAdmin_CS(req, res, next)
 {
     const session = req.session.passport
+    console.log(req.session)
     if (session) 
     {
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
@@ -64,7 +63,7 @@ function isAdmin_CS(req, res, next)
             return next()
         }
     }
-    Redirects_CS.Error.CS(res)
+    Redirects_SR.Error.CS(res)
 }
 
 async function isSameUser(req, res, next) //

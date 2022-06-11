@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: "column",
 		width: "100%",
 		boxShadow: `0px 0px 10px -7px ${theme.palette.primary.main}`,
-		zIndex: 1
+		zIndex: 2
 	},
 	RedBar: {
 		width: "100%",

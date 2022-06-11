@@ -84,7 +84,14 @@ export default function Layout(props)
                                             <Loading fullPage={true} />
                                         </Box>
                                     )
-                                    : (<main style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                    : (<main style={{
+                                        position: "relative",
+                                        width: "100vw",
+                                        height: "100vh",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "space-between"
+                                    }}>
                                         {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
 
                                         {childrenwprops.props.noHeader && adminCtx
@@ -104,7 +111,7 @@ export default function Layout(props)
                                                 }
                                             </Box>)
                                         }
-                                        <div className="cover" stle={{}}></div>
+                                        <div className="cover" style={{}}></div>
                                     </main>)
                                 }
                             </StyledEngineProvider>

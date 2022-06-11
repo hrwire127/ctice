@@ -14,7 +14,7 @@ function Login(props)
     const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
     const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [remember, setRemember] = useState(false)
     const [loadingWhile, switchLoading] = useLoading(false)
 
@@ -35,7 +35,7 @@ function Login(props)
                     else
                     {
                         window.location = (window.location.href !== document.referrer
-                            && window.location.href !== process.env.NEXT_PUBLIC_DR_HOST + "/error"
+                            || window.location.href !== `${process.env.NEXT_PUBLIC_DR_HOST}/error`
                             ? document.referrer
                             : process.env.NEXT_PUBLIC_DR_HOST)
                     }

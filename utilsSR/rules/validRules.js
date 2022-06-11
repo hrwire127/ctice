@@ -27,5 +27,7 @@ module.exports = {
     linkedin_connection_includes: "linkedin.com",
     gallery_length: 20,
     dates_length: 100,
-    block_max_chars: 1000
+    block_max_chars: 1000,
+    banner_max_size: 1000000,
+    notification_max_size: 1000000
 }

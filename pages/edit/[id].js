@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import EditForm from '../../components/EditForm';
-import UserContext from '../../components/context/contextUser'
 import AdminContext from '../../components/context/contextAdmin'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, getGlobals, loadingWhile, timeout } from '../../utilsCS/_basic'
+import { determRendering } from '../../utilsCS/_basic'
 import { getDeclr, } from "../../utilsCS/_declr"
-import useLoading from '../../components/hooks/useLoading'
 
 function edit(props)
 {

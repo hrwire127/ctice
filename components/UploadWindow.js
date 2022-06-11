@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Box, Button } from '@mui/material'
-import useStyles from '../assets/styles/_WindowProfile'
+import useStyles from '../assets/styles/_ProfileWindowow'
 
 function UploadWindow(props)
 {

@@ -116,7 +116,7 @@ function getClientUser()
         })
 }
 
-const LogoutFetch = () =>
+function LogoutFetch() 
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/logout`,
         {
@@ -129,9 +129,59 @@ const LogoutFetch = () =>
         })
 }
 
+function getBanners()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/banner/all/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+function getBanner(id)
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/banner/${id}/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+function getLatestBanners()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/banner/last/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
 
 module.exports = {
     getLimitedComments, getLimitedReplies, getLimitedBookmarks,
     getClientUser, getUsers, LogoutFetch, loadLimitedBookmarks,
-    countLimitedBookmarks
+    countLimitedBookmarks, getBanners, getBanner, getLatestBanners
 }

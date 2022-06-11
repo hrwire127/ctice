@@ -167,4 +167,24 @@ function inspectGallery(file = undefined)
     }
 }
 
-module.exports = { inspectDecrl, inspectComment, inspectUser, inspectChange, inspectPdf, inspectProfile, inspectGallery }
+function inspectBanner(file = undefined)
+{
+    if (file)
+    {
+        const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+    }
+}
+
+function inspectNotification(file = undefined)
+{
+    if (file)
+    {
+        const fileRule = new valRule(file.bytes, Rules.notification_max_size, 0)
+        if (fileRule.getVal()) return fileRule.processMsg()
+    }
+}
+
+module.exports = { inspectDecrl, inspectComment, inspectUser, 
+    inspectChange, inspectPdf, inspectProfile, 
+    inspectGallery, inspectBanner, inspectNotification }

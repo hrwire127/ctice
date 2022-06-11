@@ -1,7 +1,7 @@
 let streamifier = require('streamifier');
 const UserError = require('../general/UserError');
 const { cloud } = require('../../cloud/storage');
-const { inspectPdf, inspectProfile, inspectGallery } = require('../../utilsSR/primary/_p_inspect')
+const { inspectPdf, inspectProfile, inspectGallery, inspectBanner, inspectNotification } = require('../../utilsSR/primary/_p_inspect')
 
 async function switchSort(sort, dateFunc, scoreSort)
 {
@@ -178,6 +178,83 @@ const upload_galeries = async (file, svres) =>
     }
 }
 
+const upload_banner = async (file, svres) =>
+{
+    const res = await new Promise((resolve, reject) =>
+    {
+        let cld_upload_stream = cloud.upload_stream(
+            {
+                folder: process.env.CLOUD_FOLDER_BANNERS,
+                resource_type: "raw"
+            },
+            function (err, res)
+            {
+                if (res)
+                {
+                    resolve(res);
+                } else
+                {
+                    reject(err);
+                }
+            }
+        );
+
+        streamifier.createReadStream(file).pipe(cld_upload_stream);
+    });
+
+    console.log(res)
+
+    const invalid = await inspectBanner(res);
+
+    if (invalid)
+    {
+        await cloud.destroy(
+            res.public_id,
+        )
+        throw new UserError(invalid, 400).throw_CS(svres)
+    }
+
+    return { url: res.url, location: res.public_id }
+}
+
+const upload_notification = async (file, svres) =>
+{
+    const res = await new Promise((resolve, reject) =>
+    {
+        let cld_upload_stream = cloud.upload_stream(
+            {
+                folder: process.env.CLOUD_FOLDER_NOTIFICATIONS,
+                resource_type: "raw"
+            },
+            function (err, res)
+            {
+                if (res)
+                {
+                    console.log(res)
+                    resolve(res);
+                } else
+                {
+                    console.log(err)
+                    reject(err);
+                }
+            }
+        );
+
+        streamifier.createReadStream(file).pipe(cld_upload_stream);
+    });
+
+    const invalid = await inspectNotification(res);
+
+    if (invalid)
+    {
+        await cloud.destroy(
+            res.public_id,
+        )
+        throw new UserError(invalid, 400).throw_CS(svres)
+    }
+
+    return { url: res.url, location: res.public_id }
+}
 
 function doRemember(req, res, next)
 {
@@ -194,4 +271,9 @@ function doRemember(req, res, next)
 
 
 
-module.exports = { switchSort, sortByScore, modifyDesc, genToken, upload_pdf, doRemember, upload_profiles, upload_galeries }
+module.exports = {
+    switchSort, sortByScore, modifyDesc,
+    genToken, upload_pdf, doRemember,
+    upload_profiles, upload_galeries, upload_banner,
+    upload_notification
+}

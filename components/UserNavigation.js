@@ -4,15 +4,31 @@ import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
 import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material';
+import { getLatestBanners } from '../utilsCS/_get'
+import FixedBanner from "./FixedBanner"
+import FullBanner from './FullBanner';
 
 function UserNavigation(props)
 {
+    const [banners, setBanners] = useState([])
+
+    console.log(banners)
+
     const classes = useStyles();
+    
+    // ctice/banners/s5di2jx3lppeumuwsw1d
 
     const Item = (props) =>
     {
         const { text, url, includes, icon } = props
         const router = useRouter();
+
+        useEffect(async () =>
+        {
+            const banners = await getLatestBanners()
+            setBanners(banners.obj)
+        }, [])
+
 
         const ItemIcon = () =>
         {
@@ -106,6 +122,12 @@ function UserNavigation(props)
             >
                 {props.children}
             </Box>
+            <Box
+                sx={{ width: 300 }}
+            >
+                {banners.map(b => <FixedBanner banner={b} />)}
+            </Box>
+            {/* {banner.length >  && (<FullBanner banner={banner} />)} */}
         </Box>
     )
 }

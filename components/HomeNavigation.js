@@ -3,6 +3,8 @@ import { Box, Typography, ButtonGroup, Button, Grid, IconButton, AppBar, CssBase
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
+import FixedBanner from "./FixedBanner"
+import FullBanner from './FullBanner';
 
 function HomeNavigation(props)
 {

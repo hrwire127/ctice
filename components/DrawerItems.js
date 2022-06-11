@@ -8,6 +8,8 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
+import BackupTableIcon from '@mui/icons-material/BackupTable';
 import Link from 'next/link';
 
 const mainDrawerItems = (
@@ -16,7 +18,7 @@ const mainDrawerItems = (
       <ListItemIcon>
         <DashboardIcon color="tertiary" />
       </ListItemIcon>
-      <Link href="/admin/"><ListItemText primary="AdminIndex" /></Link>
+      <Link href="/admin/"><ListItemText primary="Home" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
@@ -35,6 +37,18 @@ const mainDrawerItems = (
         <ViewCarouselIcon color="tertiary"/>
       </ListItemIcon>
       <Link href="/admin/banner"><ListItemText primary="Create Banner" /></Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <AddAlertIcon color="tertiary"/>
+      </ListItemIcon>
+      <Link href="/admin/notification"><ListItemText primary="Create Notification" /></Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <BackupTableIcon color="tertiary"/>
+      </ListItemIcon>
+      <Link href="/admin/bannerlist"><ListItemText primary="Banner List" /></Link>
     </ListItemButton>
   </React.Fragment>
 );
