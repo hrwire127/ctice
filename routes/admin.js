@@ -22,24 +22,26 @@ router.get("/userlist", isAdmin_SR, (req, res) =>
     app.render(req, res, "/admin/userlist")
 })
 
-router.get("/banner", isAdmin_SR, (req, res) =>
+router.get("/banner/create", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/banner")
+    app.render(req, res, "/admin/banner/create")
 })
 
-router.get("/banner/:id", isAdmin_SR, (req, res) =>
+router.get("/banner/:id", isAdmin_SR, tryAsync_CS(async (req, res) =>
 {
-    app.render(req, res, `/admin/${req.params.id}`)
-})
+    const { id } = req.params
+    const banner = await Banner.findOne({ _id: id, status: "Active" })
+    app.render(req, res, `/admin/banner/${req.params.id}`, { banner })
+}))
 
 router.get("/notification", isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/admin/notification")
 })
 
-router.get("/bannerlist", isAdmin_SR, (req, res) =>
+router.get("/banner/list", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/bannerlist")
+    app.render(req, res, "/admin/banner/list")
 })
 
 router.post("/banner", isAdmin_CS, validateBanner, tryAsync_CS(async (req, res) =>
@@ -73,17 +75,17 @@ router.post("/banner/all/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, re
     Redirects_SR.Api.sendApi(res, banners)
 }))
 
-router.post("/banner/last/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
-{
-    const banners = await Banner.find({ status: "Active", type: "fixed" }).sort({ _id: -1 })
-    Redirects_SR.Api.sendApi(res, banners)
-}))
-
-router.post("/banner/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
+router.post("/banner/:id/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params
     const banner = await Banner.findOne({ _id: id, status: "Active" })
     Redirects_SR.Api.sendApi(res, banner)
+}))
+
+router.post("/banner/last/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
+{
+    const banners = await Banner.find({ status: "Active", type: "fixed" }).sort({ _id: -1 })
+    Redirects_SR.Api.sendApi(res, banners)
 }))
 
 router.put("/banner/:id", isAdmin_CS, validateBanner, tryAsync_CS(async (req, res) =>

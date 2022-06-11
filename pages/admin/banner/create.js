@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from 'react'
-import AdminContext from '../../components/context/contextAdmin'
-import CS_Redirects from '../../utilsCS/CS_Redirects'
-import AdminLayout from "../../components/AdminLayout"
-import BannerCreate from '../../components/BannerCreate.js'
+import AdminContext from '../../../components/context/contextAdmin'
+import CS_Redirects from '../../../utilsCS/CS_Redirects'
+import AdminLayout from "../../../components/AdminLayout"
+import BannerCreate from '../../../components/BannerCreate.js'
 
 function banner(props)
 {

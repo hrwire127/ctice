@@ -75,11 +75,11 @@ export default function Banners(props)
                             <TableCell>{row.views}</TableCell>
                             <TableCell align="right">
                                 <Box sx={{ display: 'flex', justifyContent: "right", gap: 1 }}>
-                                    <Link href={`/admin/banner/${row.id}`}>
-                                        <IconButton sx={{ width: 3, height: 3 }}>
+                                    <IconButton sx={{ width: 3, height: 3 }}>
+                                        <Link href={`/admin/banner/${row.id}`}>
                                             <Build color="tertiary" sx={{ fontSize: 20 }} />
-                                        </IconButton>
-                                    </Link>
+                                        </Link>
+                                    </IconButton>
                                     <IconButton onClick={(e) => onDelete(e, row.id)} sx={{ width: 3, height: 3 }}>
                                         <Delete color="tertiary" sx={{ fontSize: 20 }} />
                                     </IconButton>

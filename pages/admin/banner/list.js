@@ -1,10 +1,10 @@
 import React, { useEffect, useContext } from 'react'
-import AdminContext from '../../components/context/contextAdmin'
-import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, timeout } from '../../utilsCS/_basic'
-import { getBanners } from "../../utilsCS/_get"
-import AdminLayout from "../../components/AdminLayout"
-import AdminBanners from "../../components/AdminBanners"
+import AdminContext from '../../../components/context/contextAdmin'
+import CS_Redirects from '../../../utilsCS/CS_Redirects'
+import { determRendering, timeout } from '../../../utilsCS/_basic'
+import { getBanners } from "../../../utilsCS/_get"
+import AdminLayout from "../../../components/AdminLayout"
+import AdminBanners from "../../../components/AdminBanners"
 
 function bannerlist(props)
 {

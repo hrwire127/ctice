@@ -36,7 +36,7 @@ const mainDrawerItems = (
       <ListItemIcon>
         <ViewCarouselIcon color="tertiary"/>
       </ListItemIcon>
-      <Link href="/admin/banner"><ListItemText primary="Create Banner" /></Link>
+      <Link href="/admin/banner/create"><ListItemText primary="Create Banner" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
@@ -48,7 +48,7 @@ const mainDrawerItems = (
       <ListItemIcon>
         <BackupTableIcon color="tertiary"/>
       </ListItemIcon>
-      <Link href="/admin/bannerlist"><ListItemText primary="Banner List" /></Link>
+      <Link href="/admin/banner/list"><ListItemText primary="Banner List" /></Link>
     </ListItemButton>
   </React.Fragment>
 );
