@@ -1,0 +1,231 @@
+import React, { useState, useRef } from 'react'
+import
+{
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    Box,
+    Typography,
+    Container,
+    Slider
+} from "@mui/material";
+import { Article } from '@mui/icons-material'
+import parse from 'html-react-parser';
+import useAlertMsg from './hooks/useAlertMsg'
+import TransitionAlerts from './TransitionAlerts'
+import useLoading from './hooks/useLoading';
+import DocView from './DocView'
+
+function NotifCreate()
+{
+    const [fileNotif, setFileNotif] = useState("")
+    const [htmlNotif, setHtmlNotif] = useState("")
+    const [fileBanner, setFileBanner] = useState("")
+    const [htmlBanner, setHtmlBanner] = useState("")
+    const [submitWhile, submitSwitch] = useLoading(false)
+
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
+
+    const options = {
+        trim: true,
+        replace: (domNode) =>
+        {
+            if (domNode.attribs && domNode.attribs.class === 'remove')
+            {
+                return <></>;
+            }
+        },
+    };
+
+    const ReadFile = (e, setFile, setHtml) =>
+    {
+        var f = e.target.files[0];
+
+        if (f)
+        {
+            setFile(f)
+            var r = new FileReader();
+            r.onload = function (e)
+            {
+                var contents = e.target.result;
+                setHtml(contents)
+            }
+            r.readAsText(f);
+        } else
+        {
+            setAlertMsg("failed to load file", "error")
+        }
+    }
+
+    const onUpload = (inputFileRef) =>
+    {
+        inputFileRef.current.click();
+    }
+
+    const onDelete = (setFile, setHtml, inputFileRef) =>
+    {
+        setFile(null)
+        setHtml("")
+        inputFileRef.current.value = ''
+    }
+
+    const Notif = () =>
+    {
+        const inputFileRef = useRef(null);
+        const [width, setWidth] = useState(600)
+
+        return (<Box>
+            <Typography component="h1" variant="h5"  align="center" sx={{ mb: 2 }}>
+                Create Notification
+            </Typography>
+            <input
+                ref={inputFileRef}
+                type="file"
+                id="file"
+                name="file"
+                hidden
+                onChange={(e) => ReadFile(e, setFileNotif, setHtmlNotif)}
+            />
+            <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
+                <Button variant="outlined" onClick={() => onUpload(inputFileRef)}>{fileNotif ? fileNotif.name : "Upload"}</Button>
+                <Button color="error" variant="contained" onClick={() => onDelete(setFileNotif, setHtmlNotif, inputFileRef)}>Delete</Button>
+            </Box>
+
+            <Box
+                sx={{
+                    width: 600,
+                    height: 400,
+                }}>
+                <TextField
+                    fullWidth
+                    placeholder="Html code"
+                    multiline
+                    rows={15}
+                    value={htmlNotif}
+                    onChange={(e) => setHtmlNotif(e.target.value)}
+                />
+                <Slider
+                    sx={{ width: "100%" }}
+                    size="small"
+                    marks
+                    defaultValue={600}
+                    aria-label="Small"
+                    valueLabelDisplay="auto"
+                    step={100}
+                    min={100}
+                    max={1000}
+                    onChange={(e, val) => setWidth(val)}
+                />
+            </Box>
+            <Box sx={{ border: "1px solid gray", borderRadius: 1, width: width }}>
+                {parse(htmlNotif, options)}
+            </Box>
+        </Box>)
+    }
+
+
+    const Banner = () =>
+    {
+        const inputFileRef = useRef(null);
+        const [width, setWidth] = useState(600)
+
+        return (
+            <Box sx={{ mt: 5, position: "relative" }}>
+                <Box sx={htmlNotif !== "" ? {} : { zIndex: 3, position: "absolute", width: "100%", height: "100%", backgroundColor: "gray", opacity: "0.5" }} />
+                <Typography component="h1" variant="h5" align="center" sx={{ mb: 2 }}>
+                    Extra Banner
+                </Typography>
+                <input
+                    ref={inputFileRef}
+                    type="file"
+                    id="file"
+                    name="file"
+                    hidden
+                    onChange={(e) => ReadFile(e, setFileBanner, setHtmlBanner)}
+                />
+                <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
+                    <Button variant="outlined" onClick={() => onUpload(inputFileRef)}>{fileBanner ? fileBanner.name : "Upload"}</Button>
+                    <Button color="error" variant="contained" onClick={() => onDelete(setFileBanner, setHtmlBanner, inputFileRef)}>Delete</Button>
+                </Box>
+                <Box
+                    sx={{
+                        width: 600,
+                        height: 400,
+                    }}
+                >
+                    <TextField
+                        fullWidth
+                        placeholder="Html code"
+                        multiline
+                        rows={15}
+                        value={htmlBanner}
+                        onChange={(e) => setHtmlBanner(e.target.value)}
+                    />
+                    <Slider
+                        sx={{ width: "100%" }}
+                        size="small"
+                        marks
+                        defaultValue={600}
+                        aria-label="Small"
+                        valueLabelDisplay="auto"
+                        step={100}
+                        min={100}
+                        max={1000}
+                        onChange={(e, val) => setWidth(val)}
+                    />
+                </Box>
+                <Box sx={{ border: "1px solid gray", borderRadius: 1, width: width }}>
+                    {parse(htmlBanner, options)}
+                </Box>
+            </Box>
+        )
+    }
+
+    const handleSubmit = () =>
+    {
+        if (htmlNotif !== "")
+        {
+            submitWhile(async () =>
+            {
+                await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: htmlNotif.replace(/\s/g, ''), banner: htmlBanner !== "" ? htmlBanner.replace(/\s/g, '') : undefined }),
+                }).then(response => response.json())
+                    .then(async res =>
+                    {
+                        // CS_Redirects.tryResCS(res, window)
+                        if (res.err) setAlertMsg(res.err.message, "error")
+                    })
+            })
+        }
+        else
+        {
+            setAlertMsg("Cannot be empty", "error")
+        }
+    }
+
+    return (
+        <Container component="main" maxWidth="xs">
+            {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
+            <Box sx={{
+                marginTop: 16,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                mb: 22
+            }}>
+                <Notif />
+                <Banner />
+                {
+                    submitSwitch(0, () => <Button sx={{ mt: 2 }} color="success" variant="contained" onClick={handleSubmit}>Create</Button>)
+                }
+            </Box >
+        </Container >
+    )
+}
+
+export default NotifCreate

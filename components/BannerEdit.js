@@ -1,0 +1,172 @@
+import React, { useState, useRef, useEffect } from 'react'
+import
+{
+    Avatar,
+    Button,
+    TextField,
+    Box,
+    Container,
+    Slider
+} from "@mui/material";
+import { Article } from '@mui/icons-material'
+import parse from 'html-react-parser';
+import CS_Redirects from '../utilsCS/CS_Redirects'
+import useAlertMsg from './hooks/useAlertMsg'
+import TransitionAlerts from './TransitionAlerts'
+import useLoading from './hooks/useLoading';
+
+function BannerEdit(props)
+{
+    const { banner } = props
+    const [file, setFile] = useState("")
+    const [html, setHtml] = useState("")
+    const [width, setWidth] = useState(600)
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [submitWhile, submitSwitch] = useLoading(false)
+
+    const inputFileRef = useRef(null);
+
+    useEffect(() =>
+    {
+        fetch(banner.content)
+            .then(res => res.text())
+            .then(res => setHtml(res))
+            .catch(err => console.log(err))
+    }, [])
+
+
+    const options = {
+        trim: true,
+        replace: (domNode) =>
+        {
+            if (domNode.attribs && domNode.attribs.class === 'remove')
+            {
+                return <></>;
+            }
+        },
+    };
+
+    const ReadFile = (e) =>
+    {
+        var f = e.target.files[0];
+
+        if (f)
+        {
+            setFile(f)
+            var r = new FileReader();
+            r.onload = function (e)
+            {
+                var contents = e.target.result;
+                setHtml(contents)
+            }
+            r.readAsText(f);
+        } else
+        {
+            setAlertMsg("failed to load file", "error")
+        }
+    }
+
+    const onUpload = () =>
+    {
+        inputFileRef.current.click();
+    }
+
+    const onDelete = () =>
+    {
+        setFile(null)
+        setHtml("")
+        inputFileRef.current.value = ''
+    }
+
+    const handleSubmit = () =>
+    {
+        if (html !== "")
+        {
+            submitWhile(async () =>
+            {
+                await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/banner/${banner._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: html.replace(/\s/g, '') }),
+                }).then(response => response.json())
+                    .then(async res =>
+                    {
+                        // CS_Redirects.tryResCS(res, window)
+                        if (res.err) setAlertMsg(res.err.message, "error")
+                    })
+            })
+        }
+        else
+        {
+            setAlertMsg("Cannot be empty", "error")
+        }
+    }
+
+
+    return (
+        <Container component="main" maxWidth="xs">
+            <Box sx={{ mt: 12 }} />
+            {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
+            <Box sx={{
+                marginTop: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                mb: 22
+            }}>
+                <Avatar sx={{ m: 1, backgroundColor: "primary" }}>
+                    <Article />
+                </Avatar>
+                <input
+                    ref={inputFileRef}
+                    type="file"
+                    id="file"
+                    name="file"
+                    hidden
+                    onChange={(e) => ReadFile(e)}
+                />
+                <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
+                    <Button variant="outlined" onClick={onUpload}>{file ? file.name : "Upload"}</Button>
+                    <Button color="error" variant="contained" onClick={onDelete}>Delete</Button>
+                </Box>
+
+                <Box
+                    sx={{
+                        width: 600,
+                        height: 400,
+                    }}>
+                    <TextField
+                        fullWidth
+                        placeholder="Html code"
+                        multiline
+                        rows={15}
+                        value={html}
+                        onChange={(e) => setHtml(e.target.value)}
+                    />
+                    <Slider
+                        sx={{ width: "100%" }}
+                        size="small"
+                        marks
+                        defaultValue={600}
+                        aria-label="Small"
+                        valueLabelDisplay="auto"
+                        step={100}
+                        min={100}
+                        max={1000}
+                        onChange={(e, val) => setWidth(val)}
+                    />
+                </Box>
+                <Box sx={{ border: "1px solid gray", borderRadius: 1, width: width }}>
+                    {parse(html, options)}
+                </Box>
+                {
+                    submitSwitch(0, () => <Button sx={{ mt: 2 }} color="success" variant="contained" onClick={handleSubmit}>Create</Button>)
+                }
+            </Box>
+        </Container>
+    )
+}
+
+export default BannerEdit
