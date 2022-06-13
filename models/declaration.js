@@ -4,6 +4,8 @@ const Rules = require('../utilsSR/rules/validRules')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const { upload_pdf } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
+const notifTemplates = require("../utilsSR/rules/notifTemplates");
+const { cutMention } = require('../utilsSR/primary/_p_basic');
 const User = require("./user");
 
 const DeclarationSchema = new Schema({
@@ -64,7 +66,7 @@ DeclarationSchema.virtual('hasFile').get(function ()
     return this.file['url'] !== undefined;
 })
 
-DeclarationSchema.statics.processObj = async function (req, res,declaration = undefined, del = false) 
+DeclarationSchema.statics.processObj = async function (req, res, declaration = undefined, del = false) 
 {
     let { body, files } = req;
 
@@ -178,6 +180,15 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
             this.likes.splice(i, 1);
         }
     }
+}
+
+DeclarationSchema.methods.processNotifLike = async function () 
+{
+    const declr = await this.populate({ path: 'authors' })
+
+    const Obj = { content: notifTemplates.like, date: new Date(), banner: null }
+
+    await User.attachNotification(Obj, declr.authors[declr.authors.length - 1], false)
 }
 
 const Declaration = mongoose.model('Declaration', DeclarationSchema);

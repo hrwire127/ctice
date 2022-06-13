@@ -82,6 +82,7 @@ router.put("/likes/:id", apiSecret, isLogged_CS, tryAsync_CS(async (req, res, ne
     const user = await getUserdata(req, res);
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     declaration.tryLike(user._id, type)
+    await declaration.processNotifLike()
     await declaration.save();
     Redirects_SR.Api.sendApi(res, declaration.likes)
 }))
@@ -93,6 +94,7 @@ router.put("/comments/:cid", apiSecret, isLogged_CS, tryAsync_CS(async (req, res
     const user = await getUserdata(req, res);
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
     comment.tryLike(user._id, type)
+    await comment.processNotifLike()
     await comment.save();
     Redirects_SR.Api.sendApi(res, comment.likes)
 }))
@@ -104,6 +106,7 @@ router.put("/replies/:rid", apiSecret, isLogged_CS, tryAsync_CS(async (req, res,
     const user = await getUserdata(req, res);
     let reply = await Reply.findOne({ _id: rid, status: "Active" })
     reply.tryLike(user._id, type)
+    await reply.processNotifLike()
     await reply.save();
     Redirects_SR.Api.sendApi(res, reply.likes)
 }))
@@ -113,8 +116,8 @@ router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req
     const { id } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = new Comment(await Comment.processObj(req, res))
-    await comment.processNotifComment();
     declaration.comments.push(comment)
+    await comment.processNotifComment();
     await declaration.save()
     await comment.save()
     Redirects_SR.Home.customCS(res, `${id}`)
@@ -126,6 +129,7 @@ router.post("/:id/comment/:cid/reply", isLogged_CS, validateComment, tryAsync_CS
     let comment = await Comment.findOne({ _id: cid, status: "Active" })
     let reply = new Reply(await Reply.processObj(req, res))
     comment.replies.push(reply)
+    await reply.processNotifReply();
     await comment.save()
     await reply.save()
     Redirects_SR.Home.customCS(res, `${id}`)

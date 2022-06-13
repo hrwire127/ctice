@@ -34,7 +34,6 @@ function Header(props)
 
 		if(user.obj)
 		{
-			console.log(user.obj.notifications)
 			setNotificaions(user.obj.notifications)
 			setViews(user.obj.notifications.filter(n => !n.seen).length)
 		}

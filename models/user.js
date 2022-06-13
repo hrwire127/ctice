@@ -348,20 +348,20 @@ UserSchema.statics.processNotification = async function (req, res, preset)
     if (banner && banner !== "")
     {
         const bannerbuf = Buffer.from(banner, 'utf8');
-        const { url: bannerUrl} = await upload_banner(bannerbuf, res);
+        const { url: bannerUrl } = await upload_banner(bannerbuf, res);
         Obj.banner = { content: bannerUrl, seen: false }
     }
 
     return Obj;
 }
 
-UserSchema.statics.attachNotification = async function (Obj, id, sendmail) 
+UserSchema.statics.attachNotification = async function (Obj, user, sendmail) 
 {
     const User = mongoose.model('User', UserSchema)
-    const users = id ? await User.find({}) : [await User.findOne({ _id: id })]
+    const users = user ? [user] : await User.find({})
 
     console.log(Obj)
-    
+
     users.forEach(async u => 
     {
         u.notifications.push(Obj)

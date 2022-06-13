@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const User = require("./user");
 const notifTemplates = require("../utilsSR/rules/notifTemplates");
+const { cutMention } = require('../utilsSR/primary/_p_basic');
 
 const CommentSchema = new Schema({
     content: {
@@ -75,32 +76,6 @@ CommentSchema.statics.processObj = async function (req, res, declaration = undef
     }).Try()) return Obj;
 }
 
-CommentSchema.methods.processNotifComment = async function () 
-{
-    let username = []
-    const content = JSON.parse(this.content)
-
-    content.blocks.forEach(b =>
-    {
-        if (b.text.includes("@"))
-        {
-            let i = b.text.indexOf("@") + 1
-            for (let c = "@"; c !== " "; i++)
-            {
-                username.push(b.text[i]);
-                c = b.text[i + 1]
-            }
-            console.log(username)
-            username = username.join("")
-        }
-    })
-    console.log(username)
-
-    const Obj = { content: notifTemplates.comment, date: new Date(), banner: null }
-
-    await User.attachNotification(Obj, await User.findOne({ username }), false)
-}
-
 CommentSchema.methods.tryLike = async function (userId, type)
 {
     const True = this.likes.filter(el => el.user.valueOf() === userId.valueOf() && el.typeOf === true).length;
@@ -142,6 +117,27 @@ CommentSchema.methods.tryLike = async function (userId, type)
             this.likes.splice(i, 1);
         }
     }
+}
+
+CommentSchema.methods.processNotifComment = async function () 
+{
+    let username = cutMention(JSON.parse(this.content))
+    let comment = await this.populate({ path: 'author' })
+
+    const Comment = { content: notifTemplates.comment, date: new Date(), banner: null }
+    const Mention = { content: notifTemplates.mention, date: new Date(), banner: null }
+
+    if (username) await User.attachNotification(Mention, await User.findOne({ username }), false)
+    await User.attachNotification(Comment, comment.author, false)
+}
+
+CommentSchema.methods.processNotifLike = async function () 
+{
+    const comment = await this.populate({ path: 'author' })
+
+    const Obj = { content: notifTemplates.like, date: new Date(), banner: null }
+
+    await User.attachNotification(Obj, comment.author, false)
 }
 
 const Comment = mongoose.model('Comment', CommentSchema);

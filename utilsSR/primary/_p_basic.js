@@ -269,11 +269,30 @@ function doRemember(req, res, next)
     next();
 }
 
+function cutMention(parent)
+{
+    let substring = []
+
+    parent.blocks.forEach(b =>
+    {
+        if (b.text.includes("@"))
+        {
+            let i = b.text.indexOf("@") + 1
+            for (let c = "@"; c !== " "; i++)
+            {
+                substring.push(b.text[i]);
+                c = b.text[i + 1]
+            }
+            console.log(substring)
+            substring = substring.join("")
+        }
+    })
+}
 
 
 module.exports = {
     switchSort, sortByScore, modifyDesc,
     genToken, upload_pdf, doRemember,
     upload_profiles, upload_galeries, upload_banner,
-    upload_notification
+    upload_notification, cutMention
 }

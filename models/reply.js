@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const User = require("./user");
+const notifTemplates = require("../utilsSR/rules/notifTemplates");
+const { cutMention } = require('../utilsSR/primary/_p_basic');
 
 const ReplySchema = new Schema({
     content: {
@@ -34,7 +36,7 @@ const ReplySchema = new Schema({
     },
 });
 
-ReplySchema.statics.processObj = async function (req,res, comment = undefined, reply = undefined, del = false) 
+ReplySchema.statics.processObj = async function (req, res, comment = undefined, reply = undefined, del = false) 
 {
     let { content } = req.body;
 
@@ -111,6 +113,28 @@ ReplySchema.methods.tryLike = async function (userId, type)
             this.likes.splice(i, 1);
         }
     }
+}
+
+ReplySchema.methods.processNotifReply = async function () 
+{
+    let username = cutMention(JSON.parse(this.content))
+    let reply = await this.populate({ path: 'author' })
+
+    const Comment = { content: notifTemplates.comment, date: new Date(), banner: null }
+    const Mention = { content: notifTemplates.mention, date: new Date(), banner: null }
+
+
+    if (username) await User.attachNotification(Mention, await User.findOne({ username }), false)
+    await User.attachNotification(Comment, reply.author, false)
+}
+
+ReplySchema.methods.processNotifLike = async function () 
+{
+    const reply = await this.populate({ path: 'author' })
+
+    const Obj = { content: notifTemplates.like, date: new Date(), banner: null }
+
+    await User.attachNotification(Obj, reply.author, false)
 }
 
 const Reply = mongoose.model('Reply', ReplySchema);

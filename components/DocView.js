@@ -1,15 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import
-{
-    Avatar,
-    Button,
-    CssBaseline,
-    TextField,
-    Box,
-    Typography,
-    Container,
-    Slider
-} from "@mui/material";
 import parse from 'html-react-parser';
 
 function DocView(props)
