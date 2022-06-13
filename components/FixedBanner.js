@@ -8,7 +8,7 @@ function FixedBanner(props)
 
     return (
         <Paper sx={{ width: "100%" }}>
-            <DocView url={banner.content} />
+            <DocView url={banner.content} raw={banner.raw} />
         </Paper>
     )
 }

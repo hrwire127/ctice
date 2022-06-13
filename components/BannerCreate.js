@@ -16,7 +16,6 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
-import DocView from './DocView'
 
 function BannerCreate()
 {

@@ -15,7 +15,6 @@ import parse from 'html-react-parser';
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
-import DocView from './DocView'
 
 function NotifCreate()
 {

@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const User = require("./user");
-const notifTemplates = require("../utilsSR/rules/notifTemplates");
 const { cutMention } = require('../utilsSR/primary/_p_basic');
+const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 const CommentSchema = new Schema({
     content: {
@@ -119,23 +119,38 @@ CommentSchema.methods.tryLike = async function (userId, type)
     }
 }
 
-CommentSchema.methods.processNotifComment = async function () 
+CommentSchema.methods.processNotifComment = async function (req, res) 
 {
     let username = cutMention(JSON.parse(this.content))
     let comment = await this.populate({ path: 'author' })
+    const userdata = await getUserdata(req, res)
 
-    const Comment = { content: notifTemplates.comment, date: new Date(), banner: null }
-    const Mention = { content: notifTemplates.mention, date: new Date(), banner: null }
+
+    const Mention = {
+        raw: `<h5>${userdata.username} @ mentioned you</h5>`, date: new Date(), banner: null
+    }
+
+    const Comment = {
+        raw: `<h5>${userdata.username} commented on your post</h5>`, date: new Date(), banner: null
+    }
+    // const Comment = { content: process.env.NEXT_PUBLIC_NOTIF_COMMENT, date: new Date(), banner: null }
+    // const Mention = { content: process.env.NEXT_PUBLIC_NOTIF_MENTION, date: new Date(), banner: null }
 
     if (username) await User.attachNotification(Mention, await User.findOne({ username }), false)
     await User.attachNotification(Comment, comment.author, false)
 }
 
-CommentSchema.methods.processNotifLike = async function () 
+CommentSchema.methods.processNotifLike = async function (req, res) 
 {
     const comment = await this.populate({ path: 'author' })
+    const userdata = await getUserdata(req, res)
 
-    const Obj = { content: notifTemplates.like, date: new Date(), banner: null }
+    const raw = `<h5>${userdata.username} liked your comment</h5>`
+
+    const Obj = {
+        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
+        raw, date: new Date(), banner: null
+    }
 
     await User.attachNotification(Obj, comment.author, false)
 }

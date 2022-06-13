@@ -4,9 +4,8 @@ const Rules = require('../utilsSR/rules/validRules')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const { upload_pdf } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
-const notifTemplates = require("../utilsSR/rules/notifTemplates");
-const { cutMention } = require('../utilsSR/primary/_p_basic');
 const User = require("./user");
+const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 const DeclarationSchema = new Schema({
     title: {
@@ -182,11 +181,19 @@ DeclarationSchema.methods.tryLike = async function (userId, type)
     }
 }
 
-DeclarationSchema.methods.processNotifLike = async function () 
+DeclarationSchema.methods.processNotifLike = async function (req, res) 
 {
     const declr = await this.populate({ path: 'authors' })
+    const userdata = await getUserdata(req, res)
 
-    const Obj = { content: notifTemplates.like, date: new Date(), banner: null }
+    const raw = `<h5>${userdata.username} liked your comment</h5>`
+
+    const Obj = {
+        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
+        raw, date: new Date(), banner: null
+    }
+
+    // const Obj = { content: process.env.NEXT_PUBLIC_NOTIF_LIKE, date: new Date(), banner: null }
 
     await User.attachNotification(Obj, declr.authors[declr.authors.length - 1], false)
 }

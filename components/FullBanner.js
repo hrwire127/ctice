@@ -39,10 +39,10 @@ function FullBanner(props)
                 transform: "translate(-50%, -50%)"
             }}
         >
-            <Box sx={{display: "flex", justifyContent: "right"}}>
+            <Box sx={{ display: "flex", justifyContent: "right" }}>
                 <IconButton onClick={() => setOpen(false)} align="right"><Close /></IconButton>
             </Box>
-            <DocView url={banner.content} />
+            <DocView url={banner.content} raw={banner.raw} />
         </Paper>
     )
 }

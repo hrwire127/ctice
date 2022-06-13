@@ -6,7 +6,7 @@ const { cloud } = require('../cloud/storage');
 const BannerSchema = new Schema({
     content: {
         type: String,
-        required: true
+        default: null
     },
     date: {
         type: [Date],
@@ -20,6 +20,10 @@ const BannerSchema = new Schema({
         type: String,
         enum: ["Active", "Disabled"],
         required: true
+    },
+    raw: {
+        type: String,
+        default: null
     }
 });
 

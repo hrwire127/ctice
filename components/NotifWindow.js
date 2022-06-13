@@ -68,7 +68,7 @@ function NotifWindow(props)
             {notifications.length > 0
                 ? (<>
                     <Button onClick={onDeleteAll} color="error" variant="contained" size="small" >Clear</Button>
-                    {notifications.map((n, i) => <NotifItem key={i} content={n.content} onDelete={onDelete} index={i} />)}
+                    {notifications.map((n, i) => <NotifItem key={i} raw={n.raw} content={n.content} onDelete={onDelete} index={i} />)}
                 </>)
                 : (<Typography align="center" color="text.secondary">Nothing</Typography>)
             }

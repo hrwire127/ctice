@@ -3,17 +3,27 @@ import parse from 'html-react-parser';
 
 function DocView(props)
 {
-    const { url } = props
+    const { url, raw } = props
+    const [html, setHtml] = useState("")
 
     useEffect(() =>
     {
-        fetch(url)
-            .then(res => res.text())
-            .then(res => setHtml(res))
-            .catch(err => console.log(err))
+        console.log(url)
+        if (url)
+        {
+            console.log("!!")
+            fetch(url)
+                .then(res => res.text())
+                .then(res => setHtml(res))
+                .catch(err => console.log(err))
+        }
+        else
+        {
+            console.log("222")
+            setHtml(raw)
+        }
     }, [])
 
-    const [html, setHtml] = useState("")
 
     const options = {
         replace: (domNode) =>

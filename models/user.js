@@ -84,7 +84,7 @@ const UserSchema = new Schema({
     gallery: [new Schema({
         content: {
             type: String
-        },
+        }, 
         location: {
             type: String
         },
@@ -95,15 +95,20 @@ const UserSchema = new Schema({
     notifications: [new Schema({
         content: {
             type: String,
-            required: true
+            default: null
         },
         banner:
         {
             content: {
-                type: String
+                type: String,
+                default: null
             },
             seen: {
                 type: Boolean
+            },
+            raw: {
+                type: String,
+                default: null
             }
         },
         date: {
@@ -114,6 +119,10 @@ const UserSchema = new Schema({
             type: Boolean,
             default: false,
             required: true
+        },
+        raw: {
+            type: String,
+            default: null
         }
     }, { _id: false })]
 });

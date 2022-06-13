@@ -5,7 +5,7 @@ import DocView from "./DocView"
 
 function NotifItem(props)
 {
-    const { content, onDelete, index } = props //
+    const { content, raw, onDelete, index } = props //
 
     console.log(content)
 
@@ -18,7 +18,7 @@ function NotifItem(props)
             >
                 <Clear />
             </IconButton>
-            <DocView url={content} />
+            <DocView url={content} raw={raw} />
         </Box>
     )
 }
