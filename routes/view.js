@@ -18,7 +18,7 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
     const { id } = req.params;
     const user = await getUserdata(req, res)
-    
+
     await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
         .then(() => app.render(req, res, `/view/${id}`, { user }))
         .catch(err =>
@@ -113,6 +113,7 @@ router.post("/:id/comment", isLogged_CS, validateComment, tryAsync_CS(async (req
     const { id } = req.params;
     let declaration = await Declaration.findOne({ _id: id, status: "Active" })
     let comment = new Comment(await Comment.processObj(req, res))
+    await comment.processNotifComment();
     declaration.comments.push(comment)
     await declaration.save()
     await comment.save()

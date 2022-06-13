@@ -31,8 +31,6 @@ function DeclrView(props)
     const { declaration, user } = props;
     const { title, description, file, date, authors, _id: id } = declaration;
 
-    console.log(declaration)
-
     const adminCtx = useContext(AdminContext);
     const userCtx = useContext(UserContext);
 

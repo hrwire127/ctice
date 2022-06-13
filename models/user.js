@@ -100,22 +100,11 @@ const UserSchema = new Schema({
         banner:
         {
             content: {
-                type: String,
-                required: true
-            },
-            location: {
-                type: String,
-                required: true
+                type: String
             },
             seen: {
-                type: Boolean,
-                default: false,
-                required: true
+                type: Boolean
             }
-        },
-        location: {
-            type: String,
-            required: true
         },
         date: {
             type: [Date],
@@ -350,17 +339,17 @@ UserSchema.statics.processNotification = async function (req, res, preset)
 {
     const { content, banner } = req.body
     if (preset) content = preset
-    
-    const notifbuf = Buffer.from(content, 'utf8');
-    const { url, location } = await upload_notification(notifbuf, res)
 
-    let Obj = { content: url, location, date: new Date() }
+    const notifbuf = Buffer.from(content, 'utf8');
+    const { url } = await upload_notification(notifbuf, res)
+
+    let Obj = { content: url, date: new Date() }
 
     if (banner && banner !== "")
     {
         const bannerbuf = Buffer.from(banner, 'utf8');
-        const { url: bannerUrl, location: bannerLocation } = await upload_banner(bannerbuf, res);
-        Obj.banner = { content: bannerUrl, location: bannerLocation }
+        const { url: bannerUrl} = await upload_banner(bannerbuf, res);
+        Obj.banner = { content: bannerUrl, seen: false }
     }
 
     return Obj;
@@ -371,6 +360,8 @@ UserSchema.statics.attachNotification = async function (Obj, id, sendmail)
     const User = mongoose.model('User', UserSchema)
     const users = id ? await User.find({}) : [await User.findOne({ _id: id })]
 
+    console.log(Obj)
+    
     users.forEach(async u => 
     {
         u.notifications.push(Obj)

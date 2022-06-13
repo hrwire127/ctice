@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const User = require("./user");
+const notifTemplates = require("../utilsSR/rules/notifTemplates");
 
 const CommentSchema = new Schema({
     content: {
@@ -72,8 +73,32 @@ CommentSchema.statics.processObj = async function (req, res, declaration = undef
         Obj.author = comment.author
 
     }).Try()) return Obj;
+}
 
+CommentSchema.methods.processNotifComment = async function () 
+{
+    let username = []
+    const content = JSON.parse(this.content)
 
+    content.blocks.forEach(b =>
+    {
+        if (b.text.includes("@"))
+        {
+            let i = b.text.indexOf("@") + 1
+            for (let c = "@"; c !== " "; i++)
+            {
+                username.push(b.text[i]);
+                c = b.text[i + 1]
+            }
+            console.log(username)
+            username = username.join("")
+        }
+    })
+    console.log(username)
+
+    const Obj = { content: notifTemplates.comment, date: new Date(), banner: null }
+
+    await User.attachNotification(Obj, await User.findOne({ username }), false)
 }
 
 CommentSchema.methods.tryLike = async function (userId, type)

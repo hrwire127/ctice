@@ -7,6 +7,8 @@ function NotifItem(props)
 {
     const { content, onDelete, index } = props //
 
+    console.log(content)
+
     return (
         <Box sx={{ width: "100%", border: "1px solid", borderRadius: 1, position: "relative" }}>
             <IconButton
