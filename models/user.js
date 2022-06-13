@@ -5,11 +5,14 @@ const UserError = require('../utilsSR/general/UserError');
 const Rules = require('../utilsSR/rules/validRules')
 const passport = require('passport');
 const errorMessages = require("../utilsSR/rules/errorMessages")
-const Redirects_SR = require('../utilsSR/general/SR_Redirects')
+const { upload_notification } = require('../utilsSR/primary/_p_basic')
+const { upload_banner } = require('../utilsSR/primary/_p_basic')
+const Banner = require('./banner')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const { upload_profiles, upload_galeries } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 const ValRules = require('../utilsSR/rules/validRules')
+const nodemailer = require('../config/nodemailer')
 
 const UserSchema = new Schema({
     username: {
@@ -88,6 +91,41 @@ const UserSchema = new Schema({
         name: {
             type: String
         },
+    }, { _id: false })],
+    notifications: [new Schema({
+        content: {
+            type: String,
+            required: true
+        },
+        banner:
+        {
+            content: {
+                type: String,
+                required: true
+            },
+            location: {
+                type: String,
+                required: true
+            },
+            seen: {
+                type: Boolean,
+                default: false,
+                required: true
+            }
+        },
+        location: {
+            type: String,
+            required: true
+        },
+        date: {
+            type: [Date],
+            required: true
+        },
+        seen: {
+            type: Boolean,
+            default: false,
+            required: true
+        }
     }, { _id: false })]
 });
 
@@ -306,6 +344,47 @@ UserSchema.methods.processGalery = async function (files, res)
             this.gallery.push({ name: file.name, content: file.content })
         }
     }
+}
+
+UserSchema.statics.processNotification = async function (req, res, preset) 
+{
+    const { content, banner } = req.body
+    if (preset) content = preset
+    
+    const notifbuf = Buffer.from(content, 'utf8');
+    const { url, location } = await upload_notification(notifbuf, res)
+
+    let Obj = { content: url, location, date: new Date() }
+
+    if (banner && banner !== "")
+    {
+        const bannerbuf = Buffer.from(banner, 'utf8');
+        const { url: bannerUrl, location: bannerLocation } = await upload_banner(bannerbuf, res);
+        Obj.banner = { content: bannerUrl, location: bannerLocation }
+    }
+
+    return Obj;
+}
+
+UserSchema.statics.attachNotification = async function (Obj, id, sendmail) 
+{
+    const User = mongoose.model('User', UserSchema)
+    const users = id ? await User.find({}) : [await User.findOne({ _id: id })]
+
+    users.forEach(async u => 
+    {
+        u.notifications.push(Obj)
+
+        await u.save()
+        if (Obj.banner)
+        {
+            const content = await fetch(Obj.banner.content)
+                .then(res => res.text())
+                .then(res => res)
+
+            if (sendmail) await nodemailer.sendNotification(content, u.email)
+        }
+    })
 }
 
 const User = mongoose.model('User', UserSchema);

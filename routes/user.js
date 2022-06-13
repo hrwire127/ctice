@@ -3,6 +3,7 @@ const { app } = require("../main");
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Pending = require("../models/pending")
 const Declaration = require("../models/declaration")
+const Banner = require('../models/banner')
 const User = require("../models/user")
 const Token = require("../models/token")
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
@@ -228,5 +229,72 @@ router.post('/gallery', isLogged_CS, validateGallery, tryAsync_CS(async (req, re
     await user.save()
     Redirects_SR.Api.sendApi(res, true)
 }))
+
+
+router.post('/notifications/seen', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id })
+    for (let n of user.notifications)
+    {
+        n.seen = true
+    }
+    await user.save()
+    Redirects_SR.Api.sendApi(res, true)
+}))
+
+router.post('/notifications/delete/all', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id })
+    user.notifications = []
+    await user.save()
+    Redirects_SR.Api.sendApi(res, true)
+}))
+
+router.post('/notifications/delete/one', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const { index } = req.body
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id })
+    user.notifications.splice(index, 1)
+    await user.save()
+    Redirects_SR.Api.sendApi(res, user.notifications)
+}))
+
+
+router.post('/notifications/banner/last', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const userdata = await getUserdata(req, res)
+    const user = await User.findOne({ _id: userdata._id })
+    const lastNotif = user.notifications[user.notifications.length - 1]
+
+    const seen = lastNotif ? lastNotif.banner ? lastNotif.banner.seen : true : true
+    console.log(user.notifications)
+    console.log(lastNotif)
+
+    for (let n of user.notifications)
+    {
+        if (n.banner)
+        {
+            if (!n.banner.seen) n.banner.seen = true
+        }
+    }
+    await user.save()
+
+    console.log('\n')
+    console.log(user.notifications)
+    console.log(lastNotif)
+    console.log(seen)
+
+    Redirects_SR.Api.sendApi(res, !seen ? lastNotif.banner : null)
+}))
+
+router.post("/banner/last/api", apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
+{
+    const banners = await Banner.find({ status: "Active" }).sort({ _id: -1 })
+    Redirects_SR.Api.sendApi(res, banners)
+}))
+
 
 module.exports = router;

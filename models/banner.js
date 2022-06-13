@@ -12,15 +12,6 @@ const BannerSchema = new Schema({
         type: [Date],
         required: true
     },
-    type: {
-        type: String,
-        enum: ["full", "fixed"],
-        required: true
-    },
-    seen: {
-        type: Boolean,
-        default: false
-    },
     location: {
         type: String,
         required: true
@@ -54,7 +45,7 @@ BannerSchema.statics.processObj = async function (obj, req, res)
 
         const { url, location } = await upload_banner(buf, res)
 
-        return { content: url, location, date: new Date(), type: "fixed", status: "Active" }
+        return { content: url, location, date: new Date(), status: "Active" }
     }
 }
 

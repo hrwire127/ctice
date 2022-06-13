@@ -165,7 +165,24 @@ function getBanner(id)
 
 function getLatestBanners()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/admin/banner/last/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/banner/last/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
+function getUserNotifications()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -183,5 +200,6 @@ function getLatestBanners()
 module.exports = {
     getLimitedComments, getLimitedReplies, getLimitedBookmarks,
     getClientUser, getUsers, LogoutFetch, loadLimitedBookmarks,
-    countLimitedBookmarks, getBanners, getBanner, getLatestBanners
+    countLimitedBookmarks, getBanners, getBanner, getLatestBanners,
+    getUserNotifications
 }

@@ -56,3 +56,22 @@ module.exports.sendResetEmail = function (name, email, confirmationCode)
 		});
 	})
 }
+
+module.exports.sendNotification = function (notification, email)
+{
+	return new Promise((resolve, reject) =>
+	{
+		transport.sendMail({
+			from: user,
+			to: email,
+			subject: "Notification",
+			html: notification,
+		}).then(res =>
+		{
+			resolve(res)
+		}).catch(err => 
+		{
+			reject(err)
+		});
+	})
+}

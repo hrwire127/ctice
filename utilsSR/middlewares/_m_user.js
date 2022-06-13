@@ -55,7 +55,6 @@ function isAdmin_SR(req, res, next)
 function isAdmin_CS(req, res, next)
 {
     const session = req.session.passport
-    console.log(req.session)
     if (session) 
     {
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)

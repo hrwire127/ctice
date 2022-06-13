@@ -2,15 +2,14 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import
 {
 	Toolbar, Button, IconButton,
-	Box, Menu, MenuItem, Badge,
-	ClickAwayListener
+	Box, Badge,
 } from '@mui/material';
 import { Mail, Logout as LogoutIcon, Notifications, AssignmentInd, AccountCircle, } from "@mui/icons-material"
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import { LogoutFetch, } from '../utilsCS/_get'
+import { LogoutFetch, getClientUser } from '../utilsCS/_get'
 import useStyles from "../assets/styles/_Header"
 import NotifWindow from './NotifWindow'
 
@@ -19,11 +18,26 @@ function Header(props)
 {
 	const userCtx = useContext(UserContext);
 	const adminCtx = useContext(AdminContext);
-	const { sections, title = "ctice" } = props;
+
+	const [notifOpen, setNotifOpen] = useState(false);
+	const [notifications, setNotificaions] = useState([]);
+	const [views, setViews] = useState();
+
+	const { title = "ctice" } = props;
 
 	const classes = useStyles();
 
-	const [notifOpen, setNotifOpen] = useState(false);
+
+	useEffect(async () =>
+	{
+		const user = await getClientUser()
+
+		if(user.obj)
+		{
+			setNotificaions(user.obj.notifications)
+			setViews(user.obj.notifications.filter(n => !n.seen).length)
+		}
+	}, [])
 
 
 	const Logout = async () =>
@@ -36,7 +50,6 @@ function Header(props)
 	}
 
 	return (
-		<>
 			<Box className={classes.Total}>
 				<Box className={classes.RedBar} />
 				<Toolbar className={classes.Toolbar}>
@@ -63,18 +76,11 @@ function Header(props)
 											// onFocus={() => setNotifOpen(!notifOpen)}
 											onClick={() => setNotifOpen(!notifOpen)}
 										>
-											<Badge badgeContent={4} color="secondary">
+											<Badge badgeContent={views} color="secondary">
 												<Notifications color="tertiary" />
 											</Badge>
 										</IconButton>
-										{notifOpen && (<NotifWindow notifications={[
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" },
-											{ content: "https://res.cloudinary.com/dnu6yyl9d/raw/upload/v1654776960/ctice/banners/doc_bbjodc.html" }
-										]} />)}
+										{notifOpen && (<NotifWindow notifications={notifications} setViews={setViews} setNotificaions={setNotificaions}/>)}
 									</Box>
 									<Link href="/user/profile"><IconButton><AccountCircle color="tertiary" /></IconButton></Link>
 									<IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
@@ -92,7 +98,6 @@ function Header(props)
 					</Box>
 				</Toolbar>
 			</Box >
-		</>
 	);
 }
 

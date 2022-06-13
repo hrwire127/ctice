@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, IconButton, CssBaseline, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
 import Link from 'next/link'
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
 import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material';
@@ -10,25 +11,39 @@ import FullBanner from './FullBanner';
 
 function UserNavigation(props)
 {
+    const [open, setOpen] = useState([])
     const [banners, setBanners] = useState([])
-
-    console.log(banners)
+    const [fullBanner, setFullBanner] = useState()
 
     const classes = useStyles();
-    
-    // ctice/banners/s5di2jx3lppeumuwsw1d
+
+    useEffect(async () =>
+    {
+        const banners = await getLatestBanners()
+
+        CS_Redirects.tryResCS(banners, window)
+        setBanners(banners.obj)
+
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/banner/last`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { secret: process.env.NEXT_PUBLIC_SECRET }
+            )
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                CS_Redirects.tryResCS(res, window)
+                setFullBanner(res.obj)
+            })
+    }, [])
 
     const Item = (props) =>
     {
         const { text, url, includes, icon } = props
         const router = useRouter();
-
-        useEffect(async () =>
-        {
-            const banners = await getLatestBanners()
-            setBanners(banners.obj)
-        }, [])
-
 
         const ItemIcon = () =>
         {
@@ -122,12 +137,14 @@ function UserNavigation(props)
             >
                 {props.children}
             </Box>
-            <Box
-                sx={{ width: 300 }}
-            >
-                {banners.map(b => <FixedBanner banner={b} />)}
-            </Box>
-            {/* {banner.length >  && (<FullBanner banner={banner} />)} */}
+            {banners.length > 0
+                && (<Box
+                        sx={{ width: 300 }}
+                    >
+                        {banners.map(b => <FixedBanner banner={b} />)}
+                    </Box>)}
+
+            {fullBanner && open && (<FullBanner banner={fullBanner} setOpen={setOpen} />)}
         </Box>
     )
 }

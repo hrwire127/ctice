@@ -92,7 +92,7 @@ export default function Layout(props)
                                         flexDirection: "column",
                                         justifyContent: "space-between"
                                     }}>
-                                        {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header sections={[]} title="Ctice" />)}
+                                        {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
 
                                         {childrenwprops.props.noHeader && adminCtx
                                             ? (<Box sx={

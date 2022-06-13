@@ -5,11 +5,17 @@ import DocView from "./DocView"
 
 function NotifItem(props)
 {
-    const { content } = props //
+    const { content, onDelete, index } = props //
 
     return (
         <Box sx={{ width: "100%", border: "1px solid", borderRadius: 1, position: "relative" }}>
-            <IconButton sx={{ position: "absolute" }} size="small"><Clear /></IconButton>
+            <IconButton
+                sx={{ position: "absolute" }}
+                size="small"
+                onClick={() => onDelete(index)}
+            >
+                <Clear />
+            </IconButton>
             <DocView url={content} />
         </Box>
     )

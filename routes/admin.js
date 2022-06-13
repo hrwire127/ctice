@@ -5,7 +5,7 @@ const { validateBanner, validateNotification } = require('../utilsSR/middlewares
 const { tryAsync_CS, apiSecret } = require('../utilsSR/middlewares/_m_basic')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Banner = require('../models/banner')
-const Notification = require('../models/notification')
+const User = require('../models/user')
 
 router.get("/", isAdmin_SR, (req, res) =>
 {
@@ -54,9 +54,8 @@ router.post("/banner", isAdmin_CS, validateBanner, tryAsync_CS(async (req, res) 
 
 router.post("/notification", isAdmin_CS, validateNotification, tryAsync_CS(async (req, res) =>
 {
-    const Obj = await Notification.processObj(req, res)
-    const notification = new Notification(Obj);
-    await notification.save()
+    const Obj = await User.processNotification(req, res)
+    await User.attachNotification(Obj);
     Redirects_SR.Api.sendApi(res, true)
 }))
 
@@ -80,12 +79,6 @@ router.post("/banner/:id/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, re
     const { id } = req.params
     const banner = await Banner.findOne({ _id: id, status: "Active" })
     Redirects_SR.Api.sendApi(res, banner)
-}))
-
-router.post("/banner/last/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
-{
-    const banners = await Banner.find({ status: "Active", type: "fixed" }).sort({ _id: -1 })
-    Redirects_SR.Api.sendApi(res, banners)
 }))
 
 router.put("/banner/:id", isAdmin_CS, validateBanner, tryAsync_CS(async (req, res) =>
