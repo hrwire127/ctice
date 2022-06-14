@@ -1,19 +1,20 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
-import{ getUsers,} from '../../utilsCS/_get'
+import { getUsers, } from '../../utilsCS/_get'
 import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
 
 function admin(props)
 {
-    const { users, declarations } = props;
+    const [users, setUsers] = useState([])
+    const [declarations, setDeclarations] = useState([])
 
     let adminCtx = useContext(AdminContext);
 
-    useEffect(() =>
+    useEffect(async() =>
     {
         if (props.isAdmin)
         {
@@ -24,6 +25,13 @@ function admin(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
+
+        const newUsers = await getUsers()
+        const newDeclrs = await getDeclrs()
+        CS_Redirects.tryResCS(newUsers, window)
+        CS_Redirects.tryResCS(newDeclrs, window)
+        setUsers(newUsers.obj)
+        setDeclarations(newDeclrs.obj)
     }, [])
 
 
@@ -32,19 +40,6 @@ function admin(props)
 
 admin.getInitialProps = async (props) =>
 {
-    let declrs = await getDeclrs();
-    let users = await getUsers()
-
-    return determRendering(props, () =>
-    {
-        CS_Redirects.tryResCS(declrs, window)
-        CS_Redirects.tryResCS(users, window)
-        return { users: users.obj, declarations: declrs.obj, noHeader: true }
-    }, () =>
-    {
-        CS_Redirects.tryResSR(declrs, props)
-        CS_Redirects.tryResSR(users, props)
-        return { users: users.obj, declarations: declrs.obj, noHeader: true }
-    })
+    return { noHeader: true }
 }
 export default admin

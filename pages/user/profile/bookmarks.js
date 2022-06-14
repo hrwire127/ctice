@@ -8,7 +8,7 @@ import Bookmarks from '../../../components/Bookmarks'
 
 function bookmarks(props)
 {
-    const { user, isResetToken } = props;
+    const [user, setUser] = useState()
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
@@ -17,23 +17,28 @@ function bookmarks(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
+
+        const newUser = await getClientUser();
+        CS_Redirects.tryResCS(newUser, window)
+        setUser(newUser.obj)
     }, [])
 
-    return userCtx && (<Bookmarks user={user}/>)
+    return userCtx && (<Bookmarks user={user} />)
 }
 
 bookmarks.getInitialProps = async (props) =>
 {
-    return determRendering(props, async () =>
-    {
-        const user = await getClientUser();
-        CS_Redirects.tryResCS(user, window)
-        return { user: user.obj, nav: "Profile" }
-    }, async () =>
-    {
-        const user = JSON.parse(JSON.stringify(props.query.user));
-        return { user, nav: "Profile" }
-    })
+    // return determRendering(props, async () =>
+    // {
+    //     const user = await getClientUser();
+    //     CS_Redirects.tryResCS(user, window)
+    //     return { user: user.obj, nav: "Profile" }
+    // }, async () =>
+    // {
+    //     const user = JSON.parse(JSON.stringify(props.query.user));
+    //     return { user, nav: "Profile" }
+    // })
+    return { nav: "Profile" }
 }
 
 

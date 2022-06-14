@@ -17,6 +17,7 @@ module.exports = {
     didNotMatch: { message: "User Did Not Match", status: 400 },
     delayed: { message: "Cannot modify now, try later", status: 401 },
     tooManyEdits: { message: `Exceeded the max times of changes (${ValRules.dates_length})`, status: 401 },
-    tooManyImages: { message: `Exceeded the max size of the gallery (${ValRules.gallery_length})`, status: 401 }
+    tooManyImages: { message: `Exceeded the max size of the gallery (${ValRules.gallery_length})`, status: 401 },
+    tagExists: {message: 'Tag allready exists', status: 401}
 
 }

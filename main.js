@@ -93,10 +93,17 @@ app.prepare().then(() =>
 
     server.get("/error", (req, res, next) =>
     {
-        let error = req.session.error
-        if (!error) error = new UserError();
-        res.status(error.status)
-        app.render(req, res, "/error", { error })
+        try
+        {
+            let error = req.session.error
+            if (!error) error = new UserError();
+            res.status(error.status)
+            app.render(req, res, "/error", { error })
+        }
+        catch (err)
+        {
+            console.log(err)
+        }
     })
 
     server.get("*", (req, res, next) =>

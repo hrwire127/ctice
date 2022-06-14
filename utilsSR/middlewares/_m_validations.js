@@ -1,6 +1,6 @@
 const Joi = require("joi").extend(require('@joi/date'));
 const UserError = require('../general/UserError');
-const { inspectDecrl, inspectUser, inspectComment, inspectChange, inspectGallery } = require('../primary/_p_inspect')
+const { inspectDecrl, inspectUser, inspectComment, inspectChange, inspectGallery, inspectTag } = require('../primary/_p_inspect')
 const { modifyDesc } = require('../primary/_p_basic')
 
 async function validateDeclr(req, res, next) 
@@ -369,11 +369,40 @@ async function validateNotification(req, res, next)
     next()
 }
 
+async function validateTag(req, res, next)
+{
+    console.log(req.body)
+
+    const tagSchema = Joi.object({
+        content: Joi.string().required(),
+    })
+
+    const { error } = tagSchema.validate(req.body)
+
+    if (error) 
+    {
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        return new UserError(msg, 401).throw_CS(res)
+    }
+
+    const bodyError = inspectTag(req.body.content)
+
+    if (bodyError) 
+    {
+        return new UserError(bodyError, 401).throw_CS(res)
+    }
+
+    req.body.content = req.body.content.trim()
+
+    next()
+}
+
 module.exports = {
 
     validateDeclr, validatePendingUser,
     validateLogUser, validateChange,
     validateRegUser, validateComment,
     validateGallery, validateBanner,
-    validateNotification
+    validateNotification, validateTag
 }

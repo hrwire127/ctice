@@ -29,5 +29,8 @@ module.exports = {
     dates_length: 100,
     block_max_chars: 1000,
     banner_max_size: 1000000,
-    notification_max_size: 1000000
+    notification_max_size: 1000000,
+    declr_max_tags: 5,
+    declr_min_tags: 1,
+    tag_max_length: 20
 }

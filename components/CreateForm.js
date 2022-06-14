@@ -18,7 +18,7 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
-import useLoading from '../components/hooks/useLoading'
+import useLoading from './hooks/useLoading'
 
 export default function CreateForm(props)
 {
@@ -30,17 +30,8 @@ export default function CreateForm(props)
     
     const [loadingWhile, loadingSwitch] = useLoading(false)
 
-    const { alert, setAlert } = props;
+    const { alert, setAlert, setAlertMsg } = props;
     const classes = useStyles()
-
-    // useEffect(() =>
-    // {
-    //     const element = document.querySelector('.RichEditor-root')
-    //     element.addEventListener("mouseenter", () => {
-    //         element.style.borderColor = theme.palette.primary;
-    //       }, false);
-    // }, [])
-
 
     const handleSubmit = async (body) =>
     {

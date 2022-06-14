@@ -7,8 +7,16 @@ import useAlertMsg from '../components/hooks/useAlertMsg'
 
 function index(props)
 {
-    const { count } = props;
-	const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
+    const [count, setCount] = useState()
+    const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
+
+    useEffect(async () =>
+    {
+        const newCount = await getAllCount();
+        CS_Redirects.tryResCS(newCount, window)
+        setCount(newCount)
+    }, [])
+
 
     return (
         <DeclrList
@@ -16,22 +24,19 @@ function index(props)
             flash={flash}
             setFlash={setFlash}
         />
-        )
+    )
 }
 
 index.getInitialProps = async (props) =>
 {
-    const count = await getAllCount();
     const flash = await getFlash(props)
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(count, window)
-        return { flash, count: count.obj, nav: "Home"  }
+        return { flash, nav: "Home" }
     }, () =>
     {
-        CS_Redirects.tryResSR(count, props)
-        return { flash, count: count.obj, nav: "Home"  }
+        return { flash, nav: "Home" }
     })
 }
 

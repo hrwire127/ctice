@@ -8,16 +8,21 @@ import AdminLayout from "../../../components/AdminLayout"
 
 function banneredit(props)
 {
-    const { banner } = props
+    const { id } = props
+    const [banner, setBanner] = useState()
 
     const adminCtx = React.useContext(AdminContext);
 
-    useEffect(() =>
+    useEffect(async() =>
     {
         if (!adminCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
+
+        const newBanner = await getBanner(id)
+        CS_Redirects.tryResCS(newBanner, window)
+        setBanner(newBanner.obj)
     }, [])
 
     return adminCtx && (<AdminLayout><BannerEdit banner={banner} /></AdminLayout>)
@@ -25,17 +30,8 @@ function banneredit(props)
 
 banneredit.getInitialProps = async (props) =>
 {
-    return determRendering(props, async () =>
-    {
-        const { id } = props.query
-        let banner = await getBanner(id)
-        CS_Redirects.tryResCS(banner, window)
-        return { banner: banner.obj, noHeader: true }
-    }, () =>
-    {
-        const { banner } = props.query
-        return { banner: banner, noHeader: true }
-    })
+    const { id } = props.query
+    return { noHeader: true, id }
 }
 
 export default banneredit

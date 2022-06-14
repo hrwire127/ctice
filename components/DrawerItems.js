@@ -11,6 +11,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import AddAlertIcon from '@mui/icons-material/AddAlert';
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import Link from 'next/link';
+import StyleIcon from '@mui/icons-material/Style';
 
 const mainDrawerItems = (
   <React.Fragment>
@@ -22,33 +23,39 @@ const mainDrawerItems = (
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <ShoppingCartIcon color="tertiary"/>
+        <ShoppingCartIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/declrlist"><ListItemText primary="Declarations" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <PeopleIcon color="tertiary"/>
+        <PeopleIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/userlist"><ListItemText primary="Users" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <ViewCarouselIcon color="tertiary"/>
+        <ViewCarouselIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/banner/create"><ListItemText primary="Create Banner" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AddAlertIcon color="tertiary"/>
+        <AddAlertIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/notification"><ListItemText primary="Create Notification" /></Link>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <BackupTableIcon color="tertiary"/>
+        <BackupTableIcon color="tertiary" />
       </ListItemIcon>
       <Link href="/admin/banner/list"><ListItemText primary="Banner List" /></Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <StyleIcon color="tertiary" />
+      </ListItemIcon>
+      <Link href="/admin/tags"><ListItemText primary="Tags" /></Link>
     </ListItemButton>
   </React.Fragment>
 );
@@ -60,19 +67,19 @@ const secondaryDrawerItems = (
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon color="tertiary"/>
+        <AssignmentIcon color="tertiary" />
       </ListItemIcon>
       <ListItemText primary="Current month" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon color="tertiary"/>
+        <AssignmentIcon color="tertiary" />
       </ListItemIcon>
       <ListItemText primary="Last quarter" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon color="tertiary"/>
+        <AssignmentIcon color="tertiary" />
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItemButton>

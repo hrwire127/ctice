@@ -27,6 +27,11 @@ router.get("/banner/create", isAdmin_SR, (req, res) =>
     app.render(req, res, "/admin/banner/create")
 })
 
+router.get("/tags", isAdmin_SR, (req, res) =>
+{
+    app.render(req, res, "/admin/tags")
+})
+
 router.get("/banner/:id", isAdmin_SR, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params

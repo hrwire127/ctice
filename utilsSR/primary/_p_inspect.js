@@ -155,36 +155,36 @@ function inspectProfile(file)
     if (minHeight.getVal()) return minHeight.processMsg()
 }
 
-function inspectGallery(file = undefined)
+function inspectGallery(file)
 {
-    if (file)
-    {
-        const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
-        if (fileRule.getVal()) return fileRule.processMsg()
+    const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
+    if (fileRule.getVal()) return fileRule.processMsg()
 
-        const fileFormat = new valRule(file.format, Rules.profile_formats, 5)
-        if (fileFormat.getVal()) return fileFormat.processMsg()
-    }
+    const fileFormat = new valRule(file.format, Rules.profile_formats, 5)
+    if (fileFormat.getVal()) return fileFormat.processMsg()
 }
 
-function inspectBanner(file = undefined)
+function inspectBanner(file)
 {
-    if (file)
-    {
-        const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
-        if (fileRule.getVal()) return fileRule.processMsg()
-    }
+    const fileRule = new valRule(file.bytes, Rules.profile_max_size, 0)
+    if (fileRule.getVal()) return fileRule.processMsg()
 }
 
-function inspectNotification(file = undefined)
+function inspectNotification(file)
 {
-    if (file)
-    {
-        const fileRule = new valRule(file.bytes, Rules.notification_max_size, 0)
-        if (fileRule.getVal()) return fileRule.processMsg()
-    }
+    const fileRule = new valRule(file.bytes, Rules.notification_max_size, 0)
+    if (fileRule.getVal()) return fileRule.processMsg()
 }
 
-module.exports = { inspectDecrl, inspectComment, inspectUser, 
-    inspectChange, inspectPdf, inspectProfile, 
-    inspectGallery, inspectBanner, inspectNotification }
+function inspectTag(tag)
+{
+    const tagRule = new valRule(tag.length, Rules.tag_max_length, 0)
+    if (tagRule.getVal()) return tagRule.processMsg()
+}
+
+module.exports = {
+    inspectDecrl, inspectComment, inspectUser,
+    inspectChange, inspectPdf, inspectProfile,
+    inspectGallery, inspectBanner, inspectNotification,
+    inspectTag
+}

@@ -16,7 +16,7 @@ function create(props)
         if (!adminCtx) CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
     }, [])
 
-    return adminCtx && (<CreateForm setAlert={setAlert} alert={alert} />)
+    return adminCtx && (<CreateForm setAlert={setAlert} alert={alert} setAlertMsg={setAlertMsg} />)
 }
 
 create.getInitialProps = async (props) =>

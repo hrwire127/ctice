@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const { app } = require("../main");
 const Declaration = require("../models/declaration");
+const Tag = require("../models/tag");
 const mongoose = require('mongoose')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
-const { validateDeclr } = require('../utilsSR/middlewares/_m_validations')
+const { validateDeclr, validateTag } = require('../utilsSR/middlewares/_m_validations')
 
 router.get('/', (req, res) =>
 {
@@ -36,7 +37,7 @@ router.post('/load/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { declarations, query, date, doclimit, sort } = req.body;
-    
+
     let newDeclarations = [];
 
     const pipeline = [
@@ -82,6 +83,21 @@ router.post('/count/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     obj = await Declaration.aggregate(pipeline)
 
     Redirects_SR.Api.sendApi(res, obj.length > 0 ? obj[0].count : 0)
+}))
+
+router.post('/tags/api', apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
+{
+    const tags = await Tag.find({})
+    Redirects_SR.Api.sendApi(res, tags)
+}))
+
+router.post('/tag', isAdmin_CS, validateTag, tryAsync_CS(async (req, res) =>
+{
+    const Obj = await Tag.processObj(req, res)
+    const tag = new Tag(Obj)
+    await tag.save();
+    req.flash('success', 'Created Successfuly');
+    Redirects_SR.Api.sendApi(res, req.session.flash[0])
 }))
 
 module.exports = router;

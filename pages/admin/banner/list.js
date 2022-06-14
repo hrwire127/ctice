@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../../components/context/contextAdmin'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, timeout } from '../../../utilsCS/_basic'
@@ -8,21 +8,24 @@ import AdminBanners from "../../../components/AdminBanners"
 
 function bannerlist(props)
 {
-    const { banners } = props
-
+    const [banners, setBanners] = useState([])
     let adminCtx = useContext(AdminContext);
 
-    useEffect(() =>
+    useEffect(async () =>
     {
-        // if (props.isAdmin)
-        // {
-        //     adminCtx = props.isAdmin
-        // }
+        if (props.isAdmin)
+        {
+            adminCtx = props.isAdmin
+        }
 
         if (!adminCtx)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
+
+        const newBanners = await getBanners()
+        CS_Redirects.tryResCS(newBanners, window)
+        setBanners(newBanners.obj)
     }, [])
 
 
@@ -33,17 +36,7 @@ function bannerlist(props)
 
 bannerlist.getInitialProps = async (props) =>
 {
-    let banners = await getBanners();
-
-    return determRendering(props, () =>
-    {
-        CS_Redirects.tryResCS(banners, window)
-        return { banners: banners.obj, noHeader: true }
-    }, () =>
-    {
-        CS_Redirects.tryResSR(banners, props)
-        return { banners: banners.obj, noHeader: true }
-    })
+    return { noHeader: true }
 }
 
 export default bannerlist

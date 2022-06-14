@@ -197,9 +197,26 @@ function getUserNotifications()
         })
 }
 
+function getTags()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tags/api`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(
+            { secret: process.env.NEXT_PUBLIC_SECRET }
+        )
+    }).then(response => response.json())
+        .then(async res =>
+        {
+            return res;
+        })
+}
+
 module.exports = {
     getLimitedComments, getLimitedReplies, getLimitedBookmarks,
     getClientUser, getUsers, LogoutFetch, loadLimitedBookmarks,
     countLimitedBookmarks, getBanners, getBanner, getLatestBanners,
-    getUserNotifications
+    getUserNotifications, getTags
 }

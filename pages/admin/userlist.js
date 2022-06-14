@@ -2,17 +2,16 @@ import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, getGlobals } from '../../utilsCS/_basic'
-import { getUsers, } from '../../utilsCS/_get'
+import { getUsers } from '../../utilsCS/_get'
 import AdminLayout from "../../components/AdminLayout"
 
 function userlist(props)
 {
-    const { users } = props;
+    const [users, setUsers] = useState([])
 
     let adminCtx = useContext(AdminContext);
 
-    useEffect(() =>
+    useEffect(async() =>
     {
         if (props.isAdmin)
         {
@@ -23,6 +22,10 @@ function userlist(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
+
+        const newUsers = await getUsers()
+        CS_Redirects.tryResCS(newUsers, window)
+        setUsers(newUsers.obj)
     }, [])
 
 
@@ -30,16 +33,6 @@ function userlist(props)
 }
 userlist.getInitialProps = async (props) =>
 {
-    let users = await getUsers();
-
-    return determRendering(props, () =>
-    {
-        CS_Redirects.tryResCS(users, window)
-        return { users: users.obj, noHeader: true }
-    }, () =>
-    {
-        CS_Redirects.tryResSR(users, props)
-        return { users: users.obj, noHeader: true }
-    })
+    return { noHeader: true }
 }
 export default userlist

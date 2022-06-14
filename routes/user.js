@@ -24,26 +24,26 @@ router.get('/login', async (req, res) =>
 
 router.get('/profile', isLogged_SR, async (req, res) =>
 {
-    const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile", { user })
+    // const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile")
 })
 
 router.get('/profile/edit', isLogged_SR, async (req, res) =>
 {
-    const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/edit", { user })
+    // const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/edit")
 })
 
 router.get('/profile/customs', isLogged_SR, async (req, res) =>
 {
-    const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/customs", { user })
+    // const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/customs")
 })
 
 router.get('/profile/bookmarks', isLogged_SR, async (req, res) =>
 {
-    const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/bookmarks", { user })
+    // const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/bookmarks")
 })
 
 router.get("/pending/:confirmationCode", verifyPendingCode, tryAsync_SR(async (req, res) =>

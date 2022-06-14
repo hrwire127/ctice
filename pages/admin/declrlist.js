@@ -1,16 +1,16 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminDeclrs from '../../components/AdminDeclrs';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering, timeout } from '../../utilsCS/_basic'
 import { getDeclrs } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
 
 function declrlist(props)
 {
     let adminCtx = useContext(AdminContext);
+    const [declarations, setDeclarations] = useState([])
 
-    useEffect(() =>
+    useEffect(async() =>
     {
         if (props.isAdmin)
         {
@@ -21,22 +21,15 @@ function declrlist(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
         }
+        const newDeclrs = await getDeclrs()
+        CS_Redirects.tryResCS(newDeclrs, window)
+        setDeclarations(newDeclrs.obj)
     }, [])
 
     return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations} /></AdminLayout>) : (<></>)
 }
 declrlist.getInitialProps = async (props) =>
 {
-    let declrs = await getDeclrs();
-
-    return determRendering(props, () =>
-    {
-        CS_Redirects.tryResCS(declrs, window)
-        return { declarations: declrs.obj, noHeader: true }
-    }, () =>
-    {
-        CS_Redirects.tryResSR(declrs, props)
-        return { declarations: declrs.obj, noHeader: true }
-    })
+    return { noHeader: true }
 }
 export default declrlist

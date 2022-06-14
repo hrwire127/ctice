@@ -17,10 +17,18 @@ const { getUserdata, existsAdmin } = require('../utilsSR/primary/_p_user')
 router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
     const { id } = req.params;
-    const user = await getUserdata(req, res)
+    // const user = await getUserdata(req, res)
 
-    await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
-        .then(() => app.render(req, res, `/view/${id}`, { user }))
+    // await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
+    //     .then(() => app.render(req, res, `/view/${id}`, { user }))
+    //     .catch(err =>
+    //     {
+    //         console.log(err)
+    //         throw new UserError("Not Found", 404)
+    //     })
+
+    await Declaration.findOne({ _id: id, status: "Active" })
+        .then(() => app.render(req, res, `/view/${id}`, { id }))
         .catch(err =>
         {
             console.log(err)

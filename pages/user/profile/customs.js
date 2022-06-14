@@ -7,9 +7,10 @@ import Customs from '../../../components/Customs'
 
 function customs(props)
 {
-    const { user, isResetToken, light,
+    const { light,
         setThemeLight, setSorting: setSortCtx, setStyle: setStyleCtx } = props;
     const userCtx = useContext(UserContext);
+    const [user, setUser] = useState()
 
     useEffect(() =>
     {
@@ -17,6 +18,12 @@ function customs(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
+
+        const newUser = await getClientUser();
+        CS_Redirects.tryResCS(newUser, window)
+        setUser(newUser.obj)
+        const isResetToken = await checkToken(newUser.obj._id)
+        CS_Redirects.tryResCS(isResetToken, window)
     }, [])
 
     return userCtx && (<Customs
@@ -30,20 +37,7 @@ function customs(props)
 
 customs.getInitialProps = async (props) =>
 {
-    return determRendering(props, async () =>
-    {
-        const user = await getClientUser();
-        CS_Redirects.tryResCS(user, window)
-        const isResetToken = await checkToken(user.obj._id)
-        CS_Redirects.tryResCS(isResetToken, window)
-        return { user: user.obj, isResetToken: isResetToken.obj, nav: "Profile" }
-    }, async () =>
-    {
-        const user = JSON.parse(JSON.stringify(props.query.user));
-        const isResetToken = await checkToken(user._id)
-        CS_Redirects.tryResSR(isResetToken, props)
-        return { user, isResetToken: isResetToken.obj, nav: "Profile" }
-    })
+    return { nav: "Profile" }
 }
 
 

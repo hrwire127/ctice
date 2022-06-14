@@ -58,7 +58,26 @@ const DeclarationSchema = new Schema({
         enum: ['Disabled', 'Active'],
         default: 'Active'
     },
+    tags: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: "Tag",
+        }],
+        validate: [tagsMax, '{PATH} exceeds the limit of 5'],
+        validate: [tagsMin, '{PATH} has to be at least 1 in length'],
+        required: true
+    }
 });
+
+function tagsMax(val)
+{
+    return val.length > 5;
+}
+
+function tagsMin(val)
+{
+    return val.length < 1;
+}
 
 DeclarationSchema.virtual('hasFile').get(function ()
 {
