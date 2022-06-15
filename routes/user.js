@@ -6,6 +6,7 @@ const Declaration = require("../models/declaration")
 const Banner = require('../models/banner')
 const User = require("../models/user")
 const Token = require("../models/token")
+const mongoose = require('mongoose')
 const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isSameUser, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyPendingCode, verifyResetToken, } = require('../utilsSR/middlewares/_m_verify')
@@ -22,29 +23,29 @@ router.get('/login', async (req, res) =>
     app.render(req, res, "/user/login")
 })
 
-router.get('/profile', isLogged_SR, async (req, res) =>
+router.get('/profile', isLogged_SR, tryAsync_CS(async (req, res) =>
 {
-    // const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile")
-})
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile", { user })
+}))
 
-router.get('/profile/edit', isLogged_SR, async (req, res) =>
+router.get('/profile/edit', isLogged_SR, tryAsync_CS(async (req, res) =>
 {
-    // const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/edit")
-})
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/edit", { user })
+}))
 
-router.get('/profile/customs', isLogged_SR, async (req, res) =>
+router.get('/profile/customs', isLogged_SR, tryAsync_CS(async (req, res) =>
 {
-    // const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/customs")
-})
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/customs", { user })
+}))
 
-router.get('/profile/bookmarks', isLogged_SR, async (req, res) =>
+router.get('/profile/bookmarks', isLogged_SR, tryAsync_CS(async (req, res) =>
 {
-    // const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/bookmarks")
-})
+    const user = await getUserdata(req, res)
+    app.render(req, res, "/user/profile/bookmarks", { user })
+}))
 
 router.get("/pending/:confirmationCode", verifyPendingCode, tryAsync_SR(async (req, res) =>
 {
@@ -156,46 +157,87 @@ router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 
 router.post('/:id/bookmarks/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const { bookmarks, doclimit } = req.body;
+    const { bookmarks, doclimit, tags } = req.body;
+
+    console.log(tags)
     const userdata = await getUserdata(req, res)
-    const user = await User.findOne({ _id: userdata._id }).populate({
-        path: 'bookmarks',
-        options: {
-            limit: doclimit,
-            sort: { _id: -1 },
-            skip: bookmarks.length,
-        }
-    })
+    const user = await User.findOne({ _id: userdata._id })
+        .populate({
+            path: 'bookmarks',
+            options:
+                tags.length > 0
+                    ? {
+                        tags: { $in: tags.map(t => mongoose.Types.ObjectId(t._id)) },
+                        limit: doclimit,
+                        sort: { _id: -1 },
+                        skip: bookmarks.length,
+                    }
+                    : {
+                        limit: doclimit,
+                        sort: { _id: -1 },
+                        skip: bookmarks.length,
+                    }
+        })
     Redirects_SR.Api.sendApi(res, user.bookmarks)
 }))
 
 router.post('/:id/bookmarks/load/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const { bookmarks, query, doclimit } = req.body;
+    const { bookmarks, query, doclimit, tags } = req.body;
+
+    const obj = {
+        tags: tags.length > 0 ? { $in: tags.map(t => mongoose.Types.ObjectId(t._id)) } : null,
+        title: query !== "" ? { $regex: query, $options: 'i' } : null,
+        limit: doclimit,
+        sort: { _id: -1 },
+        skip: bookmarks.length,
+    }
+
+    Object.keys(obj).forEach(key =>
+    {
+        if (obj[key] === null)
+        {
+            delete obj[key];
+        }
+    });
+    
+    console.log(obj)
+
     const userdata = await getUserdata(req, res)
-    const user = await User.findOne({ _id: userdata._id }).populate(
+    const user = await User.findOne({ _id: userdata._id, }
+    ).populate(
         'bookmarks',
         null,
-        {
-            title: { $regex: query, $options: 'i' },
-            limit: doclimit,
-            sort: { _id: -1 },
-            skip: bookmarks.length,
-        }
+        obj
     )
     Redirects_SR.Api.sendApi(res, user.bookmarks)
 }))
 
 router.post('/:id/bookmarks/count/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 {
-    const { query } = req.body;
+    const { query, tags } = req.body;
     const userdata = await getUserdata(req, res)
-    const user = await User.findOne({ _id: userdata._id }).populate(
+
+    let obj = {
+        tags: tags.length > 0 ? { $in: tags.map(t => mongoose.Types.ObjectId(t._id)) } : null,
+        title: query !== "" ? { $regex: query, $options: 'i' } : null,
+    }
+
+    Object.keys(obj).forEach(key =>
+    {
+        if (obj[key] === null)
+        {
+            delete obj[key];
+        }
+    });
+
+    console.log(obj)
+
+    const user = await User.findOne({ _id: userdata._id, }
+    ).populate(
         'bookmarks',
         null,
-        {
-            title: { $regex: query, $options: 'i' },
-        }
+        obj
     )
     Redirects_SR.Api.sendApi(res, user.bookmarks.length)
 }))
@@ -270,8 +312,6 @@ router.post('/notifications/banner/last', apiSecret, isLogged_CS, tryAsync_CS(as
     const lastNotif = user.notifications[user.notifications.length - 1]
 
     const seen = lastNotif ? lastNotif.banner ? lastNotif.banner.seen : true : true
-    console.log(user.notifications)
-    console.log(lastNotif)
 
     for (let n of user.notifications)
     {
@@ -281,11 +321,6 @@ router.post('/notifications/banner/last', apiSecret, isLogged_CS, tryAsync_CS(as
         }
     }
     await user.save()
-
-    console.log('\n')
-    console.log(user.notifications)
-    console.log(lastNotif)
-    console.log(seen)
 
     Redirects_SR.Api.sendApi(res, !seen ? lastNotif.banner : null)
 }))

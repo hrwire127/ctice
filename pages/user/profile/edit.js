@@ -7,8 +7,7 @@ import { getClientUser, } from '../../../utilsCS/_get'
 
 function edit(props)
 {
-    const [user, setUser] = useState()
-    const [isResetToken, setToken] = useState()
+    const { isResetToken, user } = props
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
@@ -17,13 +16,6 @@ function edit(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
         }
-
-        const newUser = await getClientUser();
-        CS_Redirects.tryResCS(newUser, window)
-        setUser(newUser.obj)
-        const newToken = await checkToken(newUser.obj._id)
-        CS_Redirects.tryResCS(newToken, window)
-        setToken(newToken.obj)
     }, [])
 
     return userCtx && (<Change
@@ -34,7 +26,20 @@ function edit(props)
 
 edit.getInitialProps = async (props) =>
 {
-    return { nav: "Profile" }
+    return determRendering(props, async() =>
+    {
+        const user = await getClientUser()
+        CS_Redirects.tryResCS(user, window)
+        const isResetToken = await checkToken(user.obj._id)
+        CS_Redirects.tryResCS(isResetToken, window)
+        return { user: user.obj, isResetToken, nav: "Profile" }
+    },async () =>
+    {
+        const { user } = props.query
+        const isResetToken = await checkToken(user._id)
+        CS_Redirects.tryResCS(isResetToken, window)
+        return { user, isResetToken, nav: "Profile" }
+    })
 }
 
 export default edit

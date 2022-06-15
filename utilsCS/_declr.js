@@ -34,7 +34,7 @@ async function getDeclr(id)
         })
 }
 
-async function loadLimitedDeclrs(declarations, date, query, doclimit = 5, sort) 
+async function loadLimitedDeclrs(declarations, date, query, doclimit = 5, sort, tags) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/load/limit/api`, {
         method: 'POST',
@@ -42,7 +42,7 @@ async function loadLimitedDeclrs(declarations, date, query, doclimit = 5, sort)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { sort, doclimit, declarations, date, query, secret: process.env.NEXT_PUBLIC_SECRET }
+            { sort, doclimit, declarations, date, query, tags, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -68,7 +68,7 @@ async function getAllCount(declarations)
         })
 }
 
-function getCountLimit(query, date)
+function getCountLimit(query, date, tags)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/count/limit/api`, {
         method: 'POST',
@@ -76,7 +76,7 @@ function getCountLimit(query, date)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { query, date, secret: process.env.NEXT_PUBLIC_SECRET }
+            { query, date, tags, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -86,16 +86,16 @@ function getCountLimit(query, date)
 }
 
 
-async function getCountDateQuery(query, date, sort)
+async function getCountDateQuery(query, date, sort, tags)
 {
-    if (query === "" && date === "Invalid")
+    if (query === "" && date === "Invalid" && tags.length <= 0)
     {
         let count = await getAllCount([])
         if (nowindowFetchError(count)) return count
         return count.obj;
     }
 
-    let count = await getCountLimit(query, date, sort)
+    let count = await getCountLimit(query, date, tags)
     if (nowindowFetchError(count)) return count
     return count.obj;
 }

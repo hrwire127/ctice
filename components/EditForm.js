@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Avatar, Button, CssBaseline, Autocomplete, TextField, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Avatar, Button, CssBaseline, 
+    Autocomplete, TextField, Box, 
+    Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
 import { handleDeclrData } from "../utilsCS/_basic";
@@ -10,7 +11,6 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import TextArea from './TextArea'
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
-import Rules from "../utilsCS/clientRules"
 import useAlertMsg from './hooks/useAlertMsg'
 import useLoading from './hooks/useLoading'
 

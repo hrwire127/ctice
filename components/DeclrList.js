@@ -20,10 +20,11 @@ import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
 import useLoading from './hooks/useLoading'
 import Search from './Search'
+import TagFilter from './TagFilter';
 
 function DeclrList(props)
 {
-    const { flash, setFlash } = props;
+    const { flash, setFlash, fullTags } = props;
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
@@ -34,6 +35,7 @@ function DeclrList(props)
     const [declarations, setDeclarations] = useState();
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
+    const [tags, setTags] = useState([]);
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
@@ -43,23 +45,23 @@ function DeclrList(props)
         fullWhile(async () =>
         {
             //doclimit ---!!!
-            const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort)
-            const newCount = await getCountDateQuery(queryValue, dateValue, sort);
-            CS_Redirects.tryResCS(newDeclrs, window)
-            CS_Redirects.tryResCS(newCount, window)
+            const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort, tags)
+            const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
+            // CS_Redirects.tryResCS(newDeclrs, window)
+            // CS_Redirects.tryResCS(newCount, window)
             setDeclarations(newDeclrs.obj)
             setCount(newCount)
         })
 
-    }, [dateValue, queryValue, sort])
+    }, [dateValue, queryValue, sort, tags])
 
-    function loadMore(e, date, query, sort)
+    function loadMore(e, date, query, sort, tags)
     {
         e.preventDefault()
         loadMoreWhile(async () =>
         {
             //doclimit --!!!!
-            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort);
+            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort, tags);
             CS_Redirects.tryResCS(newDeclrs, window)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
@@ -77,7 +79,7 @@ function DeclrList(props)
                 display="flex"
                 justifyContent="center"
             >
-                <Button onClick={(e) => loadMore(e, dateValue, queryValue, sort)}>Load More</Button>
+                <Button onClick={(e) => loadMore(e, dateValue, queryValue, sort, tags)}>Load More</Button>
             </Box>))
 
     }
@@ -105,6 +107,7 @@ function DeclrList(props)
         <>
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
             <Search query={queryValue} setQuery={setQuery} />
+            <TagFilter fullTags={fullTags} setTags={setTags} />
             <Sort handleSort={handleSort} sort={sort} />
             <Box className={classes.Bar}>
                 <Typography variant="h4">

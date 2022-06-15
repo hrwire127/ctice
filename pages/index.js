@@ -3,10 +3,12 @@ import DeclrList from '../components/DeclrList';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
+import { getTags } from '../utilsCS/_get'
 import useAlertMsg from '../components/hooks/useAlertMsg'
 
 function index(props)
 {
+    const { fullTags } = props
     const [count, setCount] = useState()
     const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
 
@@ -23,6 +25,7 @@ function index(props)
             count={count}
             flash={flash}
             setFlash={setFlash}
+            fullTags={fullTags}
         />
     )
 }
@@ -30,13 +33,16 @@ function index(props)
 index.getInitialProps = async (props) =>
 {
     const flash = await getFlash(props)
+    const fullTags = await getTags()
 
     return determRendering(props, () =>
     {
-        return { flash, nav: "Home" }
+        CS_Redirects.tryResCS(fullTags, window)
+        return { flash, fullTags: fullTags.obj, nav: "Home" }
     }, () =>
     {
-        return { flash, nav: "Home" }
+        CS_Redirects.tryResSR(fullTags, props)
+        return { flash, fullTags: fullTags.obj, nav: "Home" }
     })
 }
 

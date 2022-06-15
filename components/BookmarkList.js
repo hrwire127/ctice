@@ -9,13 +9,15 @@ import useStyles from "../assets/styles/_DeclrList"
 import StyleContext from './context/contextStyle'
 import { styleCompact, styleFull } from './context/styleEnum';
 import Search from './Search'
+import TagFilter from './TagFilter';
 
 function BookmarkList(props)
 {
-    const { user } = props;
+    const { user, fullTags } = props;
     const [queryValue, setQuery] = useState("");
     const [count, setCount] = useState(user.bookmarks.length);
     const [bookmarks, setBookmarks] = useState([])
+    const [tags, setTags] = useState([]);
     const [fullWhile, fullSwitch] = useLoading(false)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const styleCtx = useContext(StyleContext);
@@ -25,26 +27,26 @@ function BookmarkList(props)
     {
         fullWhile(async () =>
         {
-            if (queryValue !== "")
-            {
-                //doclimit --!!!!
-                const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id)
-                const newCount = await countLimitedBookmarks(queryValue, user._id);
-                CS_Redirects.tryResCS(newBookmarks, window)
-                CS_Redirects.tryResCS(newCount, window)
-                setBookmarks(newBookmarks.obj)
-                setCount(newCount.obj)
-            }
-            else
-            {
-                //doclimit --!!!!
-                const newBookmarks = await getLimitedBookmarks([], 4, user._id); // <==
-                CS_Redirects.tryResCS(newBookmarks, window)
-                setBookmarks(newBookmarks.obj)
-                setCount(user.bookmarks.length)
-            }
+            // if (queryValue !== "")
+            // {
+            //doclimit --!!!!
+            const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
+            const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
+            CS_Redirects.tryResCS(newBookmarks, window)
+            CS_Redirects.tryResCS(newCount, window)
+            setBookmarks(newBookmarks.obj)
+            setCount(newCount.obj)
+            // }
+            // else
+            // {
+            //     //doclimit --!!!!
+            //     const newBookmarks = await getLimitedBookmarks([], 4, user._id, tags); // <==
+            //     CS_Redirects.tryResCS(newBookmarks, window)
+            //     setBookmarks(newBookmarks.obj)
+            //     setCount(user.bookmarks.length)
+            // }
         })
-    }, [queryValue])
+    }, [queryValue, tags])
 
     function loadMore(e)
     {
@@ -61,6 +63,7 @@ function BookmarkList(props)
     return (
         <>
             <Search query={queryValue} setQuery={setQuery} />
+            <TagFilter fullTags={fullTags} setTags={setTags} />
             {count > 0
                 ? (<>
                     <Box className={styleCtx === styleFull ? classes.ListCompact : classes.ListFull}>

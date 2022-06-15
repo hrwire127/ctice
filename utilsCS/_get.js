@@ -32,7 +32,7 @@ async function getLimitedReplies(replies, cid, id)
         })
 }
 
-function getLimitedBookmarks(bookmarks, doclimit, id)
+function getLimitedBookmarks(bookmarks, doclimit, id, tags)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/api`, {
         method: 'POST',
@@ -40,7 +40,7 @@ function getLimitedBookmarks(bookmarks, doclimit, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { bookmarks, id, doclimit, secret: process.env.NEXT_PUBLIC_SECRET }
+            { tags, bookmarks, id, doclimit, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -50,7 +50,7 @@ function getLimitedBookmarks(bookmarks, doclimit, id)
 }
 
 
-function loadLimitedBookmarks(bookmarks, query, doclimit, id)
+function loadLimitedBookmarks(bookmarks, query, doclimit, id, tags)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/load/api`, {
         method: 'POST',
@@ -58,7 +58,7 @@ function loadLimitedBookmarks(bookmarks, query, doclimit, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { bookmarks, doclimit, query, id, secret: process.env.NEXT_PUBLIC_SECRET }
+            { tags, bookmarks, doclimit, query, id, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -66,7 +66,7 @@ function loadLimitedBookmarks(bookmarks, query, doclimit, id)
             return res;
         })
 }
-function countLimitedBookmarks(query, id)
+function countLimitedBookmarks(query, id, tags)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/${id}/bookmarks/count/api`, {
         method: 'POST',
@@ -74,7 +74,7 @@ function countLimitedBookmarks(query, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { query, id, secret: process.env.NEXT_PUBLIC_SECRET }
+            { tags, query, id, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>

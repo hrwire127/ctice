@@ -289,7 +289,6 @@ function cutMention(parent)
     })
 }
 
-
 module.exports = {
     switchSort, sortByScore, modifyDesc,
     genToken, upload_pdf, doRemember,
