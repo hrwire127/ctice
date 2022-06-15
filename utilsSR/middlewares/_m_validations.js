@@ -5,7 +5,7 @@ const { modifyDesc } = require('../primary/_p_basic')
 
 async function validateDeclr(req, res, next) 
 {
-    let { title, description, file } = req.body
+    let { title, description, file, tags } = req.body
 
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
@@ -21,12 +21,13 @@ async function validateDeclr(req, res, next)
             })),
             entityMap: Joi.object().required()
         }).required(),
-        file: Joi.string()
+        file: Joi.string(),
+        tags: Joi.array().items(Joi.any().required())
     })
 
     const preparedBody =
     {
-        title, description: JSON.parse(description), file
+        title, description: JSON.parse(description), file, tags: JSON.parse(tags)
     }
 
     const { error } = declarationSchema.validate(preparedBody)
@@ -39,7 +40,7 @@ async function validateDeclr(req, res, next)
     }
 
 
-    const bodyError = inspectDecrl(title, JSON.parse(description), req.files)
+    const bodyError = inspectDecrl(title, JSON.parse(description), req.files, JSON.parse(tags))
 
     if (bodyError) 
     {

@@ -3,6 +3,7 @@ const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")
 const User = require("../models/user")
+const Tag = require("../models/tag")
 
 const { titles } = require("./seedHelpers")
 
@@ -43,12 +44,13 @@ const createDeclaration = async () =>
     //     })
     //     await declaration.save();
     // }
-    const users = await User.find({});
-    users.forEach(async u =>
-    {
-        u.notifications = []
-        await u.save()
-    })
+    // const users = await User.find({});
+    // users.forEach(async u =>
+    // {
+    //     u.notifications = []
+    //     await u.save()
+    // })
+    // await Tag.deleteMany({});
 }
 
 

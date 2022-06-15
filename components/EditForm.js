@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import { Avatar, Button, CssBaseline, Autocomplete, TextField, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
 import { handleDeclrData } from "../utilsCS/_basic";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import TextArea from './TextArea'
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import Rules from "../utilsCS/clientRules"
 import useAlertMsg from './hooks/useAlertMsg'
+import useLoading from './hooks/useLoading'
 
 
 function EditForm(props)
@@ -18,16 +20,20 @@ function EditForm(props)
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration } = props;
-    const { title, description, _id: id } = declaration;
+    const { declaration, fullTags } = props;
+    const { title, description, _id: id, tags: oldTags } = declaration;
 
-    const [file, changeFile] = useState(declaration.file);
+    const filteredTags = fullTags.filter(t => oldTags.some(nt => nt._id === t._id))
+    
     const [editorState, setEditorState] = useState();
+    const [file, changeFile] = useState(declaration.file);
+    const [tags, setTags] = useState(filteredTags);
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitLoading] = useLoading(false)
 
     const classes = useStyles();
+
 
     const handleSubmit = async (body) =>
     {
@@ -50,6 +56,11 @@ function EditForm(props)
         e.preventDefault();
 
         const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
+
+        const newTags = []
+        tags.forEach((t) => newTags.push(t._id))
+
+        data.append("tags", JSON.stringify(newTags))
 
         if (titleValid(title) && descValid(description)) //add editor state
         {
@@ -74,7 +85,7 @@ function EditForm(props)
                 <Typography component="h1" variant="h5">
                     Edit {title}
                 </Typography>
-                {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+                {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
                 <Box
                     component="form"
                     error={TitleError}
@@ -118,6 +129,25 @@ function EditForm(props)
                     }
 
                     <UploadBtnPdf changeFile={changeFile} file={file} />
+
+                    <Autocomplete
+                        sx={{ mt: 2 }}
+                        multiple
+                        id="tags-outlined"
+                        options={fullTags}
+                        getOptionLabel={(tag) => tag.content}
+                        defaultValue={filteredTags}
+                        filterSelectedOptions
+                        onChange={(event, value) => setTags(value)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Tags"
+                                placeholder="Select tags"
+                            />
+                        )}
+                    />
+
                     {submitLoading(0, () => (
                         <>
                             <Button

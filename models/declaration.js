@@ -5,6 +5,7 @@ const { excRule } = require('../utilsSR/helpers/exc-Rule');
 const { upload_pdf } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
+const Tag = require("./tag");
 const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 const DeclarationSchema = new Schema({
@@ -58,26 +59,13 @@ const DeclarationSchema = new Schema({
         enum: ['Disabled', 'Active'],
         default: 'Active'
     },
-    tags: {
-        type: [{
-            type: Schema.Types.ObjectId,
-            ref: "Tag",
-        }],
-        validate: [tagsMax, '{PATH} exceeds the limit of 5'],
-        validate: [tagsMin, '{PATH} has to be at least 1 in length'],
+    tags: [{
+        type: Schema.Types.ObjectId,
+        ref: "Tag",
         required: true
-    }
+    }]
 });
 
-function tagsMax(val)
-{
-    return val.length > 5;
-}
-
-function tagsMin(val)
-{
-    return val.length < 1;
-}
 
 DeclarationSchema.virtual('hasFile').get(function ()
 {
@@ -113,6 +101,9 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
 
     Obj.authors = declaration ? declaration.authors : []
     Obj.authors.push(await User.findOne({ username: req.session.passport.user }))
+
+    Obj.tags = JSON.parse(req.body.tags)
+    console.log(Obj.tags)
 
     if (await new excRule([body.file, files, hadFile], [], async () => //regular hadfile
     {

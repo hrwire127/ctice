@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { app } = require("../main");
 const { isAdmin_SR, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { validateBanner, validateNotification } = require('../utilsSR/middlewares/_m_validations')
-const { tryAsync_CS, apiSecret } = require('../utilsSR/middlewares/_m_basic')
+const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Banner = require('../models/banner')
 const User = require('../models/user')
@@ -32,7 +32,7 @@ router.get("/tags", isAdmin_SR, (req, res) =>
     app.render(req, res, "/admin/tags")
 })
 
-router.get("/banner/:id", isAdmin_SR, tryAsync_CS(async (req, res) =>
+router.get("/banner/:id", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
     const { id } = req.params
     const banner = await Banner.findOne({ _id: id, status: "Active" })

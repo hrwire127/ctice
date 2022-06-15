@@ -1,7 +1,7 @@
 const { valRule } = require('../helpers/val-Rule');
 const Rules = require('../rules/validRules')
 
-function inspectDecrl(title, description, Files) //
+function inspectDecrl(title, description, Files, tags) //
 {
     const titleRule = new valRule(title.length, Rules.title_max_char, 0)
     if (titleRule.getVal()) return titleRule.processMsg()
@@ -22,6 +22,15 @@ function inspectDecrl(title, description, Files) //
 
         const fileFormat = new valRule(Files.file.mimetype, Rules.pdf_format, 3)
         if (fileFormat.getVal()) return fileFormat.processMsg()
+    }
+
+    if(tags)
+    {
+        const maxTags = new valRule(tags.length, Rules.declr_max_tags, 0)
+        if (maxTags.getVal()) return maxTags.processMsg()
+
+        const minTags = new valRule(tags.length, Rules.declr_min_tags, 1)
+        if (minTags.getVal()) return minTags.processMsg()
     }
 }
 

@@ -85,7 +85,7 @@ router.post('/count/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, obj.length > 0 ? obj[0].count : 0)
 }))
 
-router.post('/tags/api', apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
+router.post('/tags/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const tags = await Tag.find({})
     Redirects_SR.Api.sendApi(res, tags)
@@ -98,6 +98,14 @@ router.post('/tag', isAdmin_CS, validateTag, tryAsync_CS(async (req, res) =>
     await tag.save();
     req.flash('success', 'Created Successfuly');
     Redirects_SR.Api.sendApi(res, req.session.flash[0])
+}))
+
+router.delete('/tag/:id', isAdmin_CS, tryAsync_CS(async (req, res) =>
+{
+    const { id } = req.params
+    await Tag.findByIdAndDelete(id)
+    req.flash('success', 'Created Successfuly');
+    Redirects_SR.Api.sendApi(res, true)
 }))
 
 module.exports = router;

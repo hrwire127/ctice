@@ -1,5 +1,6 @@
 import React from 'react'
-import { Typography, Box, List, ListItem, ListItemText, TextField, FormHelperText, Button } from "@mui/material"
+import { IconButton, Typography, Box, Card, Grid, CardContent, TextField, FormHelperText, Button } from "@mui/material"
+import { Delete } from "@mui/icons-material"
 import useLoading from './hooks/useLoading'
 import useFormError from "./hooks/useFormError";
 import useAlertMsg from './hooks/useAlertMsg'
@@ -25,7 +26,6 @@ function Tags(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    console.log(res)
                     if (res.err) setAlertMsg(res.err.message, "error")
                     else setAlertMsg(res.obj.message, res.obj.type)
 
@@ -39,6 +39,19 @@ function Tags(props)
         })
     }
 
+    const onDelete = (id) =>
+    {
+        await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tag/${id}`, {
+            method: 'DELETE',
+            body: body,
+        }).then(response => response.json())
+            .then(async res =>
+            {
+                CS_Redirects.tryResCS(res, window)
+                if (res.obj === true) setTags(tags.filter(t => t._id !== id))
+            })
+    }
+
     const errCheck = async (e) =>
     {
         e.preventDefault();
@@ -46,8 +59,6 @@ function Tags(props)
         const data = new FormData(e.currentTarget)
 
         const tag = data.get('tag')
-
-        console.log(tag)
 
         if (tagValid(tag))
         {
@@ -63,15 +74,23 @@ function Tags(props)
     return (
         <Box sx={{ mt: 4, p: 12 }}>
             <Typography variant="h5">Tags</Typography>
-            <List>
+            <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                 {tags.map(t => (
-                    <ListItem key={t._id}>
-                        <ListItemText
-                            primary={t.content}
-                        />
-                    </ListItem>
+                    <Grid
+                        key={t._id}
+                        item xs={4}
+                    >
+                        <Card
+                            sx={{ width: 200, height: 60 }}
+                        >
+                            <IconButton onClick={() => onDelete(t._id)}><Delete /></IconButton>
+                            <CardContent>
+                                <Typography>{t.content}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 ))}
-            </List>
+            </Grid>
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box
                 component="form"
@@ -92,7 +111,7 @@ function Tags(props)
                     onKeyPress={checkTagKey}
                     autoFocus
                 />
-                {alert
+                {alert && alert.type === "error"
                     ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
                     : (<FormHelperText error={TagError}>{helperTagText}</FormHelperText>)
                 }

@@ -4,7 +4,7 @@ import
 {
     Box, Typography,
     IconButton,
-    Collapse, Grid
+    Collapse, Grid, Paper
 } from '@mui/material';
 import
 {
@@ -29,7 +29,7 @@ import TransitionAlerts from './TransitionAlerts'
 function DeclrView(props)
 {
     const { declaration, user } = props;
-    const { title, description, file, date, authors, _id: id } = declaration;
+    const { title, description, file, date, authors, _id: id, tags } = declaration;
 
     const adminCtx = useContext(AdminContext);
     const userCtx = useContext(UserContext);
@@ -38,7 +38,7 @@ function DeclrView(props)
     const [comments, setComments] = useState([])
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
-    const [hasBookmark, setBookmark] = useState(userCtx ? user.bookmarks.includes(id) : false);
+    const [hasBookmark, setBookmark] = useState(user ? user.bookmarks.includes(id) : false);
     const [formOpen, setFormOpen] = useState(true);
 
     const [fullWhile, fullSwitch] = useLoading(false)
@@ -173,6 +173,12 @@ function DeclrView(props)
                 {/* <BackLink>Back</BackLink> */}
             </Box>
 
+            <Box sx={{ display: 'flex', justifyContent: "space-evenly" }}>
+                {tags.map(t => <Typography key={t._id} color="primary" fontWeight={600}>
+                    {t.content}
+                </Typography>)}
+            </Box>
+
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
@@ -200,11 +206,9 @@ function DeclrView(props)
                 : (<Typography variant="h6" align="center">
                     <Link href="/user/register">
                         Sign up
-                    </Link>
-                    or <Link href="/user/login">
+                    </Link> or <Link href="/user/login">
                         Log in
-                    </Link>
-                    to comment
+                    </Link> to comment
                 </Typography>)}
 
             <CommentList

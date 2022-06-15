@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import CreateForm from "../components/CreateForm"
 import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import Rules from "../utilsCS/clientRules"
-import useAlertMsg from './hooks/useAlertMsg'
+import useAlertMsg from '../components/hooks/useAlertMsg'
 
 function create(props)
 {

@@ -9,29 +9,42 @@ import
     Typography,
     Container,
     FormHelperText,
+    Autocomplete
 } from "@mui/material";
 import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
+import CS_Redirects from '../utilsCS/CS_Redirects'
 import useFormError from "./hooks/useFormError";
 import { handleDeclrData } from "../utilsCS/_basic";
+import { getTags } from '../utilsCS/_get'
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import useLoading from './hooks/useLoading'
 
-export default function CreateForm(props)
+function CreateForm(props)
 {
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid,] = useFormError(false);
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
 
     const [editorState, setEditorState] = useState();
     const [file, changeFile] = useState();
-    
+    const [fullTags, setFullTags] = useState([]);
+    const [tags, setTags] = useState([]);
+
     const [loadingWhile, loadingSwitch] = useLoading(false)
 
     const { alert, setAlert, setAlertMsg } = props;
     const classes = useStyles()
+
+    useEffect(async () =>
+    {
+        const newTags = await getTags()
+        CS_Redirects.tryResCS(newTags, window)
+        setFullTags(newTags.obj)
+    }, [])
+
 
     const handleSubmit = async (body) =>
     {
@@ -55,12 +68,18 @@ export default function CreateForm(props)
 
         const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
 
+        const newTags = []
+        tags.forEach((t) => newTags.push(t._id))
+
+        data.append("tags", JSON.stringify(newTags))
+
         if (titleValid(title) && descValid(description))
         {
             setTitleTrue();
             setDescTrue();
             handleSubmit(data);
-        } else
+        } 
+        else
         {
             if (!titleValid(title))
             {
@@ -83,7 +102,7 @@ export default function CreateForm(props)
                 <Typography component="h1" variant="h5">
                     Create Declaration
                 </Typography>
-                {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+                {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
                 <Box
                     component="form"
                     enctype="multipart/form-data"
@@ -93,7 +112,7 @@ export default function CreateForm(props)
                 >
                     <TextField
                         margin="normal"
-                        inputProps={{ maxLength: 10 }}
+                        inputProps={{ maxLength: 20 }}
                         required
                         error={TitleError}
                         fullWidth
@@ -124,6 +143,24 @@ export default function CreateForm(props)
 
                     <UploadBtnPdf changeFile={changeFile} file={file} />
 
+                    <Autocomplete
+                        sx={{ mt: 2 }}
+                        multiple
+                        id="tags-outlined"
+                        options={fullTags}
+                        getOptionLabel={(tag) => tag.content}
+                        // defaultValue={[top100Films[13]]}
+                        filterSelectedOptions
+                        onChange={(event, value) => setTags(value)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Tags"
+                                placeholder="Select tags"
+                            />
+                        )}
+                    />
+
                     {loadingSwitch(0, () =>
                     (<>
                         <Button
@@ -141,3 +178,4 @@ export default function CreateForm(props)
         </Container>
     );
 }
+export default CreateForm

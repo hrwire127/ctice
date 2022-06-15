@@ -22,6 +22,12 @@ TagSchema.statics.processObj = async function (req, res)
     return { content }
 }
 
+TagSchema.pre('remove', function (next)
+{
+    // Remove all the assignment docs that reference the removed person.
+    this.model('Declaration').remove({ tags: { $in: this._id } }, next);
+});
+
 const Tag = mongoose.model('Tag', TagSchema);
 
 module.exports = Tag;
