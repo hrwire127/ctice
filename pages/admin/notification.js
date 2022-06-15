@@ -4,8 +4,9 @@ import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import AdminLayout from "../../components/AdminLayout"
 import NotifCreate from '../../components/NotifCreate'
+import handleError from '../../components/custom/handleError';
 
-function notification()
+const notification = (props) => handleError(props, function (props)
 {
     let adminCtx = useContext(AdminContext);
 
@@ -26,7 +27,7 @@ function notification()
     return adminCtx ? (<AdminLayout>
         <NotifCreate />
     </AdminLayout>) : (<></>)
-}
+})
 
 notification.getInitialProps = async (props) =>
 {

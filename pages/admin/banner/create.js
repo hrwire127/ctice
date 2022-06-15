@@ -3,8 +3,9 @@ import AdminContext from '../../../components/context/contextAdmin'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import AdminLayout from "../../../components/AdminLayout"
 import BannerCreate from '../../../components/BannerCreate.js'
+import handleError from '../../../components/custom/handleError';
 
-function banner(props)
+const banner = (props) => handleError(props, function (props)
 {
     let adminCtx = useContext(AdminContext);
 
@@ -25,7 +26,7 @@ function banner(props)
     return adminCtx ? (<AdminLayout>
         <BannerCreate />
     </AdminLayout>) : (<></>)
-}
+})
 
 banner.getInitialProps = async (props) =>
 {

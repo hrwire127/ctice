@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import
 {
     Box, Typography, ButtonGroup, Button,
@@ -24,6 +24,8 @@ import TagFilter from './TagFilter';
 
 function DeclrList(props)
 {
+    const [isMounted, setIsMounted] = useState(false);
+
     const { flash, setFlash, fullTags } = props;
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
@@ -39,6 +41,19 @@ function DeclrList(props)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
+    useEffect(() =>
+    {
+        setIsMounted(true);
+    }, []);
+
+
+    useEffect(() =>
+    {
+        return () =>
+        {
+            setIsMounted(false);
+        }
+    }, []);
 
     useEffect(async () =>
     {
@@ -47,10 +62,16 @@ function DeclrList(props)
             //doclimit ---!!!
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
+
             // CS_Redirects.tryResCS(newDeclrs, window)
             // CS_Redirects.tryResCS(newCount, window)
-            setDeclarations(newDeclrs.obj)
-            setCount(newCount)
+            console.log(newDeclrs)
+            if (isMounted)
+            {
+                console.log(newCount)
+                setDeclarations(newDeclrs.obj)
+                setCount(newCount.obj)
+            }
         })
 
     }, [dateValue, queryValue, sort, tags])

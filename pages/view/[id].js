@@ -4,8 +4,9 @@ import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
 import { getClientUser, } from '../../utilsCS/_get'
 import { getDeclr } from "../../utilsCS/_declr"
+import handleError from '../../components/custom/handleError';
 
-function view(props)                                                                           
+const view = (props) => handleError(props, function (props)                                                                     
 {
     const { user, declaration } = props;
 
@@ -13,7 +14,7 @@ function view(props)
         declaration={declaration}
         user={user}
     />
-}
+})
 
 view.getInitialProps = async (props) =>
 {

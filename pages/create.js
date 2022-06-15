@@ -4,10 +4,11 @@ import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import Rules from "../utilsCS/clientRules"
 import useAlertMsg from '../components/hooks/useAlertMsg'
+import handleError from '../components/custom/handleError';
 
-function create(props)
+const create = (props) => handleError(props, function (props)
 {
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
 
     let adminCtx = useContext(AdminContext);
 
@@ -17,7 +18,7 @@ function create(props)
     }, [])
 
     return adminCtx && (<CreateForm setAlert={setAlert} alert={alert} setAlertMsg={setAlertMsg} />)
-}
+})
 
 create.getInitialProps = async (props) =>
 {

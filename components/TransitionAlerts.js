@@ -12,9 +12,17 @@ export default function TransitionAlerts(props)
 
     useEffect(() =>
     {
-        if (children === flash)
+        let isMounted = true
+        if (isMounted)
         {
-            setflash(flash)
+            if (children === flash)
+            {
+                setflash(flash)
+            }
+        }
+        return () =>
+        {
+            isMounted = false
         }
     }, [children, flash])
 

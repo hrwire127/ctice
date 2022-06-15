@@ -11,6 +11,10 @@ class SR_Redirect
         const type = Api_Call
         res.json({ type, obj })
     }
+    sendError(res, error)
+    {
+        res.json({ error })
+    }
     CS(res)
     {
         const type = Def_Call

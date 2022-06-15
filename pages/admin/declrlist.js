@@ -4,13 +4,14 @@ import AdminDeclrs from '../../components/AdminDeclrs';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getDeclrs } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
+import handleError from '../../components/custom/handleError';
 
-function declrlist(props)
+const declrlist = (props) => handleError(props, function (props)
 {
     let adminCtx = useContext(AdminContext);
     const [declarations, setDeclarations] = useState([])
 
-    useEffect(async() =>
+    useEffect(async () =>
     {
         if (props.isAdmin)
         {
@@ -27,9 +28,11 @@ function declrlist(props)
     }, [])
 
     return adminCtx ? (<AdminLayout><AdminDeclrs declarations={declarations} /></AdminLayout>) : (<></>)
-}
+})
+
 declrlist.getInitialProps = async (props) =>
 {
     return { noHeader: true }
 }
+
 export default declrlist

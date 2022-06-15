@@ -5,7 +5,7 @@ import BackLink from "./BackLink";
 
 function ErrorPage(props)
 {
-
+    console.log(props)
     const { status, message } = props;
     return (
         <Box sx={{ textAlign: "center", mt: 10 }}>

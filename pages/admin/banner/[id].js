@@ -5,15 +5,16 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering } from '../../../utilsCS/_basic'
 import BannerEdit from '../../../components/BannerEdit'
 import AdminLayout from "../../../components/AdminLayout"
+import handleError from '../../../components/custom/handleError';
 
-function banneredit(props)
+const banneredit = (props) => handleError(props, function (props)
 {
     const { id } = props
     const [banner, setBanner] = useState()
 
     const adminCtx = React.useContext(AdminContext);
 
-    useEffect(async() =>
+    useEffect(async () =>
     {
         if (!adminCtx)
         {
@@ -21,12 +22,12 @@ function banneredit(props)
         }
 
         const newBanner = await getBanner(id)
-        CS_Redirects.tryResCS(newBanner, window)
+        if (newBanner.error) return { error: newBanner.error }
         setBanner(newBanner.obj)
     }, [])
 
     return adminCtx && (<AdminLayout><BannerEdit banner={banner} /></AdminLayout>)
-}
+})
 
 banneredit.getInitialProps = async (props) =>
 {

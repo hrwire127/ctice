@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering } from '../utilsCS/_basic'
 import Welcome from '../components/Welcome'
+import handleError from '../components/custom/handleError';
 
-function welcome(props)
+const welcome = (props) => handleError(props, function (props)
 {
     const { confirmationCode } = props;
 
-    return <Welcome confirmationCode={confirmationCode}/>
-}
+    return <Welcome confirmationCode={confirmationCode} />
+})
 
 welcome.getInitialProps = async (props) =>
 {

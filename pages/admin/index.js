@@ -6,15 +6,16 @@ import { determRendering } from '../../utilsCS/_basic'
 import { getUsers, } from '../../utilsCS/_get'
 import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
+import handleError from '../../components/custom/handleError';
 
-function admin(props)
+const admin = (props) => handleError(props, function (props)
 {
     const [users, setUsers] = useState([])
     const [declarations, setDeclarations] = useState([])
 
     let adminCtx = useContext(AdminContext);
 
-    useEffect(async() =>
+    useEffect(async () =>
     {
         if (props.isAdmin)
         {
@@ -36,7 +37,7 @@ function admin(props)
 
 
     return adminCtx ? (<AdminLayout><AdminIndex declarations={declarations} users={users} /></AdminLayout>) : (<></>)
-}
+})
 
 admin.getInitialProps = async (props) =>
 {

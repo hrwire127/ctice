@@ -4,14 +4,15 @@ import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getUsers } from '../../utilsCS/_get'
 import AdminLayout from "../../components/AdminLayout"
+import handleError from '../../components/custom/handleError';
 
-function userlist(props)
+const userlist = (props) => handleError(props, function (props)
 {
     const [users, setUsers] = useState([])
 
     let adminCtx = useContext(AdminContext);
 
-    useEffect(async() =>
+    useEffect(async () =>
     {
         if (props.isAdmin)
         {
@@ -30,7 +31,8 @@ function userlist(props)
 
 
     return adminCtx ? (<AdminLayout><AdminUsers users={users} /></AdminLayout>) : (<></>)
-}
+})
+
 userlist.getInitialProps = async (props) =>
 {
     return { noHeader: true }

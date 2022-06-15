@@ -4,8 +4,9 @@ import Profile from '../../../components/Profile'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser } from '../../../utilsCS/_get'
+import handleError from '../../../components/custom/handleError';
 
-function index(props)
+const index = (props) => handleError(props, function (props)
 {
     const { isResetToken, user } = props
 
@@ -23,7 +24,7 @@ function index(props)
         user={user}
         isResetToken={isResetToken}
     />)
-}
+})
 
 index.getInitialProps = async (props) =>
 {

@@ -3,13 +3,13 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import { timeout, determRendering } from '../utilsCS/_basic'
 import useLoading from '../components/hooks/useLoading'
 import Reset from '../components/Reset'
-import Rules from "../utilsCS/clientRules"
+import handleError from '../components/custom/handleError';
 
-function reset(props)
+const reset = (props) => handleError(props, function (props)
 {
     const { confirmationCode } = props;
-    return switchLoading(2, () => <Reset confirmationCode={confirmationCode}/>)
-}
+    return switchLoading(2, () => <Reset confirmationCode={confirmationCode} />)
+})
 
 reset.getInitialProps = async (props) =>
 {
@@ -20,7 +20,7 @@ reset.getInitialProps = async (props) =>
     }, () =>
     {
         const { confirmationCode } = props.query;
-        return { confirmationCode, nav: "Home"  }
+        return { confirmationCode, nav: "Home" }
     })
 }
 

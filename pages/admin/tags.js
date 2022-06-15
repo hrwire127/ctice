@@ -5,13 +5,14 @@ import AdminLayout from "../../components/AdminLayout"
 import Tags from '../../components/Tags'
 import { getTags } from '../../utilsCS/_get'
 import { determRendering } from '../../utilsCS/_basic'
+import handleError from '../../components/custom/handleError';
 
-function tags(props)
+const tags = (props) => handleError(props, function (props)
 {
     const [tags, setTags] = useState([])
     let adminCtx = useContext(AdminContext);
 
-    useEffect(async() =>
+    useEffect(async () =>
     {
         if (props.isAdmin)
         {
@@ -30,9 +31,9 @@ function tags(props)
 
 
     return adminCtx ? (<AdminLayout>
-        <Tags tags={tags} setTags={setTags}/>
+        <Tags tags={tags} setTags={setTags} />
     </AdminLayout>) : (<></>)
-}
+})
 
 tags.getInitialProps = async (props) =>
 {

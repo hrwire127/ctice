@@ -5,8 +5,9 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, getTags } from '../../../utilsCS/_get'
 import Bookmarks from '../../../components/Bookmarks'
+import handleError from '../../../components/custom/handleError';
 
-function bookmarks(props)
+const bookmarks = (props) => handleError(props, function (props)
 {
     const { fullTags, user } = props
     const userCtx = useContext(UserContext);
@@ -20,7 +21,7 @@ function bookmarks(props)
     }, [])
 
     return userCtx && (<Bookmarks user={user} fullTags={fullTags} />)
-}
+})
 
 bookmarks.getInitialProps = async (props) =>
 {

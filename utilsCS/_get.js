@@ -199,7 +199,7 @@ function getUserNotifications()
 
 function getTags()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tags/api`, {
+    return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tags/all/api`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

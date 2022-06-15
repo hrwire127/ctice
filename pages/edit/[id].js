@@ -5,8 +5,10 @@ import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
 import { getDeclr, } from "../../utilsCS/_declr"
 import { getTags } from '../../utilsCS/_get'
+import handleError from '../../components/custom/handleError';
 
-function edit(props)
+
+const edit = (props) => handleError(props, function (props)
 {
     const { declaration, fullTags } = props;
 
@@ -22,7 +24,7 @@ function edit(props)
     }, [])
 
     return adminCtx && (<EditForm fullTags={fullTags} declaration={declaration} />)
-}
+})
 
 edit.getInitialProps = async (props) =>
 {

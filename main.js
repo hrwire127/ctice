@@ -78,33 +78,46 @@ app.prepare().then(() =>
         req.session.flash = [];
         next();
     });
-
     server.use((err, req, res, next) =>
     {
         const { type } = req.body;
-        console.log(type)
+
         console.log("AA")
         console.log(err)
+
         const error = new UserError(err.message, err.status)
-        req.session.error = error;
-        if (type === 0) Redirects_SR.Error.SR(res)
-        else Redirects_SR.Error.CS(res)
+        // req.session.error = error;
+        // if (type === 0) Redirects_SR.Error.SR(res)
+        // else Redirects_SR.Error.CS(res)
+        Redirects_SR.Api.sendError(res, error)
     })
 
-    server.get("/error", (req, res, next) =>
-    {
-        try
-        {
-            let error = req.session.error
-            if (!error) error = new UserError();
-            res.status(error.status)
-            app.render(req, res, "/error", { error })
-        }
-        catch (err)
-        {
-            console.log(err)
-        }
-    })
+    // server.use((err, req, res, next) =>
+    // {
+    //     const { type } = req.body;
+    //     console.log(type)
+    //     console.log("AA")
+    //     console.log(err)
+    //     const error = new UserError(err.message, err.status)
+    //     req.session.error = error;
+    //     if (type === 0) Redirects_SR.Error.SR(res)
+    //     else Redirects_SR.Error.CS(res)
+    // })
+
+    // server.get("/error", (req, res, next) =>
+    // {
+    //     try
+    //     {
+    //         let error = req.session.error
+    //         if (!error) error = new UserError();
+    //         res.status(error.status)
+    //         app.render(req, res, "/error", { error })
+    //     }
+    //     catch (err)
+    //     {
+    //         console.log(err)
+    //     }
+    // })
 
     server.get("*", (req, res, next) =>
     {

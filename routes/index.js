@@ -67,6 +67,7 @@ router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/count/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
+    throw new Error("F", 500)
     const count = await Declaration.count({ status: "Active" })
     Redirects_SR.Api.sendApi(res, count)
 }))
@@ -90,7 +91,7 @@ router.post('/count/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     Redirects_SR.Api.sendApi(res, obj.length > 0 ? obj[0].count : 0)
 }))
 
-router.post('/tags/api', apiSecret, tryAsync_CS(async (req, res) =>
+router.post('/tags/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
     const tags = await Tag.find({})
     Redirects_SR.Api.sendApi(res, tags)

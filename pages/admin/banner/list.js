@@ -5,8 +5,9 @@ import { determRendering, timeout } from '../../../utilsCS/_basic'
 import { getBanners } from "../../../utilsCS/_get"
 import AdminLayout from "../../../components/AdminLayout"
 import AdminBanners from "../../../components/AdminBanners"
+import handleError from '../../../components/custom/handleError';
 
-function bannerlist(props)
+const bannerlist = (props) => handleError(props, function (props)
 {
     const [banners, setBanners] = useState([])
     let adminCtx = useContext(AdminContext);
@@ -31,8 +32,8 @@ function bannerlist(props)
 
     return adminCtx && (<AdminLayout>
         <AdminBanners banners={banners} />
-    </AdminLayout>) 
-}
+    </AdminLayout>)
+})
 
 bannerlist.getInitialProps = async (props) =>
 {

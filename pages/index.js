@@ -5,8 +5,10 @@ import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
 import { getTags } from '../utilsCS/_get'
 import useAlertMsg from '../components/hooks/useAlertMsg'
+import handleError from '../components/custom/handleError';
+import ErrorPage from '../components/ErrorPage'
 
-function index(props)
+const index = (props) => handleError(props, function (props, setError)
 {
     const { fullTags } = props
     const [count, setCount] = useState()
@@ -14,9 +16,18 @@ function index(props)
 
     useEffect(async () =>
     {
+        let isMounted = true
+
         const newCount = await getAllCount();
-        CS_Redirects.tryResCS(newCount, window)
-        setCount(newCount)
+        if (isMounted)
+        {
+            if (newCount.error) setError(newCount.error)
+            setCount(newCount)
+        }
+        return () =>
+        {
+            isMounted = false
+        }
     }, [])
 
 
@@ -28,7 +39,7 @@ function index(props)
             fullTags={fullTags}
         />
     )
-}
+})
 
 index.getInitialProps = async (props) =>
 {
@@ -37,11 +48,13 @@ index.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(fullTags, window)
+        if (fullTags.error) return { error: fullTags.error }
+
         return { flash, fullTags: fullTags.obj, nav: "Home" }
     }, () =>
     {
-        CS_Redirects.tryResSR(fullTags, props)
+        if (fullTags.error) return { error: fullTags.error }
+
         return { flash, fullTags: fullTags.obj, nav: "Home" }
     })
 }
