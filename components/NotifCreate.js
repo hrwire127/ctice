@@ -16,8 +16,9 @@ import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
 
-function NotifCreate()
+function NotifCreate(props)
 {
+    const { setError } = props
     const [fileNotif, setFileNotif] = useState("")
     const [htmlNotif, setHtmlNotif] = useState("")
     const [fileBanner, setFileBanner] = useState("")
@@ -85,7 +86,7 @@ function NotifCreate()
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        // CS_Redirects.tryResCS(res, window)
+                        // if (res.error) return setError(res.error)
                         if (res.err) setAlertMsg(res.err.message, "error")
                     })
             })

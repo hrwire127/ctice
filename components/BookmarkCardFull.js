@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import useStyles from "../assets/styles/_DeclrCardFull"
 import { CropData, getDateDifference } from '../utilsCS/_basic';
@@ -9,7 +9,7 @@ import { Box, CardActions, Card, CardContent, Typography, IconButton } from '@mu
 
 function BookmarkCardFull(props) 
 {
-    const { title, _id: id, date } = props;
+    const { title, _id: id, date, setError } = props;
     const [bookmarked, setBookmark] = useState(true)
 
     const likes = props.likes.filter(el => el.typeOf === true)
@@ -32,7 +32,7 @@ function BookmarkCardFull(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 setBookmark(false)
             })
     }

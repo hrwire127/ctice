@@ -19,7 +19,7 @@ function DatePicker(props)
         if (newValue === "Invalid" || !newValue)
         {
             setTime("Invalid")
-        }
+        } 
         else
         {
             if (new Date().toDateString() === newValue.toDateString())

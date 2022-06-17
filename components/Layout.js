@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
-import Header from './Header'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
-import Loading from "../components/Loading"
 import Router from "next/router";
 import CS_Redirects from '../utilsCS/CS_Redirects';
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
-import HomeNavigation from './HomeNavigation'
-import UserNavigation from './UserNavigation'
+import Loading from "./Loading"
+import Header from './Header'
+import ErrorPage from './ErrorPage'
 import { StyledEngineProvider } from '@mui/material/styles';
 
 export default function Layout(props)
@@ -58,6 +57,13 @@ export default function Layout(props)
         }
     }, [userCtx, adminCtx]);
 
+    const [error, setError] = useState(props.children.props.error)
+
+    useEffect(() =>
+    {
+        setError(props.children.props.error)
+    }, [props.children.props.error])
+
     let childrenwprops = props.children;
 
     if (React.isValidElement(props.children))
@@ -67,9 +73,19 @@ export default function Layout(props)
             light,
             setThemeLight,
             setStyle,
-            setSorting
+            setSorting,
+            setError
         });
     }
+
+    const LoadingPage = () =>
+    {
+        return (<Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
+            <Loading fullPage={true} />
+        </Box>)
+    }
+
+
 
     return (
         <UserContext.Provider value={userCtx}>
@@ -79,11 +95,7 @@ export default function Layout(props)
                         <SortContext.Provider value={sort}>
                             <StyledEngineProvider injectFirst>
                                 {loading
-                                    ? (
-                                        <Box sx={{ width: "100vw", height: "100vh", backgroundColor: "background.default" }}>
-                                            <Loading fullPage={true} />
-                                        </Box>
-                                    )
+                                    ? (<LoadingPage />)
                                     : (<main style={{
                                         position: "relative",
                                         width: "100vw",
@@ -92,26 +104,20 @@ export default function Layout(props)
                                         flexDirection: "column",
                                         justifyContent: "space-between"
                                     }}>
-                                        {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-
-                                        {childrenwprops.props.noHeader && adminCtx
-                                            ? (<Box sx={
-                                                { margin: 0, flex: 1, backgroundColor: "background.default" }
-                                            }
-                                            >
-                                                {childrenwprops}
+                                        {error
+                                            ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
+                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                <ErrorPage message={error.message} status={error.status} />
                                             </Box>)
-                                            : (<Box sx={{ flex: 1, backgroundColor: "background.default" }}
-                                            >
-                                                {childrenwprops.props.nav
-                                                    ? childrenwprops.props.nav === "Home"
-                                                        ? (<HomeNavigation>{childrenwprops}</HomeNavigation>)
-                                                        : (<UserNavigation>{childrenwprops}</UserNavigation>)
-                                                    : (<>{childrenwprops}</>)
-                                                }
-                                            </Box>)
+                                            : (<>
+                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                <Box sx={{ flex: 1, backgroundColor: "background.default" }}
+                                                >
+                                                    {childrenwprops}
+                                                </Box>
+                                                <div className="cover"></div>
+                                            </>)
                                         }
-                                        <div className="cover" style={{}}></div>
                                     </main>)
                                 }
                             </StyledEngineProvider>

@@ -67,7 +67,6 @@ router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
 
 router.post('/count/all/api', apiSecret, tryAsync_CS(async (req, res) =>
 {
-    throw new Error("F", 500)
     const count = await Declaration.count({ status: "Active" })
     Redirects_SR.Api.sendApi(res, count)
 }))

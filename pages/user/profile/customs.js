@@ -4,46 +4,53 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'
 import Customs from '../../../components/Customs'
-import handleError from '../../../components/custom/handleError';
+import UserNavigation from '../../../components/UserNavigation'
 
-const customs = (props) => handleError(props, function (props)
+function customs(props)
 {
     const { isResetToken, user, light,
-        setThemeLight, setSorting: setSortCtx, setStyle: setStyleCtx } = props;
+        setThemeLight, setSorting: setSortCtx, setStyle: setStyleCtx, setError } = props;
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
     {
         if (!userCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
     }, [])
 
-    return userCtx && (<Customs
-        user={user}
-        light={light}
-        setThemeLight={setThemeLight}
-        setStyleCtx={setStyleCtx}
-        setSortCtx={setSortCtx}
-    />)
-})
+    return userCtx && (<UserNavigation>
+        <Customs
+            user={user}
+            light={light}
+            setThemeLight={setThemeLight}
+            setStyleCtx={setStyleCtx}
+            setSortCtx={setSortCtx}
+            setError={setError}
+        />
+    </UserNavigation>)
+}
 
 customs.getInitialProps = async (props) =>
 {
     return determRendering(props, async () =>
     {
         const user = await getClientUser()
-        CS_Redirects.tryResCS(user, window)
+        if (user.error) return { error: user.error }
+
         const isResetToken = await checkToken(user.obj._id)
-        CS_Redirects.tryResCS(isResetToken, window)
-        return { user: user.obj, isResetToken, nav: "Profile" }
+
+        if (isResetToken.error) return { error: isResetToken.error }
+
+        return { user: user.obj, isResetToken }
     }, async () =>
     {
         const { user } = props.query
         const isResetToken = await checkToken(user._id)
-        CS_Redirects.tryResCS(isResetToken, window)
-        return { user, isResetToken, nav: "Profile" }
+        if (isResetToken.error) return { error: isResetToken.error }
+
+        return { user, isResetToken }
     })
 }
 

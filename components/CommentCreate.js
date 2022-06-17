@@ -29,7 +29,7 @@ function CommentCreate(props)
 
     const [creatingWhile, creatingSwitch] = useLoading(false)
 
-    const { id } = props;
+    const { id, setError } = props;
     const classes = useStyles()
 
     const handleSubmit = async (body) =>
@@ -42,7 +42,7 @@ function CommentCreate(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

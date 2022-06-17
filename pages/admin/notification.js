@@ -1,13 +1,12 @@
 import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
-import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import AdminLayout from "../../components/AdminLayout"
 import NotifCreate from '../../components/NotifCreate'
-import handleError from '../../components/custom/handleError';
 
-const notification = (props) => handleError(props, function (props)
+function notification (props)
 {
+    const { setError } = props
     let adminCtx = useContext(AdminContext);
 
     useEffect(() =>
@@ -19,15 +18,15 @@ const notification = (props) => handleError(props, function (props)
 
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
     }, [])
 
 
     return adminCtx ? (<AdminLayout>
-        <NotifCreate />
+        <NotifCreate setError={setError} />
     </AdminLayout>) : (<></>)
-})
+}
 
 notification.getInitialProps = async (props) =>
 {

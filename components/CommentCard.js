@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
@@ -17,7 +17,7 @@ import Link from 'next/link'
 
 function CommentCard(props)
 {
-    const { setEdit, fullWhile, user, id, comment } = props;
+    const { setEdit, fullWhile, user, id, comment, setError } = props;
     const { _id: cid, content, date, author } = comment;
 
     const [replies, setReplies] = useState([])
@@ -44,7 +44,7 @@ function CommentCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setError(res.err.message)
                 })
         })
@@ -63,7 +63,7 @@ function CommentCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 if (res.obj === true)
                 {
                     setStatus(status === "Active" ? "Disabled" : "Active")
@@ -97,14 +97,14 @@ function CommentCard(props)
             </Grid>
 
             <Collapse in={isReplying}>
-                <ReplyCreate id={id} cid={cid} />
+                <ReplyCreate setError={setError} id={id} cid={cid} />
             </Collapse>
         </Box>)
 
     return (
         <Box className={classes.Card}>
             <Box className={classes.Container}>
-                <Vote comment user={user} likes={likes} setLikes={setLikes} d_id={cid} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote setError={setError} comment user={user} likes={likes} setLikes={setLikes} d_id={cid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
@@ -145,6 +145,7 @@ function CommentCard(props)
                     </Box>)}
 
             <ReplyList
+                setError={setError}
                 replies={replies}
                 setReplies={setReplies}
                 cid={cid}

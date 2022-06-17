@@ -8,12 +8,12 @@ import Link from 'next/link'
 
 function AdminIndex(props)
 {
-    const { users, declarations } = props;
+    const { users, declarations, setError } = props;
 
     const Logout = async () =>
     {
         const res = await LogoutFetch()
-        CS_Redirects.tryResCS(res, window)
+        if (res.error) return setError(res.error)
     }
 
     return (
@@ -96,7 +96,7 @@ function AdminIndex(props)
                     </Grid>
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <Declrs declarations={declarations.slice(0, process.env.DOCS_LOAD_LIMIT)} noControlls />
+                            <Declrs setError={setError} declarations={declarations.slice(0, process.env.DOCS_LOAD_LIMIT)} noControlls />
                             {declarations.length > process.env.DOCS_LOAD_LIMIT &&
                                 (<Link color="primary" href="/admin/declrlist" sx={{ mt: 3 }}>
                                     See more declarations

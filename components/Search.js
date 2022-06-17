@@ -33,7 +33,7 @@ function Search(props)
                         </InputAdornment>
                 }}
 
-            />
+            /> 
         </Tooltip>
     )
 }

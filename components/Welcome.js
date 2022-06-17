@@ -11,20 +11,20 @@ import TransitionAlerts from './TransitionAlerts'
 import UploadProfile from './UploadProfile';
 import useFormError from "./hooks/useFormError";
 import LocationSearch from "./LocationSearch"
-import TextArea from "./TextArea";
-import BackLink from "./BackLink";
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useStyles from "../assets/styles/_Welcome"
 import Rules from "../utilsCS/clientRules"
-import useLoading from '../components/hooks/useLoading'
+import useLoading from './hooks/useLoading'
+import TextArea from "./TextArea";
+import BackLink from "./BackLink";
 
 function Welcome(props)
 {
-    const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
+    const [PasswordError, , helperPasswordText, , checkPasswordKey, , , ,] = useFormError(false);
     const [LocationError, , , , checkLocationKey,] = useFormError(false);
     const [DescError, , , , checkDescKey,] = useFormError(false);
 
-    const { confirmationCode } = props
+    const { confirmationCode, setError } = props
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, loadingSwitch] = useLoading(false)
@@ -46,7 +46,7 @@ function Welcome(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

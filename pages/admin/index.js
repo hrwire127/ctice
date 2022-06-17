@@ -2,18 +2,16 @@ import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import { determRendering } from '../../utilsCS/_basic'
 import { getUsers, } from '../../utilsCS/_get'
 import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
-import handleError from '../../components/custom/handleError';
 
-const admin = (props) => handleError(props, function (props)
+function admin (props)
 {
-    const [users, setUsers] = useState([])
-    const [declarations, setDeclarations] = useState([])
+    const { setError, declarations, users } = props
 
     let adminCtx = useContext(AdminContext);
+
 
     useEffect(async () =>
     {
@@ -24,23 +22,27 @@ const admin = (props) => handleError(props, function (props)
 
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
-
-        const newUsers = await getUsers()
-        const newDeclrs = await getDeclrs()
-        CS_Redirects.tryResCS(newUsers, window)
-        CS_Redirects.tryResCS(newDeclrs, window)
-        setUsers(newUsers.obj)
-        setDeclarations(newDeclrs.obj)
     }, [])
 
 
-    return adminCtx ? (<AdminLayout><AdminIndex declarations={declarations} users={users} /></AdminLayout>) : (<></>)
-})
+    return adminCtx ? (<AdminLayout>
+        <AdminIndex setError={setError} declarations={declarations} users={users} />
+    </AdminLayout>) : (<></>)
+}
 
 admin.getInitialProps = async (props) =>
 {
-    return { noHeader: true }
+    const users = await getUsers();
+    if (users.error) return { error: users.error }
+
+    const declarations = await getUsers();
+    if (declarations.error) return { error: declarations.error }
+
+    console.log(declarations)
+    console.log(users)
+
+    return { noHeader: true, users, declarations }
 }
 export default admin

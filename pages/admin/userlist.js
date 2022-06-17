@@ -4,10 +4,11 @@ import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getUsers } from '../../utilsCS/_get'
 import AdminLayout from "../../components/AdminLayout"
-import handleError from '../../components/custom/handleError';
 
-const userlist = (props) => handleError(props, function (props)
+function userlist(props)
 {
+    const { setError } = props
+
     const [users, setUsers] = useState([])
 
     let adminCtx = useContext(AdminContext);
@@ -21,20 +22,23 @@ const userlist = (props) => handleError(props, function (props)
 
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
 
-        const newUsers = await getUsers()
-        CS_Redirects.tryResCS(newUsers, window)
-        setUsers(newUsers.obj)
+        const newUsers = await getUsers();
+        if (newUsers.error) return setError(newUsers.error)
+        else setUsers(newUsers)
     }, [])
 
 
-    return adminCtx ? (<AdminLayout><AdminUsers users={users} /></AdminLayout>) : (<></>)
-})
+    return adminCtx ? (<AdminLayout>
+        <AdminUsers newUsers={newUsers} users={users} />
+    </AdminLayout>) : (<></>)
+}
 
 userlist.getInitialProps = async (props) =>
 {
     return { noHeader: true }
 }
+
 export default userlist

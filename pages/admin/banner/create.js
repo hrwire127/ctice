@@ -3,10 +3,10 @@ import AdminContext from '../../../components/context/contextAdmin'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import AdminLayout from "../../../components/AdminLayout"
 import BannerCreate from '../../../components/BannerCreate.js'
-import handleError from '../../../components/custom/handleError';
 
-const banner = (props) => handleError(props, function (props)
+function banner (props)
 {
+    const { setError } = props
     let adminCtx = useContext(AdminContext);
 
     useEffect(() =>
@@ -18,15 +18,15 @@ const banner = (props) => handleError(props, function (props)
 
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
     }, [])
 
 
     return adminCtx ? (<AdminLayout>
-        <BannerCreate />
+        <BannerCreate setError={setError} />
     </AdminLayout>) : (<></>)
-})
+}
 
 banner.getInitialProps = async (props) =>
 {

@@ -4,25 +4,21 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
+import handleAsync from './custom/handleAsync'
 
-export default function TransitionAlerts(props)
+const TransitionAlerts = (props) => handleAsync(props, (props) =>
 {
-    const { type, setFlash, children } = props;
+    const { type, setFlash, children, Mounted } = props;
     const [flash, setflash] = useState(children)
 
     useEffect(() =>
     {
-        let isMounted = true
-        if (isMounted)
+        if (Mounted)
         {
             if (children === flash)
             {
                 setflash(flash)
             }
-        }
-        return () =>
-        {
-            isMounted = false
         }
     }, [children, flash])
 
@@ -55,4 +51,6 @@ export default function TransitionAlerts(props)
             </Collapse>
         </Box>
     );
-}
+})
+
+export default TransitionAlerts

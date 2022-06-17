@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Declrs(props)
 {
-    const { declarations, onDelete, noControlls } = props
+    const { declarations, onDelete, noControlls, setError } = props
     const classes = useStyles();
 
     function createData(id, date, title, file, status, by, views)
@@ -50,7 +50,7 @@ export default function Declrs(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
             })
     }
 

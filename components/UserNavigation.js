@@ -8,9 +8,12 @@ import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material';
 import { getLatestBanners } from '../utilsCS/_get'
 import FixedBanner from "./FixedBanner"
 import FullBanner from './FullBanner';
+import handleAsync from './custom/handleAsync'
 
-function UserNavigation(props)
+const UserNavigation = (props) => handleAsync(props, (props) =>
 {
+    const { setError, Mounted } = props
+
     const [open, setOpen] = useState([])
     const [banners, setBanners] = useState([])
     const [fullBanner, setFullBanner] = useState()
@@ -21,8 +24,8 @@ function UserNavigation(props)
     {
         const banners = await getLatestBanners()
 
-        CS_Redirects.tryResCS(banners, window)
-        setBanners(banners.obj)
+        if (banners.error) return setError(banners.error)
+        if (Mounted) setBanners(banners.obj)
 
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/banner/last`, {
             method: 'POST',
@@ -35,8 +38,8 @@ function UserNavigation(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
-                setFullBanner(res.obj)
+                if (res.error) return setError(res.error)
+                if (Mounted) setFullBanner(res.obj)
             })
     }, [])
 
@@ -139,14 +142,14 @@ function UserNavigation(props)
             </Box>
             {banners.length > 0
                 && (<Box
-                        sx={{ width: 300 }}
-                    >
-                        {banners.map(b => <FixedBanner banner={b} />)}
-                    </Box>)}
+                    sx={{ width: 300 }}
+                >
+                    {banners.map(b => <FixedBanner banner={b} />)}
+                </Box>)}
 
             {fullBanner && open && (<FullBanner banner={fullBanner} setOpen={setOpen} />)}
         </Box>
     )
-}
+})
 
 export default UserNavigation

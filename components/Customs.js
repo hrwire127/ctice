@@ -8,7 +8,7 @@ import CS_Redirects from '../utilsCS/CS_Redirects';
 
 function Customs(props)
 {
-    const { user, setThemeLight, light, setSortCtx, setStyleCtx } = props;
+    const { user, setThemeLight, light, setSortCtx, setStyleCtx, setError } = props;
     const sortCtx = React.useContext(SortContext);
     const styleCtx = React.useContext(StyleContext);
     
@@ -32,7 +32,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     setThemeLight(res.obj)
                     setTheme(newTheme);
                 })
@@ -55,7 +55,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     setStyleCtx(newStyle)
                     setStyle(newStyle);
                 })
@@ -78,7 +78,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     setSortCtx(newSort)
                     setSorting(newSort);
                 })

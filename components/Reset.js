@@ -8,11 +8,11 @@ import useStyles from "../assets/styles/_Reset"
 
 function Reset(props)
 {
-    const { confirmationCode } = props
+    const { confirmationCode, setError } = props
 
     const [PasswordError, , helperPasswordText, , checkPasswordKey, setPasswordTrue, setPasswordFalse, passwordValid,] = useFormError(false);
 
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, switchLoading] = useLoading(false)
 
     const classes = useStyles()
@@ -29,7 +29,7 @@ function Reset(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

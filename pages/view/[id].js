@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import DeclrView from '../../components/DeclrView';
-import CS_Redirects from '../../utilsCS/CS_Redirects'
+import DeclrView from '../../components/DeclrView'
 import { determRendering } from '../../utilsCS/_basic'
 import { getClientUser, } from '../../utilsCS/_get'
 import { getDeclr } from "../../utilsCS/_declr"
-import handleError from '../../components/custom/handleError';
+import HomeNavigation from '../../components/HomeNavigation'
 
-const view = (props) => handleError(props, function (props)                                                                     
+function view (props)                                                            
 {
-    const { user, declaration } = props;
+    const { user, declaration, setError } = props;
 
-    return <DeclrView
+    return <HomeNavigation><DeclrView
         declaration={declaration}
         user={user}
-    />
-})
+        setError={setError}
+    /></HomeNavigation>
+}
 
 view.getInitialProps = async (props) =>
 {
@@ -25,14 +25,16 @@ view.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(declaration, window)
-        CS_Redirects.tryResCS(user, window)
-        return { declaration: declaration.obj, user: user.obj, nav: "Home" }
+        if (declaration.error) return { error: declaration.error }
+        if (user.error) return { error: user.error }
+
+        return { declaration: declaration.obj, user: user.obj }
 
     }, () =>
     {
-        CS_Redirects.tryResSR(declaration, props)
-        return { declaration: declaration.obj, user: props.query.user, nav: "Home" }
+        if (declaration.error) return { error: declaration.error }
+
+        return { declaration: declaration.obj, user: props.query.user }
     })
 
 }

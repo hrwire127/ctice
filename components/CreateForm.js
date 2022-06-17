@@ -22,8 +22,9 @@ import useStyles from "../assets/styles/_CreateForm";
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import useLoading from './hooks/useLoading'
+import handleAsync from './custom/handleAsync'
 
-function CreateForm(props)
+const CreateForm = (props) => handleAsync(props, (props) =>
 {
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid,] = useFormError(false);
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
@@ -35,14 +36,14 @@ function CreateForm(props)
 
     const [loadingWhile, loadingSwitch] = useLoading(false)
 
-    const { alert, setAlert, setAlertMsg } = props;
+    const { alert, setAlert, setAlertMsg, setError, Mounted } = props;
     const classes = useStyles()
 
     useEffect(async () =>
     {
         const newTags = await getTags()
-        CS_Redirects.tryResCS(newTags, window)
-        setFullTags(newTags.obj)
+        if (newTags.error) return setError(newTags.error)
+        if (Mounted) setFullTags(newTags.obj)
     }, [])
 
 
@@ -56,7 +57,7 @@ function CreateForm(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })
@@ -78,7 +79,7 @@ function CreateForm(props)
             setTitleTrue();
             setDescTrue();
             handleSubmit(data);
-        } 
+        }
         else
         {
             if (!titleValid(title))
@@ -177,5 +178,6 @@ function CreateForm(props)
             </Box>
         </Container>
     );
-}
+})
+
 export default CreateForm

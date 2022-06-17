@@ -1,8 +1,8 @@
+import React, { useEffect, useState } from 'react'
 import Layout from "../components/layout"
 import "../assets/styles/body.css"
 import "../assets/styles/TextArea.css"
 import Head from 'next/head'
-import React, { useEffect, useState } from 'react'
 import App from 'next/app';
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getGlobals } from '../utilsCS/_basic'

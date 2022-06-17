@@ -27,7 +27,7 @@ function CommentEdit(props)
     const [editorState, setEditorState] = useState();
     const [submitWhile, submitSwitch] = useLoading(false)
 
-    const { comment, setEdit, id, fullWhile } = props;
+    const { comment, setEdit, id, fullWhile, setError } = props;
     const { content, _id: cid } = comment;
 
     const classes = useStyles()
@@ -44,7 +44,7 @@ function CommentEdit(props)
                 {
                     fullWhile(() =>
                     {
-                        CS_Redirects.tryResCS(res, window)
+                        if (res.error) return setError(res.error)
                         if (res.err) setAlertMsg(res.err.message, "error")
                     })
                 })

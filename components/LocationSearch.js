@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { TextField, Autocomplete, Stack, IconButton } from '@mui/material';
-import { SettingsBackupRestore } from '@mui/icons-material';
+import handleAsync from './custom/handleAsync'
 
 
-function LocationSearch(props)
+const LocationSearch = (props) => handleAsync(props, (props) =>
 {
-    const { setLocation, error, onKeyPress, limit, defaultLocation } = props
+    const { setLocation, error, onKeyPress, limit, defaultLocation, Mounted } = props
     const [features, setFeatures] = useState(defaultLocation ? [defaultLocation] : [])
     const [query, setQuery] = useState(defaultLocation ? defaultLocation.name : "")
 
@@ -16,14 +16,17 @@ function LocationSearch(props)
             .then(res => res.json())
             .then(async res => 
             {
-                setFeatures(res.features.map(el =>
+                if (Mounted)
                 {
-                    return {
-                        name: el.place_name,
-                        lat: el.geometry.coordinates[1],
-                        long: el.geometry.coordinates[0]
-                    }
-                }))
+                    setFeatures(res.features.map(el =>
+                    {
+                        return {
+                            name: el.place_name,
+                            lat: el.geometry.coordinates[1],
+                            long: el.geometry.coordinates[0]
+                        }
+                    }))
+                }
             })
     }
     return (
@@ -73,6 +76,6 @@ function LocationSearch(props)
             />
         </Stack >
     )
-}
+})
 
 export default LocationSearch

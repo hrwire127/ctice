@@ -11,7 +11,7 @@ import Vote from "./Vote";
 
 function ReplyCard(props)
 {
-    const { setEdit, user, id, cid, reply } = props;
+    const { setEdit, user, id, cid, reply, setError } = props;
     const { _id: rid, content, date, author } = reply;
 
     const [likes, setLikes] = useState(reply.likes.filter(el => el.typeOf === true));
@@ -35,7 +35,7 @@ function ReplyCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setError(res.err.message)
                 })
         })
@@ -55,7 +55,7 @@ function ReplyCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
             })
     }
 
@@ -63,7 +63,7 @@ function ReplyCard(props)
         <Box className={classes.Card} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote reply user={user} likes={likes} setLikes={setLikes} d_id={rid} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote setError={setError} reply user={user} likes={likes} setLikes={setLikes} d_id={rid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>

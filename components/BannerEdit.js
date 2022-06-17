@@ -14,10 +14,11 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
+import handleAsync from './custom/handleAsync'
 
-function BannerEdit(props)
+const BannerEdit = (props) => handleAsync(props, (props) =>
 {
-    const { banner } = props
+    const { banner, Mounted } = props
     const [file, setFile] = useState("")
     const [html, setHtml] = useState("")
     const [width, setWidth] = useState(600)
@@ -30,7 +31,10 @@ function BannerEdit(props)
     {
         fetch(banner.content)
             .then(res => res.text())
-            .then(res => setHtml(res))
+            .then(res => 
+            {
+                if (Mounted) setHtml(res)
+            })
             .catch(err => console.log(err))
     }, [])
 
@@ -93,7 +97,6 @@ function BannerEdit(props)
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        // CS_Redirects.tryResCS(res, window)
                         if (res.err) setAlertMsg(res.err.message, "error")
                     })
             })
@@ -167,6 +170,6 @@ function BannerEdit(props)
             </Box>
         </Container>
     )
-}
+})
 
 export default BannerEdit

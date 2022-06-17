@@ -3,10 +3,11 @@ import { Box, Paper, Toolbar, Typography, Button } from '@mui/material'
 import useStyles from "../assets/styles/_NotifWindow"
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import NotifItem from './NotifItem'
+import handleAsync from './custom/handleAsync'
 
-function NotifWindow(props)
+const NotifWindow = (props) => handleAsync(props, (props) =>
 {
-    const { notifications, setViews, setNotificaions } = props
+    const { notifications, setViews, setNotificaions, setError, Mounted } = props
     const classes = useStyles()
 
     useEffect(() =>
@@ -22,8 +23,11 @@ function NotifWindow(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
-                setViews(0)
+                if (res.error) return setError(res.error)
+                if(Mounted)
+                {
+                    setViews(0)
+                }
             })
     }, [])
 
@@ -40,7 +44,7 @@ function NotifWindow(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 setNotificaions(res.obj)
             })
     }
@@ -58,11 +62,11 @@ function NotifWindow(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 setNotificaions([])
             })
     }
-    
+
     return (
         <Paper elevation={10} className={classes.Full}>
             {notifications.length > 0
@@ -74,6 +78,6 @@ function NotifWindow(props)
             }
         </Paper>
     )
-}
+})
 
 export default NotifWindow

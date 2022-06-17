@@ -13,7 +13,8 @@ function Comment(props)
         comment,
         id,
         user,
-        setSortBtn
+        setSortBtn,
+        setError
     } = props;
 
     const changeEdit = (value) =>
@@ -24,12 +25,14 @@ function Comment(props)
 
     return fullSwitch(0, () => edit
         ? (<CommentEdit
+            setError={setError}
             id={id}
             comment={comment}
             setEdit={changeEdit}
             fullWhile={fullWhile}
         />)
         : (<CommentCard
+            setError={setError}
             comment={comment}
             user={user}
             setEdit={changeEdit}

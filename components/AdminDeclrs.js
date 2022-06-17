@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
 import Declrs from './Declrs';
 import useLoading from '../../components/hooks/useLoading'
+import handleAsync from './custom/handleAsync'
 
-function AdminDeclrs(props)
+function AdminDeclrs  (props)
 {
+    const { setError } = props
     const [loadingWhile, switchLoading] = useLoading(false)
     const [declarations, setDeclrs] = useState(props.declarations)
 
@@ -21,9 +23,9 @@ function AdminDeclrs(props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     const newDeclrs = await getDeclrs() //to do load more
-                    CS_Redirects.tryResCS(newDeclrs, window)
+                    if (newDeclrs.error) return setError(newDeclrs.error)
                     setDeclrs(newDeclrs.obj)
                 })
         })
@@ -36,7 +38,7 @@ function AdminDeclrs(props)
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                        {switchLoading(0, () => { if (declarations.length > 0) return (<Declrs declarations={declarations} onDelete={onDelete}/>) })}
+                        {switchLoading(0, () => { if (declarations.length > 0) return (<Declrs setError={setError} declarations={declarations} onDelete={onDelete} />) })}
                     </Paper>
                 </Grid>
             </Grid>

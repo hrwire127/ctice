@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import useStyles from "../assets/styles/_DeclrCardFull"
 import { CropData, getDateDifference } from '../utilsCS/_basic';
@@ -17,7 +17,7 @@ function DeclrCardFull(props)
     const editorState = EditorState.createWithContent(convertFromRaw(data))
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
 
-    return (
+    return ( 
         <Card className={classes.Card}>
             <CardContent className={classes.Upper}>
                 <Box className={classes.Top}>

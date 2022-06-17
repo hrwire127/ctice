@@ -10,7 +10,7 @@ import { getTags } from '../utilsCS/_get'
 
 function Tags(props)
 {
-    const { tags, setTags } = props
+    const { tags, setTags, setError } = props
     const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid] = useFormError(false);
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
@@ -32,7 +32,7 @@ function Tags(props)
                     if (!res.err)
                     {
                         const newTags = await getTags()
-                        CS_Redirects.tryResCS(newTags, window)
+                        if (newTags.error) return setError(newTags.error)
                         setTags(newTags.obj)
                     }
                 })
@@ -47,7 +47,7 @@ function Tags(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 if (res.obj === true) setTags(tags.filter(t => t._id !== id))
             })
     }

@@ -4,12 +4,12 @@ import BookmarkList from "./BookmarkList"
 
 function Bookmarks(props)
 {
-    const { user, fullTags } = props;
+    const { user, fullTags, setError } = props;
     return (<>
         <Typography variant="h3">
             Bookmarks
         </Typography>
-        <BookmarkList user={user} fullTags={fullTags} />
+        <BookmarkList setError={setError} user={user} fullTags={fullTags} />
     </>)
 }
 

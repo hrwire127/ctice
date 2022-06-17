@@ -13,9 +13,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Banners(props)
+function Banners(props)
 {
-    const { banners, onDelete } = props
+    const { banners, onDelete, setError } = props
     const classes = useStyles();
 
     function createData(id, date, type, status, url)
@@ -48,7 +48,7 @@ export default function Banners(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
             })
     }
 
@@ -101,3 +101,5 @@ export default function Banners(props)
         </>
     );
 }
+
+export default Banners

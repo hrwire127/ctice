@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import
 {
@@ -18,17 +18,17 @@ import { CropData } from '../utilsCS/_basic';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
 import UserContext from './context/contextUser'
-import CommentCreate from "./CommentCreate";
-import CommentList from "./CommentList";
 import Link from 'next/link'
-import Vote from "./Vote";
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
 import TransitionAlerts from './TransitionAlerts'
+import CommentCreate from "./CommentCreate";
+import CommentList from "./CommentList";
+import Vote from "./Vote";
 
 function DeclrView(props)
 {
-    const { declaration, user } = props;
+    const { declaration, user, setError } = props;
     const { title, description, file, date, authors, _id: id, tags } = declaration;
 
     const adminCtx = useContext(AdminContext);
@@ -71,7 +71,7 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
             })
     }
 
@@ -88,7 +88,7 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 setBookmark(!hasBookmark)
             })
     }
@@ -106,7 +106,7 @@ function DeclrView(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setDelError(res.err.message)
                 })
         })
@@ -133,7 +133,7 @@ function DeclrView(props)
                 </Grid>
 
                 <Collapse in={formOpen}>
-                    <CommentCreate id={id} />
+                    <CommentCreate setError={setError} id={id} />
                 </Collapse>
             </Box>)
     }
@@ -182,7 +182,7 @@ function DeclrView(props)
             <Box className={classes.Line} />
 
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
+                <Vote setError={setError} user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
                     <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                 </Box>
@@ -212,6 +212,7 @@ function DeclrView(props)
                 </Typography>)}
 
             <CommentList
+                setError={setError}
                 comments={comments}
                 declaration={declaration}
                 user={user}

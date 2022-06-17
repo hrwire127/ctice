@@ -21,7 +21,7 @@ function ReplyCreate(props)
     const [editorState, setEditorState] = useState();
     const [creatingWhile, creatingSwitch] = useLoading(false)
 
-    const { id, cid } = props;
+    const { id, cid, setError } = props;
     const classes = useStyles()
 
     const handleSubmit = async (body) =>
@@ -34,7 +34,7 @@ function ReplyCreate(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

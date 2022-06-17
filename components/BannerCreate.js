@@ -85,7 +85,6 @@ function BannerCreate()
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        // CS_Redirects.tryResCS(res, window)
                         if (res.err) setAlertMsg(res.err.message, "error")
                     })
             })

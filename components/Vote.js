@@ -6,7 +6,7 @@ import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function Vote(props)
 {
-    const { user, likes, setLikes, d_id, dislikes, setDislikes, comment, reply } = props;
+    const { user, likes, setLikes, d_id, dislikes, setDislikes, comment, reply, setError } = props;
     const classes = useStyles();
 
     const onLike = async (type) =>
@@ -23,7 +23,7 @@ function Vote(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 if (!res.redirect) 
                 {
                     const likes = res.obj.filter(el => el.typeOf === true)

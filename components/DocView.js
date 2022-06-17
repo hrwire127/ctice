@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import parse from 'html-react-parser';
+import handleAsync from './custom/handleAsync'
 
-function DocView(props)
+const DocView = (props) => handleAsync(props, (props) =>
 {
-    const { url, raw } = props
+    const { url, raw, Mounted } = props
     const [html, setHtml] = useState("")
 
     useEffect(() =>
     {
-        console.log(url)
         if (url)
         {
-            console.log("!!")
             fetch(url)
                 .then(res => res.text())
-                .then(res => setHtml(res))
+                .then(res => 
+                {
+                    if (Mounted) setHtml(res)
+                })
                 .catch(err => console.log(err))
         }
         else
         {
-            console.log("222")
-            setHtml(raw)
+            if (Mounted) setHtml(raw)
         }
     }, [])
 
@@ -36,6 +37,6 @@ function DocView(props)
     };
 
     return parse(html, options)
-}
+})
 
 export default DocView

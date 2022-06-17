@@ -1,27 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../../components/context/contextUser'
-import Profile from '../../../components/Profile'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, getTags } from '../../../utilsCS/_get'
 import Bookmarks from '../../../components/Bookmarks'
-import handleError from '../../../components/custom/handleError';
+import UserNavigation from '../../../components/UserNavigation'
 
-const bookmarks = (props) => handleError(props, function (props)
+function bookmarks(props)
 {
-    const { fullTags, user } = props
+    const { fullTags, user, setError } = props
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
     {
         if (!userCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
     }, [])
 
-    return userCtx && (<Bookmarks user={user} fullTags={fullTags} />)
-})
+    return userCtx && (<UserNavigation>
+        <Bookmarks user={user} fullTags={fullTags} setError={setError} />
+    </UserNavigation>)
+}
 
 bookmarks.getInitialProps = async (props) =>
 {
@@ -30,14 +31,16 @@ bookmarks.getInitialProps = async (props) =>
     return determRendering(props, async () =>
     {
         const user = await getClientUser()
-        CS_Redirects.tryResCS(user, window)
-        CS_Redirects.tryResCS(fullTags, window)
-        return { fullTags: fullTags.obj, user: user.obj, nav: "Profile" }
+        if (user.error) return { error: user.error }
+        if (fullTags.error) return { error: fullTags.error }
+
+        return { fullTags: fullTags.obj, user: user.obj }
     }, async () =>
     {
         const { user } = props.query
-        CS_Redirects.tryResSR(fullTags, props)
-        return { fullTags: fullTags.obj, user, nav: "Profile" }
+        if (fullTags.error) return { error: fullTags.error }
+
+        return { fullTags: fullTags.obj, user }
     })
 }
 

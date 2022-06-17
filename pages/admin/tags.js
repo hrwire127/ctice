@@ -5,10 +5,11 @@ import AdminLayout from "../../components/AdminLayout"
 import Tags from '../../components/Tags'
 import { getTags } from '../../utilsCS/_get'
 import { determRendering } from '../../utilsCS/_basic'
-import handleError from '../../components/custom/handleError';
 
-const tags = (props) => handleError(props, function (props)
+function tags(props)
 {
+    const { setError } = props
+
     const [tags, setTags] = useState([])
     let adminCtx = useContext(AdminContext);
 
@@ -21,19 +22,19 @@ const tags = (props) => handleError(props, function (props)
 
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
 
-        const newTags = await getTags()
-        CS_Redirects.tryResCS(newTags, window)
-        setTags(newTags.obj)
+        const newTags = await getTags();
+        if (newTags.error) return setError(newTags.error)
+        else setCount(newTags)
     }, [])
 
 
     return adminCtx ? (<AdminLayout>
-        <Tags tags={tags} setTags={setTags} />
+        <Tags setError={setError} tags={tags} setTags={setTags} />
     </AdminLayout>) : (<></>)
-})
+}
 
 tags.getInitialProps = async (props) =>
 {

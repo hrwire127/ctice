@@ -10,10 +10,11 @@ import StyleContext from './context/contextStyle'
 import { styleCompact, styleFull } from './context/styleEnum';
 import Search from './Search'
 import TagFilter from './TagFilter';
+import handleAsync from './custom/handleAsync'
 
-function BookmarkList(props)
+const BookmarkList = (props) => handleAsync(props, (props) =>
 {
-    const { user, fullTags } = props;
+    const { user, fullTags, setError, Mounted } = props;
     const [queryValue, setQuery] = useState("");
     const [count, setCount] = useState(user.bookmarks.length);
     const [bookmarks, setBookmarks] = useState([])
@@ -32,16 +33,20 @@ function BookmarkList(props)
             //doclimit --!!!!
             const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
             const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
-            CS_Redirects.tryResCS(newBookmarks, window)
-            CS_Redirects.tryResCS(newCount, window)
-            setBookmarks(newBookmarks.obj)
-            setCount(newCount.obj)
+            if (newBookmarks.error) return setError(newBookmarks.error)
+            if (newCount.error) return setError(newCount.error)
+
+            if (Mounted)
+            {
+                setBookmarks(newBookmarks.obj)
+                setCount(newCount.obj)
+            }
             // }
             // else
             // {
             //     //doclimit --!!!!
             //     const newBookmarks = await getLimitedBookmarks([], 4, user._id, tags); // <==
-            //     CS_Redirects.tryResCS(newBookmarks, window)
+            //     if (newBookmarks.error) return setError(newBookmarks.error)
             //     setBookmarks(newBookmarks.obj)
             //     setCount(user.bookmarks.length)
             // }
@@ -55,7 +60,7 @@ function BookmarkList(props)
         {
             //doclimit --!!!!
             const newBookmarks = await getLimitedBookmarks(bookmarks, 4, user._id);
-            CS_Redirects.tryResCS(newBookmarks, window)
+            if (newBookmarks.error) return setError(newBookmarks.error)
             setBookmarks(bookmarks.concat(newBookmarks.obj));
         })
     }
@@ -71,8 +76,8 @@ function BookmarkList(props)
                             fullSwitch(0, () => 
                             {
                                 return bookmarks.map(b => styleCtx === styleFull ? (
-                                    <BookmarkCardCompact key={b._id} {...b} />)
-                                    : (<BookmarkCardFull key={b._id} {...b} />))
+                                    <BookmarkCardCompact setError={setError} key={b._id} {...b} />)
+                                    : (<BookmarkCardFull setError={setError} key={b._id} {...b} />))
                             })
                         }
                         {
@@ -87,7 +92,6 @@ function BookmarkList(props)
                 : (<Typography align="center" variant="h4" color="text.secondary">Nothing</Typography>)
             }
         </>)
-}
-
+})
 
 export default BookmarkList

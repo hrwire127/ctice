@@ -2,7 +2,7 @@ const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
 
 class CS_Redirect
 {
-    tryResCS(res, window)
+    tryResCS(res)
     {
         if (res.type === Def_Call)
         {
@@ -21,7 +21,7 @@ class CS_Redirect
     {
         res.redirect(red)
     }
-    Custom_CS(red, window)
+    Custom_CS(red)
     {
         window.location = red;
     }

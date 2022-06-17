@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import Login from '../../components/Login'
-import handleError from '../../components/custom/handleError';
+import HomeNavigation from '../../components/HomeNavigation'
 
-const login = (props) => handleError(props, function (props)
+function login (props) 
 {
-    return <Login />
-})
+    const { setError } = props
+    return <HomeNavigation>
+        <Login setError={setError} />
+    </HomeNavigation>
+}
 
 export default login
-
-login.getInitialProps = async (props) =>
-{
-    return { nav: "Home" }
-}

@@ -10,10 +10,11 @@ import Rules from "../utilsCS/clientRules"
 
 function Register(props)
 {
+    const { setError } = props
     const [UsernameError, , helperUsernameText, , checkUsernameKey, setUsernameTrue, setUsernameFalse, usernameValid,] = useFormError(false);
     const [EmailError, , helperEmailText, , checkEmailKey, setEmailTrue, setEmailFalse, emailValid,] = useFormError(false);
 
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitLoading] = useLoading(false)
 
     const handleSubmit = async (body) =>
@@ -26,7 +27,7 @@ function Register(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window);
+                    if (res.error) return setError(res.error);
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

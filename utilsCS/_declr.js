@@ -92,12 +92,12 @@ async function getCountDateQuery(query, date, sort, tags)
     {
         let count = await getAllCount([])
         if (nowindowFetchError(count)) return count
-        return count.obj;
+        return count;
     }
 
     let count = await getCountLimit(query, date, tags)
     if (nowindowFetchError(count)) return count
-    return count.obj;
+    return count;
 }
 
 module.exports = {

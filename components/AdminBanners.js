@@ -4,9 +4,11 @@ import { Toolbar, Container, Grid, Paper } from '@mui/material';
 import { getBanners } from "../utilsCS/_get"
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from './hooks/useLoading'
+import handleAsync from './custom/handleAsync'
 
-function AdminBanners(props)
+function AdminBanners (props) 
 {
+    const { setError } = props
     const [loadingWhile, switchLoading] = useLoading(false)
     const [banners, setBanners] = useState(props.banners)
 
@@ -23,9 +25,9 @@ function AdminBanners(props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     const newBanners = await getBanners()
-                    CS_Redirects.tryResCS(newBanners, window)
+                    if (newBanners.error) return setError(newBanners.error)
                     setBanners(newBanners.obj)
                 })
         })
@@ -38,7 +40,7 @@ function AdminBanners(props)
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                        {switchLoading(0, () => { if (banners.length > 0) return (<Banners banners={banners} onDelete={onDelete} />) })}
+                        {switchLoading(0, () => { if (banners.length > 0) return (<Banners setError={setError} banners={banners} onDelete={onDelete} />) })}
                     </Paper>
                 </Grid>
             </Grid>

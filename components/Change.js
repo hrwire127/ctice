@@ -15,10 +15,11 @@ import useLoading from './hooks/useLoading'
 import ProfileWindow from './ProfileWindow';
 import useAlertMsg from './hooks/useAlertMsg'
 import useTimer from './hooks/useTimer'
+import handleAsync from './custom/handleAsync'
 
 function Change(props)
 {
-	const { user, isResetToken } = props;
+	const { user, isResetToken, setError } = props;
 	const { username, date, profile, bio, connections } = user;
 
 	const [DescError, , , , checkDescKey] = useFormError(false);
@@ -52,7 +53,7 @@ function Change(props)
 		}).then(response => response.json())
 			.then(res =>
 			{
-				CS_Redirects.tryResCS(res, window)
+				if (res.error) return setError(res.error)
 			})
 	}
 
@@ -66,7 +67,7 @@ function Change(props)
 			}).then(response => response.json())
 				.then(async res =>
 				{
-					CS_Redirects.tryResCS(res, window)
+					if (res.error) return setError(res.error)
 					if (res.err)
 					{
 						setFlashMsg(res.err.message, "error")

@@ -5,12 +5,12 @@ import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
 import { getDeclr, } from "../../utilsCS/_declr"
 import { getTags } from '../../utilsCS/_get'
-import handleError from '../../components/custom/handleError';
+import HomeNavigation from '../../components/HomeNavigation'
 
 
-const edit = (props) => handleError(props, function (props)
+function edit(props)
 {
-    const { declaration, fullTags } = props;
+    const { declaration, fullTags, setError } = props;
 
     const adminCtx = React.useContext(AdminContext);
 
@@ -19,12 +19,17 @@ const edit = (props) => handleError(props, function (props)
     {
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
     }, [])
 
-    return adminCtx && (<EditForm fullTags={fullTags} declaration={declaration} />)
-})
+    return adminCtx && (<HomeNavigation>
+        <EditForm
+            setError={setError}
+            fullTags={fullTags}
+            declaration={declaration} />
+    </HomeNavigation>)
+}
 
 edit.getInitialProps = async (props) =>
 {
@@ -35,14 +40,16 @@ edit.getInitialProps = async (props) =>
 
     return determRendering(props, () =>
     {
-        CS_Redirects.tryResCS(declr, window)
-        CS_Redirects.tryResCS(fullTags, window)
-        return { declaration: declr.obj, fullTags: fullTags.obj, nav: "Home" }
+        if (declr.error) return { error: declr.error }
+        if (fullTags.error) return { error: fullTags.error }
+
+        return { declaration: declr.obj, fullTags: fullTags.obj }
     }, () =>
     {
-        CS_Redirects.tryResSR(declr, props)
-        CS_Redirects.tryResSR(fullTags, props)
-        return { declaration: declr.obj, fullTags: fullTags.obj, nav: "Home" }
+        if (declr.error) return { error: declr.error }
+        if (fullTags.error) return { error: fullTags.error }
+
+        return { declaration: declr.obj, fullTags: fullTags.obj }
     })
 }
 

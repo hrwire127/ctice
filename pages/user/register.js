@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
 import Register from '../../components/Register'
-import handleError from '../../components/custom/handleError';
+import HomeNavigation from '../../components/HomeNavigation'
 
-const register = (props) => handleError(props, function (props)
+function register (props)
 {
-    return (<Register />)
-})
+    const { setError } = props
 
-register.getInitialProps = async (props) =>
-{
-    return { nav: "Home" }
+    return (<HomeNavigation>
+        <Register setError={setError} />
+    </HomeNavigation>)
 }
 
 export default register

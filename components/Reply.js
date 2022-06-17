@@ -10,10 +10,12 @@ function Reply(props)
 
     return edit
         ? (<ReplyEdit
+            setError={setError}
             reply={reply}
             setEdit={setEdit}
         />)
         : (<ReplyCard
+            setError={setError}
             reply={reply}
             user={user}
             edit={edit}

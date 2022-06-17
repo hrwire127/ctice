@@ -11,11 +11,12 @@ import useStyles from '../assets/styles/_CommentList';
 import useLoading from './hooks/useLoading'
 import { getLimitedComments } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
+import handleAsync from './custom/handleAsync'
 
-function CommentList(props)
+const CommentList = (props) => handleAsync(props, (props) =>
 {
     const sortCtx = React.useContext(SortContext);
-    
+
     const [sort, setSorting] = useState(sortCtx);
     const [isSortBtn, setSortBtn] = useState(true);
 
@@ -23,7 +24,7 @@ function CommentList(props)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [commentWhile, commentSwitch] = useLoading(false)
 
-    const { comments, user, declaration, setComments } = props;
+    const { comments, user, declaration, setComments, setError, Mounted } = props;
     const { _id: id } = declaration;
 
     const classes = useStyles();
@@ -33,8 +34,8 @@ function CommentList(props)
         commentWhile(async () =>
         {
             const newComments = await getLimitedComments([], id, sort);
-            CS_Redirects.tryResCS(newComments, window)
-            setComments(newComments.obj)
+            if (newComments.error) return setError(newComments.error)
+            if (Mounted) setComments(newComments.obj)
         })
     }, [sort])
 
@@ -49,7 +50,7 @@ function CommentList(props)
         loadMoreWhile(async () =>
         {
             const newComments = await getLimitedComments(comments, id, type);
-            CS_Redirects.tryResCS(newComments, window)
+            if (newComments.error) return setError(newComments.error)
             setComments(comments.concat(newComments.obj));
         })
     }
@@ -104,6 +105,6 @@ function CommentList(props)
             }
         </Box>)
     })
-}
+})
 
 export default CommentList;

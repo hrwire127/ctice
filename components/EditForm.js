@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Avatar, Button, CssBaseline, 
     Autocomplete, TextField, Box, 
     Typography, Container, FormHelperText, IconButton } from '@mui/material';
@@ -20,7 +20,7 @@ function EditForm(props)
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
 
-    const { declaration, fullTags } = props;
+    const { declaration, fullTags, setError } = props;
     const { title, description, _id: id, tags: oldTags } = declaration;
 
     const filteredTags = fullTags.filter(t => oldTags.some(nt => nt._id === t._id))
@@ -45,7 +45,7 @@ function EditForm(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

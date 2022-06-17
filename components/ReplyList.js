@@ -5,8 +5,9 @@ import useStyles from '../assets/styles/_ReplyList';
 import useLoading from './hooks/useLoading'
 import { getLimitedReplies, } from '../utilsCS/_get'
 import CS_Redirects from '../utilsCS/CS_Redirects'
+import handleAsync from './custom/handleAsync'
 
-function ReplyList(props)
+const ReplyList = (props) => handleAsync(props, (props) =>
 {
     const {
         cid,
@@ -14,7 +15,9 @@ function ReplyList(props)
         user,
         comment,
         replies,
-        setReplies
+        setReplies,
+        setError,
+        Mounted
     } = props;
 
     const [fullWhile, fullSwitch] = useLoading(false)
@@ -22,26 +25,26 @@ function ReplyList(props)
 
     const classes = useStyles();
 
+    useEffect(() =>
+    {
+        fullWhile(async () =>
+        {
+            const newReplies = await getLimitedReplies([], cid, id);
+            if (newReplies.error) return setError(newReplies.error)
+            if (Mounted) setReplies(newReplies.obj)
+        })
+    }, [])
+
     function loadMore(e)
     {
         if (e) e.preventDefault()
         loadMoreWhile(async () =>
         {
             const newReplies = await getLimitedReplies(replies, cid); //<=
-            CS_Redirects.tryResCS(newReplies, window)
+            if (newReplies.error) return setError(newReplies.error)
             setReplies(replies.concat(newReplies.obj));
         })
     }
-
-    useEffect(() =>
-    {
-        fullWhile(async () =>
-        {
-            const newReplies = await getLimitedReplies([], cid, id);
-            CS_Redirects.tryResCS(newReplies, window)
-            setReplies(newReplies.obj)
-        })
-    }, [])
 
     return (<Box className={classes.List}>
         {replies.length > 0
@@ -68,6 +71,6 @@ function ReplyList(props)
         }
     </Box>
     )
-}
+})
 
 export default ReplyList;

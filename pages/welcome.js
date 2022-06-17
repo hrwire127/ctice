@@ -2,26 +2,28 @@ import React, { useState } from 'react'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering } from '../utilsCS/_basic'
 import Welcome from '../components/Welcome'
-import handleError from '../components/custom/handleError';
+import HomeNavigation from '../components/HomeNavigation'
 
-const welcome = (props) => handleError(props, function (props)
+function welcome (props)
 {
-    const { confirmationCode } = props;
+    const { confirmationCode, setError } = props;
 
-    return <Welcome confirmationCode={confirmationCode} />
-})
+    return <HomeNavigation>
+        <Welcome confirmationCode={confirmationCode} setError={setError} />
+    </HomeNavigation>
+}
 
 welcome.getInitialProps = async (props) =>
 {
     return determRendering(props, () =>
     {
-        CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST, window)
+        CS_Redirects.Custom_CS(process.env.NEXT_PUBLIC_DR_HOST)
         return {}
     }, () =>
     {
         const { confirmationCode } = props.query;
 
-        return { confirmationCode, nav: "Home" }
+        return { confirmationCode}
     })
 }
 export default welcome

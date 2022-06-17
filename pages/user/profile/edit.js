@@ -4,42 +4,45 @@ import Change from '../../../components/Change'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken, getFlash } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'
-import handleError from '../../../components/custom/handleError';
+import UserNavigation from '../../../components/UserNavigation'
 
-const edit = (props) => handleError(props, function (props)
+function edit(props)
 {
-    const { isResetToken, user } = props
+    const { isResetToken, user, setError } = props
     const userCtx = useContext(UserContext);
 
     useEffect(() =>
     {
         if (!userCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
     }, [])
 
-    return userCtx && (<Change
+    return userCtx && (<UserNavigation><Change
         user={user}
         isResetToken={isResetToken}
-    />)
-})
+        setError={setError}
+    /></UserNavigation>)
+}
 
 edit.getInitialProps = async (props) =>
 {
     return determRendering(props, async () =>
     {
         const user = await getClientUser()
-        CS_Redirects.tryResCS(user, window)
+        if (user.error) return { error: user.error }
+
         const isResetToken = await checkToken(user.obj._id)
-        CS_Redirects.tryResCS(isResetToken, window)
-        return { user: user.obj, isResetToken, nav: "Profile" }
+        if (isResetToken.error) return { error: isResetToken.error }
+
+        return { user: user.obj, isResetToken }
     }, async () =>
     {
         const { user } = props.query
         const isResetToken = await checkToken(user._id)
-        CS_Redirects.tryResCS(isResetToken, window)
-        return { user, isResetToken, nav: "Profile" }
+        if (isResetToken.error) return { error: isResetToken.error }
+        return { user, isResetToken }
     })
 }
 

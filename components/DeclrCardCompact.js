@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import { Box, Typography, Paper } from '@mui/material'
 import useStyles from "../assets/styles/_DeclrCardCompact" 
@@ -6,7 +6,7 @@ import { getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
 
 function DeclrCardCompact(props) 
-{
+{ 
     const { title, _id, description, date } = props;
 
     const classes = useStyles();

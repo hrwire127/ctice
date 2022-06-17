@@ -11,7 +11,7 @@ function ReplyEdit(props)
 {
     const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-    const { reply, setEdit } = props;
+    const { reply, setEdit, setError } = props;
     const { content, _id: rid  } = reply;
 
 	const [setAlertMsg, alert, setAlert] = useAlertMsg()
@@ -30,7 +30,7 @@ function ReplyEdit(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    CS_Redirects.tryResCS(res, window)
+                    if (res.error) return setError(res.error)
                     if (res.err) setAlertMsg(res.err.message, "error")
                 })
         })

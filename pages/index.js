@@ -5,41 +5,34 @@ import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
 import { getTags } from '../utilsCS/_get'
 import useAlertMsg from '../components/hooks/useAlertMsg'
-import handleError from '../components/custom/handleError';
-import ErrorPage from '../components/ErrorPage'
+import HomeNavigation from '../components/HomeNavigation'
 
-const index = (props) => handleError(props, function (props, setError)
+function index (props) 
 {
-    const { fullTags } = props
+    const { fullTags, setError } = props
     const [count, setCount] = useState()
     const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
 
+
     useEffect(async () =>
     {
-        let isMounted = true
-
         const newCount = await getAllCount();
-        if (isMounted)
-        {
-            if (newCount.error) setError(newCount.error)
-            setCount(newCount)
-        }
-        return () =>
-        {
-            isMounted = false
-        }
+        if (newCount.error) return setError(newCount.error)
+
+        setCount(newCount.obj)
     }, [])
 
 
-    return (
+    return (<HomeNavigation>
         <DeclrList
+            setError={setError}
             count={count}
             flash={flash}
             setFlash={setFlash}
             fullTags={fullTags}
         />
-    )
-})
+    </HomeNavigation>)
+}
 
 index.getInitialProps = async (props) =>
 {
@@ -50,12 +43,14 @@ index.getInitialProps = async (props) =>
     {
         if (fullTags.error) return { error: fullTags.error }
 
-        return { flash, fullTags: fullTags.obj, nav: "Home" }
+        // return { error: { message: "3434", status: 410 } }
+        return { flash, fullTags: fullTags.obj }
     }, () =>
     {
         if (fullTags.error) return { error: fullTags.error }
 
-        return { flash, fullTags: fullTags.obj, nav: "Home" }
+        // return { error: { message: "3434", status: 410 } }
+        return { flash, fullTags: fullTags.obj }
     })
 }
 

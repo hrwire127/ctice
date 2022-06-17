@@ -8,25 +8,24 @@ import { Add } from "@mui/icons-material"
 import useStyles from '../assets/styles/_DeclrList'
 import AdminContext from './context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
-import DatePicker from './DatePicker'
-import DeclrCardCompact from './DeclrCardCompact';
-import DeclrCardFull from './DeclrCardFull';
 import Link from 'next/link'
 import TransitionAlerts from './TransitionAlerts'
 import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
 import { styleCompact, styleFull } from './context/styleEnum';
-import Sort from './Sort'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
 import useLoading from './hooks/useLoading'
 import Search from './Search'
+import Sort from './Sort'
 import TagFilter from './TagFilter';
+import DeclrCardCompact from './DeclrCardCompact';
+import DeclrCardFull from './DeclrCardFull';
+import DatePicker from './DatePicker'
+import handleAsync from './custom/handleAsync'
 
-function DeclrList(props)
+const DeclrList = (props) => handleAsync(props, (props) =>
 {
-    const [isMounted, setIsMounted] = useState(false);
-
-    const { flash, setFlash, fullTags } = props;
+    const { flash, setFlash, fullTags, setError, Mounted } = props;
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
@@ -34,47 +33,33 @@ function DeclrList(props)
 
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
-    const [declarations, setDeclarations] = useState();
+    const [declarations, setDeclarations] = useState([]);
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
     const [tags, setTags] = useState([]);
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
-    useEffect(() =>
-    {
-        setIsMounted(true);
-    }, []);
-
-
-    useEffect(() =>
-    {
-        return () =>
-        {
-            setIsMounted(false);
-        }
-    }, []);
-
     useEffect(async () =>
     {
         fullWhile(async () =>
         {
             //doclimit ---!!!
+
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
 
-            // CS_Redirects.tryResCS(newDeclrs, window)
-            // CS_Redirects.tryResCS(newCount, window)
-            console.log(newDeclrs)
-            if (isMounted)
+            if (newDeclrs.error) return setError(newDeclrs.error)
+            if (newCount.error) return setError(newCount.error)
+
+            if (Mounted) 
             {
-                console.log(newCount)
                 setDeclarations(newDeclrs.obj)
                 setCount(newCount.obj)
             }
         })
+    }, [dateValue, queryValue, sort, tags, Mounted])
 
-    }, [dateValue, queryValue, sort, tags])
 
     function loadMore(e, date, query, sort, tags)
     {
@@ -83,7 +68,7 @@ function DeclrList(props)
         {
             //doclimit --!!!!
             const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort, tags);
-            CS_Redirects.tryResCS(newDeclrs, window)
+            if (newDeclrs.error) return setError(newDeclrs.error)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }
@@ -145,6 +130,7 @@ function DeclrList(props)
             <Declrs />
         </>
     )
-}
+})
 
 export default DeclrList;
+

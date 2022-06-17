@@ -21,7 +21,7 @@ function TagFilter(props)
                     placeholder="Select tags"
                 />
             )}
-        />
+        /> 
     )
 }
 

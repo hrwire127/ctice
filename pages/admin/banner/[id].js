@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { getBanner } from '../../../utilsCS/_get'
 import AdminContext from '../../../components/context/contextAdmin'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
-import { determRendering } from '../../../utilsCS/_basic'
 import BannerEdit from '../../../components/BannerEdit'
 import AdminLayout from "../../../components/AdminLayout"
-import handleError from '../../../components/custom/handleError';
 
-const banneredit = (props) => handleError(props, function (props)
+function banneredit (props)
 {
-    const { id } = props
+    const { id, setError } = props
     const [banner, setBanner] = useState()
 
     const adminCtx = React.useContext(AdminContext);
@@ -18,7 +16,7 @@ const banneredit = (props) => handleError(props, function (props)
     {
         if (!adminCtx)
         {
-            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`, window)
+            CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
 
         const newBanner = await getBanner(id)
@@ -26,8 +24,10 @@ const banneredit = (props) => handleError(props, function (props)
         setBanner(newBanner.obj)
     }, [])
 
-    return adminCtx && (<AdminLayout><BannerEdit banner={banner} /></AdminLayout>)
-})
+    return adminCtx && (<AdminLayout>
+        <BannerEdit setError={setError} banner={banner} />
+    </AdminLayout>)
+}
 
 banneredit.getInitialProps = async (props) =>
 {

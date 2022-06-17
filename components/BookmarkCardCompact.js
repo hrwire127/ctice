@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import CS_Redirects from '../utilsCS/CS_Redirects';
 import useStyles from "../assets/styles/_DeclrCardCompact"
@@ -8,7 +8,7 @@ import { getDateDifference } from '../utilsCS/_basic';
 
 function BookmarkCardCompact(props)
 {
-    const { title, _id: id, date } = props;
+    const { title, _id: id, date, setError } = props;
     const [bookmarked, setBookmark] = useState(true)
 
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
@@ -29,7 +29,7 @@ function BookmarkCardCompact(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                CS_Redirects.tryResCS(res, window)
+                if (res.error) return setError(res.error)
                 setBookmark(false)
             })
     }
