@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, Alert, FormHelperText } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useFormError from "./hooks/useFormError";
-import BackLink from "./BackLink";
-import CS_Redirects from '../utilsCS/CS_Redirects'
+import React, { useState } from 'react'
+import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, Alert, FormHelperText } from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import useFormError from "./hooks/useFormError"
+import BackLink from "./BackLink"
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
-
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Register(props)
 {
@@ -27,8 +26,8 @@ function Register(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error);
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    // Redirects_CS.handleRes(res);
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     };

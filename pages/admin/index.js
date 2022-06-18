@@ -3,15 +3,15 @@ import AdminContext from '../../components/context/contextAdmin'
 import AdminIndex from '../../components/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getUsers, } from '../../utilsCS/_get'
+import { determRendering } from '../../utilsCS/_basic'
 import { getDeclrs, } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
 
-function admin (props)
+function admin(props)
 {
     const { setError, declarations, users } = props
 
     let adminCtx = useContext(AdminContext);
-
 
     useEffect(async () =>
     {
@@ -34,15 +34,23 @@ function admin (props)
 
 admin.getInitialProps = async (props) =>
 {
-    const users = await getUsers();
-    if (users.error) return { error: users.error }
+    const declarations = await getDeclrs();
 
-    const declarations = await getUsers();
     if (declarations.error) return { error: declarations.error }
 
-    console.log(declarations)
-    console.log(users)
+    return determRendering(props, async () =>
+    {
+        const users = await getUsers();
 
-    return { noHeader: true, users, declarations }
+        if (users.error) return { error: users.error }
+
+        return { noHeader: true, users: users.obj, declarations: declarations.obj }
+    }, () =>
+    {
+        const { users } = props.query
+
+        return { noHeader: true, users, declarations: declarations.obj }
+    })
 }
+
 export default admin

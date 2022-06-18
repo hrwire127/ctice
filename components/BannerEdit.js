@@ -10,7 +10,6 @@ import
 } from "@mui/material";
 import { Article } from '@mui/icons-material'
 import parse from 'html-react-parser';
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
@@ -36,7 +35,7 @@ const BannerEdit = (props) => handleAsync(props, (props) =>
                 if (Mounted) setHtml(res)
             })
             .catch(err => console.log(err))
-    }, [])
+    }, [Mounted])
 
 
     const options = {
@@ -97,7 +96,7 @@ const BannerEdit = (props) => handleAsync(props, (props) =>
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        if (res.err) setAlertMsg(res.err.message, "error")
+                        if (res.error) setAlertMsg(res.error.message, "error")
                     })
             })
         }

@@ -3,9 +3,9 @@ import 'draft-js/dist/Draft.css';
 import useStyles from "../assets/styles/_DeclrCardFull"
 import { CropData, getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
-import CS_Redirects from '../utilsCS/CS_Redirects';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, CardActions, Card, CardContent, Typography, IconButton } from '@mui/material'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function BookmarkCardFull(props) 
 {
@@ -32,7 +32,7 @@ function BookmarkCardFull(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 setBookmark(false)
             })
     }

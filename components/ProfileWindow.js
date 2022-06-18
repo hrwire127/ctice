@@ -11,7 +11,6 @@ import GalleryList from "./GalleryList"
 import useLoading from './hooks/useLoading'
 import UploadWindow from './UploadWindow'
 import TransitionAlerts from './TransitionAlerts'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 
 function ProfileWindow(props)
 {

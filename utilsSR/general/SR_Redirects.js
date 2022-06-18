@@ -1,5 +1,3 @@
-const { Api_Call, Def_Call } = require('../rules/apiCalls')
-
 class SR_Redirect
 {
     constructor(redirect)
@@ -8,8 +6,7 @@ class SR_Redirect
     }
     sendApi(res, obj)
     {
-        const type = Api_Call
-        res.json({ type, obj })
+        res.json({ obj })
     }
     sendError(res, error)
     {
@@ -17,8 +14,7 @@ class SR_Redirect
     }
     CS(res)
     {
-        const type = Def_Call
-        res.json({ type, redirect: this.redirect })
+        res.json({ redirect: this.redirect })
     }
     SR(res)
     {
@@ -26,8 +22,7 @@ class SR_Redirect
     }
     customCS(res, redirect)
     {
-        const type = Def_Call
-        res.json({ type, redirect })
+        res.json({ redirect })
     }
     customSR(res, redirect)
     {
@@ -37,7 +32,6 @@ class SR_Redirect
 
 const Redirects_SR = {
     Home: new SR_Redirect("/"),
-    Error: new SR_Redirect("/error"),
     Login: new SR_Redirect("/user/login"),
     Api: new SR_Redirect(),
 }

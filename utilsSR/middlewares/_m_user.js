@@ -35,27 +35,28 @@ function isSessionReqUser(req, res, next)  //
     }
     else 
     {
-        throw new UserError(...Object.values(errorMessages.userNotFound)).throw_SR(req, res)
+        next(new UserError(...Object.values(errorMessages.userNotFound)))
     }
 };
 
 function isAdmin_SR(req, res, next)
 {
     const session = req.session.passport
+
     if (session) 
     {
-        console.log(session.user)
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
         {
             return next()
         }
     }
-    throw new UserError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
+    next(new UserError(...Object.values(errorMessages.PageNotFound)))
 }
 
 function isAdmin_CS(req, res, next)
 {
     const session = req.session.passport
+
     if (session) 
     {
         if (session.user === process.env.NEXT_PUBLIC_ADMIN_USERNAME)
@@ -63,7 +64,7 @@ function isAdmin_CS(req, res, next)
             return next()
         }
     }
-    Redirects_SR.Error.CS(res)
+    Redirects_SR.Api.sendApi(res, { error: errorMessages.didNotWork })
 }
 
 async function isSameUser(req, res, next) //
@@ -76,13 +77,13 @@ async function isSameUser(req, res, next) //
     }
     else
     {
-        throw new UserError(...Object.values(errorMessages.didNotMatch)).throw_SR(req, res)
+        next(new UserError(...Object.values(errorMessages.didNotMatch)))
     }
 }
 
 
 module.exports = {
     isLogged_SR, isLogged_CS,
-    isAdmin_SR, isAdmin_CS, isSessionReqUser,
-    isSameUser
+    isAdmin_SR, isAdmin_CS,
+    isSessionReqUser, isSameUser
 }

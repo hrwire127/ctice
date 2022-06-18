@@ -38,19 +38,11 @@ edit.getInitialProps = async (props) =>
     let declr = await getDeclr(id);
     const fullTags = await getTags()
 
-    return determRendering(props, () =>
-    {
-        if (declr.error) return { error: declr.error }
-        if (fullTags.error) return { error: fullTags.error }
+    if (declr.error) return { error: declr.error }
+    if (fullTags.error) return { error: fullTags.error }
 
-        return { declaration: declr.obj, fullTags: fullTags.obj }
-    }, () =>
-    {
-        if (declr.error) return { error: declr.error }
-        if (fullTags.error) return { error: fullTags.error }
+    return { declaration: declr.obj, fullTags: fullTags.obj }
 
-        return { declaration: declr.obj, fullTags: fullTags.obj }
-    })
 }
 
 

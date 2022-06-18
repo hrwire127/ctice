@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, Typography } from '@mui/material';
 import { getLimitedBookmarks, loadLimitedBookmarks, countLimitedBookmarks } from '../utilsCS/_get'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
 import BookmarkCardCompact from "./BookmarkCardCompact"
 import BookmarkCardFull from "./BookmarkCardFull"
@@ -11,6 +10,7 @@ import { styleCompact, styleFull } from './context/styleEnum';
 import Search from './Search'
 import TagFilter from './TagFilter';
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const BookmarkList = (props) => handleAsync(props, (props) =>
 {
@@ -33,8 +33,9 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
             //doclimit --!!!!
             const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
             const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
-            if (newBookmarks.error) return setError(newBookmarks.error)
-            if (newCount.error) return setError(newCount.error)
+
+            Redirects_CS.handleRes(newBookmarks)
+            Redirects_CS.handleRes(newCount)
 
             if (Mounted)
             {
@@ -46,12 +47,12 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
             // {
             //     //doclimit --!!!!
             //     const newBookmarks = await getLimitedBookmarks([], 4, user._id, tags); // <==
-            //     if (newBookmarks.error) return setError(newBookmarks.error)
+            //        Redirects_CS.handleRes(newBookmarks)
             //     setBookmarks(newBookmarks.obj)
             //     setCount(user.bookmarks.length)
             // }
         })
-    }, [queryValue, tags])
+    }, [queryValue, tags, Mounted])
 
     function loadMore(e)
     {
@@ -60,7 +61,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
         {
             //doclimit --!!!!
             const newBookmarks = await getLimitedBookmarks(bookmarks, 4, user._id);
-            if (newBookmarks.error) return setError(newBookmarks.error)
+            Redirects_CS.handleRes(newBookmarks)
             setBookmarks(bookmarks.concat(newBookmarks.obj));
         })
     }

@@ -13,7 +13,6 @@ import
 } from "@mui/material";
 import { Article, Clear } from "@mui/icons-material";
 import TransitionAlerts from './TransitionAlerts'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useFormError from "./hooks/useFormError";
 import { handleDeclrData } from "../utilsCS/_basic";
 import { getTags } from '../utilsCS/_get'
@@ -23,6 +22,7 @@ import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import useLoading from './hooks/useLoading'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const CreateForm = (props) => handleAsync(props, (props) =>
 {
@@ -42,9 +42,9 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     useEffect(async () =>
     {
         const newTags = await getTags()
-        if (newTags.error) return setError(newTags.error)
+        Redirects_CS.handleRes(newTags)
         if (Mounted) setFullTags(newTags.obj)
-    }, [])
+    }, [Mounted])
 
 
     const handleSubmit = async (body) =>
@@ -57,8 +57,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     };

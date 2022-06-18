@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
+const UserError = require('../utilsSR/general/userError')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Pending = require("../models/pending")
 const Declaration = require("../models/declaration")
@@ -7,41 +8,41 @@ const Banner = require('../models/banner')
 const User = require("../models/user")
 const Token = require("../models/token")
 const mongoose = require('mongoose')
-const { tryAsync_CS, apiSecret, tryAsync_SR, } = require('../utilsSR/middlewares/_m_basic')
+const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isSameUser, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyPendingCode, verifyResetToken, } = require('../utilsSR/middlewares/_m_verify')
 const { validatePendingUser, validateLogUser, validateRegUser, validateChange, validateGallery } = require('../utilsSR/middlewares/_m_validations')
 const { getUserdata } = require('../utilsSR/primary/_p_user')
 
-router.get('/register', async (req, res) =>
+router.get('/register', (req, res) =>
 {
     app.render(req, res, "/user/register")
 })
 
-router.get('/login', async (req, res) =>
+router.get('/login', (req, res) =>
 {
     app.render(req, res, "/user/login")
 })
 
-router.get('/profile', isLogged_SR, tryAsync_CS(async (req, res) =>
+router.get('/profile', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     app.render(req, res, "/user/profile", { user })
 }))
 
-router.get('/profile/edit', isLogged_SR, tryAsync_CS(async (req, res) =>
+router.get('/profile/edit', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     app.render(req, res, "/user/profile/edit", { user })
 }))
 
-router.get('/profile/customs', isLogged_SR, tryAsync_CS(async (req, res) =>
+router.get('/profile/customs', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     app.render(req, res, "/user/profile/customs", { user })
 }))
 
-router.get('/profile/bookmarks', isLogged_SR, tryAsync_CS(async (req, res) =>
+router.get('/profile/bookmarks', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
     app.render(req, res, "/user/profile/bookmarks", { user })
@@ -59,7 +60,7 @@ router.get('/reset/:confirmationCode', verifyResetToken, tryAsync_SR(async (req,
     app.render(req, res, "/reset", { confirmationCode })
 }))
 
-router.post('/all/api', apiSecret, isLogged_CS, isAdmin_CS, tryAsync_CS(async (req, res) =>
+router.post('/all/api', apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>
 {
     const users = User.getSecured(await User.find({}))
     Redirects_SR.Api.sendApi(res, users)
@@ -94,7 +95,7 @@ router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.post("/register", validateRegUser, tryAsync_SR(async (req, res) =>
+router.post("/register", validateRegUser, tryAsync_CS(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
 
@@ -146,6 +147,7 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
 
 router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 
 {
+    throw new UserError("ops", 500)
     const { id } = req.body;
     const userdata = await getUserdata(req, res)
     const user = await User.findOne({ _id: userdata._id });
@@ -200,7 +202,7 @@ router.post('/:id/bookmarks/load/api', apiSecret, isLogged_CS, tryAsync_CS(async
             delete obj[key];
         }
     });
-    
+
     console.log(obj)
 
     const userdata = await getUserdata(req, res)

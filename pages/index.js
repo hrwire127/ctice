@@ -1,27 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DeclrList from '../components/DeclrList';
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
 import { getTags } from '../utilsCS/_get'
 import useAlertMsg from '../components/hooks/useAlertMsg'
 import HomeNavigation from '../components/HomeNavigation'
+import Redirects_CS from '../utilsCS/CS_Redirects'
+import handleAsync from '../components/custom/handleAsync'
 
-function index (props) 
+const index = (props) => handleAsync(props, (props) => 
 {
-    const { fullTags, setError } = props
-    const [count, setCount] = useState()
+    const { count, fullTags, setError, Mounted, } = props
     const [setFlashMsg, flash, setFlash] = useAlertMsg(props.flash)
-
-
-    useEffect(async () =>
-    {
-        const newCount = await getAllCount();
-        if (newCount.error) return setError(newCount.error)
-
-        setCount(newCount.obj)
-    }, [])
-
 
     return (<HomeNavigation>
         <DeclrList
@@ -32,26 +22,20 @@ function index (props)
             fullTags={fullTags}
         />
     </HomeNavigation>)
-}
+})
 
 index.getInitialProps = async (props) =>
 {
+    if (props.query.error) return { error: props.query.error }
+
     const flash = await getFlash(props)
     const fullTags = await getTags()
+    const count = await getAllCount();
 
-    return determRendering(props, () =>
-    {
-        if (fullTags.error) return { error: fullTags.error }
+    if (fullTags.error) return { error: fullTags.error }
+    if (count.error) return { error: count.error }
 
-        // return { error: { message: "3434", status: 410 } }
-        return { flash, fullTags: fullTags.obj }
-    }, () =>
-    {
-        if (fullTags.error) return { error: fullTags.error }
-
-        // return { error: { message: "3434", status: 410 } }
-        return { flash, fullTags: fullTags.obj }
-    })
+    return { flash, fullTags: fullTags.obj, count: count.obj }
 }
 
 export default index

@@ -11,20 +11,20 @@ import
     FormHelperText,
     Link
 } from "@mui/material";
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
 import useLoading from './hooks/useLoading'
 import useAlertMsg from './hooks/useAlertMsg'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 
 function CommentCreate(props)
 {
     const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [editorState, setEditorState] = useState();
 
     const [creatingWhile, creatingSwitch] = useLoading(false)
@@ -42,8 +42,8 @@ function CommentCreate(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    Redirects_CS.handleRes(res)
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     }

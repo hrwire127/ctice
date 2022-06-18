@@ -1,29 +1,17 @@
-const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
-
 class CS_Redirect
 {
-    tryResCS(res)
+    // Custom_SR(res, red)
+    // {
+    //     res.redirect(red)
+    // }
+    // Custom_CS(red)
+    // {
+    //     window.location = red;
+    // }
+    handleRes(res, window, setError)
     {
-        if (res.type === Def_Call)
-        {
-            window.location = res.redirect
-        }
-    }
-    tryResSR(res, props)
-    {
-        if (res.type === Def_Call)
-        {
-            props.req.session.error = res.error;
-            props.res.redirect(res.redirect)
-        }
-    }
-    Custom_SR(res, red)
-    {
-        res.redirect(red)
-    }
-    Custom_CS(red)
-    {
-        window.location = red;
+        if (res.redirect) window.location = res.redirect
+        if (res.error) setError(res.error)
     }
 }
 

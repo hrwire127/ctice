@@ -51,6 +51,7 @@
     "react-images-uploading": "^3.1.6",
     "react-pdf": "^5.6.0",
     "react-router-dom": "^6.2.1",
+    "react-share": "^4.4.0",
     "recharts": "^2.1.9",
     "streamifier": "^0.1.1",
     "styled-components": "^5.3.3"

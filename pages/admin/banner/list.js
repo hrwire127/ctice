@@ -4,11 +4,11 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { getBanners } from "../../../utilsCS/_get"
 import AdminLayout from "../../../components/AdminLayout"
 import AdminBanners from "../../../components/AdminBanners"
+import Redirects_CS from '../../../utilsCS/CS_Redirects'
 
-function bannerlist (props)
+function bannerlist(props)
 {
-    const { setError } = props
-    const [banners, setBanners] = useState([])
+    const { setError, banners } = props
     let adminCtx = useContext(AdminContext);
 
     useEffect(async () =>
@@ -22,10 +22,6 @@ function bannerlist (props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
-
-        const newBanners = await getBanners()
-        if (newBanners.error) return setError(newBanners.error)
-        else setBanners(newBanners)
     }, [])
 
 
@@ -36,7 +32,9 @@ function bannerlist (props)
 
 bannerlist.getInitialProps = async (props) =>
 {
-    return { noHeader: true }
+    const banners = await getBanners()
+    if (banners.error) return { error: banners.error }
+    return { noHeader: true, banners: banners.obj }
 }
 
 export default bannerlist

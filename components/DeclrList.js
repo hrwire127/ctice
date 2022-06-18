@@ -7,7 +7,6 @@ import
 import { Add } from "@mui/icons-material"
 import useStyles from '../assets/styles/_DeclrList'
 import AdminContext from './context/contextAdmin'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import Link from 'next/link'
 import TransitionAlerts from './TransitionAlerts'
 import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
@@ -22,6 +21,7 @@ import DeclrCardCompact from './DeclrCardCompact';
 import DeclrCardFull from './DeclrCardFull';
 import DatePicker from './DatePicker'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const DeclrList = (props) => handleAsync(props, (props) =>
 {
@@ -49,8 +49,8 @@ const DeclrList = (props) => handleAsync(props, (props) =>
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
 
-            if (newDeclrs.error) return setError(newDeclrs.error)
-            if (newCount.error) return setError(newCount.error)
+            Redirects_CS.handleRes(newDeclrs)
+            Redirects_CS.handleRes(newCount)
 
             if (Mounted) 
             {
@@ -68,7 +68,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
         {
             //doclimit --!!!!
             const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort, tags);
-            if (newDeclrs.error) return setError(newDeclrs.error)
+            Redirects_CS.handleRes(newDeclrs)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }
@@ -133,4 +133,3 @@ const DeclrList = (props) => handleAsync(props, (props) =>
 })
 
 export default DeclrList;
-

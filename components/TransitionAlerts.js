@@ -20,7 +20,7 @@ const TransitionAlerts = (props) => handleAsync(props, (props) =>
                 setflash(flash)
             }
         }
-    }, [children, flash])
+    }, [children, flash, Mounted])
 
     return (
         <Box sx={{ width: "100%", margin: "0 auto" }}>

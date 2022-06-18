@@ -107,7 +107,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
 
     if (await new excRule([body.file, files, hadFile], [], async () => //regular hadfile
     {
-        let file = await upload_pdf(files.file, res)
+        let file = await upload_pdf(files.file)
         await cloud.destroy(
             declaration.file.location,
         )
@@ -120,7 +120,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
 
     if (await new excRule([body.file, files], [hadFile], async () =>
     {
-        let file = await upload_pdf(files.file, res)
+        let file = await upload_pdf(files.file)
         Obj.file = {
             name: files.file.name,
             url: file.url,

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, } from '@mui/material';
-import Reply from './Reply';
-import useStyles from '../assets/styles/_ReplyList';
+import { Box, Button, } from '@mui/material'
+import Reply from './Reply'
+import useStyles from '../assets/styles/_ReplyList'
 import useLoading from './hooks/useLoading'
 import { getLimitedReplies, } from '../utilsCS/_get'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const ReplyList = (props) => handleAsync(props, (props) =>
 {
@@ -30,10 +30,10 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         fullWhile(async () =>
         {
             const newReplies = await getLimitedReplies([], cid, id);
-            if (newReplies.error) return setError(newReplies.error)
+            Redirects_CS.handleRes(newReplies)
             if (Mounted) setReplies(newReplies.obj)
         })
-    }, [])
+    }, [Mounted])
 
     function loadMore(e)
     {
@@ -41,7 +41,7 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         loadMoreWhile(async () =>
         {
             const newReplies = await getLimitedReplies(replies, cid); //<=
-            if (newReplies.error) return setError(newReplies.error)
+            Redirects_CS.handleRes(newReplies)
             setReplies(replies.concat(newReplies.obj));
         })
     }

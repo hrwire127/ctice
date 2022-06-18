@@ -13,7 +13,6 @@ import
     KeyboardArrowDown, Comment,
     IosShare, Accessible, Bookmark
 } from '@mui/icons-material';
-import CS_Redirects from '../utilsCS/CS_Redirects';
 import { CropData } from '../utilsCS/_basic';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
@@ -25,6 +24,9 @@ import TransitionAlerts from './TransitionAlerts'
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 import Vote from "./Vote";
+import { LinkedinShareButton } from 'react-share';
+import { LinkedIn } from '@mui/icons-material';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function DeclrView(props)
 {
@@ -42,7 +44,6 @@ function DeclrView(props)
     const [formOpen, setFormOpen] = useState(true);
 
     const [fullWhile, fullSwitch] = useLoading(false)
-
 
     const data = CropData(JSON.parse(description), 6);
     const editorState = EditorState.createWithContent(convertFromRaw(data))
@@ -71,7 +72,7 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
             })
     }
 
@@ -88,7 +89,8 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                //window not working on SSR
+                Redirects_CS.handleRes(res, window, setError)
                 setBookmark(!hasBookmark)
             })
     }
@@ -106,7 +108,8 @@ function DeclrView(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
+                    //window not working on SSR
+                    Redirects_CS.handleRes(res)
                     if (res.err) setDelError(res.err.message)
                 })
         })
@@ -138,6 +141,18 @@ function DeclrView(props)
             </Box>)
     }
 
+    const ShareButtons = () =>
+    {
+        return (
+            <LinkedinShareButton
+                url={typeof window !== "undefined" && window.location.url}
+                title="Share"
+            >
+                <LinkedIn />
+            </LinkedinShareButton>
+        )
+    }
+
     return fullSwitch(2, () => (
         <>
             {delalert && (<TransitionAlerts type="error" setFlash={setDelAlert}>{delalert}</TransitionAlerts>)}
@@ -157,6 +172,7 @@ function DeclrView(props)
                     Created by {authors[0].username}
                 </Typography>
             </Box>
+            <ShareButtons />
             <Box className={classes.Bar}>
                 <Typography variant="h9" color="text.secondary" sx={{ alignSelf: "center" }}>
                     Published on {date[date.length - 1].substring(0, 10)}, {date[date.length - 1].match(/\d\d:\d\d/)}

@@ -7,12 +7,12 @@ import { Article, Clear } from '@mui/icons-material';
 import { handleDeclrData } from "../utilsCS/_basic";
 import useFormError from './hooks/useFormError';
 import useStyles from "../assets/styles/_EditForm"
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import TextArea from './TextArea'
 import UploadBtnPdf from "./UploadBtnPdf";
 import BackLink from "./BackLink";
 import useAlertMsg from './hooks/useAlertMsg'
 import useLoading from './hooks/useLoading'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 
 function EditForm(props)
@@ -45,8 +45,8 @@ function EditForm(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    // Redirects_CS.handleRes(res)
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     };

@@ -15,6 +15,7 @@ import parse from 'html-react-parser';
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function NotifCreate(props)
 {
@@ -86,8 +87,8 @@ function NotifCreate(props)
                 }).then(response => response.json())
                     .then(async res =>
                     {
-                        // if (res.error) return setError(res.error)
-                        if (res.err) setAlertMsg(res.err.message, "error")
+                        // Redirects_CS.handleRes(res)
+                        if (res.error) setAlertMsg(res.error.message, "error")
                     })
             })
         }

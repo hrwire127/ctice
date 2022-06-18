@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, IconButton, CssBaseline, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react'
+import { Box, Typography, IconButton, CssBaseline, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material'
 import Link from 'next/link'
-import CS_Redirects from '../utilsCS/CS_Redirects'
-import useStyles from '../assets/styles/_NavLayout';
+import useStyles from '../assets/styles/_NavLayout'
 import { useRouter } from 'next/router'
-import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material';
+import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material'
 import { getLatestBanners } from '../utilsCS/_get'
 import FixedBanner from "./FixedBanner"
-import FullBanner from './FullBanner';
+import FullBanner from './FullBanner'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const UserNavigation = (props) => handleAsync(props, (props) =>
 {
@@ -24,7 +24,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     {
         const banners = await getLatestBanners()
 
-        if (banners.error) return setError(banners.error)
+        Redirects_CS.handleRes(banners)
         if (Mounted) setBanners(banners.obj)
 
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/banner/last`, {
@@ -38,10 +38,10 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 if (Mounted) setFullBanner(res.obj)
             })
-    }, [])
+    }, [Mounted])
 
     const Item = (props) =>
     {

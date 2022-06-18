@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import CS_Redirects from '../utilsCS/CS_Redirects';
 import useStyles from "../assets/styles/_DeclrCardCompact"
 import { Box, Typography, Paper, IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import { getDateDifference } from '../utilsCS/_basic';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function BookmarkCardCompact(props)
 {
@@ -29,7 +29,7 @@ function BookmarkCardCompact(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 setBookmark(false)
             })
     }

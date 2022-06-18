@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, Button, Typography, IconButton, Grid, Collapse } from '@mui/material'
 import { Build, Delete, Close, Comment, Accessible } from '@mui/icons-material';
@@ -14,6 +13,7 @@ import Vote from "./Vote";
 import ReplyCreate from "./ReplyCreate";
 import ReplyList from "./ReplyList"
 import Link from 'next/link'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function CommentCard(props)
 {
@@ -44,8 +44,7 @@ function CommentCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setError(res.err.message)
+                    Redirects_CS.handleRes(res)
                 })
         })
     };
@@ -63,7 +62,7 @@ function CommentCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 if (res.obj === true)
                 {
                     setStatus(status === "Active" ? "Disabled" : "Active")

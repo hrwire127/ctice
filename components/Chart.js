@@ -13,12 +13,12 @@ function getUserChartData(users)
 	var today = new Date();
 	let data = [];
 	let val = 0;
-	for (let i = 8; i >= 0; i--)
+	for (let i = 90; i >= 0; i--)
 	{
 		var priorDate = new Date(new Date().setDate(today.getDate() - i)).toISOString().substring(2, 10)
-		users.map(el => 
+		users.map(el =>
 		{
-			if (el.date[0].substring(2, 10) === priorDate) 
+			if (new Date(el.date[0]).toISOString().substring(2, 10) === priorDate) 
 			{
 				val++;
 			}

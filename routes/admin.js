@@ -7,20 +7,22 @@ const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Banner = require('../models/banner')
 const User = require('../models/user')
 
-router.get("/", isAdmin_SR, (req, res) =>
+router.get("/", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
-    app.render(req, res, "/admin")
-})
+    const users = User.getSecured(await User.find({}))
+    app.render(req, res, "/admin", { users })
+}))
 
 router.get("/declrlist", isAdmin_SR, (req, res) =>
 {
     app.render(req, res, "/admin/declrlist")
 })
 
-router.get("/userlist", isAdmin_SR, (req, res) =>
+router.get("/userlist", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
-    app.render(req, res, "/admin/userlist")
-})
+    const users = User.getSecured(await User.find({}))
+    app.render(req, res, "/admin/userlist", { users })
+}))
 
 router.get("/banner/create", isAdmin_SR, (req, res) =>
 {
@@ -34,9 +36,7 @@ router.get("/tags", isAdmin_SR, (req, res) =>
 
 router.get("/banner/:id", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
-    const { id } = req.params
-    const banner = await Banner.findOne({ _id: id, status: "Active" })
-    app.render(req, res, `/admin/banner/${req.params.id}`, { banner })
+    app.render(req, res, `/admin/banner/${req.params.id}`)
 }))
 
 router.get("/notification", isAdmin_SR, (req, res) =>

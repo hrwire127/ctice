@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import CommentCard from './CommentCard';
 import CommentEdit from './CommentEdit';
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from '../components/hooks/useLoading'
 
 function Comment(props)

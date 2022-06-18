@@ -44,5 +44,4 @@ bookmarks.getInitialProps = async (props) =>
     })
 }
 
-
 export default bookmarks

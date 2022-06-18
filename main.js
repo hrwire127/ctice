@@ -78,14 +78,14 @@ app.prepare().then(() =>
         req.session.flash = [];
         next();
     });
-    
+
     server.use((err, req, res, next) =>
     {
         console.log("AA")
         console.log(err)
-
-        const error = new UserError(err.message, err.status)
-        Redirects_SR.Api.sendError(res, error)
+        
+        if (req.type === 0) app.render(req, res, "/", { error: err })
+        else if (req.type === 1) Redirects_SR.Api.sendError(res, err)
     })
 
     server.get("*", (req, res, next) =>

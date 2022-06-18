@@ -18,6 +18,7 @@ import useStyles from "../assets/styles/_CreateForm";
 import Rules from "../utilsCS/clientRules"
 import useLoading from './hooks/useLoading'
 import useAlertMsg from './hooks/useAlertMsg'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function CommentEdit(props)
 {
@@ -44,8 +45,8 @@ function CommentEdit(props)
                 {
                     fullWhile(() =>
                     {
-                        if (res.error) return setError(res.error)
-                        if (res.err) setAlertMsg(res.err.message, "error")
+                        // Redirects_CS.handleRes(res)
+                        if (res.error) setAlertMsg(res.error.message, "error")
                     })
                 })
         })

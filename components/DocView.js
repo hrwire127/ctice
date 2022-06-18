@@ -23,7 +23,7 @@ const DocView = (props) => handleAsync(props, (props) =>
         {
             if (Mounted) setHtml(raw)
         }
-    }, [])
+    }, [Mounted])
 
 
     const options = {

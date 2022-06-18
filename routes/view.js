@@ -5,7 +5,7 @@ const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
-const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
+const { tryAsync_CS, tryAsync_SR, apiSecret } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_CS, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
 const { validateDeclr, validateComment } = require('../utilsSR/middlewares/_m_validations')
@@ -18,15 +18,7 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
     const { id } = req.params;
     const user = await getUserdata(req, res)
-
-    await Declaration.findOne({ _id: id, status: "Active" }).populate('authors')
-        .then(() => app.render(req, res, `/view/${id}`, { user }))
-        .catch(err =>
-        {
-            console.log(err)
-            throw new UserError("Not Found", 404)
-        })
-
+    app.render(req, res, `/view/${id}`, { user })
 }))
 
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>

@@ -1,4 +1,3 @@
-const Redirects_CS = require("../../utilsCS/CS_Redirects")
 const UserError = require('../general/UserError');
 const errorMessages = require('../rules/errorMessages');
 const Pending = require("../../models/pending")
@@ -14,13 +13,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+                next(new UserError(...Object.values(errorMessages.pendingExpired)))
             }
             next()
         })
         .catch((err) => 
         {
-            throw new UserError(err.message, err.status).throw_SR(req, res)
+            next(new UserError(err.message, err.status))
         });
 };
 
@@ -33,13 +32,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
+                next(new UserError(...Object.values(errorMessages.pendingExpired)))
             }
             next()
         })
         .catch((err) => 
         {
-            throw new UserError(err.message, err.status).throw_SR(req, res)
+            next(new UserError(err.message, err.status))
         });
 };
 
@@ -57,7 +56,7 @@ async function verifyResetToken(req, res, next)
             })
             .catch((err) => 
             {
-                throw new UserError(err.message, err.status).throw_SR(req, res)
+                next(new UserError(err.message, err.status))
                 reject(err)
             });
     }
@@ -70,7 +69,7 @@ async function verifyResetToken(req, res, next)
     }
     else
     {
-        throw new UserError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
+        next(new UserError(...Object.values(errorMessages.didNotWork)))
     }
 };
 
@@ -84,7 +83,7 @@ async function verifyCommentUser(req, res, next)
     {
         next()
     }
-    Redirects_CS.Error.CS(res)
+    next(new UserError(...Object.values(errorMessages.didNotWork)))
 }
 
 module.exports = {

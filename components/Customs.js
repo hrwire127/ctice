@@ -4,7 +4,7 @@ import { ToggleButton, ToggleButtonGroup, Typography, Box } from '@mui/material'
 import { sortScore, sortDate } from './context/sortEnum'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
-import CS_Redirects from '../utilsCS/CS_Redirects';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Customs(props)
 {
@@ -32,7 +32,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
+                    Redirects_CS.handleRes(res)
                     setThemeLight(res.obj)
                     setTheme(newTheme);
                 })
@@ -55,7 +55,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
+                    Redirects_CS.handleRes(res)
                     setStyleCtx(newStyle)
                     setStyle(newStyle);
                 })
@@ -78,7 +78,7 @@ function Customs(props)
                 }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
+                    Redirects_CS.handleRes(res)
                     setSortCtx(newSort)
                     setSorting(newSort);
                 })

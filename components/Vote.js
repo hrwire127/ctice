@@ -2,7 +2,7 @@ import React from 'react'
 import useStyles from "../assets/styles/_Vote"
 import { Box, Typography } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
-import CS_Redirects from '../utilsCS/CS_Redirects'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Vote(props)
 {
@@ -23,7 +23,7 @@ function Vote(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 if (!res.redirect) 
                 {
                     const likes = res.obj.filter(el => el.typeOf === true)

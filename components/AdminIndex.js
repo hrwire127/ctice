@@ -5,6 +5,7 @@ import { LogoutFetch, } from '../utilsCS/_get'
 import Chart from './Chart';
 import Declrs from './Declrs';
 import Link from 'next/link'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function AdminIndex(props)
 {
@@ -13,7 +14,7 @@ function AdminIndex(props)
     const Logout = async () =>
     {
         const res = await LogoutFetch()
-        if (res.error) return setError(res.error)
+        Redirects_CS.handleRes(res)
     }
 
     return (

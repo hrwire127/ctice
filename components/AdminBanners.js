@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import Banners from "./Banners"
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
 import { getBanners } from "../utilsCS/_get"
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from './hooks/useLoading'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 import handleAsync from './custom/handleAsync'
 
-function AdminBanners (props) 
+function AdminBanners(props) 
 {
     const { setError } = props
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -25,13 +25,12 @@ function AdminBanners (props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    if (res.error) return setError(res.error)
+                    Redirects_CS.handleRes(res)
                     const newBanners = await getBanners()
-                    if (newBanners.error) return setError(newBanners.error)
+                    Redirects_CS.handleRes(newBanners)
                     setBanners(newBanners.obj)
                 })
         })
-
     }
 
     return (<>

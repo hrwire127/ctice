@@ -2,14 +2,13 @@ import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import AdminUsers from '../../components/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
+import { determRendering } from '../../utilsCS/_basic'
 import { getUsers } from '../../utilsCS/_get'
 import AdminLayout from "../../components/AdminLayout"
 
 function userlist(props)
 {
-    const { setError } = props
-
-    const [users, setUsers] = useState([])
+    const { setError, users } = props
 
     let adminCtx = useContext(AdminContext);
 
@@ -24,21 +23,30 @@ function userlist(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
-
-        const newUsers = await getUsers();
-        if (newUsers.error) return setError(newUsers.error)
-        else setUsers(newUsers)
     }, [])
 
 
     return adminCtx ? (<AdminLayout>
-        <AdminUsers newUsers={newUsers} users={users} />
+        <AdminUsers setError={setError} users={users} />
     </AdminLayout>) : (<></>)
 }
 
 userlist.getInitialProps = async (props) =>
 {
-    return { noHeader: true }
+
+    return determRendering(props, async () =>
+    {
+        const users = await getUsers();
+
+        if (users.error) return { error: users.error }
+
+        return { noHeader: true, users: users.obj }
+    }, () =>
+    {
+        const { users } = props.query
+
+        return { noHeader: true, users }
+    })
 }
 
 export default userlist

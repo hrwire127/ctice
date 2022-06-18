@@ -10,8 +10,8 @@ import SortContext from './context/contextSort'
 import useStyles from '../assets/styles/_CommentList';
 import useLoading from './hooks/useLoading'
 import { getLimitedComments } from '../utilsCS/_get'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const CommentList = (props) => handleAsync(props, (props) =>
 {
@@ -34,10 +34,12 @@ const CommentList = (props) => handleAsync(props, (props) =>
         commentWhile(async () =>
         {
             const newComments = await getLimitedComments([], id, sort);
-            if (newComments.error) return setError(newComments.error)
+            Redirects_CS.handleRes(newComments)
+            console.log(newComments)
+            console.log(Mounted)
             if (Mounted) setComments(newComments.obj)
         })
-    }, [sort])
+    }, [sort, Mounted])
 
     const handleChange = (e) =>
     {
@@ -50,7 +52,7 @@ const CommentList = (props) => handleAsync(props, (props) =>
         loadMoreWhile(async () =>
         {
             const newComments = await getLimitedComments(comments, id, type);
-            if (newComments.error) return setError(newComments.error)
+            Redirects_CS.handleRes(newComments)
             setComments(comments.concat(newComments.obj));
         })
     }

@@ -8,6 +8,7 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import 'draft-js/dist/Draft.css';
 import Vote from "./Vote";
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function ReplyCard(props)
 {
@@ -35,8 +36,8 @@ function ReplyCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setError(res.err.message)
+                    Redirects_CS.handleRes(res)
+                    // if (res.err) setError(res.err.message)
                 })
         })
 
@@ -55,7 +56,7 @@ function ReplyCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
             })
     }
 

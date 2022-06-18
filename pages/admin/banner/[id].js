@@ -5,10 +5,9 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import BannerEdit from '../../../components/BannerEdit'
 import AdminLayout from "../../../components/AdminLayout"
 
-function banneredit (props)
+function banneredit(props)
 {
-    const { id, setError } = props
-    const [banner, setBanner] = useState()
+    const { id, setError, banner } = props
 
     const adminCtx = React.useContext(AdminContext);
 
@@ -18,10 +17,6 @@ function banneredit (props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/user/login`)
         }
-
-        const newBanner = await getBanner(id)
-        if (newBanner.error) return { error: newBanner.error }
-        setBanner(newBanner.obj)
     }, [])
 
     return adminCtx && (<AdminLayout>
@@ -32,7 +27,10 @@ function banneredit (props)
 banneredit.getInitialProps = async (props) =>
 {
     const { id } = props.query
-    return { noHeader: true, id }
+    const newBanner = await getBanner(id)
+    if (newBanner.error) return { error: newBanner.error }
+
+    return { noHeader: true, id, banner: newBanner.obj }
 }
 
 export default banneredit

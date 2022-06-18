@@ -4,12 +4,12 @@ import AdminDeclrs from '../../components/AdminDeclrs'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getDeclrs } from "../../utilsCS/_declr"
 import AdminLayout from "../../components/AdminLayout"
+import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 function declrlist(props)
 {
-    const { setError } = props
+    const { setError, declarations } = props
     let adminCtx = useContext(AdminContext);
-    const [declarations, setDeclarations] = useState([])
 
     useEffect(async () =>
     {
@@ -22,9 +22,7 @@ function declrlist(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
-        const newDeclrs = await getDeclrs();
-        if (newDeclrs.error) return setError(newDeclrs.error)
-        else setDeclarations(newCount)
+
     }, [])
 
     return adminCtx ? (<AdminLayout>
@@ -34,7 +32,10 @@ function declrlist(props)
 
 declrlist.getInitialProps = async (props) =>
 {
-    return { noHeader: true }
+    const declrs = await getDeclrs();
+    if (declrs.error) return { error: declrs.error }
+
+    return { noHeader: true, declarations: declrs.obj }
 }
 
 export default declrlist

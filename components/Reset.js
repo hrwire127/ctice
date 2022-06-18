@@ -5,6 +5,7 @@ import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
 import BackLink from "./BackLink";
 import useStyles from "../assets/styles/_Reset"
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Reset(props)
 {
@@ -29,8 +30,8 @@ function Reset(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    // Redirects_CS.handleRes(res)
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     };

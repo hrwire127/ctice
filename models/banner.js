@@ -47,7 +47,7 @@ BannerSchema.statics.processObj = async function (obj, req, res)
     {
         const buf = Buffer.from(content, 'utf8');
 
-        const { url, location } = await upload_banner(buf, res)
+        const { url, location } = await upload_banner(buf)
 
         return { content: url, location, date: new Date(), status: "Active" }
     }

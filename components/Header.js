@@ -8,10 +8,10 @@ import { Mail, Logout as LogoutIcon, Notifications, AssignmentInd, AccountCircle
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { LogoutFetch, getClientUser } from '../utilsCS/_get'
 import useStyles from "../assets/styles/_Header"
 import NotifWindow from './NotifWindow'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 
 const Header = (props) => 
@@ -46,7 +46,7 @@ const Header = (props) =>
 		const res = await LogoutFetch()
 		if (typeof window !== "undefined")
 		{
-			if (res.error) return setError(res.error)
+			Redirects_CS.handleRes(res)
 		}
 	}
 

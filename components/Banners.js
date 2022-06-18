@@ -4,6 +4,7 @@ import { RemoveRedEye, Build, Delete, Accessible, InsertLink } from '@mui/icons-
 import Title from './Title';
 import Link from 'next/link';
 import { makeStyles } from '@mui/styles';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const useStyles = makeStyles((theme) => ({
     Table: {
@@ -48,7 +49,8 @@ function Banners(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
+                // Redirects_CS.handleRes(res)
             })
     }
 

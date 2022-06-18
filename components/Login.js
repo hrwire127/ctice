@@ -4,10 +4,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import useFormError from "./hooks/useFormError";
 import BackLink from "./BackLink";
 import useStyles from '../assets/styles/_Login'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
 import useAlertMsg from './hooks/useAlertMsg'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Login(props)
 {
@@ -31,8 +31,7 @@ function Login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    if (res.error) setAlertMsg(res.error.message, "error")
                     else
                     {
                         window.location = (window.location.href !== document.referrer
@@ -92,7 +91,7 @@ function Login(props)
                     Login
                 </Typography>
                 {alert && (
-                    <Alert severity="error">{alert}</Alert>
+                    <Alert severity={alert.type}>{alert.message}</Alert>
                 )}
                 <Box
                     component="form"

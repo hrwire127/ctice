@@ -1,17 +1,19 @@
 import React from 'react'
-import { IconButton, Typography, Box, Card, Grid, CardContent, TextField, FormHelperText, Button } from "@mui/material"
+import { IconButton, Typography, Box, Paper, Card, Grid, CardContent, TextField, FormHelperText, Button } from "@mui/material"
 import { Delete } from "@mui/icons-material"
 import useLoading from './hooks/useLoading'
-import useFormError from "./hooks/useFormError";
+import useFormError from "./hooks/useFormError"
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { getTags } from '../utilsCS/_get'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Tags(props)
 {
     const { tags, setTags, setError } = props
     const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid] = useFormError(false);
+
+    console.log(tags)
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
@@ -26,20 +28,20 @@ function Tags(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    if (res.error) setAlertMsg(res.error.message, "error")
                     else setAlertMsg(res.obj.message, res.obj.type)
 
-                    if (!res.err)
+                    if (!res.error)
                     {
                         const newTags = await getTags()
-                        if (newTags.error) return setError(newTags.error)
+                        Redirects_CS.handleRes(newTags)
                         setTags(newTags.obj)
                     }
                 })
         })
     }
 
-    const onDelete = (id) =>
+    const onDelete = async (id) =>
     {
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tag/${id}`, {
             method: 'DELETE',
@@ -47,7 +49,7 @@ function Tags(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 if (res.obj === true) setTags(tags.filter(t => t._id !== id))
             })
     }
@@ -80,14 +82,12 @@ function Tags(props)
                         key={t._id}
                         item xs={4}
                     >
-                        <Card
-                            sx={{ width: 200, height: 60 }}
+                        <Paper
+                            sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center"}}
                         >
                             <IconButton onClick={() => onDelete(t._id)}><Delete /></IconButton>
-                            <CardContent>
-                                <Typography>{t.content}</Typography>
-                            </CardContent>
-                        </Card>
+                            <Typography>{t.content}</Typography>
+                        </Paper>
                     </Grid>
                 ))}
             </Grid>

@@ -5,13 +5,13 @@ import AdminContext from './context/contextAdmin'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
 import Router from "next/router";
-import CS_Redirects from '../utilsCS/CS_Redirects';
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
 import Loading from "./Loading"
 import Header from './Header'
 import ErrorPage from './ErrorPage'
 import { StyledEngineProvider } from '@mui/material/styles';
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 export default function Layout(props)
 {
@@ -21,6 +21,8 @@ export default function Layout(props)
     const [style, setStyle] = useState(globals.style);
     const [sort, setSorting] = useState(globals.sort);
 
+    const [error, setError] = useState(props.children.props.error)
+
     useEffect(() =>
     {
         const start = () =>
@@ -29,6 +31,7 @@ export default function Layout(props)
         };
         const end = () =>
         {
+            setError(props.children.props.error)
             setLoading(false);
         };
         Router.events.on("routeChangeStart", start);
@@ -57,13 +60,6 @@ export default function Layout(props)
         }
     }, [userCtx, adminCtx]);
 
-    const [error, setError] = useState(props.children.props.error)
-
-    useEffect(() =>
-    {
-        setError(props.children.props.error)
-    }, [props.children.props.error])
-
     let childrenwprops = props.children;
 
     if (React.isValidElement(props.children))
@@ -84,8 +80,6 @@ export default function Layout(props)
             <Loading fullPage={true} />
         </Box>)
     }
-
-
 
     return (
         <UserContext.Provider value={userCtx}>

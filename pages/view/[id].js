@@ -39,6 +39,4 @@ view.getInitialProps = async (props) =>
 
 }
 
-
-
 export default view

@@ -9,13 +9,13 @@ import useStyles from "../assets/styles/_CreateForm";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
 import UploadProfile from './UploadProfile'
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
 import ProfileWindow from './ProfileWindow';
 import useAlertMsg from './hooks/useAlertMsg'
 import useTimer from './hooks/useTimer'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Change(props)
 {
@@ -53,7 +53,7 @@ function Change(props)
 		}).then(response => response.json())
 			.then(res =>
 			{
-				if (res.error) return setError(res.error)
+				Redirects_CS.handleRes(res)
 			})
 	}
 
@@ -67,10 +67,10 @@ function Change(props)
 			}).then(response => response.json())
 				.then(async res =>
 				{
-					if (res.error) return setError(res.error)
-					if (res.err)
+                    // Redirects_CS.handleRes(res)
+					if (res.error)
 					{
-						setFlashMsg(res.err.message, "error")
+						setFlashMsg(res.error.message, "error")
 					}
 					else
 					{

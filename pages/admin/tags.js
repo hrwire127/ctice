@@ -5,13 +5,17 @@ import AdminLayout from "../../components/AdminLayout"
 import Tags from '../../components/Tags'
 import { getTags } from '../../utilsCS/_get'
 import { determRendering } from '../../utilsCS/_basic'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import handleAsync from '../../components/custom/handleAsync'
 
-function tags(props)
+const tags = (props) => handleAsync(props, (props) => 
 {
-    const { setError } = props
+    const { setError, Mounted } = props
 
-    const [tags, setTags] = useState([])
+    const [tags, setTags] = useState(props.tags)
     let adminCtx = useContext(AdminContext);
+
+    console.log(tags)
 
     useEffect(async () =>
     {
@@ -24,21 +28,19 @@ function tags(props)
         {
             CS_Redirects.Custom_CS(`${process.env.NEXT_PUBLIC_DR_HOST}/error`)
         }
-
-        const newTags = await getTags();
-        if (newTags.error) return setError(newTags.error)
-        else setCount(newTags)
     }, [])
 
 
     return adminCtx ? (<AdminLayout>
         <Tags setError={setError} tags={tags} setTags={setTags} />
     </AdminLayout>) : (<></>)
-}
+})
 
 tags.getInitialProps = async (props) =>
 {
-    return { noHeader: true }
+    const tags = await getTags(); //<== handle async
+    if (tags.error) return { error: tags.error }
+    return { noHeader: true, tags: tags.obj }
 }
 
 export default tags

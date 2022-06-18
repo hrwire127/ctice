@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import { Box, Paper, Toolbar, Typography, Button } from '@mui/material'
 import useStyles from "../assets/styles/_NotifWindow"
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import NotifItem from './NotifItem'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 const NotifWindow = (props) => handleAsync(props, (props) =>
 {
     const { notifications, setViews, setNotificaions, setError, Mounted } = props
     const classes = useStyles()
+
+    console.log(notifications)
 
     useEffect(() =>
     {
@@ -23,13 +25,13 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 if(Mounted)
                 {
                     setViews(0)
                 }
             })
-    }, [])
+    }, [Mounted])
 
     const onDelete = (i) =>
     {
@@ -44,7 +46,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 setNotificaions(res.obj)
             })
     }
@@ -62,7 +64,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                if (res.error) return setError(res.error)
+                Redirects_CS.handleRes(res)
                 setNotificaions([])
             })
     }

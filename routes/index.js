@@ -1,18 +1,19 @@
 const router = require('express').Router();
 const { app } = require("../main");
+const UserError = require('../utilsSR/general/UserError')
 const Declaration = require("../models/declaration");
 const Tag = require("../models/tag");
 const mongoose = require('mongoose')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
-const { tryAsync_CS, apiSecret, } = require('../utilsSR/middlewares/_m_basic')
+const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isAdmin_SR, isAdmin_CS, } = require('../utilsSR/middlewares/_m_user')
-const { switchSort, sortByScore, cutTags } = require('../utilsSR/primary/_p_basic')
+const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
 const { validateDeclr, validateTag } = require('../utilsSR/middlewares/_m_validations')
 
-router.get('/', (req, res) =>
+router.get('/', tryAsync_SR(async (req, res) =>
 {
     app.render(req, res, "/")
-})
+}))
 
 router.get("/create", isLogged_SR, isAdmin_SR, (req, res) =>
 {
@@ -39,8 +40,6 @@ router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
     const { declarations, query, date, doclimit, sort, tags } = req.body;
 
     let newDeclarations = [];
-
-    // tags.length > 0 ? { $match: { tags: { $elemMatch: { content: { $eq: tags.map(t => t.content) } } } } } : null,
 
     const pipeline = [
         { $match: { _id: { $nin: declarations.map(el => mongoose.Types.ObjectId(el._id)) } } },

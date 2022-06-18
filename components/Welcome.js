@@ -5,18 +5,18 @@ import
     TextField,
     Grid, Box, Typography,
     FormHelperText
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+} from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import TransitionAlerts from './TransitionAlerts'
-import UploadProfile from './UploadProfile';
-import useFormError from "./hooks/useFormError";
+import UploadProfile from './UploadProfile'
+import useFormError from "./hooks/useFormError"
 import LocationSearch from "./LocationSearch"
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import useStyles from "../assets/styles/_Welcome"
 import Rules from "../utilsCS/clientRules"
 import useLoading from './hooks/useLoading'
-import TextArea from "./TextArea";
-import BackLink from "./BackLink";
+import TextArea from "./TextArea"
+import BackLink from "./BackLink"
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
 function Welcome(props)
 {
@@ -46,8 +46,8 @@ function Welcome(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) return setError(res.error)
-                    if (res.err) setAlertMsg(res.err.message, "error")
+                    // Redirects_CS.handleRes(res)
+                    if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
     };

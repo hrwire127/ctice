@@ -4,7 +4,6 @@ import "../assets/styles/body.css"
 import "../assets/styles/TextArea.css"
 import Head from 'next/head'
 import App from 'next/app';
-import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering, getGlobals } from '../utilsCS/_basic'
 
 function MyApp({ Component, pageProps, globals })

@@ -36,7 +36,7 @@ async function validateDeclr(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
 
@@ -44,7 +44,7 @@ async function validateDeclr(req, res, next)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     req.body.title = title.trim()
@@ -101,7 +101,7 @@ async function validateRegUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
 
@@ -113,12 +113,12 @@ async function validateRegUser(req, res, next)
 
     if (userError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return new UserError(bodyError, 401)
     }
 
     req.body.password = password.trim()
@@ -142,14 +142,14 @@ async function validatePendingUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     const bodyError = inspectUser(username, email)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     req.body.username = username.trim()
@@ -175,14 +175,14 @@ async function validateLogUser(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     const bodyError = inspectUser(username, undefined, password)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     req.body.username = username.trim()
@@ -238,7 +238,7 @@ async function validateChange(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     const bodyError = inspectChange(username,
@@ -249,7 +249,7 @@ async function validateChange(req, res, next)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     if (req.body.username) req.body.username = username.trim()
@@ -289,7 +289,7 @@ async function validateComment(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
 
@@ -297,7 +297,7 @@ async function validateComment(req, res, next)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     req.body.content = JSON.stringify(modifyDesc(JSON.parse(content)))
@@ -326,7 +326,7 @@ async function validateGallery(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
     next()
 }
@@ -344,7 +344,7 @@ async function validateBanner(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     next()
@@ -364,7 +364,7 @@ async function validateNotification(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     next()
@@ -384,14 +384,14 @@ async function validateTag(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        return new UserError(msg, 401).throw_CS(res)
+        return next(new UserError(msg, 401))
     }
 
     const bodyError = inspectTag(req.body.content)
 
     if (bodyError) 
     {
-        return new UserError(bodyError, 401).throw_CS(res)
+        return next(new UserError(bodyError, 401))
     }
 
     req.body.content = req.body.content.trim()

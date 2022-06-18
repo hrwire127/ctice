@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
 import Declrs from './Declrs';
-import useLoading from '../../components/hooks/useLoading'
+import useLoading from './hooks/useLoading'
 import handleAsync from './custom/handleAsync'
+import Redirects_CS from '../utilsCS/CS_Redirects'
 
-function AdminDeclrs  (props)
+function AdminDeclrs(props)
 {
     const { setError } = props
     const [loadingWhile, switchLoading] = useLoading(false)
@@ -23,9 +24,9 @@ function AdminDeclrs  (props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    if (res.error) return setError(res.error)
+                    Redirects_CS.handleRes(res)
                     const newDeclrs = await getDeclrs() //to do load more
-                    if (newDeclrs.error) return setError(newDeclrs.error)
+                    Redirects_CS.handleRes(newDeclrs)
                     setDeclrs(newDeclrs.obj)
                 })
         })

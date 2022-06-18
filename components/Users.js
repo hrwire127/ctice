@@ -4,16 +4,17 @@ import Title from './Title';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
-    Table: {
-        "& td": {
-            color: theme.palette.text.default
-        }
-    }
+	Table: {
+		"& td": {
+			color: theme.palette.text.default
+		}
+	}
 }));
 function Users(props)
 {
 	const { users } = props
 	const classes = useStyles();
+
 
 	function createData(id, date, username, email, status)
 	{
@@ -47,7 +48,7 @@ function Users(props)
 				<TableBody>
 					{rows.map(row => (
 						<TableRow key={row.id}>
-							<TableCell>{row.date}</TableCell>
+							<TableCell>{new Date(row.date[0]).toISOString().substring(0, 10)}</TableCell>
 							<TableCell>{row.username}</TableCell>
 							<TableCell>{row.email}</TableCell>
 							<TableCell align="right">{row.status}</TableCell>
