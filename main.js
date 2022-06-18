@@ -38,6 +38,7 @@ const User = require('./models/user');
 const UserError = require("./utilsSR/general/UserError");
 const Redirects_SR = require('./utilsSR/general/SR_Redirects');
 const sessionConfig = require('./config/session.config')
+const errorMessages = require('./utilsSR/rules/errorMessages')
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
@@ -83,9 +84,17 @@ app.prepare().then(() =>
     {
         console.log("AA")
         console.log(err)
+
+        console.log(req.type)
+
+        // const error = new UserError(err.message, err.status)
+        const error = new UserError(undefined, err.status).generateMessage()
+
         
-        if (req.type === 0) app.render(req, res, "/", { error: err })
-        else if (req.type === 1) Redirects_SR.Api.sendError(res, err)
+        console.log(error)
+
+        if (req.type === 0) app.render(req, res, "/", { error })
+        else if (req.type === 1) Redirects_SR.Api.sendError(res, error)
     })
 
     server.get("*", (req, res, next) =>

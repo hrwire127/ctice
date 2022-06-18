@@ -25,7 +25,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 if(Mounted)
                 {
                     setViews(0)
@@ -46,7 +46,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 setNotificaions(res.obj)
             })
     }
@@ -64,7 +64,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 setNotificaions([])
             })
     }

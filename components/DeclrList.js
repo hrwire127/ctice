@@ -13,6 +13,7 @@ import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
 import { styleCompact, styleFull } from './context/styleEnum';
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
+import DeviceContext from './context/contextDevice'
 import useLoading from './hooks/useLoading'
 import Search from './Search'
 import Sort from './Sort'
@@ -30,6 +31,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
     const styleCtx = useContext(StyleContext);
+    const device = useContext(DeviceContext)
 
     const [dateValue, setDate] = useState("Invalid");
     const [queryValue, setQuery] = useState("");
@@ -46,11 +48,11 @@ const DeclrList = (props) => handleAsync(props, (props) =>
         {
             //doclimit ---!!!
 
-            const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, 4, sort, tags)
+            const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, device.doclimit, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
 
-            Redirects_CS.handleRes(newDeclrs)
-            Redirects_CS.handleRes(newCount)
+            Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError)
+            Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
 
             if (Mounted) 
             {
@@ -67,8 +69,8 @@ const DeclrList = (props) => handleAsync(props, (props) =>
         loadMoreWhile(async () =>
         {
             //doclimit --!!!!
-            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, 5, sort, tags);
-            Redirects_CS.handleRes(newDeclrs)
+            const newDeclrs = await loadLimitedDeclrs(declarations, date, query, device.doclimit, sort, tags);
+            Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError)
             setDeclarations(declarations.concat(newDeclrs.obj));
         })
     }

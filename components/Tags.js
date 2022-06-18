@@ -34,7 +34,7 @@ function Tags(props)
                     if (!res.error)
                     {
                         const newTags = await getTags()
-                        Redirects_CS.handleRes(newTags)
+                        Redirects_CS.handleRes(newTags, typeof window !== "undefined" && window, setError)
                         setTags(newTags.obj)
                     }
                 })
@@ -49,7 +49,7 @@ function Tags(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 if (res.obj === true) setTags(tags.filter(t => t._id !== id))
             })
     }

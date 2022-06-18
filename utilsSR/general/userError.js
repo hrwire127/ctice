@@ -1,3 +1,5 @@
+const codes = require("../../seeds/errorCodes")
+
 class UserError extends Error
 {
     constructor(message = "Something went wrong", status = 500)
@@ -6,25 +8,35 @@ class UserError extends Error
         this.message = message;
         this.status = status;
     }
-    setup(req)
+    generateMessage()
     {
-        req.session.error = { message: this.message, status: this.status }
+        codes.forEach(c =>
+        {
+            if (c.status === this.status) this.message = c.message
+        })
+        if (!this.message) this.message = "Something went wrong"
+
+        return this
     }
-    throw_SR(req, res)
-    {
-        this.setup(req)
-        res.redirect('/error')
-    }
-    throw_CS(res) 
-    {
-        res.json(
-            { 
-                err: {
-                    message: this.message,
-                    status: this.status
-                }
-            })
-    }
+    // setup(req)
+    // {
+    //     req.session.error = { message: this.message, status: this.status }
+    // }
+    // throw_SR(req, res)
+    // {
+    //     this.setup(req)
+    //     res.redirect('/error')
+    // }
+    // throw_CS(res) 
+    // {
+    //     res.json(
+    //         { 
+    //             err: {
+    //                 message: this.message,
+    //                 status: this.status
+    //             }
+    //         })
+    // }
 }
 
 module.exports = UserError;

@@ -53,7 +53,7 @@ function Change(props)
 		}).then(response => response.json())
 			.then(res =>
 			{
-				Redirects_CS.handleRes(res)
+				Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
 			})
 	}
 

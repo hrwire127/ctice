@@ -25,9 +25,9 @@ function AdminBanners(props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    Redirects_CS.handleRes(res)
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     const newBanners = await getBanners()
-                    Redirects_CS.handleRes(newBanners)
+                    Redirects_CS.handleRes(newBanners, typeof window !== "undefined" && window, setError)
                     setBanners(newBanners.obj)
                 })
         })

@@ -25,7 +25,7 @@ function inspectDecrl(title, description, Files, tags) //
     }
 
     if(tags)
-    {
+    { 
         const maxTags = new valRule(tags.length, Rules.declr_max_tags, 0)
         if (maxTags.getVal()) return maxTags.processMsg()
 

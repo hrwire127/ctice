@@ -1,4 +1,4 @@
-async function getLimitedComments(comments, id, type)
+async function getLimitedComments(comments, id, type, doclimit)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/api`, {
         method: 'POST',
@@ -6,7 +6,7 @@ async function getLimitedComments(comments, id, type)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { type, comments, secret: process.env.NEXT_PUBLIC_SECRET }
+            { doclimit, type, comments, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>
@@ -15,7 +15,7 @@ async function getLimitedComments(comments, id, type)
         })
 }
 
-async function getLimitedReplies(replies, cid, id)
+async function getLimitedReplies(replies, cid, id, doclimit)
 {
     return fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/view/${id}/comment/${cid}/reply/api`, {
         method: 'POST',
@@ -23,7 +23,7 @@ async function getLimitedReplies(replies, cid, id)
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(
-            { replies, secret: process.env.NEXT_PUBLIC_SECRET }
+            { doclimit, replies, secret: process.env.NEXT_PUBLIC_SECRET }
         )
     }).then(response => response.json())
         .then(async res =>

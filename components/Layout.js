@@ -4,13 +4,16 @@ import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
 import StyleContext from './context/contextStyle'
 import SortContext from './context/contextSort'
+import DeviceContext from './context/contextDevice'
 import Router from "next/router";
 import { ThemeProvider } from '@mui/material/styles';
 import { themeLight, themeBlack } from './context/theme'
+import { styleCompact, styleFull } from './context/styleEnum';
 import Loading from "./Loading"
 import Header from './Header'
 import ErrorPage from './ErrorPage'
 import { StyledEngineProvider } from '@mui/material/styles';
+import { isBrowser } from 'react-device-detect';
 import Redirects_CS from '../utilsCS/CS_Redirects'
 
 export default function Layout(props)
@@ -81,40 +84,49 @@ export default function Layout(props)
         </Box>)
     }
 
+    const DeviceCtxValue = {
+        isBrowser,
+        doclimit: isBrowser
+            ? (process.env.NEXT_PUBLIC_DOC_LIMIT_BROWSER * (style === styleCompact ? process.env.NEXT_PUBLIC_COMPACT_COEFICIENT : 1))
+            : (process.env.NEXT_PUBLIC_DOC_LIMIT_MOBILE * (style === styleCompact ? process.env.NEXT_PUBLIC_COMPACT_COEFICIENT : 1))
+    }
+
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
                 <ThemeProvider theme={light ? themeLight : themeBlack}>
                     <StyleContext.Provider value={style}>
                         <SortContext.Provider value={sort}>
-                            <StyledEngineProvider injectFirst>
-                                {loading
-                                    ? (<LoadingPage />)
-                                    : (<main style={{
-                                        position: "relative",
-                                        width: "100vw",
-                                        height: "100vh",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "space-between"
-                                    }}>
-                                        {error
-                                            ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
-                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                <ErrorPage message={error.message} status={error.status} />
-                                            </Box>)
-                                            : (<>
-                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                <Box sx={{ flex: 1, backgroundColor: "background.default" }}
-                                                >
-                                                    {childrenwprops}
-                                                </Box>
-                                                <div className="cover"></div>
-                                            </>)
-                                        }
-                                    </main>)
-                                }
-                            </StyledEngineProvider>
+                            <DeviceContext.Provider value={DeviceCtxValue}>
+                                <StyledEngineProvider injectFirst>
+                                    {loading
+                                        ? (<LoadingPage />)
+                                        : (<main style={{
+                                            position: "relative",
+                                            width: "100%",
+                                            minHeight: "100vh",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "space-between"
+                                        }}>
+                                            {error
+                                                ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
+                                                    {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                    <ErrorPage message={error.message} status={error.status} />
+                                                </Box>)
+                                                : (<>
+                                                    {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                    <Box sx={{ flex: 1, backgroundColor: "background.default" }}
+                                                    >
+                                                        {childrenwprops}
+                                                    </Box>
+                                                    <div className="cover"></div>
+                                                </>)
+                                            }
+                                        </main>)
+                                    }
+                                </StyledEngineProvider>
+                            </DeviceContext.Provider>
                         </SortContext.Provider>
                     </StyleContext.Provider>
                 </ThemeProvider>

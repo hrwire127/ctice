@@ -24,9 +24,9 @@ function AdminDeclrs(props)
             }).then(response => response.json())
                 .then(async () =>
                 {
-                    Redirects_CS.handleRes(res)
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError, setError)
                     const newDeclrs = await getDeclrs() //to do load more
-                    Redirects_CS.handleRes(newDeclrs)
+                    Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError, setError)
                     setDeclrs(newDeclrs.obj)
                 })
         })

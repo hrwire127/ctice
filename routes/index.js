@@ -52,6 +52,7 @@ router.post('/load/limit/api', apiSecret, tryAsync_CS(async (req, res) =>
         sort !== "score" ? { $limit: doclimit } : null,
     ].filter(x => x !== null)
 
+
     await switchSort(sort, async () =>
     {
         newDeclarations = await Declaration.aggregate(pipeline)

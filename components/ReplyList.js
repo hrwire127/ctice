@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, } from '@mui/material'
 import Reply from './Reply'
 import useStyles from '../assets/styles/_ReplyList'
 import useLoading from './hooks/useLoading'
 import { getLimitedReplies, } from '../utilsCS/_get'
+import DeviceContext from './context/contextDevice'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 
@@ -24,13 +25,14 @@ const ReplyList = (props) => handleAsync(props, (props) =>
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
 
     const classes = useStyles();
+    const device = useContext(DeviceContext)
 
     useEffect(() =>
     {
         fullWhile(async () =>
         {
-            const newReplies = await getLimitedReplies([], cid, id);
-            Redirects_CS.handleRes(newReplies)
+            const newReplies = await getLimitedReplies([], cid, id, device.doclimit);
+            Redirects_CS.handleRes(newReplies, typeof window !== "undefined" && window, setError)
             if (Mounted) setReplies(newReplies.obj)
         })
     }, [Mounted])
@@ -40,8 +42,8 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         if (e) e.preventDefault()
         loadMoreWhile(async () =>
         {
-            const newReplies = await getLimitedReplies(replies, cid); //<=
-            Redirects_CS.handleRes(newReplies)
+            const newReplies = await getLimitedReplies(replies, cid, id, device.doclimit); //<=
+            Redirects_CS.handleRes(newReplies, typeof window !== "undefined" && window, setError)
             setReplies(replies.concat(newReplies.obj));
         })
     }

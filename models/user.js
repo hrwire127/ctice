@@ -184,11 +184,11 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
     {
         if (await User.findOne({ email: pending.email }))
         {
-            throw new UserError(...Object.values(errorMessages.emailAllreadyUsed))
+            throw new UserError(...Object.values(errorMessages.emailAlreadyUsed))
         }
         else if (await User.findOne({ username: pending.username }))
         {
-            throw new UserError(...Object.values(errorMessages.usernameAllreadyUsed))
+            throw new UserError(...Object.values(errorMessages.usernameAlreadyUsed))
         }
         else
         {
@@ -217,7 +217,8 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
     }
     else
     {
-        throw new UserError(...Object.values(errorMessages.noPending)).setup(req, res);
+        throw new UserError(...Object.values(errorMessages.noPending))
+        //.setup(req, res);
     }
 }
 
@@ -229,7 +230,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
     if (await User.findOne({ username }))
     {
-        throw new UserError(...Object.values(errorMessages.usernameAllreadyUsed))
+        throw new UserError(...Object.values(errorMessages.usernameAlreadyUsed))
     }
     else if (Math.abs(user.getDateDiffMS() < process.env.NEXT_PUBLIC_ACCOUNT_EDIT_DELAY))
     {

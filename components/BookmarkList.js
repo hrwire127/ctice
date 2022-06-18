@@ -6,11 +6,11 @@ import BookmarkCardCompact from "./BookmarkCardCompact"
 import BookmarkCardFull from "./BookmarkCardFull"
 import useStyles from "../assets/styles/_DeclrList"
 import StyleContext from './context/contextStyle'
-import { styleCompact, styleFull } from './context/styleEnum';
-import Search from './Search'
-import TagFilter from './TagFilter';
+import DeviceContext from './context/contextDevice'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import TagFilter from './TagFilter';
+import Search from './Search'
 
 const BookmarkList = (props) => handleAsync(props, (props) =>
 {
@@ -21,37 +21,24 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
     const [tags, setTags] = useState([]);
     const [fullWhile, fullSwitch] = useLoading(false)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
+
+    const device = useContext(DeviceContext)
     const styleCtx = useContext(StyleContext);
     const classes = useStyles();
 
     useEffect(async () =>
     {
-        fullWhile(async () =>
+        const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
+        const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
+
+        Redirects_CS.handleRes(newBookmarks, typeof window !== "undefined" && window, setError)
+        Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
+
+        if (Mounted)
         {
-            // if (queryValue !== "")
-            // {
-            //doclimit --!!!!
-            const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
-            const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
-
-            Redirects_CS.handleRes(newBookmarks)
-            Redirects_CS.handleRes(newCount)
-
-            if (Mounted)
-            {
-                setBookmarks(newBookmarks.obj)
-                setCount(newCount.obj)
-            }
-            // }
-            // else
-            // {
-            //     //doclimit --!!!!
-            //     const newBookmarks = await getLimitedBookmarks([], 4, user._id, tags); // <==
-            //        Redirects_CS.handleRes(newBookmarks)
-            //     setBookmarks(newBookmarks.obj)
-            //     setCount(user.bookmarks.length)
-            // }
-        })
+            setBookmarks(newBookmarks.obj)
+            setCount(newCount.obj)
+        }
     }, [queryValue, tags, Mounted])
 
     function loadMore(e)
@@ -60,8 +47,8 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
         loadMoreWhile(async () =>
         {
             //doclimit --!!!!
-            const newBookmarks = await getLimitedBookmarks(bookmarks, 4, user._id);
-            Redirects_CS.handleRes(newBookmarks)
+            const newBookmarks = await getLimitedBookmarks(bookmarks, device.doclimit, user._id);
+            Redirects_CS.handleRes(newBookmarks, typeof window !== "undefined" && window, setError)
             setBookmarks(bookmarks.concat(newBookmarks.obj));
         })
     }

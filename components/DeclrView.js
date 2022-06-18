@@ -72,7 +72,7 @@ function DeclrView(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
             })
     }
 
@@ -109,7 +109,7 @@ function DeclrView(props)
                 .then(async res =>
                 {
                     //window not working on SSR
-                    Redirects_CS.handleRes(res)
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     if (res.err) setDelError(res.err.message)
                 })
         })

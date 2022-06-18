@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import
 {
     Box, MenuItem, FormControl,
@@ -7,6 +7,7 @@ import
 } from '@mui/material';
 import Comment from './Comment';
 import SortContext from './context/contextSort'
+import DeviceContext from './context/contextDevice'
 import useStyles from '../assets/styles/_CommentList';
 import useLoading from './hooks/useLoading'
 import { getLimitedComments } from '../utilsCS/_get'
@@ -28,15 +29,14 @@ const CommentList = (props) => handleAsync(props, (props) =>
     const { _id: id } = declaration;
 
     const classes = useStyles();
+    const device = useContext(DeviceContext)
 
     useEffect(() =>
     {
         commentWhile(async () =>
         {
-            const newComments = await getLimitedComments([], id, sort);
-            Redirects_CS.handleRes(newComments)
-            console.log(newComments)
-            console.log(Mounted)
+            const newComments = await getLimitedComments([], id, sort, device.doclimit);
+            Redirects_CS.handleRes(newComments, typeof window !== "undefined" && window, setError)
             if (Mounted) setComments(newComments.obj)
         })
     }, [sort, Mounted])
@@ -51,8 +51,8 @@ const CommentList = (props) => handleAsync(props, (props) =>
         e.preventDefault()
         loadMoreWhile(async () =>
         {
-            const newComments = await getLimitedComments(comments, id, type);
-            Redirects_CS.handleRes(newComments)
+            const newComments = await getLimitedComments(comments, id, type, device.doclimit);
+            Redirects_CS.handleRes(newComments, typeof window !== "undefined" && window, setError)
             setComments(comments.concat(newComments.obj));
         })
     }

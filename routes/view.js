@@ -11,7 +11,6 @@ const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
 const { validateDeclr, validateComment } = require('../utilsSR/middlewares/_m_validations')
 const { getDeclrDateSort } = require("../utilsSR/primary/_p_declrApi")
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
-const { getCommentDateSort, } = require('../utilsSR/primary/_p_commentApi')
 const { getUserdata, existsAdmin } = require('../utilsSR/primary/_p_user')
 
 router.get("/:id", tryAsync_SR(async (req, res, next) =>
@@ -31,17 +30,17 @@ router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
-    const { comments, type } = req.body;
+    const { comments, type, doclimit } = req.body;
 
     let declaration;
     const admin = await existsAdmin(req, res)
 
     await switchSort(type, async () =>
     {
-        declaration = await getDeclrDateSort(id, comments.length, admin)
+        declaration = await getDeclrDateSort(id, comments.length, admin, doclimit)
     }, async () =>
     {
-        declaration = await getDeclrScoreSort(id, admin)
+        declaration = await getDeclrScoreSort(id, admin, doclimit)
     })
 
     Redirects_SR.Api.sendApi(res, declaration.comments)
@@ -50,10 +49,26 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
 router.post("/:id/comment/:cid/reply/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { cid } = req.params;
-    const { replies } = req.body;
+    const { replies, doclimit } = req.body;
 
     const admin = await existsAdmin(req, res)
-    const comment = await getCommentDateSort(cid, replies.length, admin)
+
+    const findPip = admin ? { _id: cid } : { _id: cid, status: "Active" }
+    const populatePip = {
+        path: 'replies',
+        populate: {
+            path: 'author'
+        },
+    }
+
+    if (admin) populatePip.match = { status: "Active" }
+    populatePip.options = {
+        limit: doclimit,
+        sort: { _id: -1 },
+        skip: replies.length,
+    }
+
+    const comment = await Comment.findOne(findPip).populate(populatePip)
 
     Redirects_SR.Api.sendApi(res, comment.replies)
 }))

@@ -36,7 +36,7 @@ function ReplyCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    Redirects_CS.handleRes(res)
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     // if (res.err) setError(res.err.message)
                 })
         })
@@ -56,7 +56,7 @@ function ReplyCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
             })
     }
 

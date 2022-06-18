@@ -24,7 +24,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     {
         const banners = await getLatestBanners()
 
-        Redirects_CS.handleRes(banners)
+        Redirects_CS.handleRes(banners, typeof window !== "undefined" && window, setError)
         if (Mounted) setBanners(banners.obj)
 
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/banner/last`, {
@@ -38,7 +38,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 if (Mounted) setFullBanner(res.obj)
             })
     }, [Mounted])

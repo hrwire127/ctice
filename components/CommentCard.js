@@ -5,7 +5,6 @@ import { Box, Button, Typography, IconButton, Grid, Collapse } from '@mui/materi
 import { Build, Delete, Close, Comment, Accessible } from '@mui/icons-material';
 import useStyles from "../assets/styles/_CommentCard"
 import { getDateDifference } from '../utilsCS/_basic';
-import { getLimitedReplies, } from '../utilsCS/_get'
 import useLoading from '../components/hooks/useLoading'
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -44,7 +43,7 @@ function CommentCard(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    Redirects_CS.handleRes(res)
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })
         })
     };
@@ -62,7 +61,7 @@ function CommentCard(props)
         }).then(response => response.json())
             .then(async res =>
             {
-                Redirects_CS.handleRes(res)
+                Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 if (res.obj === true)
                 {
                     setStatus(status === "Active" ? "Disabled" : "Active")

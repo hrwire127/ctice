@@ -42,7 +42,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     useEffect(async () =>
     {
         const newTags = await getTags()
-        Redirects_CS.handleRes(newTags)
+        Redirects_CS.handleRes(newTags, typeof window !== "undefined" && window, setError)
         if (Mounted) setFullTags(newTags.obj)
     }, [Mounted])
 
