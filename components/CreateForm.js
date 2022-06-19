@@ -31,8 +31,8 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
 
     const [editorState, setEditorState, resetEditorState] = useLocalStorage("description")
-    const [title, setTitle, resetTitle] = useLocalStorage("title", '')
-    const [tags, setTags, resetTags] = useLocalStorage("tags", [])
+    const [title, setTitle, resetTitle] = useLocalStorage("title", '', true)
+    const [tags, setTags, resetTags] = useLocalStorage("tags", [], true)
     const [file, changeFile] = useState();
     const [fullTags, setFullTags] = useState([]);
     // const [tags, setTags] = useState([]);

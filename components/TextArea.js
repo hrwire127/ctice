@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { Box, Button } from '@mui/material';
+import { Box, Button, TextField, IconButton, Typography } from '@mui/material';
+import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
+
 
 class TextArea extends React.Component
 {
@@ -137,14 +139,16 @@ class TextArea extends React.Component
                         }
                 }
             >
-                <BlockStyleControls
-                    editorState={editorState}
-                    onToggle={this.toggleBlockType}
-                />
-                <InlineStyleControls
-                    editorState={editorState}
-                    onToggle={this.toggleInlineStyle}
-                />
+                <div style={{ display: 'flex', justifyContent: "space-between" }}>
+                    <InlineStyleControls
+                        editorState={editorState}
+                        onToggle={this.toggleInlineStyle}
+                    />
+                    <BlockStyleControls
+                        editorState={editorState}
+                        onToggle={this.toggleBlockType}
+                    />
+                </div>
                 <div className={className} onClick={this.focus}>
                     <Editor
                         editorKey="editor"
@@ -183,50 +187,99 @@ function getBlockStyle(block)
     }
 }
 
-class StyleButton extends React.Component
+const StyleButton = (props) =>
 {
-    constructor()
+    const { style, label, active } = props
+
+    const onToggle = (e) =>
     {
-        super();
-        this.onToggle = (e) =>
-        {
-            e.preventDefault();
-            this.props.onToggle(this.props.style);
-        };
+        e.preventDefault();
+        props.onToggle(style);
+    };
+
+    let className = 'RichEditor-styleButton';
+    if (active)
+    {
+        className += ' RichEditor-activeButton';
     }
 
-    render()
-    {
-        let className = 'RichEditor-styleButton';
-        if (this.props.active)
-        {
-            className += ' RichEditor-activeButton';
-        }
-
-        return (
-            <span className={className} onMouseDown={this.onToggle}>
-                {this.props.label}
-            </span>
-        );
-    }
+    return (
+        <span className={className} onMouseDown={onToggle}>
+            {label}
+        </span>
+    );
 }
 
-const BLOCK_TYPES = [
-    { label: 'H1', style: 'header-one' },
-    { label: 'H2', style: 'header-two' },
-    { label: 'H3', style: 'header-three' },
-    { label: 'H4', style: 'header-four' },
-    { label: 'H5', style: 'header-five' },
-    { label: 'H6', style: 'header-six' },
-    { label: 'Blockquote', style: 'blockquote' },
-    { label: 'UL', style: 'unordered-list-item' },
-    { label: 'OL', style: 'ordered-list-item' },
-    { label: 'Code Block', style: 'code-block' },
-];
+const StyleNum = (props) =>
+{
+    const [num, setNum] = useState(6)
+
+    const types = [
+        { label: 'H1', style: 'header-one' },
+        { label: 'H2', style: 'header-two' },
+        { label: 'H3', style: 'header-three' },
+        { label: 'H4', style: 'header-four' },
+        { label: 'H5', style: 'header-five' },
+        { label: 'H6', style: 'header-six' }]
+
+    const increase = (e) =>
+    {
+        e.preventDefault();
+        if (num < 6)
+        {
+            if (num === 5)
+            {
+                props.onToggle(types[5].style)
+                console.log("none")
+                setNum(num + 1)
+            }
+            else
+            {
+                setNum(num + 1)
+                console.log(num + 1)
+                props.onToggle(types[num + 1].style)
+            }
+        }
+    };
+
+    const descrease = (e) =>
+    {
+        e.preventDefault();
+        if (num > 1)
+        {
+            setNum(num - 1)
+            console.log(num - 1)
+            props.onToggle(types[num - 1].style);
+        }
+    };
+
+    return (
+        <span className='RichEditor-styleButton'>
+            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 0.5 }}>
+                <Typography color="text.secondary">{num === 6 ? "n" : num}</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <div onClick={increase} style={{
+                        width: 10, height: 10,
+                        borderLeft: "5px solid transparent",
+                        borderRight: "5px solid transparent",
+                        borderBottom: "5px solid gray",
+                    }}></div>
+                    <div onClick={descrease} style={{
+                        width: 10, height: 10,
+                        borderLeft: "5px solid transparent",
+                        borderRight: "5px solid transparent",
+                        borderTop: "5px solid gray",
+                    }}></div>
+                </Box>
+            </Box>
+        </span>
+    );
+}
 
 const BlockStyleControls = (props) =>
 {
     const { editorState } = props;
+
     const selection = editorState.getSelection();
     const blockType = editorState
         .getCurrentContent()
@@ -234,42 +287,75 @@ const BlockStyleControls = (props) =>
         .getType();
 
     return (
-        <div className="RichEditor-controls">
-            {BLOCK_TYPES.map((type) =>
-                <StyleButton
-                    key={type.label}
-                    active={type.style === blockType}
-                    label={type.label}
-                    onToggle={props.onToggle}
-                    style={type.style}
-                />
-            )}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <StyleNum onToggle={props.onToggle} />
+            <StyleButton
+                key={'blockquote'}
+                active={'blockquote' === blockType}
+                label={(<FormatQuote />)}
+                onToggle={props.onToggle}
+                style={'blockquote'}
+            />
+            <StyleButton
+                key={'unordered-list-item'}
+                active={'unordered-list-item' === blockType}
+                label={(<FormatListBulleted />)}
+                onToggle={props.onToggle}
+                style={'unordered-list-item'}
+            />
+            <StyleButton
+                key={'ordered-list-item'}
+                active={'ordered-list-item' === blockType}
+                label={(<FormatListNumbered />)}
+                onToggle={props.onToggle}
+                style={'ordered-list-item'}
+            />
+            <StyleButton
+                key={'code-block'}
+                active={'code-block' === blockType}
+                label={(<Code />)}
+                onToggle={props.onToggle}
+                style={'code-block'}
+            />
         </div>
     );
 };
-
-var INLINE_STYLES = [
-    { label: 'Bold', style: 'BOLD' },
-    { label: 'Italic', style: 'ITALIC' },
-    { label: 'Underline', style: 'UNDERLINE' },
-    { label: 'Monospace', style: 'CODE' },
-];
 
 const InlineStyleControls = (props) =>
 {
     var currentStyle = props.editorState.getCurrentInlineStyle();
     return (
-        <div className="RichEditor-controls">
-            {INLINE_STYLES.map(type =>
-                <StyleButton
-                    key={type.label}
-                    active={currentStyle.has(type.style)}
-                    label={type.label}
-                    onToggle={props.onToggle}
-                    style={type.style}
-                />
-            )}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <StyleButton
+                key={'BOLD'}
+                active={currentStyle.has('BOLD')}
+                label={(<FormatBold />)}
+                onToggle={props.onToggle}
+                style={'BOLD'}
+            />
+            <StyleButton
+                key={'ITALIC'}
+                active={currentStyle.has('ITALIC')}
+                label={(<FormatItalic />)}
+                onToggle={props.onToggle}
+                style={'ITALIC'}
+            />
+            <StyleButton
+                key={'UNDERLINE'}
+                active={currentStyle.has('UNDERLINE')}
+                label={(<FormatUnderlined />)}
+                onToggle={props.onToggle}
+                style={'UNDERLINE'}
+            />
+            <StyleButton
+                key={'CODE'}
+                active={currentStyle.has('CODE')}
+                label={(<HighlightAlt />)}
+                onToggle={props.onToggle}
+                style={'CODE'}
+            />
         </div>
     );
 };
+
 export default TextArea;
