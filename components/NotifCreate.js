@@ -16,14 +16,15 @@ import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading';
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 function NotifCreate(props)
 {
     const { setError } = props
     const [fileNotif, setFileNotif] = useState("")
-    const [htmlNotif, setHtmlNotif] = useState("")
+    const [htmlNotif, setHtmlNotif] = useLocalStorage("notification_create", "", true)
     const [fileBanner, setFileBanner] = useState("")
-    const [htmlBanner, setHtmlBanner] = useState("")
+    const [htmlBanner, setHtmlBanner] = useLocalStorage("notification_banner_create", "", true)
     const [submitWhile, submitSwitch] = useLoading(false)
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()

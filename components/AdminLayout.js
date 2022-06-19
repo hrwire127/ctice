@@ -4,6 +4,7 @@ import { CssBaseline, Drawer, Box, AppBar, Toolbar, List, Typography, Divider, I
 import { Menu, ChevronLeft, Close } from '@mui/icons-material';
 import { mainDrawerItems, secondaryDrawerItems } from './DrawerItems';
 import Link from 'next/link'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 const drawerWidth = 240;
 
@@ -54,7 +55,7 @@ const Drawer_ = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
 
 function AdminLayout(props)
 {
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useLocalStorage("admin_drawer", true, true);
 
     const toggleDrawer = () =>
     {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import
 {
     Avatar,
@@ -10,16 +10,16 @@ import
     Container,
     FormHelperText,
     Autocomplete
-} from "@mui/material";
-import { Article, Clear } from "@mui/icons-material";
+} from "@mui/material"
+import { Article, Clear } from "@mui/icons-material"
 import TransitionAlerts from './TransitionAlerts'
-import useFormError from "./hooks/useFormError";
-import { handleDeclrData } from "../utilsCS/_basic";
+import useFormError from "./hooks/useFormError"
+import { handleDeclrData } from "../utilsCS/_basic"
 import { getTags } from '../utilsCS/_get'
-import TextArea from "./TextArea";
-import useStyles from "../assets/styles/_CreateForm";
-import UploadBtnPdf from "./UploadBtnPdf";
-import BackLink from "./BackLink";
+import TextArea from "./TextArea"
+import useStyles from "../assets/styles/_CreateForm"
+import UploadBtnPdf from "./UploadBtnPdf"
+import BackLink from "./BackLink"
 import useLoading from './hooks/useLoading'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'

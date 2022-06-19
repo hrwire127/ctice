@@ -11,15 +11,16 @@ import
     Slider
 } from "@mui/material";
 import { Article } from '@mui/icons-material'
-import parse from 'html-react-parser';
+import parse from 'html-react-parser'
 import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
-import useLoading from './hooks/useLoading';
+import useLoading from './hooks/useLoading'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 function BannerCreate()
 {
     const [file, setFile] = useState("")
-    const [html, setHtml] = useState("")
+    const [html, setHtml] = useLocalStorage("banner_create", "", true)
     const [width, setWidth] = useState(600)
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
@@ -80,7 +81,7 @@ function BannerCreate()
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({content: html.replace(/\s/g, '')}),
+                    body: JSON.stringify({ content: html.replace(/\s/g, '') }),
                 }).then(response => response.json())
                     .then(async res =>
                     {

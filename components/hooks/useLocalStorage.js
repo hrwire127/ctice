@@ -10,9 +10,9 @@ const useLocalStorage = (keyName, initial = undefined, noNull = false) =>
         if (noNull)
         {
             const storageValue = JSON.parse(window.localStorage.getItem(keyName))
-            console.log(storageValue)
-            if (storageValue)
+            if (storageValue !== null || storageValue !== undefined)
             {
+                console.log(JSON.parse(window.localStorage.getItem(keyName)))
                 setValue(storageValue)
             }
         }

@@ -7,6 +7,7 @@ import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import { getTags } from '../utilsCS/_get'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 function Tags(props)
 {
@@ -17,6 +18,7 @@ function Tags(props)
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
+    const [tag, setTag, resetTag] = useLocalStorage("tag_create", "")
 
     const handleSubmit = (body) =>
     {
@@ -36,6 +38,7 @@ function Tags(props)
                         const newTags = await getTags()
                         Redirects_CS.handleRes(newTags, typeof window !== "undefined" && window, setError)
                         setTags(newTags.obj)
+                        resetTag()
                     }
                 })
         })
@@ -83,7 +86,7 @@ function Tags(props)
                         item xs={4}
                     >
                         <Paper
-                            sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center"}}
+                            sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center" }}
                         >
                             <IconButton onClick={() => onDelete(t._id)}><Delete /></IconButton>
                             <Typography>{t.content}</Typography>
@@ -99,6 +102,8 @@ function Tags(props)
                 noValidate
             >
                 <TextField
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
                     margin="normal"
                     inputProps={{ maxLength: 20 }}
                     required
