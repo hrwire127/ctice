@@ -94,14 +94,14 @@ app.prepare().then(() =>
         console.log(error)
 
         if (req.type === 0) app.render(req, res, "/", { error })
-        else if (req.type === 1) Redirects_SR.Api.sendError(res, error)
+        else  Redirects_SR.Api.sendError(res, error)
     })
 
     server.get("*", (req, res, next) =>
     {
         return handle(req, res)
     })
-
+ 
     server.listen(NEXT_PUBLIC_DR_PORT, e =>
     {
         if (e) throw e;

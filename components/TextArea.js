@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
+import { Editor, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { Box, Button } from '@mui/material';
 
@@ -29,7 +29,8 @@ class TextArea extends React.Component
         {
             editorState: props.data
                 ? EditorState.createWithContent(convertFromRaw(props.data))
-                : EditorState.createEmpty()
+                : EditorState.createEmpty(),
+            render: 0
         };
         this.focus = () => this.refs.editor.focus();
         this.onChange = (editorState) =>
@@ -45,8 +46,21 @@ class TextArea extends React.Component
 
     componentDidMount()
     {
+        this.setState({ render: 1 })
         const editorContent = convertToRaw(this.state.editorState.getCurrentContent())
         this.props.setData(editorContent);
+    }
+
+    componentDidUpdate()
+    {
+        console.log(this.props.data)
+        if (this.state.render === 1)
+        {
+            this.setState({ editorState: EditorState.createWithContent(convertFromRaw(this.props.data)) })
+            this.setState((prevState) => ({
+                render: prevState.render + 1
+            }))
+        }
     }
 
     _handleKeyCommand(command)

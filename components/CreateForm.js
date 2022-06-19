@@ -23,13 +23,14 @@ import BackLink from "./BackLink";
 import useLoading from './hooks/useLoading'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 const CreateForm = (props) => handleAsync(props, (props) =>
 {
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid,] = useFormError(false);
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
 
-    const [editorState, setEditorState] = useState();
+    const [editorState, setEditorState, resetEditorState] = useLocalStorage("description")
     const [file, changeFile] = useState();
     const [fullTags, setFullTags] = useState([]);
     const [tags, setTags] = useState([]);
@@ -38,6 +39,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
 
     const { alert, setAlert, setAlertMsg, setError, Mounted } = props;
     const classes = useStyles()
+
 
     useEffect(async () =>
     {
@@ -58,6 +60,8 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
+                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
+                    resetEditorState()
                 })
         })
     };
@@ -134,6 +138,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                         setData={setEditorState}
                         error={DescError}
                         checkDescKey={checkDescKey}
+                        data={editorState}
                     />
 
                     {alert

@@ -147,7 +147,6 @@ router.post('/change', isLogged_CS, validateChange, tryAsync_CS(async (req, res,
 
 router.post('/bookmark', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) => 
 {
-    throw new UserError("ops", 500)
     const { id } = req.body;
     const userdata = await getUserdata(req, res)
     const user = await User.findOne({ _id: userdata._id });

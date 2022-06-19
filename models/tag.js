@@ -17,7 +17,7 @@ TagSchema.statics.processObj = async function (req, res)
     const Tag = mongoose.model('Tag', TagSchema);
     if (await Tag.findOne({ content }))
     {
-        throw new UserError(...Object.values(errorMessages.tagExists));
+        throw new UserError(...Object.values(errorMessages.tagExists)).throw_CS(res)
     }
     return { content }
 }

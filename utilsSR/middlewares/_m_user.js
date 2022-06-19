@@ -35,7 +35,7 @@ function isSessionReqUser(req, res, next)  //
     }
     else 
     {
-        next(new UserError(...Object.values(errorMessages.userNotFound)))
+        throw new UserError(...Object.values(errorMessages.userNotFound)).throw_CS(res)
     }
 };
 
@@ -50,7 +50,7 @@ function isAdmin_SR(req, res, next)
             return next()
         }
     }
-    next(new UserError(...Object.values(errorMessages.PageNotFound)))
+    throw new UserError(...Object.values(errorMessages.PageNotFound)).throw_CS(res)
 }
 
 function isAdmin_CS(req, res, next)
@@ -77,7 +77,7 @@ async function isSameUser(req, res, next) //
     }
     else
     {
-        next(new UserError(...Object.values(errorMessages.didNotMatch)))
+        throw new UserError(...Object.values(errorMessages.didNotMatch)).throw_CS(res)
     }
 }
 

@@ -13,13 +13,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                next(new UserError(...Object.values(errorMessages.pendingExpired)))
+                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_CS(res)
             }
             next()
         })
         .catch((err) => 
         {
-            next(new UserError(err.message, err.status))
+            throw new UserError(err.message, err.status).throw_CS(res)
         });
 };
 
@@ -32,13 +32,13 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                next(new UserError(...Object.values(errorMessages.pendingExpired)))
+                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_CS(res)
             }
             next()
         })
         .catch((err) => 
         {
-            next(new UserError(err.message, err.status))
+            throw new UserError(err.message, err.status).throw_CS(res)
         });
 };
 
@@ -56,7 +56,7 @@ async function verifyResetToken(req, res, next)
             })
             .catch((err) => 
             {
-                next(new UserError(err.message, err.status))
+                throw new UserError(err.message, err.status).throw_CS(res)
                 reject(err)
             });
     }
@@ -69,7 +69,7 @@ async function verifyResetToken(req, res, next)
     }
     else
     {
-        next(new UserError(...Object.values(errorMessages.didNotWork)))
+        throw new UserError(...Object.values(errorMessages.didNotWork)).throw_CS(res)
     }
 };
 
@@ -83,7 +83,7 @@ async function verifyCommentUser(req, res, next)
     {
         next()
     }
-    next(new UserError(...Object.values(errorMessages.didNotWork)))
+    throw new UserError(...Object.values(errorMessages.didNotWork)).throw_CS(res)
 }
 
 module.exports = {

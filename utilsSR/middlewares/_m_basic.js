@@ -22,7 +22,7 @@ function apiSecret(req, res, next)
 {
     if (req.body.secret !== process.env.NEXT_PUBLIC_SECRET)
     {
-        next(new UserError(...Object.values(errorMessages.didNotWork)))
+        new UserError(...Object.values(errorMessages.didNotWork)).throw_CS(res)
     }
     next()
 }

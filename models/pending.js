@@ -49,11 +49,11 @@ PendingSchema.methods.processPending = async function (req, res)
         if (await Pending.findOne({ email: this.email })
             || await User.findOne({ email: this.email }))
         {
-            throw new UserError(...Object.values(errorMessages.emailAlreadyUsed))
+            throw new UserError(...Object.values(errorMessages.emailAlreadyUsed)).throw_CS(res)
         }
         else if (await User.findOne({ username: this.username }))
         {
-            throw new UserError(...Object.values(errorMessages.usernameAlreadyUsed))
+            throw new UserError(...Object.values(errorMessages.usernameAlreadyUsed)).throw_CS(res)
         }
         else
         {
