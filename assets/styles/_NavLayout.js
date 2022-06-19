@@ -13,7 +13,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         paddingLeft: theme.maxPadding,
         paddingRight: theme.maxPadding,
-        height: "100%"
+        height: "100%",
+        flex: 1
     },
     ItemButton: {
         backgroundColor: theme.palette.shadow,

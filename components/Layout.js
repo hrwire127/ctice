@@ -116,7 +116,7 @@ export default function Layout(props)
                                                 </Box>)
                                                 : (<>
                                                     {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                    <Box sx={{ flex: 1, backgroundColor: "background.default" }}
+                                                    <Box sx={{ flex: 1, backgroundColor: "background.default", display: "flex", flexDirection: "column" }}
                                                     >
                                                         {childrenwprops}
                                                     </Box>
