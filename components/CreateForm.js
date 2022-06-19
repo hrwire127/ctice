@@ -31,9 +31,11 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
 
     const [editorState, setEditorState, resetEditorState] = useLocalStorage("description")
+    const [title, setTitle, resetTitle] = useLocalStorage("title", '')
+    const [tags, setTags, resetTags] = useLocalStorage("tags", [])
     const [file, changeFile] = useState();
     const [fullTags, setFullTags] = useState([]);
-    const [tags, setTags] = useState([]);
+    // const [tags, setTags] = useState([]);
 
     const [loadingWhile, loadingSwitch] = useLoading(false)
 
@@ -62,6 +64,8 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                     if (res.error) setAlertMsg(res.error.message, "error")
                     Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     resetEditorState()
+                    resetTitle()
+                    resetTags()
                 })
         })
     };
@@ -115,6 +119,8 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                     className={classes.Form}
                 >
                     <TextField
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         margin="normal"
                         inputProps={{ maxLength: 20 }}
                         required
@@ -154,8 +160,8 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                         id="tags-outlined"
                         options={fullTags}
                         getOptionLabel={(tag) => tag.content}
-                        // defaultValue={[top100Films[13]]}
                         filterSelectedOptions
+                        value={fullTags.filter(t => tags.some(nt => nt._id === t._id))}
                         onChange={(event, value) => setTags(value)}
                         renderInput={(params) => (
                             <TextField

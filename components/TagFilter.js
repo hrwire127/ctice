@@ -3,7 +3,7 @@ import { Avatar, Button, CssBaseline, Autocomplete, TextField, Box, Typography, 
 
 function TagFilter(props)
 {
-    const { setTags, fullTags } = props
+    const { setTags, fullTags, value = [] } = props
 
     return (
         <Autocomplete
@@ -13,6 +13,7 @@ function TagFilter(props)
             options={fullTags}
             getOptionLabel={(tag) => tag.content}
             filterSelectedOptions
+            value={fullTags.filter(t => value.some(nt => nt._id === t._id))}
             onChange={(event, value) => setTags(value)}
             renderInput={(params) => (
                 <TextField

@@ -25,6 +25,7 @@ class TextArea extends React.Component
     constructor(props)
     {
         super(props);
+        console.log(props.data)
         this.state =
         {
             editorState: props.data
@@ -53,8 +54,8 @@ class TextArea extends React.Component
 
     componentDidUpdate()
     {
-        console.log(this.props.data)
-        if (this.state.render === 1)
+        // console.log(this.props.data)
+        if (this.state.render === 1 && this.props.data)
         {
             this.setState({ editorState: EditorState.createWithContent(convertFromRaw(this.props.data)) })
             this.setState((prevState) => ({

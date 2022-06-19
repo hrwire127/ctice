@@ -18,18 +18,21 @@ import useStyles from "../assets/styles/_CreateForm";
 import useLoading from './hooks/useLoading'
 import useAlertMsg from './hooks/useAlertMsg'
 import Redirects_CS from '../utilsCS/CS_Redirects'
-
+import useLocalStorage from "./hooks/useLocalStorage"
 
 function CommentCreate(props)
 {
     const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
+    const { id, setError } = props;
+
+    // console.log(`comment ${id}`)
+
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
-    const [editorState, setEditorState] = useState();
+    const [editorState, setEditorState, resetEditorState] = useLocalStorage(`comment_${id}`)
 
     const [creatingWhile, creatingSwitch] = useLoading(false)
 
-    const { id, setError } = props;
     const classes = useStyles()
 
     const handleSubmit = async (body) =>
@@ -44,6 +47,7 @@ function CommentCreate(props)
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
                     Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
+                    resetEditorState()
                 })
         })
     }
@@ -87,6 +91,7 @@ function CommentCreate(props)
                     setData={setEditorState}
                     error={ContentError}
                     checkDescKey={checkContentKey}
+                    data={editorState}
                 />
 
                 {alert

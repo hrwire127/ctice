@@ -23,6 +23,7 @@ import DeclrCardFull from './DeclrCardFull';
 import DatePicker from './DatePicker'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 const DeclrList = (props) => handleAsync(props, (props) =>
 {
@@ -33,12 +34,12 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const styleCtx = useContext(StyleContext);
     const device = useContext(DeviceContext)
 
-    const [dateValue, setDate] = useState("Invalid");
-    const [queryValue, setQuery] = useState("");
+    const [dateValue, setDate, resetDate] = useLocalStorage("declr_date", 'Invalid', true);
+    const [queryValue, setQuery, resetQuery] = useLocalStorage("declr_query", '', true);
+    const [tags, setTags, resetTags] = useLocalStorage("declr_tags", [], true);
     const [declarations, setDeclarations] = useState([]);
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
-    const [tags, setTags] = useState([]);
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
@@ -115,7 +116,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
         <>
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
             <Search query={queryValue} setQuery={setQuery} />
-            <TagFilter fullTags={fullTags} setTags={setTags} />
+            <TagFilter fullTags={fullTags} setTags={setTags} value={tags} />
             <Sort handleSort={handleSort} sort={sort} />
             <Box className={classes.Bar}>
                 <Typography variant="h4">
