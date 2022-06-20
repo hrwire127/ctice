@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
-import { Editor, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
+import { AtomicBlockUtils, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
+import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
+import '@draft-js-plugins/image/lib/plugin.css';
+import '@draft-js-plugins/alignment/lib/plugin.css'
+import '@draft-js-plugins/image/lib/plugin.css';
 import { Box, Button, TextField, IconButton, Typography } from '@mui/material';
 import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
+
+import createImagePlugin from '@draft-js-plugins/image';
+import createAlignmentPlugin from '@draft-js-plugins/alignment';
+import createFocusPlugin from '@draft-js-plugins/focus';
+import createResizeablePlugin from '@draft-js-plugins/resizeable';
+import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
+import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
+import mockUpload from './mockUpload';
 
 
 class TextArea extends React.Component
@@ -27,11 +39,56 @@ class TextArea extends React.Component
     constructor(props)
     {
         super(props);
-        console.log(props.data)
         this.state =
         {
             editorState: props.data
-                ? EditorState.createWithContent(convertFromRaw(props.data))
+                ? EditorState.createWithContent(convertFromRaw({
+                    entityMap: {
+                        0: {
+                            type: 'IMAGE',
+                            mutability: 'IMMUTABLE',
+                            data: {
+                                src: 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
+                            },
+                        },
+                    },
+                    blocks: [
+                        {
+                            key: '9gm3s',
+                            text:
+                                'You can have images in your text field. This is a very rudimentary example, but you can enhance the image plugin with resizing, focus or alignment plugins.',
+                            type: 'unstyled',
+                            depth: 0,
+                            inlineStyleRanges: [],
+                            entityRanges: [],
+                            data: {},
+                        },
+                        {
+                            key: 'ov7r',
+                            text: ' ',
+                            type: 'atomic',
+                            depth: 0,
+                            inlineStyleRanges: [],
+                            entityRanges: [
+                                {
+                                    offset: 0,
+                                    length: 1,
+                                    key: 0,
+                                },
+                            ],
+                            data: {},
+                        },
+                        {
+                            key: 'e23a8',
+                            text: 'See advanced examples further down …',
+                            type: 'unstyled',
+                            depth: 0,
+                            inlineStyleRanges: [],
+                            entityRanges: [],
+                            data: {},
+                        },
+                    ],
+                }))
                 : EditorState.createEmpty(),
             render: 0
         };
@@ -45,6 +102,7 @@ class TextArea extends React.Component
         this.handleKeyCommand = (command) => this._handleKeyCommand(command);
         this.toggleBlockType = (type) => this._toggleBlockType(type);
         this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+        this.insertImage = (editorState, base64) => this._insertImage(editorState, base64)
     }
 
     componentDidMount()
@@ -99,13 +157,57 @@ class TextArea extends React.Component
         );
     }
 
+    _insertImage = (editorState, base64) =>
+    {
+        const contentState = editorState.getCurrentContent();
+        const contentStateWithEntity = contentState.createEntity(
+            'image',
+            'IMMUTABLE',
+            { src: base64 },
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(
+            editorState,
+            { currentContent: contentStateWithEntity },
+        );
+        return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ');
+    };
+
     render()
     {
         const { editorState } = this.state;
 
+        const focusPlugin = createFocusPlugin();
+        const resizeablePlugin = createResizeablePlugin();
+        const blockDndPlugin = createBlockDndPlugin();
+        const alignmentPlugin = createAlignmentPlugin();
+        const { AlignmentTool } = alignmentPlugin;
+
+        const decorator = composeDecorators(
+            resizeablePlugin.decorator,
+            alignmentPlugin.decorator,
+            focusPlugin.decorator,
+            blockDndPlugin.decorator
+        );
+        const imagePlugin = createImagePlugin({ decorator });
+
+        const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
+            handleUpload: mockUpload,
+            addImage: imagePlugin.addImage,
+        });
+
+        const plugins = [
+            dragNDropFileUploadPlugin,
+            blockDndPlugin,
+            focusPlugin,
+            alignmentPlugin,
+            resizeablePlugin,
+            imagePlugin,
+        ];
+
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
-        let className = 'RichEditor-editor';
+        let className = 'RichEditor-editor editor';
         var contentState = editorState.getCurrentContent();
         if (!contentState.hasText())
         {
@@ -114,6 +216,8 @@ class TextArea extends React.Component
                 className += ' RichEditor-hidePlaceholder';
             }
         }
+
+        console.log(this.props.data)
 
         return (
             <Box className="RichEditor-root"//theme => theme.spacing(2)
@@ -139,10 +243,21 @@ class TextArea extends React.Component
                         }
                 }
             >
-                <div style={{ display: 'flex', justifyContent: "space-between" }}>
+                <div style={{ display: 'flex', justifyContent: "left" }}>
                     <InlineStyleControls
                         editorState={editorState}
                         onToggle={this.toggleInlineStyle}
+                    />
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        onChange={(e) => 
+                        {
+                            const newEditorState = this.insertImage(this.state.editorState, URL.createObjectURL(e.target.files[0])//state Url(images)
+                            );
+                            this.setState({ editorState: newEditorState });
+                        }}
                     />
                     <BlockStyleControls
                         editorState={editorState}
@@ -161,7 +276,9 @@ class TextArea extends React.Component
                         ref="editor"
                         spellCheck={true}
                         keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}
+                        plugins={plugins}
                     />
+                    <AlignmentTool />
                 </div>
             </Box>
         );

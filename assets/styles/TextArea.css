@@ -4,7 +4,13 @@
   font-size: 14px;
   padding: 15px;
 }
+.DraftEditor-editorContainer figure {
+  margin: 10px
+}
 
+.DraftEditor-editorContainer figure img {
+  width: 100%!important;
+}
 .RichEditor-editor {
   border-top: 1px solid #9d9d9d;
   cursor: text;

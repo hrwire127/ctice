@@ -5,6 +5,10 @@ module.exports = {
             test: /\.pdf$/i,
             type: 'asset/source',
         })
+        // config.module.rules.push({
+        //     test: /plugin\.css$/,
+        //     use:['style-loader','css-loader']
+        // })
         return config
     }, devIndicators: {
         buildActivity: false
