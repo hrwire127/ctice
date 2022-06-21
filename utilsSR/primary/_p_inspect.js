@@ -15,7 +15,7 @@ function inspectDecrl(title, description, Files, tags) //
         if (charRule.getVal()) return charRule.processMsg()
     }
 
-    if (Files)
+    if (Files && Files.file)
     {
         const fileRule = new valRule(Files.file.size, Rules.pdf_max_size, 0)
         if (fileRule.getVal()) return fileRule.processMsg()
@@ -24,8 +24,24 @@ function inspectDecrl(title, description, Files, tags) //
         if (fileFormat.getVal()) return fileFormat.processMsg()
     }
 
-    if(tags)
-    { 
+    if (Files)
+    {
+        Object.keys(Files).map(async function (key, index)
+        {
+            if (key !== "file")
+            {
+                const file = Files[key];
+                const fileRule = new valRule(file.size, Rules.desc_file_max_size, 0)
+                if (fileRule.getVal()) return fileRule.processMsg()
+
+                const fileFormat = new valRule(file.mimetype, Rules.desc_file_format, 3)
+                if (fileFormat.getVal()) return fileFormat.processMsg()
+            }
+        });
+    }
+
+    if (tags)
+    {
         const maxTags = new valRule(tags.length, Rules.declr_max_tags, 0)
         if (maxTags.getVal()) return maxTags.processMsg()
 
@@ -100,8 +116,6 @@ function inspectChange(username = undefined, Files = undefined, location = undef
 
     if (bio)
     {
-        console.log(bio.blocks)
-        console.log(bio.blocks.length)
         const bioRule = new valRule(bio.blocks.length, Rules.bio_max_blocks, 0)
         if (bioRule.getVal()) return bioRule.processMsg()
 
@@ -191,9 +205,24 @@ function inspectTag(tag)
     if (tagRule.getVal()) return tagRule.processMsg()
 }
 
+function inspectUploadedDescImg(file)
+{
+    const maxWidth = new valRule(file.width, Rules.desc_file_max_width, 0)
+    if (maxWidth.getVal()) return maxWidth.processMsg()
+
+    const minWidth = new valRule(file.width, Rules.desc_file_min_width, 1)
+    if (minWidth.getVal()) return minWidth.processMsg()
+
+    const maxHeight = new valRule(file.height, Rules.desc_file_max_height, 0)
+    if (maxHeight.getVal()) return maxHeight.processMsg()
+
+    const minHeight = new valRule(file.height, Rules.desc_file_min_height, 1)
+    if (minHeight.getVal()) return minHeight.processMsg()
+}
+
 module.exports = {
     inspectDecrl, inspectComment, inspectUser,
     inspectChange, inspectPdf, inspectProfile,
     inspectGallery, inspectBanner, inspectNotification,
-    inspectTag
+    inspectTag, inspectUploadedDescImg
 }

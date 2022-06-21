@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { EditorState, convertFromRaw } from 'draft-js';
+import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import
 {
     Box, Typography,
@@ -27,6 +28,7 @@ import Vote from "./Vote";
 import { LinkedinShareButton } from 'react-share';
 import { LinkedIn } from '@mui/icons-material';
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import EditorView from './EditorView';
 
 function DeclrView(props)
 {
@@ -45,8 +47,8 @@ function DeclrView(props)
 
     const [fullWhile, fullSwitch] = useLoading(false)
 
-    const data = CropData(JSON.parse(description), 6);
-    const editorState = EditorState.createWithContent(convertFromRaw(data))
+    // const data = CropData(JSON.parse(description), 6);
+    // const editorState = EditorState.createWithContent(convertFromRaw(data))
 
     const classes = useStyles();
 
@@ -200,7 +202,8 @@ function DeclrView(props)
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Vote setError={setError} user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
-                    <Editor editorKey="editor" readOnly={true} editorState={editorState} />
+                    {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
+                    <EditorView data={JSON.parse(description)} />
                 </Box>
             </Box>
 

@@ -11,10 +11,8 @@ import { readFile } from '@draft-js-plugins/drag-n-drop-upload';
 */
 export default function mockUpload(data, success, failed, progress)
 {
-    console.log(data)
     readFile(data.files[0]).then(res => 
     {
-        console.log(res)
         success([res], { retainSrc: true })
     })
 

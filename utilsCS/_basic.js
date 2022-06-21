@@ -1,6 +1,7 @@
 const { Api_Call, Def_Call } = require('../utilsSR/rules/apiCalls')
 import { sortScore, sortDate } from '../components/context/sortEnum'
 import { styleFull, styleCompact } from '../components/context/styleEnum'
+import { v4 as uuidv4 } from 'uuid';
 
 const CropData = (data, length) =>
 {
@@ -35,16 +36,42 @@ const uploadFile = (file, changeState) =>
     ));
 }
 
-function handleDeclrData(evtTarget, file = undefined, description)
+async function handleDeclrData(evtTarget, file = undefined, description)
 {
     const data = new FormData(evtTarget);
 
     if (file) data.append("file", file)
     else data.delete("file")
+    console.log(description)
 
-    data.append("description", JSON.stringify(description));
-    // data.append("date", new Date())
+    await new Promise(async (resolve, reject) => 
+    {
+        console.log(Object.keys(description.entityMap))
+        if (Object.keys(description.entityMap).length > 0)
+        {                
+            for(let key in description.entityMap)
+            {
+                const e = description.entityMap[key];
+                const name = uuidv4()
+                const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
+                console.log(blob)
+                console.log(name)
+                if (blob)
+                {
+                    data.append(name, blob)
+                    console.log(data.get(name))
+                    e.data.src = name
+                }
+            }
+            resolve()
+        }
+        else
+        {
+            resolve()
+        }
+    })
 
+    data.append("description", JSON.stringify(description))
 
     const title_ = data.get("title");
     const description_ = description.blocks[0].text;
@@ -161,11 +188,36 @@ function checkToken(id)
         }).then(response => response.json())
 }
 
+function rgbToHex(color)
+{
+    color = "" + color;
+    if (!color || color.indexOf("rgb") < 0)
+    {
+        return;
+    }
+
+    if (color.charAt(0) == "#")
+    {
+        return color;
+    }
+
+    var nums = /(.*?)rgb\((\d+),\s*(\d+),\s*(\d+)\)/i.exec(color),
+        r = parseInt(nums[2], 10).toString(16),
+        g = parseInt(nums[3], 10).toString(16),
+        b = parseInt(nums[4], 10).toString(16);
+
+    return "#" + (
+        (r.length == 1 ? "0" + r : r) +
+        (g.length == 1 ? "0" + g : g) +
+        (b.length == 1 ? "0" + b : b)
+    );
+}
+
 module.exports = {
     CropData, uploadFile,
     handleDeclrData, isResetToken,
     determRendering, getGlobals,
     timeout, getField,
     getDateDifference, getFlash,
-    checkToken, nowindowFetchError
+    checkToken, nowindowFetchError, rgbToHex
 }

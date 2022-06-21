@@ -2,20 +2,38 @@ import React, { useState } from 'react';
 import { AtomicBlockUtils, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
 import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
-import '@draft-js-plugins/image/lib/plugin.css';
-import '@draft-js-plugins/alignment/lib/plugin.css'
-import '@draft-js-plugins/image/lib/plugin.css';
-import { Box, Button, TextField, IconButton, Typography } from '@mui/material';
-import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
-
 import createImagePlugin from '@draft-js-plugins/image';
-import createAlignmentPlugin from '@draft-js-plugins/alignment';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
 import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
 import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
-import mockUpload from './mockUpload';
+import { Box, Button, TextField, IconButton, Typography, Paper, } from '@mui/material';
+import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, Attachment, Image } from "@mui/icons-material"
+import { withStyles } from "@mui/styles"
+import { rgbToHex } from "../utilsCS/_basic"
+import mockUpload from "./mockUpload"
 
+const styles = theme => ({
+    TextAreaError: {
+        width: "100%",
+        border: "1px solid",
+        borderColor: "red!important",
+        "&:hover":
+        {
+            borderColor: "white"
+        }
+    },
+    TextAreaNormal: {
+        width: "100%",
+        border: "1px solid",
+        borderColor: theme.line,
+        "&:hover":
+        {
+            borderColor: theme.palette.text.default,
+        }
+    }
+
+})
 
 class TextArea extends React.Component
 {
@@ -42,57 +60,11 @@ class TextArea extends React.Component
         this.state =
         {
             editorState: props.data
-                ? EditorState.createWithContent(convertFromRaw({
-                    entityMap: {
-                        0: {
-                            type: 'IMAGE',
-                            mutability: 'IMMUTABLE',
-                            data: {
-                                src: 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg',
-                            },
-                        },
-                    },
-                    blocks: [
-                        {
-                            key: '9gm3s',
-                            text:
-                                'You can have images in your text field. This is a very rudimentary example, but you can enhance the image plugin with resizing, focus or alignment plugins.',
-                            type: 'unstyled',
-                            depth: 0,
-                            inlineStyleRanges: [],
-                            entityRanges: [],
-                            data: {},
-                        },
-                        {
-                            key: 'ov7r',
-                            text: ' ',
-                            type: 'atomic',
-                            depth: 0,
-                            inlineStyleRanges: [],
-                            entityRanges: [
-                                {
-                                    offset: 0,
-                                    length: 1,
-                                    key: 0,
-                                },
-                            ],
-                            data: {},
-                        },
-                        {
-                            key: 'e23a8',
-                            text: 'See advanced examples further down …',
-                            type: 'unstyled',
-                            depth: 0,
-                            inlineStyleRanges: [],
-                            entityRanges: [],
-                            data: {},
-                        },
-                    ],
-                }))
+                ? EditorState.createWithContent(convertFromRaw(props.data))
                 : EditorState.createEmpty(),
             render: 0
         };
-        this.focus = () => this.refs.editor.focus();
+        // this.focus = () => this.refs.editor.focus();
         this.onChange = (editorState) =>
         {
             this.setState({ editorState });
@@ -114,7 +86,6 @@ class TextArea extends React.Component
 
     componentDidUpdate()
     {
-        // console.log(this.props.data)
         if (this.state.render === 1 && this.props.data)
         {
             this.setState({ editorState: EditorState.createWithContent(convertFromRaw(this.props.data)) })
@@ -135,7 +106,6 @@ class TextArea extends React.Component
         }
         return false;
     }
-
 
     _toggleBlockType(blockType)
     {
@@ -173,23 +143,26 @@ class TextArea extends React.Component
         return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ');
     };
 
+    mockUpload = (data, success, failed, progress) =>
+    {
+        readFile(data.files[0]).then(res => 
+        {
+            success([res], { retainSrc: true })
+        })
+
+    }
+
     render()
     {
         const { editorState } = this.state;
+        const { classes, theme } = this.props
+
 
         const focusPlugin = createFocusPlugin();
-        const resizeablePlugin = createResizeablePlugin();
         const blockDndPlugin = createBlockDndPlugin();
-        const alignmentPlugin = createAlignmentPlugin();
-        const { AlignmentTool } = alignmentPlugin;
+        const resizeablePlugin = createResizeablePlugin();
 
-        const decorator = composeDecorators(
-            resizeablePlugin.decorator,
-            alignmentPlugin.decorator,
-            focusPlugin.decorator,
-            blockDndPlugin.decorator
-        );
-        const imagePlugin = createImagePlugin({ decorator });
+        const imagePlugin = createImagePlugin();
 
         const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
             handleUpload: mockUpload,
@@ -200,14 +173,12 @@ class TextArea extends React.Component
             dragNDropFileUploadPlugin,
             blockDndPlugin,
             focusPlugin,
-            alignmentPlugin,
             resizeablePlugin,
             imagePlugin,
         ];
-
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
-        let className = 'RichEditor-editor editor';
+        let className = 'RichEditor-editor';
         var contentState = editorState.getCurrentContent();
         if (!contentState.hasText())
         {
@@ -217,54 +188,63 @@ class TextArea extends React.Component
             }
         }
 
-        console.log(this.props.data)
+        const onHoverEnter = () =>
+        {
+            if (rgbToHex(this.refs.textarea.style.borderColor) !== this.props.theme.palette.primary.main.toLowerCase())
+            {
+                this.refs.textarea.style.borderColor = "black"
+                this.refs.textarea.style.outline = `none`
+            }
+        }
+
+        const onHoverLeave = () =>
+        {
+            if (rgbToHex(this.refs.textarea.style.borderColor) !== this.props.theme.palette.primary.main.toLowerCase())
+            {
+                this.refs.textarea.style.borderColor = "gray"
+                this.refs.textarea.style.outline = `none`
+            }
+        }
+
+        const onFocus = () =>
+        {
+            this.refs.editor.focus()
+            this.refs.textarea.style.border = `1px solid ${theme.palette.primary.main}`
+            this.refs.textarea.style.outline = `1px solid ${theme.palette.primary.main}`
+        }
+
+        const onBlur = () =>
+        {
+            this.refs.textarea.style.border = "1px solid gray"
+            this.refs.textarea.style.outline = `none`
+        }
+
+        const setEditor = (img) =>
+        {
+            const newEditorState = this.insertImage(this.state.editorState, img//state Url(images)
+            );
+            this.setState({ editorState: newEditorState });
+        }
+
 
         return (
-            <Box className="RichEditor-root"//theme => theme.spacing(2)
-                sx={
-                    this.props.error
-                        ? {
-                            width: "100%",
-                            border: "1px solid",
-                            borderColor: "red!important",
-                            "&:hover":
-                            {
-                                borderColor: "white"
-                            }
-                        }
-                        : {
-                            width: "100%",
-                            border: "1px solid",
-                            borderColor: theme => theme.line,
-                            "&:hover":
-                            {
-                                borderColor: theme => theme.palette.text.default,
-                            }
-                        }
-                }
+            <Box
+                className={`RichEditor-root ${this.props.error ? classes.TextAreaError : classes.TextAreaNormal}`}
+                ref="textarea"
+                onMouseEnter={onHoverEnter}
+                onMouseLeave={onHoverLeave}
             >
-                <div style={{ display: 'flex', justifyContent: "left" }}>
-                    <InlineStyleControls
-                        editorState={editorState}
-                        onToggle={this.toggleInlineStyle}
-                    />
-                    <input
-                        type="file"
-                        id="file"
-                        name="file"
-                        onChange={(e) => 
-                        {
-                            const newEditorState = this.insertImage(this.state.editorState, URL.createObjectURL(e.target.files[0])//state Url(images)
-                            );
-                            this.setState({ editorState: newEditorState });
-                        }}
-                    />
-                    <BlockStyleControls
-                        editorState={editorState}
-                        onToggle={this.toggleBlockType}
-                    />
-                </div>
-                <div className={className} onClick={this.focus}>
+                <InlineStyleControls
+                    editorState={editorState}
+                    onToggle={this.toggleInlineStyle}
+                    setEditor={setEditor}
+                />
+                <BlockStyleControls
+                    editorState={editorState}
+                    onToggle={this.toggleBlockType}
+                />
+
+                <Box className={className} onClick={onFocus}>
                     <Editor
                         editorKey="editor"
                         blockStyleFn={getBlockStyle}
@@ -277,10 +257,10 @@ class TextArea extends React.Component
                         spellCheck={true}
                         keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}
                         plugins={plugins}
+                        onBlur={onBlur}
                     />
-                    <AlignmentTool />
-                </div>
-            </Box>
+                </Box>
+            </Box >
         );
     }
 }
@@ -372,8 +352,8 @@ const StyleNum = (props) =>
 
     return (
         <span className='RichEditor-styleButton'>
-            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 0.5 }}>
-                <Typography color="text.secondary">{num === 6 ? "n" : num}</Typography>
+            <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 0.5, marginLeft: "8px", marginRight: "6px" }}>
+                {/* <Typography color="text.secondary">{num === 6 ? "n" : num}</Typography> */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                     <div onClick={increase} style={{
                         width: 10, height: 10,
@@ -404,7 +384,7 @@ const BlockStyleControls = (props) =>
         .getType();
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
             <StyleNum onToggle={props.onToggle} />
             <StyleButton
                 key={'blockquote'}
@@ -441,8 +421,12 @@ const BlockStyleControls = (props) =>
 const InlineStyleControls = (props) =>
 {
     var currentStyle = props.editorState.getCurrentInlineStyle();
+    const [open, setOpen] = React.useState(false)
+    const [url, setUrl] = React.useState("")
+    const fileRef = React.useRef()
+
     return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
             <StyleButton
                 key={'BOLD'}
                 active={currentStyle.has('BOLD')}
@@ -471,8 +455,42 @@ const InlineStyleControls = (props) =>
                 onToggle={props.onToggle}
                 style={'CODE'}
             />
-        </div>
+            <Image sx={{
+                mb: 1, color: "gray", "&:hover": {
+                    cursor: "pointer"
+                }
+            }}
+                onClick={() => fileRef.current.click()}
+            />
+            <input
+                type="file"
+                id="file"
+                name="file"
+                hidden
+                ref={fileRef}
+                onChange={(e) => props.setEditor(URL.createObjectURL(e.target.files[0]))}
+                accept="image/png, image/jpg, image/jpeg"
+            />
+            <Attachment
+                sx={{
+                    mb: 1, ml: 2, color: "gray", "&:hover": {
+                        cursor: "pointer"
+                    }
+                }}
+                onClick={() => setOpen(!open)}
+            />
+            {open && (<Paper sx={{ width: 100, height: 30, position: "absolute", ml: 25, mb: 7, display: 'flex', justifyContent: "center" }}>
+                <TextField value={url} onChange={(e) => setUrl(e.target.value)} variant="outlined" sx={{ width: "80%", height: "90%", "& input": { padding: "3px" } }} />
+                <IconButton type="submit" onClick={(e) => 
+                {
+                    props.setEditor(url)
+                    setUrl('')
+                    setOpen(false)
+                }}>+</IconButton>
+            </Paper>)
+            }
+        </div >
     );
 };
 
-export default TextArea;
+export default withStyles(styles, { withTheme: true })(TextArea)

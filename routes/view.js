@@ -5,6 +5,7 @@ const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
+const errorMessages = require("../utilsSR/rules/errorMessages")
 const { tryAsync_CS, tryAsync_SR, apiSecret } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_CS, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
@@ -23,8 +24,11 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>
 {
     const { id } = req.params;
+
     const declaration = await Declaration.findOne({ _id: id, status: "Active" }).populate('authors').populate('tags')
-    Redirects_SR.Api.sendApi(res, declaration)
+
+    if (declaration) Redirects_SR.Api.sendApi(res, declaration)
+    else throw new UserError(...Object.values(errorMessages.PageNotFound))
 }))
 
 router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>

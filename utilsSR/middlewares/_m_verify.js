@@ -4,7 +4,7 @@ const Pending = require("../../models/pending")
 const Token = require("../../models/token")
 const Comment = require("../../models/comment")
 
-function verifyPendingCode(req, res, next) 
+function verifyPendingCode_SR(req, res, next) 
 {
     Pending.findOne({
         confirmationCode: req.params.confirmationCode,
@@ -13,36 +13,19 @@ function verifyPendingCode(req, res, next)
         {
             if (!pending)
             {
-                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_CS(res)
+                req.type = 0
+                next(new UserError(...Object.values(errorMessages.pendingExpired)))
             }
             next()
         })
         .catch((err) => 
         {
-            throw new UserError(err.message, err.status).throw_CS(res)
+            req.type = 0
+            next(new UserError(err.message, err.status))
         });
 };
 
-function verifyPendingCode(req, res, next) 
-{
-    Pending.findOne({
-        confirmationCode: req.params.confirmationCode,
-    })
-        .then(async (pending) =>
-        {
-            if (!pending)
-            {
-                throw new UserError(...Object.values(errorMessages.pendingExpired)).throw_CS(res)
-            }
-            next()
-        })
-        .catch((err) => 
-        {
-            throw new UserError(err.message, err.status).throw_CS(res)
-        });
-};
-
-async function verifyResetToken(req, res, next) 
+async function verifyResetToken_SR(req, res, next) 
 {
     if (req.params.confirmationCode)
     {
@@ -56,7 +39,8 @@ async function verifyResetToken(req, res, next)
             })
             .catch((err) => 
             {
-                throw new UserError(err.message, err.status).throw_CS(res)
+                req.type = 0
+                next(new UserError(err.message, err.status))
                 reject(err)
             });
     }
@@ -69,7 +53,8 @@ async function verifyResetToken(req, res, next)
     }
     else
     {
-        throw new UserError(...Object.values(errorMessages.didNotWork)).throw_CS(res)
+        req.type = 0
+        next(new UserError(...Object.values(errorMessages.didNotWork)))
     }
 };
 
@@ -87,6 +72,6 @@ async function verifyCommentUser(req, res, next)
 }
 
 module.exports = {
-    verifyPendingCode, verifyCommentUser, verifyResetToken,
-    verifyPendingCode,
+    verifyPendingCode_SR, verifyCommentUser, verifyResetToken_SR,
+    verifyPendingCode_SR,
 }

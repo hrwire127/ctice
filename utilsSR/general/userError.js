@@ -22,11 +22,6 @@ class UserError extends Error
     // {
     //     req.session.error = { message: this.message, status: this.status }
     // }
-    throw_SR(req, res)
-    {
-        this.setup(req)
-        res.redirect('/error')
-    }
     throw_CS(res) 
     {
         res.json(

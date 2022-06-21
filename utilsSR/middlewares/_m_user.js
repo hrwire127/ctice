@@ -50,7 +50,8 @@ function isAdmin_SR(req, res, next)
             return next()
         }
     }
-    throw new UserError(...Object.values(errorMessages.PageNotFound)).throw_CS(res)
+    req.type = 0
+    next(new UserError(...Object.values(errorMessages.PageNotFound)))
 }
 
 function isAdmin_CS(req, res, next)
@@ -64,7 +65,7 @@ function isAdmin_CS(req, res, next)
             return next()
         }
     }
-    Redirects_SR.Api.sendApi(res, { error: errorMessages.didNotWork })
+    throw new UserError(...Object.values(errorMessages.PageNotFound)).throw_CS(res)
 }
 
 async function isSameUser(req, res, next) //

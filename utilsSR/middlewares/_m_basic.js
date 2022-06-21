@@ -5,7 +5,10 @@ function tryAsync_SR(func)
     return function (req, res, next)
     {
         req.type = 0
-        func(req, res, next).catch(err => next(err))
+        func(req, res, next).catch(err => 
+        {
+            next(err)
+        })
     }
 }
 

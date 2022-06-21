@@ -62,7 +62,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
-                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     resetEditorState()
                     resetTitle()
                     resetTags()
@@ -74,7 +74,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     {
         e.preventDefault();
 
-        const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
+        const { data, title, description } = await handleDeclrData(e.currentTarget, file, editorState)
 
         const newTags = []
         tags.forEach((t) => newTags.push(t._id))
@@ -85,6 +85,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
         {
             setTitleTrue();
             setDescTrue();
+            // console.log(editorState)
             handleSubmit(data);
         }
         else

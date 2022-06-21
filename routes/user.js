@@ -10,7 +10,7 @@ const Token = require("../models/token")
 const mongoose = require('mongoose')
 const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
 const { isLogged_SR, isLogged_CS, isSameUser, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
-const { verifyPendingCode, verifyResetToken, } = require('../utilsSR/middlewares/_m_verify')
+const { verifyPendingCode_SR, verifyResetToken_SR, } = require('../utilsSR/middlewares/_m_verify')
 const { validatePendingUser, validateLogUser, validateRegUser, validateChange, validateGallery } = require('../utilsSR/middlewares/_m_validations')
 const { getUserdata } = require('../utilsSR/primary/_p_user')
 
@@ -48,13 +48,13 @@ router.get('/profile/bookmarks', isLogged_SR, tryAsync_SR(async (req, res) =>
     app.render(req, res, "/user/profile/bookmarks", { user })
 }))
 
-router.get("/pending/:confirmationCode", verifyPendingCode, tryAsync_SR(async (req, res) =>
+router.get("/pending/:confirmationCode", verifyPendingCode_SR, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
     app.render(req, res, "/welcome", { confirmationCode })
 }))
 
-router.get('/reset/:confirmationCode', verifyResetToken, tryAsync_SR(async (req, res) =>
+router.get('/reset/:confirmationCode', verifyResetToken_SR, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
     app.render(req, res, "/reset", { confirmationCode })
@@ -117,7 +117,7 @@ router.post('/reset/send', isLogged_CS, tryAsync_CS(async (req, res) =>
     Redirects_SR.Home.CS(res)
 }))
 
-router.post('/reset', verifyResetToken, tryAsync_CS(async (req, res) =>
+router.post('/reset', verifyResetToken_SR, tryAsync_CS(async (req, res) =>
 {
     const { confirmationCode, password } = req.body
     const token = await Token.findOne({ token: confirmationCode }).populate('user')

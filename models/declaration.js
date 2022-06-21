@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const Rules = require('../utilsSR/rules/validRules')
 const { excRule } = require('../utilsSR/helpers/exc-Rule');
-const { upload_pdf } = require('../utilsSR/primary/_p_basic')
+const { upload_pdf, upload_desc } = require('../utilsSR/primary/_p_basic')
 const { cloud } = require('../cloud/storage');
 const User = require("./user");
 const Tag = require("./tag");
@@ -103,10 +103,101 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
     Obj.authors.push(await User.findOne({ username: req.session.passport.user }))
 
     Obj.tags = JSON.parse(req.body.tags)
-    console.log(Obj.tags)
 
-    if (await new excRule([body.file, files, hadFile], [], async () => //regular hadfile
+    const pdf_file = files ? files.file : null
+
+    if (declaration)
     {
+        const descriptionObj = JSON.parse(Obj.description)
+        const descriptionDeclr = JSON.parse(declaration.description)
+
+        console.log(descriptionObj.entityMap)
+
+        if (files)
+        {
+            await new Promise(async (resolve, reject) =>
+            {
+                for (let key in files)
+                {
+                    if (key !== "file")
+                    {
+                        const file = files[key]
+                        let { url } = await upload_desc(file.data)
+                        for (const secKey in descriptionObj.entityMap)
+                        {
+                            const e = descriptionObj.entityMap[secKey];
+                            if (e.data.src === key)
+                            {
+                                descriptionObj.entityMap[secKey].data.src = url
+                            }
+                        }
+                    }
+                }
+                resolve()
+            })
+            Obj.description = JSON.stringify(descriptionObj)
+        }
+
+        const oldFiles = Object.keys({ ...descriptionDeclr.entityMap }).map((key) => descriptionDeclr.entityMap[key].data.src)
+        const newFiles = Object.keys({ ...descriptionObj.entityMap }).map((key) => descriptionObj.entityMap[key].data.src)
+
+        console.log(oldFiles)
+        console.log(newFiles)
+
+        await new Promise((resolve, reject) =>
+        {
+            oldFiles.every(async (f) => 
+            {
+                if (newFiles.includes(f))
+                {
+                    return true
+                }
+                else if (f.includes("ctice"))
+                {
+                    const url = []
+                    for (let char of f.slice(f.indexOf("ctice"), f.length))
+                    {
+                        if (char === ".") break
+                        url.push(char)
+                    }
+                    console.log(url)
+                    await cloud.destroy(
+                        url.join('')
+                    )
+                }
+            })
+            resolve()
+        })
+    }
+    else if (files)
+    {
+        const descriptionObj = JSON.parse(Obj.description)
+        await new Promise(async (resolve, reject) =>
+        {
+            for (let key in files)
+            {
+                if (key !== "file")
+                {
+                    const file = files[key]
+                    let { url } = await upload_desc(file.data)
+                    for (const secKey in descriptionObj.entityMap)
+                    {
+                        const e = descriptionObj.entityMap[secKey];
+                        if (e.data.src === key)
+                        {
+                            descriptionObj.entityMap[secKey].data.src = url
+                        }
+                    }
+                }
+            }
+            resolve()
+        })
+        Obj.description = JSON.stringify(descriptionObj)
+    }
+
+    if (await new excRule([body.file, pdf_file, hadFile], [], async () => //regular hadfile
+    {
+        //modified file
         let file = await upload_pdf(files.file)
         await cloud.destroy(
             declaration.file.location,
@@ -118,8 +209,9 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
         }
     }).Try()) return Obj;
 
-    if (await new excRule([body.file, files], [hadFile], async () =>
+    if (await new excRule([body.file, pdf_file], [hadFile], async () =>
     {
+        //added file
         let file = await upload_pdf(files.file)
         Obj.file = {
             name: files.file.name,
@@ -128,12 +220,14 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
         }
     }).Try()) return Obj;
 
-    if (await new excRule([], [body.file, files, hadFile], async () =>
+    if (await new excRule([], [body.file, pdf_file, hadFile], async () =>
     {
+        //did not had and will not
     }).Try()) return Obj;
 
-    if (await new excRule([hadFile], [body.file, files,], async () =>
+    if (await new excRule([hadFile], [body.file, pdf_file,], async () =>
     {
+        //had but got deleted
         await cloud.destroy(
             declaration.file.location,
         )
@@ -141,8 +235,9 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
         await declaration.save();
     }).Try()) return Obj;
 
-    if (await new excRule([body.file, hadFile], [files], async () =>
+    if (await new excRule([body.file, hadFile], [pdf_file], async () =>
     {
+        //had but wasn't modified
         Obj.file = declaration.file;
     }).Try()) return Obj;
 

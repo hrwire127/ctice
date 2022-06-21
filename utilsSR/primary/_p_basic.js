@@ -1,7 +1,7 @@
 let streamifier = require('streamifier');
 const UserError = require('../general/UserError');
 const { cloud } = require('../../cloud/storage');
-const { inspectPdf, inspectProfile, inspectGallery, inspectBanner, inspectNotification } = require('../../utilsSR/primary/_p_inspect')
+const { inspectPdf, inspectProfile, inspectGallery, inspectBanner, inspectNotification, inspectUploadedDescImg } = require('../../utilsSR/primary/_p_inspect')
 
 async function switchSort(sort, dateFunc, scoreSort)
 {
@@ -256,6 +256,48 @@ const upload_notification = async (file) =>
     return { url: res.url, location: res.public_id }
 }
 
+const upload_desc = async (file) =>
+{
+    const res = await new Promise((resolve, reject) =>
+    {
+        let cld_upload_stream = cloud.upload_stream(
+            {
+                folder: process.env.CLOUD_FOLDER_DESC
+            },
+            function (err, res)
+            {
+                if (res)
+                {
+                    console.log(res)
+                    resolve(res);
+                } else
+                {
+                    console.log(err)
+                    reject(err);
+                }
+            }
+        );
+
+        streamifier.createReadStream(file).pipe(cld_upload_stream);
+    });
+
+    const invalid = await inspectUploadedDescImg(res);
+
+    console.log(invalid)
+
+    if (invalid)
+    {
+        await cloud.destroy(
+            res.public_id,
+        )
+        throw new UserError(invalid, 400)
+    }
+
+    console.log(res.url)
+    console.log(res.public_id)
+    return { url: res.url, location: res.public_id }
+}
+
 function doRemember(req, res, next)
 {
     if (req.body.doRemember)
@@ -293,5 +335,5 @@ module.exports = {
     switchSort, sortByScore, modifyDesc,
     genToken, upload_pdf, doRemember,
     upload_profiles, upload_galeries, upload_banner,
-    upload_notification, cutMention
+    upload_notification, cutMention, upload_desc
 }

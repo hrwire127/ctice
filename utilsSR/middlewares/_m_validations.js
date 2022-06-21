@@ -7,6 +7,9 @@ async function validateDeclr(req, res, next)
 {
     let { title, description, file, tags } = req.body
 
+    console.log(req.body)
+    console.log(req.files)
+
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
         description: Joi.object({
@@ -49,7 +52,6 @@ async function validateDeclr(req, res, next)
 
     req.body.title = title.trim()
     req.body.description = JSON.stringify(modifyDesc(JSON.parse(description)))
-
     next()
 }
 

@@ -1,7 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Avatar, Button, CssBaseline, 
-    Autocomplete, TextField, Box, 
-    Typography, Container, FormHelperText, IconButton } from '@mui/material';
+import
+{
+    Avatar, Button, CssBaseline,
+    Autocomplete, TextField, Box,
+    Typography, Container, FormHelperText, IconButton
+} from '@mui/material';
 import TransitionAlerts from './TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
 import { handleDeclrData } from "../utilsCS/_basic";
@@ -24,8 +27,8 @@ function EditForm(props)
     const { title, description, _id: id, tags: oldTags } = declaration;
 
     const filteredTags = fullTags.filter(t => oldTags.some(nt => nt._id === t._id))
-    
-    const [editorState, setEditorState] = useState();
+
+    const [editorState, setEditorState] = useState(JSON.parse(description));
     const [file, changeFile] = useState(declaration.file);
     const [tags, setTags] = useState(filteredTags);
 
@@ -45,17 +48,17 @@ function EditForm(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    // Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     if (res.error) setAlertMsg(res.error.message, "error")
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })
         })
     };
 
-    const errCheck = (e) =>
+    const errCheck = async (e) =>
     {
         e.preventDefault();
 
-        const { data, title, description } = handleDeclrData(e.currentTarget, file, editorState)
+        const { data, title, description } = await handleDeclrData(e.currentTarget, file, editorState)
 
         const newTags = []
         tags.forEach((t) => newTags.push(t._id))
@@ -95,7 +98,7 @@ function EditForm(props)
                 >
                     <TextField
                         margin="normal"
-                        inputProps={{ maxLength: 10 }}
+                        inputProps={{ maxLength: 20 }}
                         required
                         error={TitleError}
                         fullWidth
@@ -113,14 +116,12 @@ function EditForm(props)
                         : (<FormHelperText error={TitleError}>{helperTitleText}</FormHelperText>)
                     }
 
-
-
                     <TextArea
                         placeholder="Description"
                         setData={setEditorState}
                         error={DescError}
                         checkDescKey={checkDescKey}
-                        data={JSON.parse(description)}
+                        data={editorState}
                     />
 
                     {alert
