@@ -5,16 +5,17 @@ import { CropData, getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, CardActions, Card, CardContent, Typography } from '@mui/material'
+import EditorView from './EditorView';
 
 function DeclrCardFull(props) 
 {
     const { title, _id: id, description, date } = props;
     const classes = useStyles();
 
-    const data = CropData(JSON.parse(description), 6);
+    // const data = CropData(JSON.parse(description), 6);
     const likes = props.likes.filter(el => el.typeOf === true)
     const dislikes = props.likes.filter(el => el.typeOf === false)
-    const editorState = EditorState.createWithContent(convertFromRaw(data))
+    // const editorState = EditorState.createWithContent(convertFromRaw(data))
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
 
     return ( 
@@ -30,7 +31,7 @@ function DeclrCardFull(props)
                         {likes.length - dislikes.length}
                     </Typography>
                 </Box>
-                <Editor editorKey="editor" readOnly={true} editorState={editorState} />
+                <EditorView data={JSON.parse(description)} />
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>

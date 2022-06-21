@@ -57,6 +57,7 @@ function CommentCreate(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
+        editorState.entityMap = {}
         data.append("content", JSON.stringify(editorState));
         // data.append("date", new Date())
 
@@ -92,6 +93,7 @@ function CommentCreate(props)
                     error={ContentError}
                     checkDescKey={checkContentKey}
                     data={editorState}
+                    noImgs
                 />
 
                 {alert

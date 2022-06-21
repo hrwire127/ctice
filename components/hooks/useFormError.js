@@ -30,7 +30,11 @@ function useFormError(initialValue = false)
 
     const isValid = (value) =>
     {
-        return value !== "" 
+        if(value)
+        {
+            return value !== "" 
+        }
+        return false
     }
 
     return [error, setError, helperText, setHelperText, checkKey, setTrue, setFalse, isValid]

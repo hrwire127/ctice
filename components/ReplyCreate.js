@@ -46,6 +46,7 @@ function ReplyCreate(props)
         e.preventDefault();
         const data = new FormData(e.currentTarget);
 
+        editorState.entityMap = {}
         data.append("content", JSON.stringify(editorState));
         // data.append("date", new Date())
 
@@ -77,6 +78,7 @@ function ReplyCreate(props)
                     setData={setEditorState}
                     error={ContentError}
                     checkDescKey={checkContentKey}
+                    noImgs
                 />
 
                 {alert

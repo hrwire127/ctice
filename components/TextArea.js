@@ -7,11 +7,18 @@ import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
 import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
 import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
+import createLinkifyPlugin from '@draft-js-plugins/linkify';
 import { Box, Button, TextField, IconButton, Typography, Paper, } from '@mui/material';
-import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, Attachment, Image } from "@mui/icons-material"
+import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, Attachment, Image, AddLink } from "@mui/icons-material"
 import { withStyles } from "@mui/styles"
 import { rgbToHex } from "../utilsCS/_basic"
 import mockUpload from "./mockUpload"
+import
+{
+    ItalicButton,
+    BoldButton,
+    UnderlineButton,
+} from '@draft-js-plugins/buttons';
 
 const styles = theme => ({
     TextAreaError: {
@@ -155,12 +162,13 @@ class TextArea extends React.Component
     render()
     {
         const { editorState } = this.state;
-        const { classes, theme } = this.props
+        const { classes, theme, noImgs } = this.props
 
 
         const focusPlugin = createFocusPlugin();
         const blockDndPlugin = createBlockDndPlugin();
         const resizeablePlugin = createResizeablePlugin();
+        const linkifyPlugin = createLinkifyPlugin();
 
         const imagePlugin = createImagePlugin();
 
@@ -175,6 +183,7 @@ class TextArea extends React.Component
             focusPlugin,
             resizeablePlugin,
             imagePlugin,
+            linkifyPlugin
         ];
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
@@ -235,9 +244,11 @@ class TextArea extends React.Component
                 onMouseLeave={onHoverLeave}
             >
                 <InlineStyleControls
+                    noImgs={noImgs}
                     editorState={editorState}
                     onToggle={this.toggleInlineStyle}
                     setEditor={setEditor}
+                    // linkPlugin={linkPlugin}
                 />
                 <BlockStyleControls
                     editorState={editorState}
@@ -420,6 +431,7 @@ const BlockStyleControls = (props) =>
 
 const InlineStyleControls = (props) =>
 {
+    const { noImgs } = props
     var currentStyle = props.editorState.getCurrentInlineStyle();
     const [open, setOpen] = React.useState(false)
     const [url, setUrl] = React.useState("")
@@ -455,40 +467,50 @@ const InlineStyleControls = (props) =>
                 onToggle={props.onToggle}
                 style={'CODE'}
             />
+            {/* <StyleButton
+                key={'LINK'}
+                active={currentStyle.has('LINK')}
+                label={(<AddLink />)}
+                onToggle={props.onToggle}
+                style={'LINK'}
+            /> */}
+            {/* <linkPlugin.LinkButton />
             <Image sx={{
                 mb: 1, color: "gray", "&:hover": {
                     cursor: "pointer"
                 }
             }}
                 onClick={() => fileRef.current.click()}
-            />
-            <input
-                type="file"
-                id="file"
-                name="file"
-                hidden
-                ref={fileRef}
-                onChange={(e) => props.setEditor(URL.createObjectURL(e.target.files[0]))}
-                accept="image/png, image/jpg, image/jpeg"
-            />
-            <Attachment
-                sx={{
-                    mb: 1, ml: 2, color: "gray", "&:hover": {
-                        cursor: "pointer"
-                    }
-                }}
-                onClick={() => setOpen(!open)}
-            />
-            {open && (<Paper sx={{ width: 100, height: 30, position: "absolute", ml: 25, mb: 7, display: 'flex', justifyContent: "center" }}>
-                <TextField value={url} onChange={(e) => setUrl(e.target.value)} variant="outlined" sx={{ width: "80%", height: "90%", "& input": { padding: "3px" } }} />
-                <IconButton type="submit" onClick={(e) => 
-                {
-                    props.setEditor(url)
-                    setUrl('')
-                    setOpen(false)
-                }}>+</IconButton>
-            </Paper>)
-            }
+            /> */}
+            {!noImgs &&
+                (<>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        hidden
+                        ref={fileRef}
+                        onChange={(e) => props.setEditor(URL.createObjectURL(e.target.files[0]))}
+                        accept="image/png, image/jpg, image/jpeg"
+                    />
+                    <Attachment
+                        sx={{
+                            mb: 1, ml: 2, color: "gray", "&:hover": {
+                                cursor: "pointer"
+                            }
+                        }}
+                        onClick={() => setOpen(!open)}
+                    />
+                    {open && (<Paper sx={{ width: 100, height: 30, position: "absolute", ml: 25, mb: 7, display: 'flex', justifyContent: "center" }}>
+                        <TextField value={url} onChange={(e) => setUrl(e.target.value)} variant="outlined" sx={{ width: "80%", height: "90%", "& input": { padding: "3px" } }} />
+                        <IconButton type="submit" onClick={(e) => 
+                        {
+                            props.setEditor(url)
+                            setUrl('')
+                            setOpen(false)
+                        }}>+</IconButton>
+                    </Paper>)}
+                </>)}
         </div >
     );
 };

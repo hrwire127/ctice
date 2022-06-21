@@ -29,6 +29,7 @@ const CreateForm = (props) => handleAsync(props, (props) =>
 {
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid,] = useFormError(false);
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid,] = useFormError(false);
+    const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid,] = useFormError(false);
 
     const [editorState, setEditorState, resetEditorState] = useLocalStorage("description")
     const [title, setTitle, resetTitle] = useLocalStorage("title", '', true)
@@ -81,11 +82,11 @@ const CreateForm = (props) => handleAsync(props, (props) =>
 
         data.append("tags", JSON.stringify(newTags))
 
-        if (titleValid(title) && descValid(description))
+        if (titleValid(title) && descValid(description) && tagValid(tags[0]))
         {
             setTitleTrue();
             setDescTrue();
-            // console.log(editorState)
+            setTagTrue();
             handleSubmit(data);
         }
         else
@@ -97,6 +98,10 @@ const CreateForm = (props) => handleAsync(props, (props) =>
             if (!descValid(description))
             {
                 setDescFalse();
+            }
+            if (!tagValid(tags[0]))
+            {
+                setTagFalse();
             }
         }
     };
@@ -167,11 +172,18 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                error={TagError}
+                                onKeyPress={checkTagKey}
                                 label="Tags"
                                 placeholder="Select tags"
                             />
                         )}
                     />
+
+                    {alert
+                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                        : (<FormHelperText error={TagError}>{helperTagText}</FormHelperText>)
+                    }
 
                     {loadingSwitch(0, () =>
                     (<>

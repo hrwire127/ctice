@@ -9,6 +9,7 @@ import { getDateDifference } from '../utilsCS/_basic';
 import { CheckBox, HighlightOff, Cake, LocationOn, Twitter, LinkedIn, Facebook, Email } from '@mui/icons-material';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import useStyles from '../assets/styles/_Profile';
+import EditorView from './EditorView';
 
 function Profile(props)
 {
@@ -61,7 +62,8 @@ function Profile(props)
                     About Me
                 </Typography>
                 <Paper className={classes.TextArea}>
-                    {editorState && (<Editor editorKey="editor" readOnly={true} editorState={editorState} />)}
+                    {editorState && (
+                        <EditorView data={JSON.parse(description)} />)}
                 </Paper>
             </Box>
 

@@ -22,6 +22,7 @@ function EditForm(props)
 {
     const [TitleError, , helperTitleText, , checkTitleKey, setTitleTrue, setTitleFalse, titleValid] = useFormError(false)
     const [DescError, , helperDescText, , checkDescKey, setDescTrue, setDescFalse, descValid] = useFormError(false)
+    const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid,] = useFormError(false);
 
     const { declaration, fullTags, setError } = props;
     const { title, description, _id: id, tags: oldTags } = declaration;
@@ -65,10 +66,11 @@ function EditForm(props)
 
         data.append("tags", JSON.stringify(newTags))
 
-        if (titleValid(title) && descValid(description)) //add editor state
+        if (titleValid(title) && descValid(description) && tagValid(tags[0])) //add editor state
         {
             setTitleTrue()
             setDescTrue()
+            setTagTrue();
             handleSubmit(data)
         }
         else
@@ -76,6 +78,10 @@ function EditForm(props)
 
             if (!titleValid(title)) { setTitleFalse() }
             if (!descValid(description)) { setDescFalse() }
+            if (!tagValid(tags[0]))
+            {
+                setTagFalse();
+            }
         }
     }
     return (
@@ -143,11 +149,18 @@ function EditForm(props)
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                error={TagError}
+                                onKeyPress={checkTagKey}
                                 label="Tags"
                                 placeholder="Select tags"
                             />
                         )}
                     />
+                    
+                    {alert
+                        ? (<FormHelperText error={true}>{"Something Went Wrong"}</FormHelperText>)
+                        : (<FormHelperText error={TagError}>{helperTagText}</FormHelperText>)
+                    }
 
                     {submitLoading(0, () => (
                         <>

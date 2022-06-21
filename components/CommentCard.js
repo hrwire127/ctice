@@ -13,6 +13,7 @@ import ReplyCreate from "./ReplyCreate";
 import ReplyList from "./ReplyList"
 import Link from 'next/link'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import EditorView from './EditorView';
 
 function CommentCard(props)
 {
@@ -28,8 +29,8 @@ function CommentCard(props)
     const userCtx = React.useContext(UserContext);
     const adminCtx = React.useContext(AdminContext);
 
-    const data = JSON.parse(content)
-    const editorState = EditorState.createWithContent(convertFromRaw(data))
+    // const data = JSON.parse(content)
+    // const editorState = EditorState.createWithContent(convertFromRaw(data))
     const initDiff = getDateDifference(new Date(), new Date(date[0]))
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
     const classes = useStyles();
@@ -104,7 +105,8 @@ function CommentCard(props)
             <Box className={classes.Container}>
                 <Vote setError={setError} comment user={user} likes={likes} setLikes={setLikes} d_id={cid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
-                    <Editor editorKey="editor" readOnly={true} editorState={editorState} />
+                    <EditorView data={JSON.parse(description)} />
+                    {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
                 </Box>
             </Box>
             <Box className={classes.FooterBar}>

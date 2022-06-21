@@ -44,37 +44,40 @@ async function handleDeclrData(evtTarget, file = undefined, description)
     else data.delete("file")
     console.log(description)
 
-    await new Promise(async (resolve, reject) => 
+    if (description)
     {
-        console.log(Object.keys(description.entityMap))
-        if (Object.keys(description.entityMap).length > 0)
-        {                
-            for(let key in description.entityMap)
-            {
-                const e = description.entityMap[key];
-                const name = uuidv4()
-                const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
-                console.log(blob)
-                console.log(name)
-                if (blob)
-                {
-                    data.append(name, blob)
-                    console.log(data.get(name))
-                    e.data.src = name
-                }
-            }
-            resolve()
-        }
-        else
+        await new Promise(async (resolve, reject) => 
         {
-            resolve()
-        }
-    })
+            if (Object.keys(description.entityMap).length > 0)
+            {
+                for (let key in description.entityMap)
+                {
+                    const e = description.entityMap[key];
+                    const name = uuidv4()
+                    const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
+                    console.log(blob)
+                    console.log(name)
+                    if (blob)
+                    {
+                        data.append(name, blob)
+                        console.log(data.get(name))
+                        e.data.src = name
+                    }
+                }
+                resolve()
+            }
+            else
+            {
+                resolve()
+            }
+        })
 
-    data.append("description", JSON.stringify(description))
+        data.append("description", JSON.stringify(description))
+    }
+
 
     const title_ = data.get("title");
-    const description_ = description.blocks[0].text;
+    const description_ = description ? description.blocks[0].text : null
 
     return { data, title: title_, description: description_ }
 }

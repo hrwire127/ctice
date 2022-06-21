@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, CardActions, Card, CardContent, Typography, IconButton } from '@mui/material'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import EditorView from './EditorView';
 
 function BookmarkCardFull(props) 
 {
@@ -15,8 +16,8 @@ function BookmarkCardFull(props)
     const likes = props.likes.filter(el => el.typeOf === true)
     const dislikes = props.likes.filter(el => el.typeOf === false)
     const classes = useStyles();
-    const data = CropData(JSON.parse(description), 6);
-    const editorState = EditorState.createWithContent(convertFromRaw(data))
+    // const data = CropData(JSON.parse(description), 6);
+    // const editorState = EditorState.createWithContent(convertFromRaw(data))
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
 
     const switchBookmark = () =>
@@ -50,7 +51,8 @@ function BookmarkCardFull(props)
                         {likes.length - dislikes.length}
                     </Typography>
                 </Box>
-                <Editor editorKey="editor" readOnly={true} editorState={editorState} />
+                <EditorView data={JSON.parse(description)} />
+                {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
             </CardContent>
             <CardActions className={classes.Actions} sx={{ zIndex: 'modal' }}>
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
