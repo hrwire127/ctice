@@ -53,15 +53,18 @@ async function handleDeclrData(evtTarget, file = undefined, description)
                 for (let key in description.entityMap)
                 {
                     const e = description.entityMap[key];
-                    const name = uuidv4()
-                    const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
-                    console.log(blob)
-                    console.log(name)
-                    if (blob)
+                    if (e.type !== "LINK")
                     {
-                        data.append(name, blob)
-                        console.log(data.get(name))
-                        e.data.src = name
+                        const name = uuidv4()
+                        const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
+                        console.log(blob)
+                        console.log(name)
+                        if (blob)
+                        {
+                            data.append(name, blob)
+                            console.log(data.get(name))
+                            e.data.src = name
+                        }
                     }
                 }
                 resolve()

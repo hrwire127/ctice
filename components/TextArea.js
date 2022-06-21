@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AtomicBlockUtils, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding } from 'draft-js';
+import { AtomicBlockUtils, EditorState, RichUtils, resetKeyGenerator, convertToRaw, convertFromRaw, getDefaultKeyBinding, Entity } from 'draft-js';
 import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import 'draft-js/dist/Draft.css';
 import createImagePlugin from '@draft-js-plugins/image';
@@ -14,16 +14,13 @@ import { withStyles } from "@mui/styles"
 import { rgbToHex } from "../utilsCS/_basic"
 import mockUpload from "./mockUpload"
 
+import createLinkPlugin from "@draft-js-plugins/anchor";
+import "@draft-js-plugins/anchor/lib/plugin.css";
+import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
+import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 
-import createLinkPlugin from '@draft-js-plugins/anchor';
-import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
-import
-{
-    ItalicButton,
-    BoldButton,
-    UnderlineButton,
-} from '@draft-js-plugins/buttons';
-import "@draft-js-plugins/anchor/lib/plugin.css"
+const linkPlugin = createLinkPlugin();
+
 
 const styles = theme => ({
     TextAreaError: {
@@ -48,12 +45,13 @@ const styles = theme => ({
 })
 
 
-const linkPlugin = createLinkPlugin();
-const inlineToolbarPlugin = createInlineToolbarPlugin();
-const { InlineToolbar } = inlineToolbarPlugin;
-
-
 const imagePlugin = createImagePlugin();
+
+const toolbarPlugin = createToolbarPlugin({
+    structure: [linkPlugin.LinkButton]
+});
+
+const { Toolbar } = toolbarPlugin;
 
 const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
     handleUpload: mockUpload,
@@ -178,6 +176,8 @@ class TextArea extends React.Component
 
     }
 
+
+
     render()
     {
         const { editorState } = this.state;
@@ -196,7 +196,8 @@ class TextArea extends React.Component
             resizeablePlugin,
             imagePlugin,
             linkifyPlugin,
-            inlineToolbarPlugin, linkPlugin
+            linkPlugin,
+            toolbarPlugin
         ];
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
@@ -282,30 +283,14 @@ class TextArea extends React.Component
                         keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}
                         plugins={plugins}
                         onBlur={onBlur}
-                    />
-                    <InlineToolbar>
-                        {
-                            // may be use React.Fragment instead of div to improve perfomance after React 16
-                            (externalProps) =>
-                            {
-                                console.log(externalProps)
-                                return (
-                                    <div>
-                                        <BoldButton {...externalProps} />
-                                        <ItalicButton {...externalProps} />
-                                        <UnderlineButton {...externalProps} />
-                                        <linkPlugin.LinkButton {...externalProps} />
-                                    </div>
-                                )
-                            }
-                        }
-                    </InlineToolbar>
-
-                    {/* theme:
-                    active: "a9immln"
-                    button: "b181v2oy"
-                    buttonWrapper: "bpsgbes" */}
-                    
+                    /> <Toolbar>
+                        {// may be use React.Fragment instead of div to improve perfomance after React 16
+                            externalProps => (
+                                <div>
+                                    <linkPlugin.LinkButton {...externalProps} />
+                                </div>
+                            )}
+                    </Toolbar>
                 </Box>
             </Box >
         );
