@@ -13,12 +13,17 @@ import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, 
 import { withStyles } from "@mui/styles"
 import { rgbToHex } from "../utilsCS/_basic"
 import mockUpload from "./mockUpload"
+
+
+import createLinkPlugin from '@draft-js-plugins/anchor';
+import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
 import
 {
     ItalicButton,
     BoldButton,
     UnderlineButton,
 } from '@draft-js-plugins/buttons';
+import "@draft-js-plugins/anchor/lib/plugin.css"
 
 const styles = theme => ({
     TextAreaError: {
@@ -41,6 +46,20 @@ const styles = theme => ({
     }
 
 })
+
+
+const linkPlugin = createLinkPlugin();
+const inlineToolbarPlugin = createInlineToolbarPlugin();
+const { InlineToolbar } = inlineToolbarPlugin;
+
+
+const imagePlugin = createImagePlugin();
+
+const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
+    handleUpload: mockUpload,
+    addImage: imagePlugin.addImage,
+});
+
 
 class TextArea extends React.Component
 {
@@ -170,20 +189,14 @@ class TextArea extends React.Component
         const resizeablePlugin = createResizeablePlugin();
         const linkifyPlugin = createLinkifyPlugin();
 
-        const imagePlugin = createImagePlugin();
-
-        const dragNDropFileUploadPlugin = createDragNDropUploadPlugin({
-            handleUpload: mockUpload,
-            addImage: imagePlugin.addImage,
-        });
-
         const plugins = [
             dragNDropFileUploadPlugin,
             blockDndPlugin,
             focusPlugin,
             resizeablePlugin,
             imagePlugin,
-            linkifyPlugin
+            linkifyPlugin,
+            inlineToolbarPlugin, linkPlugin
         ];
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
@@ -248,7 +261,7 @@ class TextArea extends React.Component
                     editorState={editorState}
                     onToggle={this.toggleInlineStyle}
                     setEditor={setEditor}
-                    // linkPlugin={linkPlugin}
+                // linkPlugin={linkPlugin}
                 />
                 <BlockStyleControls
                     editorState={editorState}
@@ -270,6 +283,29 @@ class TextArea extends React.Component
                         plugins={plugins}
                         onBlur={onBlur}
                     />
+                    <InlineToolbar>
+                        {
+                            // may be use React.Fragment instead of div to improve perfomance after React 16
+                            (externalProps) =>
+                            {
+                                console.log(externalProps)
+                                return (
+                                    <div>
+                                        <BoldButton {...externalProps} />
+                                        <ItalicButton {...externalProps} />
+                                        <UnderlineButton {...externalProps} />
+                                        <linkPlugin.LinkButton {...externalProps} />
+                                    </div>
+                                )
+                            }
+                        }
+                    </InlineToolbar>
+
+                    {/* theme:
+                    active: "a9immln"
+                    button: "b181v2oy"
+                    buttonWrapper: "bpsgbes" */}
+                    
                 </Box>
             </Box >
         );
