@@ -21,7 +21,8 @@ function ProfileWindow(props)
 
     const [submitWhile, submitSwitch] = useLoading(false)
 
-    const classes = useStyles(props)();
+    const classes = useStyles(props)()
+    
     const selections = [
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1,
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_2,

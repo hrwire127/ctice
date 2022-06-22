@@ -63,7 +63,7 @@ function Profile(props)
                 </Typography>
                 <Paper className={classes.TextArea}>
                     {editorState && (
-                        <EditorView data={JSON.parse(description)} />)}
+                        <EditorView data={JSON.parse(bio)} />)}
                 </Paper>
             </Box>
 

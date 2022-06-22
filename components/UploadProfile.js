@@ -7,8 +7,10 @@ function UploadIconProfile(props)
 {
     const { setImage, setOpen } = props;
     const preparedImg = props.image
-        ? (props.image.content ? URL.createObjectURL(props.image.content) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)
+        ? (props.image.content ? URL.createObjectURL(props.image.content) : (props.image.type ? URL.createObjectURL(props.image) : props.image))
         : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+
+    console.log(props.image)
 
 
     const inputFileRef = useRef(null);
