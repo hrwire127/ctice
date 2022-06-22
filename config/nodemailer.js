@@ -5,6 +5,7 @@ const pass = process.env.PASS;
 
 const transport = nodemailer.createTransport({
 	service: "Gmail",
+	secure: true,
 	auth: {
 		user: user,
 		pass: pass,
@@ -29,6 +30,7 @@ module.exports.sendRegisterEmail = function (name, email, confirmationCode)
 			resolve(res)
 		}).catch(err => 
 		{
+			console.log(err)
 			reject(err)
 		});
 	})

@@ -7,7 +7,7 @@ function TagFilter(props)
 
     return (
         <Autocomplete
-            sx={{ mt: 2, width: 200 }}
+            sx={{ mt: 2, width: 200}}
             multiple
             id="tags-outlined"
             options={fullTags}
@@ -17,7 +17,8 @@ function TagFilter(props)
             onChange={(event, value) => setTags(value)}
             renderInput={(params) => (
                 <TextField
-                    {...params}
+                    {...params} 
+                    variant="standard" 
                     label="Tags"
                     placeholder="Select tags"
                 />

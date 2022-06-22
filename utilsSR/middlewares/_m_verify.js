@@ -14,7 +14,7 @@ function verifyPendingCode_SR(req, res, next)
             if (!pending)
             {
                 req.type = 0
-                next(new UserError(...Object.values(errorMessages.pendingExpired)))
+                return new UserError(...Object.values(errorMessages.pendingExpired)).throw_SR(req, res)
             }
             next()
         })
@@ -54,7 +54,7 @@ async function verifyResetToken_SR(req, res, next)
     else
     {
         req.type = 0
-        next(new UserError(...Object.values(errorMessages.didNotWork)))
+        throw new UserError(...Object.values(errorMessages.didNotWork)).throw_SR(req, res)
     }
 };
 

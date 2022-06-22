@@ -51,7 +51,7 @@ function isAdmin_SR(req, res, next)
         }
     }
     req.type = 0
-    next(new UserError(...Object.values(errorMessages.PageNotFound)))
+    throw new UserError(...Object.values(errorMessages.PageNotFound)).throw_SR(req, res)
 }
 
 function isAdmin_CS(req, res, next)

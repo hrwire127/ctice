@@ -17,6 +17,7 @@ import useLoading from './hooks/useLoading'
 import TextArea from "./TextArea"
 import BackLink from "./BackLink"
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useAlertMsg from "./hooks/useAlertMsg"
 
 function Welcome(props)
 {
@@ -28,7 +29,7 @@ function Welcome(props)
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [loadingWhile, loadingSwitch] = useLoading(false)
-    const [image, changeImage] = useState();
+    const [image, setImage] = useState();
     const [editorState, setEditorState] = useState();
     const [location, setLocation] = useState()
 
@@ -46,8 +47,8 @@ function Welcome(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    // Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     if (res.error) setAlertMsg(res.error.message, "error")
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })
         })
     };
@@ -64,23 +65,39 @@ function Welcome(props)
 
         handleSubmit(data);
     }
+
+
     return loadingSwitch(0, () => (
         <Box className={classes.Container}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                 <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Please introduce a password
+                Please fill out the profile
             </Typography>
-            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+            {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box
                 component="form"
                 noValidate
                 sx={{ mt: 3 }}
                 onSubmit={errCheck}
             >
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{ mb: 5 }}>
                     <Grid item xs={4}>
+                        <UploadProfile
+                            setImage={setImage}
+                            image={image}
+                            noWindow
+                        />
+                        {/* {isOpen && (<ProfileWindow
+                            image={image}
+                            setImage={setImage}
+                            setOpen={setOpen}
+                        />)} */}
+                    </Grid>
+                    <Grid
+                        item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}
+                    >
                         <TextField
                             margin="normal"
                             inputProps={{ maxLength: 10 }}
@@ -95,11 +112,6 @@ function Welcome(props)
                             onKeyPress={checkPasswordKey}
                         />
                         <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <UploadProfile changeFile={changeImage} file={image} />
-                    </Grid>
-                    <Grid item xs={4}>
                         <LocationSearch
                             setLocation={setLocation}
                             error={LocationError}
@@ -107,51 +119,46 @@ function Welcome(props)
                             limit={5}
                         />
                     </Grid>
-                    <Grid item xs={4}>
-                        <TextArea
-                            placeholder="Description"
-                            setData={setEditorState}
-                            error={DescError}
-                            checkDescKey={checkDescKey}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            margin="normal"
-                            name="twitter"
-                            label="Twitter Link"
-                            type="twitter"
-                            id="twitter"
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            margin="normal"
-                            name="facebook"
-                            label="Facebook Link"
-                            type="facebook"
-                            id="facebook"
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            margin="normal"
-                            name="linkedin"
-                            label="Linkedin Link"
-                            type="linkedin"
-                            id="linkedin"
-                        />
-                    </Grid>
                 </Grid>
 
+                <TextArea
+                    placeholder="About you"
+                    setData={setEditorState}
+                    error={alert && alert.type === "error"}
+                    checkDescKey={checkDescKey}
+                />
+                <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 2 }}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="twitter"
+                        label="Twitter Link"
+                        type="twitter"
+                        id="twitter"
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="facebook"
+                        label="Facebook Link"
+                        type="facebook"
+                        id="facebook"
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="linkedin"
+                        label="Linkedin Link"
+                        type="linkedin"
+                        id="linkedin"
+                    />
+                </Box>
+
                 {loadingSwitch(0, () =>
-                (<>
+                (<Box sx={{ textAlign: "center" }}>
                     <Button
                         type="submit"
                         variant="contained"
@@ -159,8 +166,7 @@ function Welcome(props)
                     >
                         Register
                     </Button>
-                    <BackLink>Back</BackLink>
-                </>))}
+                </Box>))}
             </Box>
         </Box>
     ))

@@ -105,7 +105,7 @@ function Change(props)
 			noValidate
 		>
 			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
-			<Grid container spacing={2} sx={{ mb: 2 }}>
+			<Grid container spacing={2} sx={{ mb: 5 }}>
 				<Grid item xs={4}>
 					<UploadProfile
 						profile={profile.url}
@@ -153,9 +153,10 @@ function Change(props)
 					</div>
 				</Grid>
 			</Grid>
+
 			<TextArea
 				styles={classes.Editor}
-				placeholder="Description"
+				placeholder="About you"
 				setData={setEditorState}
 				error={flash && flash.type === "error"}
 				data={JSON.parse(bio)}

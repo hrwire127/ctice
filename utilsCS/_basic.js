@@ -115,7 +115,7 @@ function getGlobals(context)
     let isUser;
     let isAdmin = false;
     let lightTheme = true;
-    let style = styleFull;
+    let style = styleCompact;
     let sort = sortDate;
     if (context.req.session.passport) isUser = context.req.session.passport.user
     if (context.req.session.light) lightTheme = context.req.session.light

@@ -25,8 +25,8 @@ import TransitionAlerts from './TransitionAlerts'
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 import Vote from "./Vote";
-import { LinkedinShareButton } from 'react-share';
-import { LinkedIn } from '@mui/icons-material';
+import { LinkedinShareButton, FacebookShareButton, TwitterShareButton } from 'react-share';
+import { LinkedIn, Facebook, Twitter } from '@mui/icons-material';
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import EditorView from './EditorView';
 import useAlertMsg from './hooks/useAlertMsg';
@@ -138,12 +138,26 @@ function DeclrView(props)
     const ShareButtons = () =>
     {
         return (
-            <LinkedinShareButton
-                url={typeof window !== "undefined" && window.location.url}
-                title="Share"
-            >
-                <LinkedIn />
-            </LinkedinShareButton>
+            <>
+                <LinkedinShareButton
+                    url={typeof window !== "undefined" && window.location.url}
+                    title="Share"
+                >
+                    <LinkedIn />
+                </LinkedinShareButton>
+                <FacebookShareButton
+                    url={typeof window !== "undefined" && window.location.url}
+                    title="Share"
+                >
+                    <Facebook />
+                </FacebookShareButton>
+                <TwitterShareButton
+                    url={typeof window !== "undefined" && window.location.url}
+                    title="Share"
+                >
+                    <Twitter />
+                </TwitterShareButton>
+            </>
         )
     }
 

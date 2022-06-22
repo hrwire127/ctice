@@ -5,7 +5,6 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "right",
         position: "sticky",
         overflowY: "auto",
-        width: "auto",
         top: 24
     },
     Body:
@@ -13,6 +12,18 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         paddingLeft: theme.maxPadding,
         paddingRight: theme.maxPadding,
+        ["@media (max-width:1300px)"]: {
+            paddingLeft: theme.minPadding,
+            paddingRight: theme.minPadding,
+        },
+        ["@media (max-width:960px)"]: {
+            paddingLeft: 0,
+            paddingRight: 0,
+        },
+        ["@media (max-width:830px)"]: {
+            paddingLeft: 0,
+            paddingRight: 0,
+        },
         height: "100%",
         flex: 1
     },

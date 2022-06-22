@@ -11,7 +11,7 @@ function Sort(props)
     const { sort, handleSort } = props
 
     return (<Box sx={{ display: 'flex', justifyContent: "right" }}>
-        <FormControl sx={{ width: 120, mt: 2, mb: 2 }}>
+        <FormControl size="small" sx={{ width: 120, mt: 2, mb: 2 }}>
             <InputLabel id="demo-simple-select-label">Sort</InputLabel>
             <Select
                 labelId="demo-simple-select-label"

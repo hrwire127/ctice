@@ -1,11 +1,12 @@
 import React, { useRef } from 'react'
-import { Box, } from '@mui/material';
+import { Box } from '@mui/material';
 import { FileUpload } from '@mui/icons-material';
 import useStyles from '../assets/styles/_UploadProfile'
 
-function UploadIconProfile(props)
+function UploadProfile(props)
 {
-    const { setImage, setOpen } = props;
+    const { setImage, setOpen, noWindow } = props;
+
     const preparedImg = props.image
         ? (props.image.content ? URL.createObjectURL(props.image.content) : (props.image.type ? URL.createObjectURL(props.image) : props.image))
         : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
@@ -15,7 +16,14 @@ function UploadIconProfile(props)
     const classes = useStyles(props, preparedImg)()
 
     return (<Box
-        onClick={() => setOpen(true)}
+        onClick={() =>
+        {
+            if (noWindow)
+            {
+                inputFileRef.current.click()
+            }
+            else setOpen(true)
+        }}
         className={classes.Profile}
     >
         <div
@@ -26,7 +34,11 @@ function UploadIconProfile(props)
             id="profile"
             name="profile"
             ref={inputFileRef}
-            onChange={e => setImage(e.target.files[0])}
+            onChange={(e) => 
+            {
+                console.log(e.target.files[0])
+                if (e.target.files[0]) setImage(e.target.files[0])
+            }}
             hidden
             accept="image/png, image/jpg, image/jpeg"
         />
@@ -37,4 +49,4 @@ function UploadIconProfile(props)
     </Box>)
 }
 
-export default UploadIconProfile
+export default UploadProfile

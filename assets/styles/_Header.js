@@ -10,15 +10,22 @@ const useStyles = makeStyles((theme) => ({
 		},
 		paddingLeft: theme.maxPadding,
 		paddingRight: theme.maxPadding,
-		["@media (max-width:740px)"]: {
+		["@media (max-width:1300px)"]: {
 			paddingLeft: theme.minPadding,
 			paddingRight: theme.minPadding,
+		},
+		["@media (max-width:500px)"]: {
+			paddingLeft: 10,
+			paddingRight: 10,
 		},
 	},
 	List: {
 		flex: 1,
 		justifyContent: 'space-evenly',
-		overflowX: 'auto'
+		overflowX: 'auto',
+		["@media (max-width:350px)"]: {
+			display: "none"
+		},
 	},
 	Profile: {
 		transition: "transform 0.4s",
@@ -39,11 +46,12 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		gap: 20,
-		["@media (max-width:553px)"]: {
-			gap: 0,
-		},
 		["@media (max-width:740px)"]: {
 			marginLeft: 20
+		},
+		["@media (max-width:286px)"]: {
+			marginLeft: 5,
+			gap: 5
 		},
 	},
 	Tools: {

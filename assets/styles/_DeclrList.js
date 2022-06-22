@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         width: "100%",
         margin: "auto",
+        alignItems: "center",
         ["@media (max-width:510px)"]: {
             flexWrap: "wrap",
             justifyContent: "center"

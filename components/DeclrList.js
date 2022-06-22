@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import
 {
     Box, Typography, ButtonGroup, Button,
-    IconButton,
+    IconButton, Collapse, Link as MuiLink
 } from '@mui/material';
-import { Add } from "@mui/icons-material"
+import { Add, MoreHoriz, Close } from "@mui/icons-material"
 import useStyles from '../assets/styles/_DeclrList'
 import AdminContext from './context/contextAdmin'
 import Link from 'next/link'
@@ -37,6 +37,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const [dateValue, setDate, resetDate] = useLocalStorage("declr_date", 'Invalid', true);
     const [queryValue, setQuery, resetQuery] = useLocalStorage("declr_query", '', true);
     const [tags, setTags, resetTags] = useLocalStorage("declr_tags", [], true);
+    const [open, setOpen, resetOpen] = useLocalStorage("search_open", false, true);
     const [declarations, setDeclarations] = useState([]);
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
@@ -115,9 +116,6 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     return (
         <>
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
-            <Search query={queryValue} setQuery={setQuery} />
-            <TagFilter fullTags={fullTags} setTags={setTags} value={tags} />
-            <Sort handleSort={handleSort} sort={sort} />
             <Box className={classes.Bar}>
                 <Typography variant="h4">
                     Announcements
@@ -128,7 +126,17 @@ const DeclrList = (props) => handleAsync(props, (props) =>
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
                 </Box>
-                <DatePicker setTime={setDate} value={dateValue} />
+                <Sort handleSort={handleSort} sort={sort} />
+            </Box>
+            <Box sx={{textAlign: "center"}}>
+                <IconButton onClick={() => setOpen(!open)}>{open ? (<Close />) : (<MoreHoriz />)}</IconButton>
+                <Collapse in={open} >
+                    <Box sx={{ width: "100%", display: 'flex', justifyContent: "space-between", alignItems: "end" }}>
+                        <Search query={queryValue} setQuery={setQuery} />
+                        <TagFilter fullTags={fullTags} setTags={setTags} value={tags} />
+                        <DatePicker setTime={setDate} value={dateValue} />
+                    </Box>
+                </Collapse>
             </Box>
             <Declrs />
         </>

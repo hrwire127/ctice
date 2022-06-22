@@ -1,4 +1,5 @@
 const codes = require("../../seeds/errorCodes")
+const { app } = require("../../main");
 
 class UserError extends Error
 {
@@ -25,12 +26,17 @@ class UserError extends Error
     throw_CS(res) 
     {
         res.json(
-            { 
+            {
                 error: {
                     message: this.message,
                     status: this.status
                 }
             })
+    }
+    throw_SR(req, res) 
+    {
+        console.log(this)
+        app.render(req, res, "/", { error: this })
     }
 }
 

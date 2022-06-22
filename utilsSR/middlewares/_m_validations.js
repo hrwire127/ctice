@@ -59,6 +59,8 @@ async function validateRegUser(req, res, next)
 {
     let { confirmationCode, password, profile, location, bio, facebook, linkedin, twitter } = req.body
 
+    console.log(req.body)
+
     const declarationSchema = Joi.object({
         confirmationCode: Joi.string().required(),
         password: Joi.string().required(),
@@ -133,6 +135,7 @@ async function validateRegUser(req, res, next)
 async function validatePendingUser(req, res, next) 
 {
     const { username, email } = req.body;
+
     const userSchema = Joi.object({
         username: Joi.string().required(),
         email: Joi.string().required()
@@ -240,7 +243,7 @@ async function validateChange(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-         throw new UserError(msg, 401).throw_CS(res)
+        throw new UserError(msg, 401).throw_CS(res)
     }
 
     const bodyError = inspectChange(username,
@@ -251,7 +254,7 @@ async function validateChange(req, res, next)
 
     if (bodyError) 
     {
-         throw new UserError(bodyError, 401).throw_CS(res)
+        throw new UserError(bodyError, 401).throw_CS(res)
     }
 
     if (req.body.username) req.body.username = username.trim()

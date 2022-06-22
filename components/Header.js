@@ -4,7 +4,7 @@ import
 	Toolbar, Button, IconButton,
 	Box, Badge,
 } from '@mui/material';
-import { Mail, Logout as LogoutIcon, Notifications, AssignmentInd, AccountCircle, } from "@mui/icons-material"
+import { Mail, Logout as LogoutIcon, Notifications, AssignmentInd, AccountCircle, Menu } from "@mui/icons-material"
 import Link from 'next/link';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
@@ -22,6 +22,25 @@ const Header = (props) =>
 	const [notifOpen, setNotifOpen] = useState(false);
 	const [notifications, setNotificaions] = useState([]);
 	const [views, setViews] = useState();
+
+	const [windowSize, setWindowSize] = useState();
+
+	useEffect(() =>
+	{
+		function handleWindowResize()
+		{
+			setWindowSize(window.innerWidth);
+		}
+
+		handleWindowResize()
+
+		window.addEventListener('resize', handleWindowResize);
+
+		return () =>
+		{
+			window.removeEventListener('resize', handleWindowResize);
+		};
+	}, []);
 
 	//\/setError
 	const { title = "ctice", setError } = props;
@@ -54,6 +73,14 @@ const Header = (props) =>
 		<Box className={classes.Total}>
 			<Box className={classes.RedBar} />
 			<Toolbar className={classes.Toolbar}>
+				<Box
+					id="menu-btn"
+				>
+					{windowSize < 830 && (
+						<IconButton>
+							<Menu />
+						</IconButton>)}
+				</Box>
 				<Box sx={{ height: "100%", display: "flex", alignItems: "center" }}>
 					<a href="/" className={classes.Brand}>
 						{title}
@@ -88,16 +115,16 @@ const Header = (props) =>
 							</>)
 							: (<>
 								<Link href="/user/register" className={classes.Auth}>
-									<Button className={classes.SignUp} disableElevation variant="outlined">Sign Up</Button>
+									<Button className={classes.SignUp} disableElevation size={windowSize < 320 ? "small" : "medium"} variant="outlined">Sign Up</Button>
 								</Link>
 								<Link href="/user/login" className={classes.Auth}>
-									<Button className={classes.SignIn} disableElevation variant="contained">Sign In</Button>
+									<Button className={classes.SignIn} disableElevation size={windowSize < 320 ? "small" : "medium"} variant="contained">Sign In</Button>
 								</Link>
 							</>)
 						}
 					</Box>
 				</Box>
-			</Toolbar>
+			</Toolbar >
 		</Box >
 	);
 }

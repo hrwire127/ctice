@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Box, Typography, ButtonGroup, Button, Grid, IconButton, AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, MailIcon, Toolbar, ListItemButton } from '@mui/material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Box, Typography, CssBaseline, List, ListItem, ListItemText, ListItemButton, SwipeableDrawer, IconButton } from '@mui/material';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
@@ -9,6 +9,28 @@ import FullBanner from './FullBanner';
 function HomeNavigation(props)
 {
     const classes = useStyles();
+    const [open, setOpen] = useState(false);
+    const [windowSize, setWindowSize] = useState();
+
+    useEffect(() =>
+    {
+        const menuBtn = document.querySelector("#menu-btn")
+        menuBtn.addEventListener('click', () => setOpen(!open))
+
+        function handleWindowResize()
+        {
+            setWindowSize(window.innerWidth);
+        }
+
+        handleWindowResize()
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () =>
+        {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
 
     const Item = (props) =>
     {
@@ -38,7 +60,7 @@ function HomeNavigation(props)
                 <ListItem key={text} disablePadding>
                     {router.pathname.includes(url)
                         ? selected
-                        : basic                   
+                        : basic
                     }
                 </ListItem >)
         }
@@ -62,8 +84,27 @@ function HomeNavigation(props)
         </List>
     );
 
-    return (
-        <Box className={classes.Body}>
+    console.log(windowSize)
+
+    return windowSize < 830
+        ? (<>
+            <SwipeableDrawer
+                open={open}
+                onClose={() => setOpen(false)}
+                onOpen={() => setOpen(true)}
+            >
+                <Box
+                    component="nav"
+                    className={classes.Drawer}
+                    aria-label="mailbox folders"
+                >
+                    {drawer}
+                </Box>
+            </SwipeableDrawer>
+
+            {props.children}
+        </>)
+        : (<Box className={classes.Body}>
             <CssBaseline />
             <Box
                 component="nav"
@@ -78,8 +119,7 @@ function HomeNavigation(props)
             >
                 {props.children}
             </Box>
-        </Box>
-    )
+        </Box >)
 }
 
 export default HomeNavigation

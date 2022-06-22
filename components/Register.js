@@ -6,6 +6,7 @@ import BackLink from "./BackLink"
 import useLoading from './hooks/useLoading'
 import Rules from "../utilsCS/clientRules"
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useAlertMsg from './hooks/useAlertMsg'
 
 function Register(props)
 {
@@ -16,18 +17,19 @@ function Register(props)
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitLoading] = useLoading(false)
 
-    const handleSubmit = async (body) =>
+    const handleSubmit = async (data) =>
     {
+        console.log(data)
         submitWhile(async () =>
         {
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/pending`, {
                 method: 'POST',
-                body: body,
+                body: data
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    // Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError);
                     if (res.error) setAlertMsg(res.error.message, "error")
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError);
                 })
         })
     };

@@ -40,7 +40,7 @@ const themeLight = createTheme({
     },
     gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%, #143F6B 0%, #4D77FF 100%)",
     maxPadding: 200,
-    minPadding: 30,
+    minPadding: 60,
     drawerWidth: 170,
     windowDrawerWidth: 280,
     cardHeight: 55
@@ -110,7 +110,7 @@ const themeBlack = createTheme({
     },
     gradient: "linear-gradient(274deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 0%,#FEB139 0%, #F55353 100%)",
     maxPadding: 200,
-    minPadding: 30,
+    minPadding: 60,
     drawerWidth: 170,
     windowDrawerWidth: 280,
     cardHeight: 55
