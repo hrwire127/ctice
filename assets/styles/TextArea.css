@@ -9,6 +9,21 @@
   margin: 10px;
 }
 
+.bc4rxid {
+  border: none;
+  padding-left: 0;
+  background-color: #9d9d9d00;
+}
+
+.bc4rxid svg 
+{
+  fill: gray;
+}
+
+.bc4rxid:hover {
+  cursor: pointer;
+}
+
 .DraftEditor-editorContainer figure img {
   width: 100% !important;
 }

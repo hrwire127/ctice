@@ -6,6 +6,7 @@ const useStyles = makeStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: "100%"
     },
     Form: {
         mt: 1,

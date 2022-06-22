@@ -17,7 +17,7 @@ import mockUpload from "./mockUpload"
 import createLinkPlugin from "@draft-js-plugins/anchor";
 import "@draft-js-plugins/anchor/lib/plugin.css";
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
-import '@draft-js-plugins/static-toolbar/lib/plugin.css';
+// import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 
 const linkPlugin = createLinkPlugin();
 
@@ -39,6 +39,19 @@ const styles = theme => ({
         "&:hover":
         {
             borderColor: theme.palette.text.default,
+        }
+    },
+    Toolbar: {
+        background: theme.palette.background.default,
+        "& button":
+        {
+            mb: 1,
+            mr: 2,
+            color: "gray",
+            border: "none",
+            "&:hover": {
+                cursor: "pointer"
+            }
         }
     }
 
@@ -257,17 +270,27 @@ class TextArea extends React.Component
                 onMouseEnter={onHoverEnter}
                 onMouseLeave={onHoverLeave}
             >
-                <InlineStyleControls
-                    noImgs={noImgs}
-                    editorState={editorState}
-                    onToggle={this.toggleInlineStyle}
-                    setEditor={setEditor}
-                // linkPlugin={linkPlugin}
-                />
-                <BlockStyleControls
-                    editorState={editorState}
-                    onToggle={this.toggleBlockType}
-                />
+                <Box sx={{ display: 'flex', justifyContent: "left" }}>
+                    <InlineStyleControls
+                        noImgs={noImgs}
+                        editorState={editorState}
+                        onToggle={this.toggleInlineStyle}
+                        setEditor={setEditor}
+                    // linkPlugin={linkPlugin}
+                    />
+                    <BlockStyleControls
+                        editorState={editorState}
+                        onToggle={this.toggleBlockType}
+                    />
+                </Box>
+                <Toolbar style={{ml: -1}}>
+                    {externalProps => (
+                        <>
+                            <linkPlugin.LinkButton style={{
+                            }} {...externalProps} />
+                        </>
+                    )}
+                </Toolbar>
 
                 <Box className={className} onClick={onFocus}>
                     <Editor
@@ -283,14 +306,7 @@ class TextArea extends React.Component
                         keyBindingFn={(e) => { this.props.checkDescKey(e, false); return getDefaultKeyBinding(e); }}
                         plugins={plugins}
                         onBlur={onBlur}
-                    /> <Toolbar>
-                        {// may be use React.Fragment instead of div to improve perfomance after React 16
-                            externalProps => (
-                                <div>
-                                    <linkPlugin.LinkButton {...externalProps} />
-                                </div>
-                            )}
-                    </Toolbar>
+                    />
                 </Box>
             </Box >
         );
@@ -416,7 +432,7 @@ const BlockStyleControls = (props) =>
         .getType();
 
     return (
-        <div style={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+        <>
             <StyleNum onToggle={props.onToggle} />
             <StyleButton
                 key={'blockquote'}
@@ -446,7 +462,7 @@ const BlockStyleControls = (props) =>
                 onToggle={props.onToggle}
                 style={'code-block'}
             />
-        </div>
+        </>
     );
 };
 
@@ -459,7 +475,7 @@ const InlineStyleControls = (props) =>
     const fileRef = React.useRef()
 
     return (
-        <div style={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+        <>
             <StyleButton
                 key={'BOLD'}
                 active={currentStyle.has('BOLD')}
@@ -488,23 +504,18 @@ const InlineStyleControls = (props) =>
                 onToggle={props.onToggle}
                 style={'CODE'}
             />
-            {/* <StyleButton
-                key={'LINK'}
-                active={currentStyle.has('LINK')}
-                label={(<AddLink />)}
-                onToggle={props.onToggle}
-                style={'LINK'}
-            /> */}
-            {/* <linkPlugin.LinkButton />
-            <Image sx={{
-                mb: 1, color: "gray", "&:hover": {
-                    cursor: "pointer"
-                }
-            }}
-                onClick={() => fileRef.current.click()}
-            /> */}
             {!noImgs &&
                 (<>
+                    <Image sx={{
+                        mb: 1,
+                        mr: 2,
+                        color: "gray",
+                        "&:hover": {
+                            cursor: "pointer"
+                        }
+                    }}
+                        onClick={() => fileRef.current.click()}
+                    />
                     <input
                         type="file"
                         id="file"
@@ -516,13 +527,16 @@ const InlineStyleControls = (props) =>
                     />
                     <Attachment
                         sx={{
-                            mb: 1, ml: 2, color: "gray", "&:hover": {
+                            mb: 1,
+                            mr: 2,
+                            color: "gray",
+                            "&:hover": {
                                 cursor: "pointer"
                             }
                         }}
                         onClick={() => setOpen(!open)}
                     />
-                    {open && (<Paper sx={{ width: 100, height: 30, position: "absolute", ml: 25, mb: 7, display: 'flex', justifyContent: "center" }}>
+                    {open && (<Paper sx={{ width: 100, height: 30, position: "absolute", ml: 28, mb: 30, display: 'flex', justifyContent: "center" }}>
                         <TextField value={url} onChange={(e) => setUrl(e.target.value)} variant="outlined" sx={{ width: "80%", height: "90%", "& input": { padding: "3px" } }} />
                         <IconButton type="submit" onClick={(e) => 
                         {
@@ -532,7 +546,7 @@ const InlineStyleControls = (props) =>
                         }}>+</IconButton>
                     </Paper>)}
                 </>)}
-        </div >
+        </>
     );
 };
 

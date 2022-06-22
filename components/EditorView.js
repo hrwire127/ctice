@@ -17,7 +17,7 @@ import mockUpload from "./mockUpload"
 import createLinkPlugin from "@draft-js-plugins/anchor";
 import "@draft-js-plugins/anchor/lib/plugin.css";
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
-import '@draft-js-plugins/static-toolbar/lib/plugin.css';
+// import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 
 const linkPlugin = createLinkPlugin();
 

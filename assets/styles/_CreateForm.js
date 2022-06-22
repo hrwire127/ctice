@@ -6,13 +6,11 @@ const useStyles = makeStyles({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        width: "100%",
     },
     Form: {
         width: "100%",
         marginTop: 8,
-    },
-    Editor: {
-        
     }
 });
 
