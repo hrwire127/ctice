@@ -11,6 +11,7 @@ function SelectionCard(props)
             sx={{
                 width: 100,
                 height: 100,
+                position: "relative",
                 "& div": {
                     width: "100%",
                     height: "100%",
@@ -29,8 +30,10 @@ function SelectionCard(props)
                 sx={{
                     fontSize: 90,
                     position: "absolute",
-                    top: "42%",
-                }} />
+                    top: "0%",
+                    left: "6%"
+                }}
+            />
         </Paper>)
         : (<Paper
             onClick={() => setImage(image)}

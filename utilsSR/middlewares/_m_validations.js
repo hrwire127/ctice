@@ -328,7 +328,7 @@ async function validateGallery(req, res, next)
     {
         console.log(error)
         const msg = error.details.map(e => e.message).join(',')
-        throw new UserError(msg, 401).throw_CS(res)
+        return new UserError(msg, 401).throw_CS(res)
     }
     next()
 }

@@ -192,7 +192,7 @@ UserSchema.statics.processRegister = async function (req, res, { pending, passwo
         }
         else
         {
-            const file = files ? await upload_profiles(files.profile) : null
+            const file = files ? await upload_profiles(files.profile, res) : null
 
             const user = new User({
                 username: pending.username,
@@ -273,7 +273,7 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
-            let file = await upload_profiles(req.files.profile)
+            let file = await upload_profiles(req.files.profile, res)
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(
@@ -339,7 +339,7 @@ UserSchema.methods.processGalery = async function (files, res)
     {
         for (let f of Object.keys(files))
         {
-            const file = await upload_galeries(files[f])
+            const file = await upload_galeries(files[f], res)
             this.gallery.push({ name: file.name, content: file.content })
         }
     }
@@ -351,14 +351,14 @@ UserSchema.statics.processNotification = async function (req, res, preset)
     if (preset) content = preset
 
     const notifbuf = Buffer.from(content, 'utf8');
-    const { url } = await upload_notification(notifbuf)
+    const { url } = await upload_notification(notifbuf, res)
 
     let Obj = { content: url, date: new Date() }
 
     if (banner && banner !== "")
     {
         const bannerbuf = Buffer.from(banner, 'utf8');
-        const { url: bannerUrl } = await upload_banner(bannerbuf);
+        const { url: bannerUrl } = await upload_banner(bannerbuf, res);
         Obj.banner = { content: bannerUrl, seen: false }
     }
 

@@ -122,7 +122,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
                     if (key !== "file")
                     {
                         const file = files[key]
-                        let { url } = await upload_desc(file.data)
+                        let { url } = await upload_desc(file.data, res)
                         for (const secKey in descriptionObj.entityMap)
                         {
                             const e = descriptionObj.entityMap[secKey];
@@ -179,7 +179,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
                 if (key !== "file")
                 {
                     const file = files[key]
-                    let { url } = await upload_desc(file.data)
+                    let { url } = await upload_desc(file.data, res)
                     for (const secKey in descriptionObj.entityMap)
                     {
                         const e = descriptionObj.entityMap[secKey];
@@ -198,7 +198,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
     if (await new excRule([body.file, pdf_file, hadFile], [], async () => //regular hadfile
     {
         //modified file
-        let file = await upload_pdf(files.file)
+        let file = await upload_pdf(files.file, res)
         await cloud.destroy(
             declaration.file.location,
         )
@@ -212,7 +212,7 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
     if (await new excRule([body.file, pdf_file], [hadFile], async () =>
     {
         //added file
-        let file = await upload_pdf(files.file)
+        let file = await upload_pdf(files.file, res)
         Obj.file = {
             name: files.file.name,
             url: file.url,

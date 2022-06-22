@@ -10,8 +10,6 @@ function UploadIconProfile(props)
         ? (props.image.content ? URL.createObjectURL(props.image.content) : (props.image.type ? URL.createObjectURL(props.image) : props.image))
         : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
 
-    console.log(props.image)
-
 
     const inputFileRef = useRef(null);
     const classes = useStyles(props, preparedImg)()

@@ -10,11 +10,14 @@ function GalleryList(props)
 
     const classes = useStyles(props)()
 
+    console.log(image)
+    console.log(gallery)
+
     return (
         <Box className={classes.SelectionsFull}>
             <Box className={classes.SelectionsGrid}>
                 <GalleryUpload setGalleryFiles={setGalleryFiles} gallery={gallery} />
-                {gallery.map((p, i) => <GalleryCard key={i} setImage={setImage} image={p} checked={image === p ? true : false} galleryDelete={galleryDelete}/>)}
+                {gallery.map((p, i) => <GalleryCard key={i} setImage={setImage} image={p} checked={image ? (image.name === p.name ? true : false) : false} galleryDelete={galleryDelete} />)}
             </Box>
         </Box>
     )

@@ -29,6 +29,7 @@ import { LinkedinShareButton } from 'react-share';
 import { LinkedIn } from '@mui/icons-material';
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import EditorView from './EditorView';
+import useAlertMsg from './hooks/useAlertMsg';
 
 function DeclrView(props)
 {
@@ -38,7 +39,7 @@ function DeclrView(props)
     const adminCtx = useContext(AdminContext);
     const userCtx = useContext(UserContext);
 
-    const [delalert, setDelAlert] = useState()
+    const [setDelAlertMsg, delalert, setDelAlert] = useAlertMsg()
     const [comments, setComments] = useState([])
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
@@ -51,15 +52,6 @@ function DeclrView(props)
     // const editorState = EditorState.createWithContent(convertFromRaw(data))
 
     const classes = useStyles();
-
-    const setDelError = (msg) =>  
-    {
-        setDelAlert(msg)
-        setTimeout(() =>
-        {
-            setDelAlert()
-        }, Rules.form_message_delay);
-    }
 
     const switchStatus = () =>
     {
@@ -111,8 +103,8 @@ function DeclrView(props)
                 .then(async res =>
                 {
                     //window not working on SSR
-                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                    if (res.err) setDelError(res.err.message)
+                    if (res.error) setDelAlertMsg(res.error.message, "error")
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })
         })
     }
@@ -157,7 +149,7 @@ function DeclrView(props)
 
     return fullSwitch(2, () => (
         <>
-            {delalert && (<TransitionAlerts type="error" setFlash={setDelAlert}>{delalert}</TransitionAlerts>)}
+            {delalert && (<TransitionAlerts type={delalert.type} setFlash={setDelAlert}>{delalert.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Box className={classes.Title}>
                     <Typography variant="h4" color="text.default">

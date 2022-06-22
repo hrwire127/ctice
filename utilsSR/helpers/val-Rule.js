@@ -28,12 +28,12 @@ class valRule
     processMsg()
     {
         let sign;
-        if (this.rule === 0) sign = "greater"
-        if (this.rule === 1) sign = "smaller"
-        if (this.rule === 2) sign = "equal"
-        if (this.rule === 3) sign = "different"
-        if (this.rule === 4) sign = "unmatched"
-        return `The value ${this.value} is ${sign} than ${this.expected} expected value`
+        if (this.rule === 0) sign = "too big"
+        if (this.rule === 1) sign = "too small"
+        if (this.rule === 2) sign = "not equal"
+        if (this.rule === 3) sign = "not different"
+        if (this.rule === 4) sign = "invalid"
+        return `${this.value} is ${sign}, expected ${this.expected}`
     }
 }
 

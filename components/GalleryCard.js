@@ -10,11 +10,14 @@ function GalleryCard(props)
         ? (image.content ? URL.createObjectURL(image.content) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)
         : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
 
+    console.log(checked)
+
     return checked
         ? (<Paper
             sx={{
                 width: 100,
                 height: 100,
+                position: "relative",
                 "& div": {
                     width: "100%",
                     height: "100%",
@@ -33,7 +36,8 @@ function GalleryCard(props)
                 sx={{
                     fontSize: 90,
                     position: "absolute",
-                    top: "42%",
+                    top: "0%",
+                    left: "6%"
                 }} />
             <IconButton
                 onClick={() => galleryDelete(image)}

@@ -11,18 +11,19 @@ import GalleryList from "./GalleryList"
 import useLoading from './hooks/useLoading'
 import UploadWindow from './UploadWindow'
 import TransitionAlerts from './TransitionAlerts'
+import useAlertMsg from './hooks/useAlertMsg';
 
 function ProfileWindow(props)
 {
     const { setOpen, image, setImage } = props
 
-    const [windowAlert, setWindowAlert] = useState()
+    const [setWindowAlertMsg, windowAlert, setWindowAlert] = useAlertMsg()
     const [gallery, setGallery] = useState([])
 
     const [submitWhile, submitSwitch] = useLoading(false)
 
     const classes = useStyles(props)()
-    
+
     const selections = [
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1,
         process.env.NEXT_PUBLIC_DEF_PROFILE_URL_2,
@@ -48,16 +49,6 @@ function ProfileWindow(props)
         }
     }, [])
 
-
-    const setWindowError = (msg) =>
-    {
-        setWindowAlert(msg)
-        setTimeout(() =>
-        {
-            setWindowAlert()
-        }, Rules.form_message_delay);
-    }
-
     const setGalleryFiles = (files) =>
     {
         let newGallery = []
@@ -77,7 +68,7 @@ function ProfileWindow(props)
             }
             else
             {
-                setWindowError(`[${i.name}] exists`)
+                setWindowAlertMsg(`[${i.name}] exists`, 'error')
                 return
             }
         })
@@ -109,17 +100,18 @@ function ProfileWindow(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.err) setWindowAlert(res.err.message)
+                    if (res.error) setWindowAlertMsg(res.error.message, "error")
                 })
         })
     }
+
 
     return (
         <Paper
             elevation={12}
             className={classes.Window}
         >
-            {windowAlert && (<TransitionAlerts type="error" setFlash={setWindowAlert}>{windowAlert}</TransitionAlerts>)}
+            {windowAlert && (<TransitionAlerts type={windowAlert.type} setFlash={setWindowAlert}>{windowAlert.message}</TransitionAlerts>)}
             <Box sx={{ display: 'flex', height: "100%" }}>
                 <CssBaseline />
                 <Box

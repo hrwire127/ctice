@@ -66,7 +66,7 @@ function genToken()
 }
 
 
-const upload_pdf = async (file) =>
+const upload_pdf = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -94,7 +94,7 @@ const upload_pdf = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     return {
@@ -103,7 +103,7 @@ const upload_pdf = async (file) =>
     }
 }
 
-const upload_profiles = async (file) =>
+const upload_profiles = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -131,7 +131,7 @@ const upload_profiles = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     return {
@@ -140,7 +140,7 @@ const upload_profiles = async (file) =>
     }
 }
 
-const upload_galeries = async (file) =>
+const upload_galeries = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -169,7 +169,7 @@ const upload_galeries = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     return {
@@ -178,7 +178,7 @@ const upload_galeries = async (file) =>
     }
 }
 
-const upload_banner = async (file) =>
+const upload_banner = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -211,13 +211,13 @@ const upload_banner = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     return { url: res.url, location: res.public_id }
 }
 
-const upload_notification = async (file) =>
+const upload_notification = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -250,13 +250,13 @@ const upload_notification = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     return { url: res.url, location: res.public_id }
 }
 
-const upload_desc = async (file) =>
+const upload_desc = async (file, Res) =>
 {
     const res = await new Promise((resolve, reject) =>
     {
@@ -290,7 +290,7 @@ const upload_desc = async (file) =>
         await cloud.destroy(
             res.public_id,
         )
-        throw new UserError(invalid, 400)
+        throw new UserError(invalid, 400).throw_CS(Res)
     }
 
     console.log(res.url)
