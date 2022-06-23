@@ -270,7 +270,7 @@ class TextArea extends React.Component
                 onMouseEnter={onHoverEnter}
                 onMouseLeave={onHoverLeave}
             >
-                <Box sx={{ display: 'flex', justifyContent: "left" }}>
+                <Box sx={{ display: 'flex', justifyContent: "left", flexWrap: "wrap" }}>
                     <InlineStyleControls
                         noImgs={noImgs}
                         editorState={editorState}

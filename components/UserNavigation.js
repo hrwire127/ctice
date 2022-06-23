@@ -17,6 +17,7 @@ import FixedBanner from "./FixedBanner"
 import FullBanner from './FullBanner'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useWindowSize from './hooks/useWindowSize'
 
 const UserNavigation = (props) => handleAsync(props, (props) =>
 {
@@ -25,7 +26,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     const [open, setOpen] = useState([])
     const [banners, setBanners] = useState([])
     const [fullBanner, setFullBanner] = useState()
-    const [windowSize, setWindowSize] = useState();
+    const [windowSize] = useWindowSize();
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const classes = useStyles();
@@ -34,20 +35,6 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     {
         const menuBtn = document.querySelector("#menu-btn")
         menuBtn.addEventListener('click', () => setDrawerOpen(!drawerOpen))
-
-        function handleWindowResize()
-        {
-            setWindowSize(window.innerWidth);
-        }
-
-        handleWindowResize()
-
-        window.addEventListener('resize', handleWindowResize);
-
-        return () =>
-        {
-            window.removeEventListener('resize', handleWindowResize);
-        };
     }, []);
 
     useEffect(async () =>
@@ -182,23 +169,6 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                     component="nav"
                     className={classes.Drawer}
                     aria-label="mailbox folders"
-                ><Box display="flex" justifyContent="center">
-                        <Link href="/">
-                            <IconButton>
-                                <Close color="tertiary" />
-                            </IconButton>
-                        </Link>
-                        <Link href="/">
-                            <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
-                        </Link>
-                    </Box>
-                    {drawer}
-                </Box>
-            </SwipeableDrawer>
-            {/* <Box
-                    component="nav"
-                    className={classes.Drawer}
-                    aria-label="mailbox folders"
                 >
                     <Box display="flex" justifyContent="center">
                         <Link href="/">
@@ -206,12 +176,15 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                                 <Close color="tertiary" />
                             </IconButton>
                         </Link>
+                    </Box>
+                    {drawer}
+                    <Box display="flex" justifyContent="center">
                         <Link href="/">
                             <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
                         </Link>
                     </Box>
-                    {drawer}
-                </Box> */}
+                </Box>
+            </SwipeableDrawer>
             <Box
                 component="main"
                 className={classes.Content}
@@ -233,11 +206,13 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                             <Close color="tertiary" />
                         </IconButton>
                     </Link>
+                </Box>
+                {drawer}
+                <Box display="flex" justifyContent="center">
                     <Link href="/">
                         <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
                     </Link>
                 </Box>
-                {drawer}
             </Box>
             <Box
                 component="main"

@@ -5,7 +5,7 @@ import
 	Grid, Box, Typography, Link
 } from '@mui/material';
 import TextArea from "./TextArea";
-import useStyles from "../assets/styles/_CreateForm";
+import useStyles from "../assets/styles/_Change";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
 import UploadProfile from './UploadProfile'
@@ -20,12 +20,13 @@ import Redirects_CS from '../utilsCS/CS_Redirects'
 function Change(props)
 {
 	const { user, isResetToken, setError } = props;
-	const { username, date, profile, bio, connections } = user;
+	const { date, profile, bio, connections } = user;
 
 	const [DescError, , , , checkDescKey] = useFormError(false);
 
 	const [setFlashMsg, flash, setFlash] = useAlertMsg()
 	const [updateTimer, delay, startTimer] = useTimer(0)
+	const [username, setUsername] = useState(user.username)
 	const [isOpen, setOpen] = useState(false)
 	const [image, setImage] = useState(profile ? profile.url : null);
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
@@ -67,7 +68,7 @@ function Change(props)
 			}).then(response => response.json())
 				.then(async res =>
 				{
-                    // Redirects_CS.handleRes(res)
+					// Redirects_CS.handleRes(res)
 					if (res.error)
 					{
 						setFlashMsg(res.error.message, "error")
@@ -80,6 +81,7 @@ function Change(props)
 				})
 		})
 	}
+
 	const errCheck = async (e) =>
 	{
 		e.preventDefault();
@@ -98,37 +100,43 @@ function Change(props)
 		handleSubmit(data);
 	}
 
+	const onClear = () =>
+	{
+		setImage(profile.url)
+		setLocation(user.location ? user.location : undefined)
+		setEditorState(JSON.parse(bio));
+		setFlashMsg("Cleared Inputs", "info")
+		setUsername(user.username)
+	}
+
 	return (
-		<Box
-			onSubmit={errCheck}
-			component="form"
-			noValidate
-		>
+		<>
 			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
-			<Grid container spacing={2} sx={{ mb: 5 }}>
-				<Grid item xs={4}>
+			<Box
+				className={classes.FrontInfo}
+				sx={{ mb: 2 }}
+				onSubmit={errCheck}
+				component="form"
+				noValidate
+			>
+				<Box className={classes.Profile}>
 					<UploadProfile
 						profile={profile.url}
 						image={image}
 						setImage={setImage}
 						setOpen={setOpen}
 					/>
-					{isOpen && (<ProfileWindow
-						image={image}
-						setImage={setImage}
-						setOpen={setOpen}
-					/>)}
-				</Grid>
-				<Grid
-					item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}
-				>
+				</Box>
+				<Box className={classes.SecInfo}>
 					<TextField
 						fullWidth
 						variant="outlined"
 						margin="normal"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
 						inputProps={{ maxLength: 10 }}
-						defaultValue={username}
 						error={flash && flash.type === "error"}
+						sx={{ minWidth: 200 }}
 						name="username"
 						label="Username"
 						type="username"
@@ -141,7 +149,7 @@ function Change(props)
 						error={flash && flash.type === "error"}
 						limit={5}
 					/>
-					<div>
+					<Box sx={{ mt: 2 }}>
 						{isResetToken
 							? (<Typography variant="h7" color="text.danger">
 								An email was sent for the password reset
@@ -150,9 +158,17 @@ function Change(props)
 								Reset Password
 							</Link>)
 						}
-					</div>
-				</Grid>
-			</Grid>
+					</Box>
+				</Box>
+			</Box>
+
+			{
+				isOpen && (<ProfileWindow
+					image={image}
+					setImage={setImage}
+					setOpen={setOpen}
+				/>)
+			}
 
 			<TextArea
 				styles={classes.Editor}
@@ -163,7 +179,7 @@ function Change(props)
 				checkDescKey={checkDescKey}
 			/>
 
-			<Box sx={{ display: 'flex', justifyContent: "space-between", mt: 2 }}>
+			<Box className={classes.Connections}>
 				<TextField
 					fullWidth
 					variant="outlined"
@@ -202,10 +218,10 @@ function Change(props)
 			<Box sx={{ textAlign: "center" }}>
 				{delay > 0
 					? (<Typography variant="h7" color="text.danger">
-						Please wait some time after the edit, {delay} seconds remained
+						Cannot edit now, {delay} seconds remained
 					</Typography>)
 					: (submitSwitch(0, () =>
-					(<>
+					(<Box sx={{ display: 'flex', gap: 1, justifyContent: "center" }}>
 						<Button
 							type="submit"
 							variant="contained"
@@ -213,10 +229,18 @@ function Change(props)
 						>
 							Save
 						</Button>
-					</>)))
+						<Button
+							onClick={onClear}
+							variant="contained"
+							color="error"
+							sx={{ mt: 3, mb: 2 }}
+						>
+							Clear
+						</Button>
+					</Box>)))
 				}
 			</Box>
-		</Box >
+		</>
 	)
 }
 

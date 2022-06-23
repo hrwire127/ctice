@@ -8,7 +8,7 @@ import handleAsync from './custom/handleAsync'
 
 const TransitionAlerts = (props) => handleAsync(props, (props) =>
 {
-    const { type, setFlash, children, Mounted } = props;
+    const { type, setFlash, children, Mounted, floating } = props;
     const [flash, setflash] = useState(children)
 
     useEffect(() =>
@@ -23,7 +23,11 @@ const TransitionAlerts = (props) => handleAsync(props, (props) =>
     }, [children, flash, Mounted])
 
     return (
-        <Box sx={{ width: "100%", margin: "0 auto" }}>
+        <Box sx={floating ? {
+            position: "absolute",
+            top: "-20%",
+            width: "100%",
+        } : { width: "100%", margin: "0 auto" }}>
             <Collapse in={flash ? true : false}>
                 <Alert
                     severity={type}

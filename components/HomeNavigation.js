@@ -12,31 +12,18 @@ import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
 import FixedBanner from "./FixedBanner"
 import FullBanner from './FullBanner';
+import useWindowSize from './hooks/useWindowSize';
 
 function HomeNavigation(props)
 {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [windowSize, setWindowSize] = useState();
+    const [windowSize] = useWindowSize();
 
     useEffect(() =>
     {
         const menuBtn = document.querySelector("#menu-btn")
         menuBtn.addEventListener('click', () => setOpen(!open))
-
-        function handleWindowResize()
-        {
-            setWindowSize(window.innerWidth);
-        }
-
-        handleWindowResize()
-
-        window.addEventListener('resize', handleWindowResize);
-
-        return () =>
-        {
-            window.removeEventListener('resize', handleWindowResize);
-        };
     }, []);
 
     const Item = (props) =>

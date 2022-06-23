@@ -41,6 +41,11 @@ function ProfileWindow(props)
         main.style.height = "100vh"
         main.style.width = "100vw"
 
+        main.addEventListener('click', () =>
+        {
+            setOpen(false)
+        })
+
         return () =>
         {
             const main = document.querySelector(".cover")
@@ -111,8 +116,15 @@ function ProfileWindow(props)
             elevation={12}
             className={classes.Window}
         >
-            {windowAlert && (<TransitionAlerts type={windowAlert.type} setFlash={setWindowAlert}>{windowAlert.message}</TransitionAlerts>)}
-            <Box sx={{ display: 'flex', height: "100%" }}>
+            {windowAlert && (<TransitionAlerts
+                type={windowAlert.type}
+                setFlash={setWindowAlert}
+                floating
+            >
+                {windowAlert.message}
+            </TransitionAlerts>)}
+
+            <Box className={classes.Container} >
                 <CssBaseline />
                 <Box
                     position="fixed"
@@ -142,7 +154,7 @@ function ProfileWindow(props)
                         },
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
                     }}
                     variant="permanent"
                     anchor="left"

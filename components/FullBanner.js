@@ -14,13 +14,17 @@ function FullBanner(props)
         main.style.zIndex = 2
         main.style.background = "rgba(255, 255, 255, 0.2)"
         main.style.backdropFilter = "blur(8px)"
-        main.style.height = "100%"
+        main.style.minHeight = "100%"
         main.style.width = "98.9vw"
+
+        main.addEventListener('click', () =>
+        {
+            setOpen(false)
+        })
 
         return () =>
         {
             const main = document.querySelector(".cover")
-            main.style = null
             main.style = null
         }
     }, [])

@@ -12,6 +12,7 @@ import { LogoutFetch, getClientUser } from '../utilsCS/_get'
 import useStyles from "../assets/styles/_Header"
 import NotifWindow from './NotifWindow'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useWindowSize from './hooks/useWindowSize';
 
 
 const Header = (props) => 
@@ -23,24 +24,8 @@ const Header = (props) =>
 	const [notifications, setNotificaions] = useState([]);
 	const [views, setViews] = useState();
 
-	const [windowSize, setWindowSize] = useState();
+	const [windowSize] = useWindowSize();
 
-	useEffect(() =>
-	{
-		function handleWindowResize()
-		{
-			setWindowSize(window.innerWidth);
-		}
-
-		handleWindowResize()
-
-		window.addEventListener('resize', handleWindowResize);
-
-		return () =>
-		{
-			window.removeEventListener('resize', handleWindowResize);
-		};
-	}, []);
 
 	//\/setError
 	const { title = "ctice", setError } = props;

@@ -47,7 +47,13 @@ const useStyles = makeStyles((theme) => ({
     Content: {
         flexGrow: 1,
         padding: 24,
-        width: theme.drawerWidth
+        width: theme.drawerWidth,
+        ["@media (max-width:960px)"]: {
+            paddingRight: 60,
+        },
+        ["@media (max-width:830px)"]: {
+            paddingLeft: 60,
+        },
     },
     Banners: {
         display: "flex",

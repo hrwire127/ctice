@@ -36,13 +36,13 @@ edit.getInitialProps = async (props) =>
         const isResetToken = await checkToken(user.obj._id)
         if (isResetToken.error) return { error: isResetToken.error }
 
-        return { user: user.obj, isResetToken }
+        return { user: user.obj, isResetToken: isResetToken.obj }
     }, async () =>
     {
         const { user } = props.query
         const isResetToken = await checkToken(user._id)
         if (isResetToken.error) return { error: isResetToken.error }
-        return { user, isResetToken }
+        return { user, isResetToken: isResetToken.obj }
     })
 }
 

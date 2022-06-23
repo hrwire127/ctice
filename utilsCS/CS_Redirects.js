@@ -1,13 +1,13 @@
 class CS_Redirect
 {
-    // Custom_SR(res, red)
-    // {
-    //     res.redirect(red)
-    // }
-    // Custom_CS(red)
-    // {
-    //     window.location = red;
-    // }
+    Custom_SR(res, red)
+    {
+        res.redirect(red)
+    }
+    Custom_CS(red)
+    {
+        window.location = red;
+    }
     handleRes(res, window, setError)
     {
         if (res.redirect) window.location = res.redirect

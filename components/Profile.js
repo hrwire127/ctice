@@ -6,7 +6,7 @@ import
     Link as MuiLink
 } from '@mui/material';
 import { getDateDifference } from '../utilsCS/_basic';
-import { CheckBox, HighlightOff, Cake, LocationOn, Twitter, LinkedIn, Facebook, Email } from '@mui/icons-material';
+import { Check, Close, Cake, LocationOn, Twitter, LinkedIn, Facebook, Email } from '@mui/icons-material';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import useStyles from '../assets/styles/_Profile';
 import EditorView from './EditorView';
@@ -23,69 +23,76 @@ function Profile(props)
 
     return (
         <>
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <Paper sx={{ width: "350px", height: "350px" }}>
-                        <img src={profile.url ? profile.url : process.env.NEXT_PUBLIC_DEF_PROFILE_URL} style={{ width: "350px", height: "350px", borderRadius: 4 }} />
-                    </Paper>
-                </Grid>
-                <Grid item xs={6} display="flex" justifyContent="space-between" flexDirection="column">
-                    <Box sx={{ display: 'flex', justifyContent: "left", alignItems: "center" }}>
-                        {status === "Active" ? (<CheckBox color="success" sx={{ fontSize: 60 }} />) : <HighlightOff color="danger" sx={{ fontSize: 60 }} />}
-                        <Typography variant="h4">
-                            {username}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: "left", alignItems: "center" }}>
-                        <Email sx={{ fontSize: 60 }} />
-                        <Typography variant="h5">
+            <Box className={classes.FrontInfo}>
+                <Box className={classes.Profile}>
+                    <img src={profile.url ? profile.url : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                        className={classes.Img} />
+                </Box>
+                <Box className={classes.SecInfo}>
+                    <Typography variant="h3" className={classes.Username}>
+                        {username}
+                    </Typography>
+                    {status === "Active"
+                        ? (<Box className={classes.Status}>
+                            <Check color="success" sx={{ fontSize: 20 }} />
+                            <Typography color="text.success" >active</Typography>
+                        </Box>)
+                        : (<Box className={classes.Status}>
+                            <Close color="error" sx={{ fontSize: 20 }} />
+                            <Typography color="text.error" >disabled</Typography>
+                        </Box>)}
+                    <Box className={classes.Name}>
+                        <Email sx={{ fontSize: 20 }} />
+                        <Typography variant="h8">
                             {email}
                         </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: "left", alignItems: "center" }}>
-                        <Cake sx={{ fontSize: 60 }} />
-                        <Typography variant="h5" >
-                            {diff}
-                        </Typography>
+                    <Box className={classes.ThirdInfo}>
+                        <Box>
+                            <Cake sx={{ fontSize: 20 }} />
+                            <Typography variant="h8" >
+                                Member for {diff}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <LocationOn sx={{ fontSize: 20 }} />
+                            <Typography variant="h8" >
+                                {location ? location.name : "Unknown"}
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', justifyContent: "left", alignItems: "center" }}>
-                        <LocationOn sx={{ fontSize: 60 }} />
-                        <Typography variant="h5" >
-                            {location ? location.name : "Unknown"}
-                        </Typography>
-                    </Box>
-                </Grid>
-            </Grid>
-
-            <Box sx={{ width: "100%", mt: 6 }}>
-                <Typography variant="h2" align="center">
-                    About Me
-                </Typography>
-                <Paper className={classes.TextArea}>
-                    {editorState && (
-                        <EditorView data={JSON.parse(bio)} />)}
-                </Paper>
+                </Box>
             </Box>
 
             <Box sx={{ width: "100%", mt: 6 }}>
-                <Typography variant="h2" align="center" >
+                <Typography variant="h4" align="left">
+                    About Me
+                </Typography>
+                <Box className={classes.TextArea}>
+                    {editorState && (
+                        <EditorView data={JSON.parse(bio)} />)}
+                </Box>
+            </Box>
+
+            <Box sx={{ width: "100%", mt: 6 }}>
+                <Typography variant="h4" align="left" >
                     Connections
                 </Typography>
                 <Box display="flex" justifyContent="space-between">
                     <a href={connections.twitter}>
-                        <Paper sx={{ width: 100, minHeight: 100, display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                            <Twitter sx={{ fontSize: 60 }} />
-                        </Paper>
+                        <Box className={classes.Connection}>
+                            <Twitter color="primary" sx={{ fontSize: 60 }} />
+                        </Box>
                     </a>
                     <a href={connections.linkedin}>
-                        <Paper sx={{ width: 100, minHeight: 100, display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                            <LinkedIn sx={{ fontSize: 60 }} />
-                        </Paper>
+                        <Box className={classes.Connection}>
+                            <LinkedIn color="primary" sx={{ fontSize: 60 }} />
+                        </Box>
                     </a>
                     <a href={connections.facebook}>
-                        <Paper sx={{ width: 100, minHeight: 100, display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                            <Facebook sx={{ fontSize: 60 }} />
-                        </Paper>
+                        <Box className={classes.Connection}>
+                            <Facebook color="primary" sx={{ fontSize: 60 }} />
+                        </Box>
                     </a>
                 </Box>
             </Box>

@@ -26,7 +26,22 @@ const useStyles = props => makeStyles((theme) => ({
         top: "50%",
         left: "50%",
         marginRight: "-50%",
-        transform: "translate(-50%, -50%)"
+        transform: "translate(-50%, -50%)",
+        ["@media (max-width:850px)"]: {
+            width: 500
+        },
+        ["@media (max-width:560px)"]: {
+            width: 300, 
+            height: 950,
+        },
+    },
+    Container: {
+        display: 'flex',
+        height: "100%",
+        ["@media (max-width:560px)"]: {
+            marginTop: 10,
+            flexDirection: "column"
+        },
     },
     Btn: {
         fontSize: 90,

@@ -25,7 +25,7 @@ const useStyles = props => makeStyles((theme) => ({
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, 100px)",
         justifyContent: "center",
-        gridGap: "20px",
+        gridGap: 21,
     },
 }))
 
