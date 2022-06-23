@@ -27,7 +27,7 @@ function Change(props)
 	const [setFlashMsg, flash, setFlash] = useAlertMsg()
 	const [updateTimer, delay, startTimer] = useTimer(0)
 	const [isOpen, setOpen] = useState(false)
-	const [image, setImage] = useState(profile.url !== process.env.NEXT_PUBLIC_DEF_PROFILE_URL && profile.url);
+	const [image, setImage] = useState(profile ? profile.url : null);
 	const [location, setLocation] = useState(user.location ? user.location : undefined)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 

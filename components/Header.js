@@ -60,15 +60,6 @@ const Header = (props) =>
 	}, [])
 
 
-	const Logout = async () =>
-	{
-		const res = await LogoutFetch()
-		if (typeof window !== "undefined")
-		{
-			Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-		}
-	}
-
 	return (
 		<Box className={classes.Total}>
 			<Box className={classes.RedBar} />
@@ -111,7 +102,6 @@ const Header = (props) =>
 									{notifOpen && (<NotifWindow setError={setError} notifications={notifications} setViews={setViews} setNotificaions={setNotificaions} />)}
 								</Box>
 								<Link href="/user/profile"><IconButton><AccountCircle color="tertiary" /></IconButton></Link>
-								<IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
 							</>)
 							: (<>
 								<Link href="/user/register" className={classes.Auth}>

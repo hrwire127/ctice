@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Box, Typography, IconButton, CssBaseline, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material'
+import
+{
+    Box, Typography,
+    IconButton, CssBaseline,
+    List, ListItem,
+    ListItemIcon, ListItemText,
+    ListItemButton, SwipeableDrawer
+} from '@mui/material'
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout'
 import { useRouter } from 'next/router'
-import { Info, Palette, Edit, Bookmarks, Close } from '@mui/icons-material'
+import { Info, Palette, Edit, Bookmarks, Close, Logout as LogoutIcon, } from '@mui/icons-material'
+import { LogoutFetch, getClientUser } from '../utilsCS/_get'
 import { getLatestBanners } from '../utilsCS/_get'
 import FixedBanner from "./FixedBanner"
 import FullBanner from './FullBanner'
@@ -17,8 +25,30 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     const [open, setOpen] = useState([])
     const [banners, setBanners] = useState([])
     const [fullBanner, setFullBanner] = useState()
+    const [windowSize, setWindowSize] = useState();
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const classes = useStyles();
+
+    useEffect(() =>
+    {
+        const menuBtn = document.querySelector("#menu-btn")
+        menuBtn.addEventListener('click', () => setDrawerOpen(!drawerOpen))
+
+        function handleWindowResize()
+        {
+            setWindowSize(window.innerWidth);
+        }
+
+        handleWindowResize()
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () =>
+        {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
 
     useEffect(async () =>
     {
@@ -42,6 +72,15 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                 if (Mounted) setFullBanner(res.obj)
             })
     }, [Mounted])
+
+    const Logout = async () =>
+    {
+        const res = await LogoutFetch()
+        if (typeof window !== "undefined")
+        {
+            Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
+        }
+    }
 
     const Item = (props) =>
     {
@@ -117,8 +156,71 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         </List>
     );
 
-    return (
-        <Box className={classes.Body}>
+    const Main = () =>
+    {
+        return <>
+            {banners.length > 0
+                && (<Box
+                    sx={{ width: 300 }}
+                >
+                    {banners.map(b => <FixedBanner banner={b} />)}
+                </Box>)
+            }
+            {fullBanner && open && (<FullBanner banner={fullBanner} setOpen={setOpen} />)}
+        </>
+    }
+
+    return (windowSize < 830
+        ? (<Box className={classes.Body}>
+            <CssBaseline />
+            <SwipeableDrawer
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                onOpen={() => setDrawerOpen(true)}
+            >
+                <Box
+                    component="nav"
+                    className={classes.Drawer}
+                    aria-label="mailbox folders"
+                ><Box display="flex" justifyContent="center">
+                        <Link href="/">
+                            <IconButton>
+                                <Close color="tertiary" />
+                            </IconButton>
+                        </Link>
+                        <Link href="/">
+                            <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
+                        </Link>
+                    </Box>
+                    {drawer}
+                </Box>
+            </SwipeableDrawer>
+            {/* <Box
+                    component="nav"
+                    className={classes.Drawer}
+                    aria-label="mailbox folders"
+                >
+                    <Box display="flex" justifyContent="center">
+                        <Link href="/">
+                            <IconButton>
+                                <Close color="tertiary" />
+                            </IconButton>
+                        </Link>
+                        <Link href="/">
+                            <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
+                        </Link>
+                    </Box>
+                    {drawer}
+                </Box> */}
+            <Box
+                component="main"
+                className={classes.Content}
+            >
+                {props.children}
+            </Box>
+            <Main />
+        </Box>)
+        : (<Box className={classes.Body}>
             <CssBaseline />
             <Box
                 component="nav"
@@ -128,8 +230,11 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                 <Box display="flex" justifyContent="center">
                     <Link href="/">
                         <IconButton>
-                            <Close />
+                            <Close color="tertiary" />
                         </IconButton>
+                    </Link>
+                    <Link href="/">
+                        <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
                     </Link>
                 </Box>
                 {drawer}
@@ -140,15 +245,8 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
             >
                 {props.children}
             </Box>
-            {banners.length > 0
-                && (<Box
-                    sx={{ width: 300 }}
-                >
-                    {banners.map(b => <FixedBanner banner={b} />)}
-                </Box>)}
-
-            {fullBanner && open && (<FullBanner banner={fullBanner} setOpen={setOpen} />)}
-        </Box>
+            <Main />
+        </Box>)
     )
 })
 

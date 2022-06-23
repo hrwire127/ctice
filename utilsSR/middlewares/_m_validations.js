@@ -201,6 +201,9 @@ async function validateChange(req, res, next)
 {
     let { username, profile, location, bio, facebook, linkedin, twitter } = req.body
 
+    console.log(req.body)
+    console.log(req.files)
+
     const declarationSchema = Joi.object({
         username: Joi.string(),
         profile: Joi.string(),

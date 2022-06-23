@@ -10,8 +10,6 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
     const { notifications, setViews, setNotificaions, setError, Mounted } = props
     const classes = useStyles()
 
-    console.log(notifications)
-
     useEffect(() =>
     {
         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/seen`, {

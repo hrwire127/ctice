@@ -26,7 +26,7 @@ function Profile(props)
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <Paper sx={{ width: "350px", height: "350px" }}>
-                        <img src={profile.url} style={{ width: "350px", height: "350px", borderRadius: 4 }} />
+                        <img src={profile.url ? profile.url : process.env.NEXT_PUBLIC_DEF_PROFILE_URL} style={{ width: "350px", height: "350px", borderRadius: 4 }} />
                     </Paper>
                 </Grid>
                 <Grid item xs={6} display="flex" justifyContent="space-between" flexDirection="column">

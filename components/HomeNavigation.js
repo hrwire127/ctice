@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Box, Typography, CssBaseline, List, ListItem, ListItemText, ListItemButton, SwipeableDrawer, IconButton } from '@mui/material';
+import
+    {
+        Button, Box,
+        Typography, CssBaseline,
+        List, ListItem,
+        ListItemText, ListItemButton,
+        SwipeableDrawer, IconButton
+    } from '@mui/material';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
@@ -80,11 +87,10 @@ function HomeNavigation(props)
         <List className={classes.DrawerList}>
             <Item text="Home" url="/" />
             <Item text="Login" url="/user/login" />
+            <Item text="Register" url="/user/register" />
             <Item text="Profile" url="/user/profile" />
         </List>
     );
-
-    console.log(windowSize)
 
     return windowSize < 830
         ? (<>
