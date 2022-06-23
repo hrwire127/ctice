@@ -8,16 +8,16 @@ const useStyles = makeStyles((theme) => ({
 		["@media (max-width:467px)"]: {
 			minHeight: 60
 		},
-		paddingLeft: theme.maxPadding,
-		paddingRight: theme.maxPadding,
-		["@media (max-width:1300px)"]: {
-			paddingLeft: theme.minPadding,
-			paddingRight: theme.minPadding,
-		},
-		["@media (max-width:500px)"]: {
-			paddingLeft: 10,
-			paddingRight: 10,
-		},
+		paddingLeft: "7%",
+		paddingRight: "7%",
+		// ["@media (max-width:1300px)"]: {
+		// 	paddingLeft: theme.minPadding,
+		// 	paddingRight: theme.minPadding,
+		// },
+		// ["@media (max-width:500px)"]: {
+		// 	paddingLeft: 10,
+		// 	paddingRight: 10,
+		// },
 	},
 	List: {
 		flex: 1,
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 		["@media (max-width:740px)"]: {
 			marginLeft: 20
 		},
-		["@media (max-width:286px)"]: {
-			marginLeft: 5,
+		["@media (max-width:310px)"]: {
+			marginLeft: 2,
 			gap: 5
 		},
 	},

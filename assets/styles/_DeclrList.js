@@ -4,16 +4,17 @@ const useStyles = makeStyles((theme) => ({
     Bar: {
         display: "flex",
         justifyContent: "space-between",
-        width: "100%",
-        margin: "auto",
+        width: "85%",
+        margin: "20px auto",
         alignItems: "center",
-        ["@media (max-width:510px)"]: {
-            flexWrap: "wrap",
-            justifyContent: "center"
-        },
+        flexWrap: "wrap",
         "& button": {
             color: theme.palette.tertiary.main
-        }
+        },
+        ["@media (max-width:460px)"]: {
+            justifyContent: "center",
+            flexDirection: "column",
+        },
     },
     Grid: {
         margin: "auto!important",

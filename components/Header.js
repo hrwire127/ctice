@@ -115,10 +115,10 @@ const Header = (props) =>
 							</>)
 							: (<>
 								<Link href="/user/register" className={classes.Auth}>
-									<Button className={classes.SignUp} disableElevation size={windowSize < 320 ? "small" : "medium"} variant="outlined">Sign Up</Button>
+									<Button className={classes.SignUp} disableElevation size={windowSize < 380 ? "small" : "medium"} variant="outlined">Sign Up</Button>
 								</Link>
 								<Link href="/user/login" className={classes.Auth}>
-									<Button className={classes.SignIn} disableElevation size={windowSize < 320 ? "small" : "medium"} variant="contained">Sign In</Button>
+									<Button className={classes.SignIn} disableElevation size={windowSize < 380 ? "small" : "medium"} variant="contained">Sign In</Button>
 								</Link>
 							</>)
 						}

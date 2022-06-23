@@ -102,6 +102,7 @@ function HomeNavigation(props)
                 </Box>
             </SwipeableDrawer>
 
+
             {props.children}
         </>)
         : (<Box className={classes.Body}>

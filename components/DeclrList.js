@@ -128,10 +128,17 @@ const DeclrList = (props) => handleAsync(props, (props) =>
                 </Box>
                 <Sort handleSort={handleSort} sort={sort} />
             </Box>
-            <Box sx={{textAlign: "center"}}>
+            <Box sx={{ textAlign: "center" }}>
                 <IconButton onClick={() => setOpen(!open)}>{open ? (<Close />) : (<MoreHoriz />)}</IconButton>
                 <Collapse in={open} >
-                    <Box sx={{ width: "100%", display: 'flex', justifyContent: "space-between", alignItems: "end" }}>
+                    <Box sx={{
+                        width: "100%",
+                        display: 'flex',
+                        justifyContent: "space-evenly",
+                        alignItems: "end",
+                        flexWrap: "wrap",
+                        rowGap: 2
+                    }}>
                         <Search query={queryValue} setQuery={setQuery} />
                         <TagFilter fullTags={fullTags} setTags={setTags} value={tags} />
                         <DatePicker setTime={setDate} value={dateValue} />
