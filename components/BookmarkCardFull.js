@@ -5,12 +5,13 @@ import { CropData, getDateDifference } from '../utilsCS/_basic';
 import Link from 'next/link'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { Box, CardActions, Card, CardContent, Typography, IconButton } from '@mui/material'
+import { Delete } from "@mui/icons-material"
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import EditorView from './EditorView';
 
 function BookmarkCardFull(props) 
 {
-    const { title, _id: id, date, setError } = props;
+    const { title, _id: id, date, setError, description } = props;
     const [bookmarked, setBookmark] = useState(true)
 
     const likes = props.likes.filter(el => el.typeOf === true)

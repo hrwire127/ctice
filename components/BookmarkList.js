@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Box, Button, Typography } from '@mui/material';
 import { getLimitedBookmarks, loadLimitedBookmarks, countLimitedBookmarks } from '../utilsCS/_get'
+import { styleFull, styleCompact } from "./context/styleEnum"
 import useLoading from '../components/hooks/useLoading'
 import BookmarkCardCompact from "./BookmarkCardCompact"
 import BookmarkCardFull from "./BookmarkCardFull"
@@ -55,17 +56,28 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
 
     return (
         <>
-            <Search query={queryValue} setQuery={setQuery} />
-            <TagFilter fullTags={fullTags} setTags={setTags} />
+            <Box sx={{
+                width: "100%",
+                display: 'flex',
+                justifyContent: "space-evenly",
+                alignItems: "end",
+                flexWrap: "wrap",
+                rowGap: 2,
+                mb: 4
+            }}>
+                <Search query={queryValue} setQuery={setQuery} />
+                <TagFilter fullTags={fullTags} setTags={setTags} />
+            </Box>
             {count > 0
                 ? (<>
-                    <Box className={styleCtx === styleFull ? classes.ListCompact : classes.ListFull}>
+                    <Box className={styleCtx === styleFull ? classes.ListFull : classes.ListCompact}>
                         {
                             fullSwitch(0, () => 
                             {
-                                return bookmarks.map(b => styleCtx === styleFull ? (
-                                    <BookmarkCardCompact setError={setError} key={b._id} {...b} />)
-                                    : (<BookmarkCardFull setError={setError} key={b._id} {...b} />))
+                                return bookmarks.map(b => styleCtx === styleFull
+                                    ? (<BookmarkCardFull setError={setError} key={b._id} {...b} />)
+                                    : (<BookmarkCardCompact setError={setError} key={b._id} {...b} />)
+                                )
                             })
                         }
                         {
@@ -77,7 +89,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
                         }
                     </Box>
                 </>)
-                : (<Typography align="center" variant="h4" color="text.secondary">Nothing</Typography>)
+                : (<Typography align="center" variant="h5" color="text.secondary">Nothing</Typography>)
             }
         </>)
 })
