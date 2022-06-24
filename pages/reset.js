@@ -8,9 +8,9 @@ function reset(props)
 {
     const { confirmationCode, setError } = props;
 
-    return switchLoading(2, () => <HomeNavigation>
+    return <HomeNavigation>
         <Reset setError={setError} confirmationCode={confirmationCode} />
-    </HomeNavigation>)
+    </HomeNavigation>
 }
 
 reset.getInitialProps = async (props) =>

@@ -6,6 +6,8 @@ import TransitionAlerts from './TransitionAlerts'
 import BackLink from "./BackLink";
 import useStyles from "../assets/styles/_Reset"
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useAlertMsg from './hooks/useAlertMsg'
+import useLoading from './hooks/useLoading'
 
 function Reset(props)
 {
@@ -65,27 +67,24 @@ function Reset(props)
             <Box
                 component="form"
                 noValidate
-                sx={{ mt: 3, width: 400 }}
+                sx={{ mt: 3, width: "60%", maxWidth: 400 }}
                 onSubmit={errCheck}
             >
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            margin="normal"
-                            inputProps={{ maxLength: 10 }}
-                            required
-                            error={PasswordError}
-                            fullWidth
-                            name="password"
-                            label="New Password"
-                            type="password"
-                            id="password"
-                            autoComplete="new-password"
-                            onKeyPress={checkPasswordKey}
-                        />
-                        <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
-                    </Grid>
-                </Grid>
+                <TextField
+                    margin="normal"
+                    inputProps={{ maxLength: 10 }}
+                    required
+                    error={PasswordError}
+                    fullWidth
+                    name="password"
+                    label="New Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                    onKeyPress={checkPasswordKey}
+                />
+                <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
+
                 {switchLoading(0, () =>
                 (<>
                     <Button

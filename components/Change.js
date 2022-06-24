@@ -33,6 +33,7 @@ function Change(props)
 	const [editorState, setEditorState] = useState(JSON.parse(bio));
 
 	const [submitWhile, submitSwitch] = useLoading(false)
+	const [resetWhile, resetSwitch] = useLoading(false)
 
 	const classes = useStyles()
 
@@ -49,13 +50,16 @@ function Change(props)
 
 	const resetPassword = async () =>
 	{
-		await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/send`, {
-			method: 'POST',
-		}).then(response => response.json())
-			.then(res =>
-			{
-				Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-			})
+		resetWhile(async () =>
+		{
+			await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/reset/send`, {
+				method: 'POST',
+			}).then(response => response.json())
+				.then(res =>
+				{
+					Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
+				})
+		})
 	}
 
 	const handleSubmit = async (body) =>
@@ -157,9 +161,9 @@ function Change(props)
 							? (<Typography variant="h7" color="text.danger">
 								An email was sent for the password reset
 							</Typography>)
-							: (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
+							: resetSwitch(0, () => (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
 								Reset Password
-							</Link>)
+							</Link>))
 						}
 					</Box>
 				</Box>

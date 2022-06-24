@@ -34,14 +34,12 @@ async function verifyResetToken_SR(req, res, next)
         })
             .then(async (token) =>
             {
-                resolve(token)
                 next()
             })
             .catch((err) => 
             {
                 req.type = 0
                 next(new UserError(err.message, err.status))
-                reject(err)
             });
     }
     else if (req.body.confirmationCode)

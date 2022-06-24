@@ -134,41 +134,33 @@ async function validateRegUser(req, res, next)
 
 async function validatePendingUser(req, res, next) 
 {
-    try
+    const { username, email } = req.body;
+
+    const userSchema = Joi.object({
+        username: Joi.string().required(),
+        email: Joi.string().required()
+    })
+
+    const { error } = userSchema.validate({ username, email })
+
+    if (error) 
     {
-
-        const { username, email } = req.body;
-
-        const userSchema = Joi.object({
-            username: Joi.string().required(),
-            email: Joi.string().required()
-        })
-
-        const { error } = userSchema.validate({ username, email })
-
-        if (error) 
-        {
-            console.log(error)
-            const msg = error.details.map(e => e.message).join(',')
-            throw new UserError(msg, 401).throw_CS(res)
-        }
-
-        const bodyError = inspectUser(username, email)
-
-        if (bodyError) 
-        {
-            throw new UserError(bodyError, 401).throw_CS(res)
-        }
-
-        req.body.username = username.trim()
-        req.body.email = email.trim()
-
-        next()
+        console.log(error)
+        const msg = error.details.map(e => e.message).join(',')
+        throw new UserError(msg, 401).throw_CS(res)
     }
-    catch (err)
+
+    const bodyError = inspectUser(username, email)
+
+    if (bodyError) 
     {
-        console.log(err)
+        throw new UserError(bodyError, 401).throw_CS(res)
     }
+
+    req.body.username = username.trim()
+    req.body.email = email.trim()
+
+    next()
 }
 
 async function validateLogUser(req, res, next) 
