@@ -79,7 +79,7 @@ function Register(props)
                     Register
                 </Typography>
                 {alert && (
-                    <Alert severity="error">{alert}</Alert>
+                    <Alert severity={alert.type}>{alert.message}</Alert>
                 )}
                 <Box
                     component="form"

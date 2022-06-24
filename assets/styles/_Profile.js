@@ -4,10 +4,10 @@ const useStyles = makeStyles(theme => ({
     Container: {
         flexGrow: 1,
         padding: "24px",
+        maxWidth: "800px"
     },
     TextArea:
     {
-        width: "100%",
         minHeight: 150,
         padding: 20,
         border: `1px solid ${theme.line}`,

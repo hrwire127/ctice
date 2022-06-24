@@ -8,10 +8,11 @@ import
 } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import TransitionAlerts from './TransitionAlerts'
+import useStyles from "../assets/styles/_Change";
 import UploadProfile from './UploadProfile'
 import useFormError from "./hooks/useFormError"
 import LocationSearch from "./LocationSearch"
-import useStyles from "../assets/styles/_Welcome"
+// import useStyles from "../assets/styles/_Welcome"
 import Rules from "../utilsCS/clientRules"
 import useLoading from './hooks/useLoading'
 import TextArea from "./TextArea"
@@ -68,106 +69,105 @@ function Welcome(props)
 
 
     return loadingSwitch(0, () => (
-        <Box className={classes.Container}>
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Please fill out the profile
-            </Typography>
+        <Box
+            component="main"
+            className={classes.Container}
+        >
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
+            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Please fill out the profile
+                </Typography>
+            </Box>
             <Box
+                className={classes.FrontInfo}
+                sx={{ mb: 2, mt: 3 }}
+                onSubmit={errCheck}
                 component="form"
                 noValidate
-                sx={{ mt: 3 }}
-                onSubmit={errCheck}
             >
-                <Grid container spacing={2} sx={{ mb: 5 }}>
-                    <Grid item xs={4}>
-                        <UploadProfile
-                            setImage={setImage}
-                            image={image}
-                            noWindow
-                        />
-                        {/* {isOpen && (<ProfileWindow
-                            image={image}
-                            setImage={setImage}
-                            setOpen={setOpen}
-                        />)} */}
-                    </Grid>
-                    <Grid
-                        item xs={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-evenly" }}
-                    >
-                        <TextField
-                            margin="normal"
-                            inputProps={{ maxLength: 10 }}
-                            required
-                            error={PasswordError}
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="new-password"
-                            onKeyPress={checkPasswordKey}
-                        />
-                        <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
-                        <LocationSearch
-                            setLocation={setLocation}
-                            error={LocationError}
-                            onKeyPress={checkLocationKey}
-                            limit={5}
-                        />
-                    </Grid>
-                </Grid>
-
-                <TextArea
-                    placeholder="About you"
-                    setData={setEditorState}
-                    error={alert && alert.type === "error"}
-                    checkDescKey={checkDescKey}
-                />
-                <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 2 }}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="twitter"
-                        label="Twitter Link"
-                        type="twitter"
-                        id="twitter"
-                    />
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="facebook"
-                        label="Facebook Link"
-                        type="facebook"
-                        id="facebook"
-                    />
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                        name="linkedin"
-                        label="Linkedin Link"
-                        type="linkedin"
-                        id="linkedin"
+                <Box className={classes.Profile}>
+                    <UploadProfile
+                        setImage={setImage}
+                        image={image}
+                        noWindow
                     />
                 </Box>
-
-                {loadingSwitch(0, () =>
-                (<Box sx={{ textAlign: "center" }}>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Register
-                    </Button>
-                </Box>))}
+                <Box className={classes.SecInfo}>
+                    <TextField
+                        margin="normal"
+                        inputProps={{ maxLength: 10 }}
+                        required
+                        error={PasswordError}
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="new-password"
+                        onKeyPress={checkPasswordKey}
+                    />
+                    <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
+                    <LocationSearch
+                        setLocation={setLocation}
+                        error={LocationError}
+                        onKeyPress={checkLocationKey}
+                        limit={5}
+                    />
+                </Box>
             </Box>
+
+            <TextArea
+                styles={classes.Editor}
+                placeholder="About you"
+                setData={setEditorState}
+                error={alert && alert.type === "error"}
+                checkDescKey={checkDescKey}
+            />
+
+            <Box className={classes.Connections}>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    name="twitter"
+                    label="Twitter Link"
+                    type="twitter"
+                    id="twitter"
+                />
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    name="facebook"
+                    label="Facebook Link"
+                    type="facebook"
+                    id="facebook"
+                />
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    name="linkedin"
+                    label="Linkedin Link"
+                    type="linkedin"
+                    id="linkedin"
+                />
+            </Box>
+
+            {loadingSwitch(0, () =>
+            (<Box sx={{ textAlign: "center" }}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Register
+                </Button>
+            </Box>))}
         </Box>
     ))
 }

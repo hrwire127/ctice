@@ -34,7 +34,7 @@ function Customs(props)
     const imgWidth = windowSize < 400 ? "80%" : (windowSize < 600 ? "60%" : "35%")
 
     const ImgSelected = { width: imgWidth, opacity: 0.5 }
-    const ImgEmpty = { width: imgWidth, boxShadow: "0 0 10px -5px" }
+    const ImgEmpty = { width: imgWidth, boxShadow: "0 0 10px -5px", cursor: "pointer" }
 
     const handleTheme = (e, newTheme) =>
     {
@@ -104,7 +104,6 @@ function Customs(props)
                 })
         }
     };
-
 
     return (
         <Box

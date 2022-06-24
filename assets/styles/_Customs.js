@@ -3,7 +3,8 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles({
     Body: {
         flexGrow: 1,
-        padding: "24px"
+        padding: "24px",
+        maxWidth: "800px"
     },
     Container: {
         display: "flex",

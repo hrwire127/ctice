@@ -74,13 +74,22 @@ router.post('/one/api', apiSecret, isLogged_CS, tryAsync_CS(async (req, res) =>
 
 router.post('/pending', validatePendingUser, tryAsync_CS(async (req, res) =>
 {
-    const pending = new Pending(req.body)
-    await pending.processPending(req, res)
-    console.log("!3!")
-    await pending.save()
-    console.log("!4!")
-    req.flash('info', 'Checkout your email, pending exires in 5 min');
-    Redirects_SR.Home.CS(res)
+    try
+    {
+
+        console.log(req.body)
+        const pending = new Pending(req.body)
+        await pending.processPending(req, res)
+        console.log("!3!")
+        await pending.save()
+        console.log("!4!")
+        req.flash('info', 'Checkout your email, pending exires in 5 min');
+        Redirects_SR.Home.CS(res)
+    }
+    catch (err)
+    {
+        console.log(err)
+    }
 }))
 
 router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>

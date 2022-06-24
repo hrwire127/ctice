@@ -4,6 +4,7 @@ const useStyles = makeStyles(theme => ({
     Container: {
         flexGrow: 1,
         padding: "24px",
+        maxWidth: "800px"
     },
     FrontInfo: {
         display: 'flex',

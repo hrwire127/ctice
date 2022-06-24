@@ -71,6 +71,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
                 paddingRight: "50px",
                 paddingLeft: "50px",
             },
+            maxWidth: "800px"
         }}>
             <Box className={classes.Bar}>
                 <Typography sx={{ textAlign: "center" }} variant="h4">
