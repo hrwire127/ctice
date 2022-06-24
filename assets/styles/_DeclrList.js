@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
         "& button": {
             color: theme.palette.tertiary.main
         },
-        ["@media (max-width:460px)"]: {
+        ["@media (max-width:520px)"]: {
             justifyContent: "center",
             flexDirection: "column",
         },
@@ -24,23 +24,21 @@ const useStyles = makeStyles((theme) => ({
         margin: "auto",
         marginTop: 20,
         width: "100%",
-        paddingBottom: "50px",
-        // display: "grid",
-        // gridTemplateColumns: "repeat(auto-fill, 220px)",
+        paddingBottom: 50,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gridGap: "20px",
+        gap: 20,
     },
     ListFull: {
         margin: "auto",
         marginTop: 20,
         width: "100%",
-        paddingBottom: "50px",
+        paddingBottom: 50,
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, 220px)",
         justifyContent: "center",
-        gridGap: "20px",
+        gap: 20,
     },
 }));
 

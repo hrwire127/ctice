@@ -12,16 +12,18 @@ import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import TagFilter from './TagFilter';
 import Search from './Search'
+import useLocalStorage from "./hooks/useLocalStorage"
 
 const BookmarkList = (props) => handleAsync(props, (props) =>
 {
     const { user, fullTags, setError, Mounted } = props;
-    const [queryValue, setQuery] = useState("");
+    const [queryValue, setQuery] = useLocalStorage("query_bookmarks", "", true);
+    const [tags, setTags] = useLocalStorage("bookmarks_tags", [], true);
     const [count, setCount] = useState(user.bookmarks.length);
     const [bookmarks, setBookmarks] = useState([])
-    const [tags, setTags] = useState([]);
-    const [fullWhile, fullSwitch] = useLoading(false)
+
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
+    const [fullWhile, fullSwitch] = useLoading(false)
 
     const device = useContext(DeviceContext)
     const styleCtx = useContext(StyleContext);
@@ -29,17 +31,20 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
 
     useEffect(async () =>
     {
-        const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
-        const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
-
-        Redirects_CS.handleRes(newBookmarks, typeof window !== "undefined" && window, setError)
-        Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
-
-        if (Mounted)
+        fullWhile(async () =>
         {
-            setBookmarks(newBookmarks.obj)
-            setCount(newCount.obj)
-        }
+            const newBookmarks = await loadLimitedBookmarks([], queryValue, 4, user._id, tags)
+            const newCount = await countLimitedBookmarks(queryValue, user._id, tags);
+
+            Redirects_CS.handleRes(newBookmarks, typeof window !== "undefined" && window, setError)
+            Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
+
+            if (Mounted)
+            {
+                setBookmarks(newBookmarks.obj)
+                setCount(newCount.obj)
+            }
+        })
     }, [queryValue, tags, Mounted])
 
     function loadMore(e)
@@ -55,14 +60,29 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
     }
 
     return (
-        <>
+        <Box sx={{
+            flexGrow: 1,
+            padding: "24px",
+            ["@media (max-width:960px)"]: {
+                paddingRight: "60px",
+                paddingLeft: "60px",
+            },
+            ["@media (max-width:530px)"]: {
+                paddingRight: "50px",
+                paddingLeft: "50px",
+            },
+        }}>
+            <Box className={classes.Bar}>
+                <Typography sx={{ textAlign: "center" }} variant="h4">
+                    Bookmarks
+                </Typography>
+            </Box>
             <Box sx={{
                 width: "100%",
                 display: 'flex',
                 justifyContent: "space-evenly",
                 alignItems: "end",
                 flexWrap: "wrap",
-                rowGap: 2,
                 mb: 4
             }}>
                 <Search query={queryValue} setQuery={setQuery} />
@@ -91,7 +111,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
                 </>)
                 : (<Typography align="center" variant="h5" color="text.secondary">Nothing</Typography>)
             }
-        </>)
+        </Box >)
 })
 
 export default BookmarkList

@@ -18,7 +18,22 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: 16
+        padding: 16,
+    },
+    BookmarkCard: {
+        width: "80%",
+        height: 55,
+        position: 'relative',
+        backgroundColor: theme.card,
+        color: theme.palette.tertiary.main,
+        backgroundImage: "none",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 16,
+        ["@media (max-width:520px)"]: {
+            width: "100%",
+        },
     },
     Actions: {
         display: "flex",

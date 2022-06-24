@@ -110,7 +110,10 @@ function Change(props)
 	}
 
 	return (
-		<>
+		<Box
+			component="main"
+			className={classes.Container}
+		>
 			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
 			<Box
 				className={classes.FrontInfo}
@@ -240,7 +243,7 @@ function Change(props)
 					</Box>)))
 				}
 			</Box>
-		</>
+		</Box>
 	)
 }
 

@@ -3,7 +3,7 @@ import UserContext from '../../../components/context/contextUser'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, getTags } from '../../../utilsCS/_get'
-import Bookmarks from '../../../components/Bookmarks'
+import BookmarkList from '../../../components/BookmarkList'
 import UserNavigation from '../../../components/UserNavigation'
 
 function bookmarks(props)
@@ -20,7 +20,7 @@ function bookmarks(props)
     }, [])
 
     return userCtx && (<UserNavigation>
-        <Bookmarks user={user} fullTags={fullTags} setError={setError} />
+        <BookmarkList user={user} fullTags={fullTags} setError={setError} />
     </UserNavigation>)
 }
 

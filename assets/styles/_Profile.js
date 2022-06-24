@@ -1,6 +1,10 @@
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(theme => ({
+    Container: {
+        flexGrow: 1,
+        padding: "24px",
+    },
     TextArea:
     {
         width: "100%",

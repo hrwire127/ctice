@@ -41,6 +41,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const [declarations, setDeclarations] = useState([]);
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
+    
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
@@ -91,7 +92,6 @@ const DeclrList = (props) => handleAsync(props, (props) =>
             >
                 <Button onClick={(e) => loadMore(e, dateValue, queryValue, sort, tags)}>Load More</Button>
             </Box>))
-
     }
 
     const Declrs = () =>

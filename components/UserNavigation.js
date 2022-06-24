@@ -185,12 +185,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                     </Box>
                 </Box>
             </SwipeableDrawer>
-            <Box
-                component="main"
-                className={classes.Content}
-            >
-                {props.children}
-            </Box>
+            {props.children}
             <Main />
         </Box>)
         : (<Box className={classes.Body}>
