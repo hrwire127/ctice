@@ -1,12 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { EditorState, convertFromRaw } from 'draft-js';
-import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import
 {
     Box, Typography,
     IconButton,
     Collapse, Grid, Paper,
-    Avatar
+    Avatar, Fab, Zoom, useScrollTrigger
 } from '@mui/material';
 import
 {
@@ -15,13 +13,11 @@ import
     KeyboardArrowDown, Comment,
     IosShare, Accessible, Bookmark
 } from '@mui/icons-material';
-import { CropData } from '../utilsCS/_basic';
 import useStyles from '../assets/styles/_DeclrView';
 import AdminContext from './context/contextAdmin'
 import UserContext from './context/contextUser'
 import Link from 'next/link'
 import useLoading from './hooks/useLoading'
-import Rules from "../utilsCS/clientRules"
 import TransitionAlerts from './TransitionAlerts'
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
@@ -174,7 +170,7 @@ function DeclrView(props)
                         {title}
                     </Typography>
                     {adminCtx && (
-                        <Box sx={{ display: 'flex', justifyContent: "left",flexWrap: "wrap"}}>
+                        <Box sx={{ display: 'flex', justifyContent: "left", flexWrap: "wrap" }}>
                             <Box>
                                 <Link href={`/edit/${id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
                             </Box>
@@ -236,7 +232,7 @@ function DeclrView(props)
                     <Box className={classes.Social}>
                         <ShareButtons />
 
-                        <IconButton className={classes.Share}>
+                        <IconButton className={classes.Share} onClick={() => navigator.clipboard.writeText(window.location)}>
                             <IosShare sx={{ ml: 2 }} />
                         </IconButton>
                     </Box>

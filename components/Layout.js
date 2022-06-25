@@ -15,6 +15,7 @@ import ErrorPage from './ErrorPage'
 import { StyledEngineProvider } from '@mui/material/styles';
 import { isBrowser } from 'react-device-detect';
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import BackToTop from './BackToTop'
 
 export default function Layout(props)
 {
@@ -118,7 +119,9 @@ export default function Layout(props)
                                                     {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
                                                     <Box sx={{ flex: 1, backgroundColor: "background.default", display: "flex", flexDirection: "column" }}
                                                     >
+                                                        <Box id="back-to-top-anchor" />
                                                         {childrenwprops}
+                                                        <BackToTop />
                                                     </Box>
                                                     <div className="cover"></div>
                                                 </>)

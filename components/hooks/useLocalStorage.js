@@ -26,7 +26,6 @@ const useLocalStorage = (keyName, initial = undefined, noNull = false) =>
     {
         if (value !== undefined)
         {
-            console.log("!")
             window.localStorage.setItem(keyName, JSON.stringify(value))
         }
     }, [value])
