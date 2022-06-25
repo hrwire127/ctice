@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import
-    {
-        Button, Box,
-        Typography, CssBaseline,
-        List, ListItem,
-        ListItemText, ListItemButton,
-        SwipeableDrawer, IconButton
-    } from '@mui/material';
+{
+    Button, Box,
+    Typography, CssBaseline,
+    List, ListItem,
+    ListItemText, ListItemButton,
+    SwipeableDrawer, IconButton
+} from '@mui/material';
 import Link from 'next/link'
 import useStyles from '../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
@@ -80,7 +80,7 @@ function HomeNavigation(props)
     );
 
     return windowSize < 830
-        ? (<>
+        ? (<Box className={classes.SwipeContainer}>
             <SwipeableDrawer
                 open={open}
                 onClose={() => setOpen(false)}
@@ -96,7 +96,7 @@ function HomeNavigation(props)
             </SwipeableDrawer>
 
             {props.children}
-        </>)
+        </Box>)
         : (<Box className={classes.Body}>
             <CssBaseline />
             <Box

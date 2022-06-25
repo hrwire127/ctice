@@ -129,7 +129,7 @@ function NotifCreate(props)
                             id="file"
                             name="file"
                             hidden
-                            onChange={(e) => ReadFile(e, setFileNotif, setHtmlNotif)}
+                            onInput={(e) => ReadFile(e, setFileNotif, setHtmlNotif)}
                         />
                         <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
                             <Button variant="outlined" onClick={() => onUpload(inputFileRefNotif)}>{fileNotif ? fileNotif.name : "Upload"}</Button>
@@ -179,7 +179,7 @@ function NotifCreate(props)
                             id="file"
                             name="file"
                             hidden
-                            onChange={(e) => ReadFile(e, setFileBanner, setHtmlBanner)}
+                            onInput={(e) => ReadFile(e, setFileBanner, setHtmlBanner)}
                         />
                         <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
                             <Button variant="outlined" onClick={() => onUpload(inputFileRefBanner)}>{fileBanner ? fileBanner.name : "Upload"}</Button>

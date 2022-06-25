@@ -150,6 +150,7 @@ function AdminLayout(props)
                     flexGrow: 1,
                     height: '100vh',
                     overflow: 'auto',
+                    paddingRight: 0 
                 }}
             >
                 {props.children}

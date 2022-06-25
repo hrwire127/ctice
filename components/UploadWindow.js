@@ -48,7 +48,7 @@ function UploadWindow(props)
                     id="profile"
                     name="profile"
                     ref={inputFileRef}
-                    onChange={(e) => 
+                    onInput={(e) => 
                     {
                         setImage(e.target.files[0])
                     }}

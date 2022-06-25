@@ -31,13 +31,18 @@ function Login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    if (res.error) setAlertMsg(res.error.message, "error")
+                    console.log(window.location.href)
+                    console.log(document.referrer)
+
+                    console.log(window.location.href === document.referrer)
+
+                    if(window.location.href === document.referrer)
+                    {
+                        window.location = process.env.NEXT_PUBLIC_DR_HOST
+                    }
                     else
                     {
-                        window.location = (window.location.href !== document.referrer
-                            || window.location.href !== `${process.env.NEXT_PUBLIC_DR_HOST}/error`
-                            ? document.referrer
-                            : process.env.NEXT_PUBLIC_DR_HOST)
+                        window.location = document.referrer
                     }
                 })
         })

@@ -125,7 +125,7 @@ export default function Layout(props)
                                                         backgroundColor: "background.default",
                                                         display: "flex",
                                                         flexDirection: "column",
-                                                        overflow: "auto"
+                                                        overflow: "hidden"
                                                     }}
                                                     >
                                                         <Box id="back-to-top-anchor" />

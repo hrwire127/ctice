@@ -119,7 +119,7 @@ function BannerCreate()
                     id="file"
                     name="file"
                     hidden
-                    onChange={(e) => ReadFile(e)}
+                    onInput={(e) => ReadFile(e)}
                 />
                 <Box sx={{ display: "flex", gap: 5, justifyContent: "center", mb: 5 }}>
                     <Button variant="outlined" onClick={onUpload}>{file ? file.name : "Upload"}</Button>

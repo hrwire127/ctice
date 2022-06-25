@@ -34,7 +34,7 @@ function UploadProfile(props)
             id="profile"
             name="profile"
             ref={inputFileRef}
-            onChange={(e) => 
+            onInput={(e) => 
             {
                 console.log(e.target.files[0])
                 if (e.target.files[0]) setImage(e.target.files[0])

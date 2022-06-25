@@ -24,7 +24,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
             .then(async res =>
             {
                 Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                if(Mounted)
+                if (Mounted)
                 {
                     setViews(0)
                 }
@@ -49,7 +49,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
             })
     }
 
-    const onDeleteAll = () =>
+    const onDeleteAll = () => 
     {
         fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/notifications/delete/all`, {
             method: 'POST',
@@ -74,7 +74,13 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
                     <Button onClick={onDeleteAll} color="error" variant="contained" size="small" >Clear</Button>
                     {notifications.map((n, i) => <NotifItem key={i} raw={n.raw} content={n.content} onDelete={onDelete} index={i} />)}
                 </>)
-                : (<Typography align="center" color="text.secondary">Nothing</Typography>)
+                : (<Box sx={{ height: "20%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Typography
+                        color="text.secondary"
+                    >
+                        Nothing
+                    </Typography>
+                </Box>)
             }
         </Paper>
     )

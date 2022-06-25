@@ -24,7 +24,7 @@ function UploadBtnPdf(props)
                     type="file"
                     id="file"
                     name="file"
-                    onChange={(e) => uploadFile(e.target.files[0], changeFile)}
+                    onInput={(e) => uploadFile(e.target.files[0], changeFile)}
                     hidden
                     accept="application/pdf"
                 />

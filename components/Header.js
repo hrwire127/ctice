@@ -73,7 +73,7 @@ const Header = (props) =>
 						{userCtx
 							? (<>
 								<Box
-								// onBlur={() => setNotifOpen(false)}
+								// onBlur={() => setNotifOpen(false)} 
 								>
 									<IconButton
 										// onFocus={() => setNotifOpen(!notifOpen)}

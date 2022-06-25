@@ -23,21 +23,21 @@ const useStyles = makeStyles((theme) => ({
     {
         display: 'flex',
         paddingLeft: theme.maxPadding,
-        paddingRight: theme.maxPadding,
+        // paddingRight: theme.maxPadding,
         ["@media (max-width:1300px)"]: {
             paddingLeft: theme.minPadding,
-            paddingRight: theme.minPadding,
+            // paddingRight: theme.minPadding,
         },
         ["@media (max-width:960px)"]: {
             paddingLeft: 0,
-            paddingRight: 0,
         },
         ["@media (max-width:830px)"]: {
             paddingLeft: 0,
-            paddingRight: 0,
         },
         height: "100%",
-        flex: 1
+        flex: 1,
+        overflow: "auto",
+        paddingRight: 0
     },
     ItemButton: {
         backgroundColor: theme.palette.shadow,
@@ -58,18 +58,24 @@ const useStyles = makeStyles((theme) => ({
     },
     Content: {
         flexGrow: 1,
-        padding: 24,
-        width: theme.drawerWidth,
-        ["@media (max-width:960px)"]: {
-            paddingRight: 60,
-        },
+        paddingLeft: 24,
+        // width: theme.drawerWidth,
+        // ["@media (max-width:960px)"]: {
+        //     paddingRight: 60,
+        // },
         ["@media (max-width:830px)"]: {
             paddingLeft: 60,
         },
+        overflow: "auto",
+        paddingRight: 0
     },
     Banners: {
         display: "flex",
         flexDirection: "column",
+    },
+    SwipeContainer: {
+        overflow: "auto",
+        paddingRight: 0
     }
 }))
 

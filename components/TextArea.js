@@ -529,7 +529,7 @@ const InlineStyleControls = (props) =>
                         name="file"
                         hidden
                         ref={fileRef}
-                        onChange={(e) => props.setEditor(URL.createObjectURL(e.target.files[0]))}
+                        onInput={(e) => props.setEditor(URL.createObjectURL(e.target.files[0]))}
                         accept="image/png, image/jpg, image/jpeg"
                     />
                     <Attachment

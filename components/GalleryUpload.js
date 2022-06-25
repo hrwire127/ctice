@@ -37,7 +37,7 @@ function GalleryUpload(props)
             name="profile"
             ref={inputFileRef}
             multiple
-            onChange={(e) => 
+            onInput={(e) => 
             {
                 setGalleryFiles(e.target.files)
             }}
