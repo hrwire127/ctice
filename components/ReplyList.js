@@ -18,7 +18,7 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         replies,
         setReplies,
         setError,
-        Mounted
+        Mounted,
     } = props;
 
     const [fullWhile, fullSwitch] = useLoading(false)
@@ -55,6 +55,7 @@ const ReplyList = (props) => handleAsync(props, (props) =>
                 {
                     return replies.map(r => (
                         <Reply
+                            setError={setError}
                             reply={r}
                             cid={cid}
                             id={id}

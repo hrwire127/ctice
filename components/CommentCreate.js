@@ -46,7 +46,6 @@ function CommentCreate(props)
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
-                    Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     resetEditorState()
                 })
         })
@@ -78,7 +77,7 @@ function CommentCreate(props)
             <Typography align="left" component="h6" variant="h6">
                 Your Comment
             </Typography>
-            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+            {alert && (<TransitionAlerts type={alert.type}setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box
                 component="form"
                 enctype="multipart/form-data"

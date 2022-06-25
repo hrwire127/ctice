@@ -5,7 +5,8 @@ import
 {
     Box, Typography,
     IconButton,
-    Collapse, Grid, Paper
+    Collapse, Grid, Paper,
+    Avatar
 } from '@mui/material';
 import
 {
@@ -138,7 +139,7 @@ function DeclrView(props)
     const ShareButtons = () =>
     {
         return (
-            <>
+            <Box>
                 <LinkedinShareButton
                     url={typeof window !== "undefined" && window.location.url}
                     title="Share"
@@ -157,12 +158,15 @@ function DeclrView(props)
                 >
                     <Twitter />
                 </TwitterShareButton>
-            </>
+            </Box>
         )
     }
 
     return fullSwitch(2, () => (
-        <>
+        <Box
+            component="main"
+            className={classes.Container}
+        >
             {delalert && (<TransitionAlerts type={delalert.type} setFlash={setDelAlert}>{delalert.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Box className={classes.Title}>
@@ -170,60 +174,113 @@ function DeclrView(props)
                         {title}
                     </Typography>
                     {adminCtx && (
-                        <>
-                            <Link href={`/edit/${id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
-                            <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete color="tertiary" /></IconButton></Link>
-                        </>
+                        <Box sx={{ display: 'flex', justifyContent: "left",flexWrap: "wrap"}}>
+                            <Box>
+                                <Link href={`/edit/${id}`}><IconButton size="small"><Build color="tertiary" /></IconButton></Link>
+                            </Box>
+                            <Box>
+                                <Link href=""><IconButton onClick={onDeclrDelete} size="small"><Delete color="tertiary" /></IconButton></Link>
+                            </Box>
+                            <Box>
+                                <IconButton size="small" onClick={switchStatus}>
+                                    <Accessible color="tertiary" />
+                                </IconButton>
+                            </Box>
+                        </Box>
                     )}
                 </Box>
-                <Typography variant="h8" color="text.secondary" alignSelf="center">
-                    Created by {authors[0].username}
-                </Typography>
             </Box>
-            <ShareButtons />
             <Box className={classes.Bar}>
-                <Typography variant="h9" color="text.secondary" sx={{ alignSelf: "center" }}>
-                    Published on {date[date.length - 1].substring(0, 10)}, {date[date.length - 1].match(/\d\d:\d\d/)}
-                </Typography>
-                {authors.length > 1 &&
-                    (<Typography variant="h9" color="text.secondary">
-                        Last Edited by {authors[authors.length - 1].username}
+                <Box>
+                    <Typography variant="" color="text.secondary" sx={{ alignSelf: "center" }}>
+                        Published on
                     </Typography>
-                    )}
-                {adminCtx
-                    && (<IconButton size="small" onClick={switchStatus}>
-                        <Accessible />
-                    </IconButton>)}
-                {/* <BackLink>Back</BackLink> */}
-            </Box>
-
-            <Box sx={{ display: 'flex', justifyContent: "space-evenly" }}>
-                {tags.map(t => <Typography key={t._id} color="primary" fontWeight={600}>
-                    {t.content}
-                </Typography>)}
+                    <Typography variant="" sx={{ alignSelf: "center", ml: 1 }}>
+                        {date[0].substring(0, 10)} at {date[0].match(/\d\d:\d\d/)}
+                    </Typography>
+                </Box>
+                {date.length > 1 && (<Box>
+                    <Typography variant="" color="text.secondary" sx={{ alignSelf: "center" }}>
+                        Edited on
+                    </Typography>
+                    <Typography variant="" sx={{ alignSelf: "center", ml: 1 }}>
+                        {date[date.length - 1].substring(0, 10)} at {date[date.length - 1].match(/\d\d:\d\d/)}
+                    </Typography>
+                </Box>)}
             </Box>
 
             <Box className={classes.Line} />
 
-            <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
-                <Vote setError={setError} user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
-                <Box sx={{ width: "90%" }}>
-                    {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
-                    <EditorView data={JSON.parse(description)} />
-                </Box>
-            </Box>
+            <Box className={classes.Body} >
+                <Box className={classes.Vote}>
+                    <Vote setError={setError} user={user} likes={likes} setLikes={setLikes} d_id={id} dislikes={dislikes} setDislikes={setDislikes} />
 
-            <Box className={classes.Paragraph}>
-                <Box display="flex" justifyContent="left" gap={1}>
-                    <Comment /> {declaration.comments.length}
-                </Box>
-
-                <Box display="flex" justifyContent="left" gap={1}>
-                    <IosShare />
                     {userCtx && (hasBookmark ? (<IconButton onClick={switchBookmark}><Bookmark /></IconButton>)
                         : (<IconButton onClick={switchBookmark}><TurnedInNot /></IconButton>))}
                 </Box>
+                <Box sx={{ width: "90%" }}>
+                    {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
+                    <Box sx={{ minHeight: 200 }}>
+                        <EditorView data={JSON.parse(description)} />
+                    </Box>
+                    <Box className={classes.Tags}>
+                        {tags.map(t =>
+                        (<Paper sx={{ pl: 1, pr: 1 }} key={t._id}>
+                            <Typography color="primary" fontWeight={600}>
+                                {t.content}
+                            </Typography>
+                        </Paper>)
+                        )}
+                    </Box>
+
+                    <Box className={classes.Social}>
+                        <ShareButtons />
+
+                        <IconButton className={classes.Share}>
+                            <IosShare sx={{ ml: 2 }} />
+                        </IconButton>
+                    </Box>
+
+                    <Box className={classes.LastRow}>
+                        <Box display="flex" justifyContent="left" gap={1}>
+                            <Comment sx={{ fontSize: 50 }} />
+                            <Typography variant="h4" >
+                                {declaration.comments.length}
+                            </Typography>
+                        </Box>
+
+                        <Box className={classes.Authors}>
+                            {authors.length > 1 &&
+                                (<Paper className={classes.Author}>
+                                    <Typography variant="h11" color="text.secondary">
+                                        Last Edited
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
+                                        <Avatar alt={authors[authors.length - 1].username} src={authors[authors.length - 1].profile.url} />
+                                        <Typography variant="h5">
+                                            {authors[authors.length - 1].username}
+                                        </Typography>
+                                    </Box>
+                                </Paper>)}
+                            <Paper className={classes.Author}>
+                                <Typography variant="h11" color="text.secondary">
+                                    Created
+                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
+                                    <Avatar alt={authors[0].username} src={authors[0].profile.url} />
+                                    <Typography variant="h5">
+                                        {authors[0].username}
+                                    </Typography>
+                                </Box>
+                            </Paper>
+                        </Box>
+                    </Box>
+
+
+                    {/* <BackLink>Back</BackLink> */}
+                </Box>
             </Box>
+
 
             <Box className={classes.Line} />
 
@@ -234,7 +291,8 @@ function DeclrView(props)
                     </Link> or <Link href="/user/login">
                         Log in
                     </Link> to comment
-                </Typography>)}
+                </Typography>)
+            }
 
             <CommentList
                 setError={setError}
@@ -243,12 +301,11 @@ function DeclrView(props)
                 user={user}
                 setComments={setComments}
             />
-
             {/* {file ? (<DocumentView file={file} />) 
             : (<Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
                 No Upload...
             </Typography>)} */}
-        </>
+        </Box >
     ))
 }
 export default DeclrView;

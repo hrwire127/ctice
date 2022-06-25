@@ -4,7 +4,7 @@ const useStyles = makeStyles({
     Body: {
         flexGrow: 1,
         padding: "24px",
-        maxWidth: "800px"
+        maxWidth: theme.containerMaxWidth
     },
     Container: {
         display: "flex",

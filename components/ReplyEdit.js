@@ -7,15 +7,16 @@ import useStyles from "../assets/styles/_CreateForm";
 import useLoading from './hooks/useLoading'
 import Rules from '../utilsCS/clientRules'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import useAlertMsg from './hooks/useAlertMsg'
 
 function ReplyEdit(props)
 {
     const [ContentError, , helperContentText, , checkContentKey, setContentTrue, setContentFalse, contentValid,] = useFormError(false);
 
-    const { reply, setEdit, setError } = props;
-    const { content, _id: rid  } = reply;
+    const { reply, setEdit, setError, cid, id } = props;
+    const { content, _id: rid } = reply;
 
-	const [setAlertMsg, alert, setAlert] = useAlertMsg()
+    const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
     const [editorState, setEditorState] = useState();
 
@@ -31,7 +32,6 @@ function ReplyEdit(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    // Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     if (res.error) setAlertMsg(res.error.message, "error")
                 })
         })
@@ -57,9 +57,9 @@ function ReplyEdit(props)
     };
 
     return (
-        <Box>
-
-            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+        <Box sx={{ width: "80%" }}>
+            <Box className={classes.Line} />
+            {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box
                 component="form"
                 enctype="multipart/form-data"

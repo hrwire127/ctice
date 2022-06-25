@@ -10,7 +10,7 @@ const { tryAsync_CS, tryAsync_SR, apiSecret } = require('../utilsSR/middlewares/
 const { isLogged_CS, isAdmin_CS } = require('../utilsSR/middlewares/_m_user')
 const { verifyCommentUser } = require('../utilsSR/middlewares/_m_verify')
 const { validateDeclr, validateComment } = require('../utilsSR/middlewares/_m_validations')
-const { getDeclrDateSort } = require("../utilsSR/primary/_p_declrApi")
+const { getDeclrDateSort, getDeclrScoreSort } = require("../utilsSR/primary/_p_declrApi")
 const { switchSort, sortByScore } = require('../utilsSR/primary/_p_basic')
 const { getUserdata, existsAdmin } = require('../utilsSR/primary/_p_user')
 
@@ -44,7 +44,7 @@ router.post("/:id/comment/api", apiSecret, tryAsync_CS(async (req, res) =>
         declaration = await getDeclrDateSort(id, comments.length, admin, doclimit)
     }, async () =>
     {
-        declaration = await getDeclrScoreSort(id, admin, doclimit)
+        declaration = await getDeclrScoreSort(id, comments.length, admin, doclimit)
     })
 
     Redirects_SR.Api.sendApi(res, declaration.comments)

@@ -6,10 +6,12 @@ function Reply(props)
 {
     const [edit, setEdit] = useState(false)
 
-    const { reply, id, cid, user } = props;
+    const { reply, id, cid, user, setError } = props;
 
     return edit
         ? (<ReplyEdit
+            cid={cid}
+            id={id}
             setError={setError}
             reply={reply}
             setEdit={setEdit}

@@ -41,10 +41,11 @@ const useStyles = makeStyles((theme) => ({
     },
     FooterBar: {
         display: 'flex', 
-        justifyContent: "space-evenly", 
+        justifyContent: "space-between", 
         gap: 4,
         width: "100%", 
-        marginTop: 8 
+        marginTop: 8,
+        flexWrap: "wrap"
     }
 }));
 

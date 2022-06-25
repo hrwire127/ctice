@@ -45,7 +45,6 @@ function CommentEdit(props)
                 {
                     fullWhile(() =>
                     {
-                        // Redirects_CS.handleRes(res)
                         if (res.error) setAlertMsg(res.error.message, "error")
                     })
                 })
@@ -73,7 +72,9 @@ function CommentEdit(props)
 
     return (
         <>
-            {alert && (<TransitionAlerts type="error" setFlash={setAlert}>{alert}</TransitionAlerts>)}
+            <Box className={classes.Line} />
+            {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
+            <Typography>Edit comment</Typography>
             <Box
                 component="form"
                 enctype="multipart/form-data"

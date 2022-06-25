@@ -41,7 +41,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const [declarations, setDeclarations] = useState([]);
     const [count, setCount] = useState(props.count);
     const [sort, setSorting] = useState(sortCtx);
-    
+
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
 
@@ -114,7 +114,10 @@ const DeclrList = (props) => handleAsync(props, (props) =>
 
 
     return (
-        <>
+        <Box
+            component="main"
+            className={classes.Container}
+        >
             {flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
             <Box className={classes.Bar}>
                 <Typography variant="h4">
@@ -146,7 +149,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
                 </Collapse>
             </Box>
             <Declrs />
-        </>
+        </Box>
     )
 })
 

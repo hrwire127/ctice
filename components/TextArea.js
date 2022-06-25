@@ -33,7 +33,6 @@ const styles = theme => ({
         }
     },
     TextAreaNormal: {
-        width: "100%",
         border: "1px solid",
         borderColor: theme.line,
         "&:hover":
@@ -283,7 +282,7 @@ class TextArea extends React.Component
                         onToggle={this.toggleBlockType}
                     />
                 </Box>
-                <Toolbar style={{ml: -1}}>
+                <Toolbar style={{ ml: -1 }}>
                     {externalProps => (
                         <>
                             <linkPlugin.LinkButton style={{
@@ -403,18 +402,26 @@ const StyleNum = (props) =>
             <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 0.5, marginLeft: "8px", marginRight: "6px" }}>
                 {/* <Typography color="text.secondary">{num === 6 ? "n" : num}</Typography> */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    <div onClick={increase} style={{
-                        width: 10, height: 10,
-                        borderLeft: "5px solid transparent",
-                        borderRight: "5px solid transparent",
-                        borderBottom: "5px solid gray",
-                    }}></div>
-                    <div onClick={descrease} style={{
-                        width: 10, height: 10,
-                        borderLeft: "5px solid transparent",
-                        borderRight: "5px solid transparent",
-                        borderTop: "5px solid gray",
-                    }}></div>
+                    <Box onClick={increase}
+                        sx={{
+                            width: 10, height: 10,
+                            borderLeft: "5px solid transparent",
+                            borderRight: "5px solid transparent",
+                            borderBottom: "5px solid gray",
+                            ["@media (max-width:828px)"]: {
+                                width: "1px", height: 5,
+                            },
+                        }}></Box>
+                    <Box onClick={descrease}
+                        sx={{
+                            width: 10, height: 10,
+                            borderLeft: "5px solid transparent",
+                            borderRight: "5px solid transparent",
+                            borderTop: "5px solid gray",
+                            ["@media (max-width:828px)"]: {
+                                width: "1px", height: 5,
+                            },
+                        }}></Box>
                 </Box>
             </Box>
         </span>

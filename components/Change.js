@@ -118,134 +118,138 @@ function Change(props)
 			component="main"
 			className={classes.Container}
 		>
-			{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
 			<Box
-				className={classes.FrontInfo}
-				sx={{ mb: 2 }}
 				onSubmit={errCheck}
 				component="form"
 				noValidate
 			>
-				<Box className={classes.Profile}>
-					<UploadProfile
-						profile={profile.url}
+				{flash && (<TransitionAlerts type={flash.type} setFlash={setFlash}>{flash.message}</TransitionAlerts>)}
+				<Box
+					className={classes.FrontInfo}
+					sx={{ mb: 2 }}
+				>
+					<Box className={classes.Profile}>
+						<UploadProfile
+							profile={profile.url}
+							image={image}
+							setImage={setImage}
+							setOpen={setOpen}
+						/>
+					</Box>
+					<Box className={classes.SecInfo}>
+						<TextField
+							fullWidth
+							variant="outlined"
+							margin="normal"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							inputProps={{ maxLength: 10 }}
+							error={flash && flash.type === "error"}
+							sx={{ minWidth: 200 }}
+							name="username"
+							label="Username"
+							type="username"
+							id="username"
+							autoComplete="new-username"
+						/>
+						<LocationSearch
+							defaultLocation={user.location}
+							setLocation={setLocation}
+							error={flash && flash.type === "error"}
+							limit={5}
+						/>
+						<Box sx={{ mt: 2 }}>
+							{isResetToken
+								? (<Typography variant="h7" color="text.danger">
+									An email was sent for the password reset
+								</Typography>)
+								: resetSwitch(0, () => (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
+									Reset Password
+								</Link>))
+							}
+						</Box>
+					</Box>
+				</Box>
+
+				{
+					isOpen && (<ProfileWindow
 						image={image}
 						setImage={setImage}
 						setOpen={setOpen}
-					/>
-				</Box>
-				<Box className={classes.SecInfo}>
+					/>)
+				}
+
+				<TextArea
+					styles={classes.Editor}
+					placeholder="About you"
+					setData={setEditorState}
+					error={flash && flash.type === "error"}
+					data={JSON.parse(bio)}
+					checkDescKey={checkDescKey}
+				/>
+
+				<Box className={classes.Connections}>
 					<TextField
 						fullWidth
 						variant="outlined"
 						margin="normal"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						inputProps={{ maxLength: 10 }}
+						defaultValue={connections ? connections.twitter : ""}
+						name="twitter"
+						label="Twitter Link"
+						type="twitter"
+						id="twitter"
 						error={flash && flash.type === "error"}
-						sx={{ minWidth: 200 }}
-						name="username"
-						label="Username"
-						type="username"
-						id="username"
-						autoComplete="new-username"
 					/>
-					<LocationSearch
-						defaultLocation={user.location}
-						setLocation={setLocation}
+					<TextField
+						fullWidth
+						variant="outlined"
+						margin="normal"
+						defaultValue={connections ? connections.facebook : ""}
+						name="facebook"
+						label="Facebook Link"
+						type="facebook"
+						id="facebook"
 						error={flash && flash.type === "error"}
-						limit={5}
 					/>
-					<Box sx={{ mt: 2 }}>
-						{isResetToken
-							? (<Typography variant="h7" color="text.danger">
-								An email was sent for the password reset
-							</Typography>)
-							: resetSwitch(0, () => (<Link sx={{ "&:hover": { cursor: "pointer" } }} onClick={resetPassword}>
-								Reset Password
-							</Link>))
-						}
-					</Box>
+					<TextField
+						fullWidth
+						variant="outlined"
+						margin="normal"
+						defaultValue={connections && connections.linkedin}
+						name="linkedin"
+						label="Linkedin Link"
+						type="linkedin"
+						id="linkedin"
+						error={flash && flash.type === "error"}
+					/>
 				</Box>
-			</Box>
 
-			{
-				isOpen && (<ProfileWindow
-					image={image}
-					setImage={setImage}
-					setOpen={setOpen}
-				/>)
-			}
 
-			<TextArea
-				styles={classes.Editor}
-				placeholder="About you"
-				setData={setEditorState}
-				error={flash && flash.type === "error"}
-				data={JSON.parse(bio)}
-				checkDescKey={checkDescKey}
-			/>
-
-			<Box className={classes.Connections}>
-				<TextField
-					fullWidth
-					variant="outlined"
-					margin="normal"
-					defaultValue={connections ? connections.twitter : ""}
-					name="twitter"
-					label="Twitter Link"
-					type="twitter"
-					id="twitter"
-					error={flash && flash.type === "error"}
-				/>
-				<TextField
-					fullWidth
-					variant="outlined"
-					margin="normal"
-					defaultValue={connections ? connections.facebook : ""}
-					name="facebook"
-					label="Facebook Link"
-					type="facebook"
-					id="facebook"
-					error={flash && flash.type === "error"}
-				/>
-				<TextField
-					fullWidth
-					variant="outlined"
-					margin="normal"
-					defaultValue={connections && connections.linkedin}
-					name="linkedin"
-					label="Linkedin Link"
-					type="linkedin"
-					id="linkedin"
-					error={flash && flash.type === "error"}
-				/>
-			</Box>
-
-			<Box sx={{ textAlign: "center" }}>
-				{delay > 0
-					? (<Typography variant="h7" color="text.danger">
-						Cannot edit now, {delay} seconds remained
-					</Typography>)
-					: (submitSwitch(0, () =>
-					(<Box sx={{ display: 'flex', gap: 1, justifyContent: "center" }}>
-						<Button
-							type="submit"
-							variant="contained"
-							sx={{ mt: 3, mb: 2 }}
-						>
-							Save
-						</Button>
-						<Button
-							onClick={onClear}
-							variant="contained"
-							color="error"
-							sx={{ mt: 3, mb: 2 }}
-						>
-							Clear
-						</Button>
-					</Box>)))
-				}
+				<Box sx={{ textAlign: "center" }}>
+					{delay > 0
+						? (<Typography variant="h7" color="text.danger">
+							Cannot edit now, {delay} seconds remained
+						</Typography>)
+						: (submitSwitch(0, () =>
+						(<Box sx={{ display: 'flex', gap: 1, justifyContent: "center" }}>
+							<Button
+								type="submit"
+								variant="contained"
+								sx={{ mt: 3, mb: 2 }}
+							>
+								Save
+							</Button>
+							<Button
+								onClick={onClear}
+								variant="contained"
+								color="error"
+								sx={{ mt: 3, mb: 2 }}
+							>
+								Clear
+							</Button>
+						</Box>)))
+					}
+				</Box>
 			</Box>
 		</Box>
 	)

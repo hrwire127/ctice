@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Typography, IconButton } from '@mui/material'
-import { Build, Delete, Accessible } from '@mui/icons-material';
+import { Box, Typography, IconButton, Paper, Avatar } from '@mui/material'
+import { Build, Delete, Accessible, } from '@mui/icons-material';
 import useStyles from "../assets/styles/_ReplyCard"
 import { getDateDifference } from '../utilsCS/_basic';
 import UserContext from './context/contextUser'
@@ -61,36 +61,44 @@ function ReplyCard(props)
     }
 
     return (
-        <Box className={classes.Card} sx={status === "Disabled" ? { backgroundColor: "gray" } : {}}>
+        <Box className={classes.Card}
+            sx={status === "Disabled"
+                ? { backgroundColor: "gray" }
+                : {}}
+        >
             <Box className={classes.Line} />
             <Box sx={{ display: "flex", gap: 2, maxHeight: "100vh" }}>
                 <Vote setError={setError} reply user={user} likes={likes} setLikes={setLikes} d_id={rid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
-                    <Editor editorKey="editor" readOnly={true} editorState={editorState} />
-                </Box>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: "space-evenly", gap: 1, width: "100%", mt: 2 }}>
-                {userCtx === author.username && (
-                    <Box>
-                        <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
-                        <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                    <Box sx={{ minHeight: 100 }}>
+                        <Editor editorKey="editor" readOnly={true} editorState={editorState} />
                     </Box>
-                )}
-                <Box sx={{ display: 'flex', gap: 1, }}>
-                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                        Created {initdiff}
-                    </Typography>
-                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                        Edited {diff}
-                    </Typography>
-                    <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                        {author.username}
-                    </Typography>
-                    {adminCtx
-                        && (<IconButton size="small" onClick={switchReply}>
-                            <Accessible />
-                        </IconButton>)
-                    }
+                    <Box className={classes.FooterBar}>
+                        {userCtx === author.username ? (
+                            <Box>
+                                <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                                <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                                {adminCtx
+                                    && (<IconButton size="small" onClick={switchReply}>
+                                        <Accessible />
+                                    </IconButton>)
+                                }
+                            </Box>
+                        ) : <Box></Box>}
+                        <Box sx={{ display: 'flex', gap: 1, }}>
+                            <Paper sx={{ display: 'flex', justifyContent: "center", alignItems: "center", flexDirection: "column", width: "auto", p: 2 }}>
+                                <Typography variant="h11" color="text.secondary">
+                                    {initdiff ? (<>{initdiff} ago</>) : (<>{diff} (edited)</>)}
+                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
+                                    <Avatar alt={author.username} src={author.profile.url} />
+                                    <Typography variant="h5">
+                                        {author.username}
+                                    </Typography>
+                                </Box>
+                            </Paper>
+                        </Box>
+                    </Box>
                 </Box>
             </Box>
         </ Box>

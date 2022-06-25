@@ -34,6 +34,19 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.line,
         alignSelf: "stretch"
     },
+    Container: {
+        display: "flex", 
+        gap: 20, 
+        maxHeight: "100vh"
+    },
+    FooterBar: {
+        display: 'flex', 
+        justifyContent: "space-between", 
+        gap: 4,
+        width: "100%", 
+        marginTop: 8,
+        flexWrap: "wrap"
+    }
 }));
 
 export default useStyles;

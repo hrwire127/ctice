@@ -20,7 +20,7 @@ async function getDeclrDateSort(id, length, admin = false, doclimit)
     return await Declaration.findOne(findPip).populate(populatePip)
 }
 
-async function getDeclrScoreSort(id, admin = false, doclimit)
+async function getDeclrScoreSort(id, length, admin = false, doclimit)
 {
     const findPip = admin ? { _id: id } : { _id: id, status: "Active" }
     const populatePip = {
@@ -32,7 +32,7 @@ async function getDeclrScoreSort(id, admin = false, doclimit)
     if (admin) populatePip.match = { status: "Active" }
     const declaration = await Declaration.findOne(findPip).populate(populatePip);
     declaration.comments = sortByScore(declaration.comments
-        .splice(0, comments.length)
+        .splice(0, length)
         .splice(doclimit, declaration.comments.length))
     return declaration;
 }

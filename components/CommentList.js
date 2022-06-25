@@ -13,6 +13,7 @@ import useLoading from './hooks/useLoading'
 import { getLimitedComments } from '../utilsCS/_get'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import { timeout } from "../utilsCS/_basic"
 
 const CommentList = (props) => handleAsync(props, (props) =>
 {
@@ -25,7 +26,8 @@ const CommentList = (props) => handleAsync(props, (props) =>
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [commentWhile, commentSwitch] = useLoading(false)
 
-    const { comments, user, declaration, setComments, setError, Mounted } = props;
+    const { comments, user, declaration,
+        setComments, setError, Mounted,} = props;
     const { _id: id } = declaration;
 
     const classes = useStyles();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import 'draft-js/dist/Draft.css';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import { Box, Button, Typography, IconButton, Grid, Collapse } from '@mui/material'
+import { Box, Button, Typography, IconButton, Grid, Collapse, Paper, Avatar } from '@mui/material'
 import { Build, Delete, Close, Comment, Accessible } from '@mui/icons-material';
 import useStyles from "../assets/styles/_CommentCard"
 import { getDateDifference } from '../utilsCS/_basic';
@@ -85,7 +85,7 @@ function CommentCard(props)
                     >
                         <Close fontSize="inherit" />
                     </IconButton>)
-                    : (<Box textAlign="center">
+                    : (<Box textAlign="center" sx={{ mt: 1 }}>
                         <Box display="flex" justifyContent="center" gap={1} alignItems="center">
                             <Box display="flex" justifyContent="center" gap={1} alignItems="center">
                                 <Comment /> {replies.length}
@@ -105,34 +105,38 @@ function CommentCard(props)
             <Box className={classes.Container}>
                 <Vote setError={setError} comment user={user} likes={likes} setLikes={setLikes} d_id={cid} dislikes={dislikes} setDislikes={setDislikes} />
                 <Box sx={{ width: "90%" }}>
-                    <EditorView data={JSON.parse(description)} />
-                    {/* <Editor editorKey="editor" readOnly={true} editorState={editorState} /> */}
-                </Box>
-            </Box>
-            <Box className={classes.FooterBar}>
-                {userCtx === author.username && (
-                    <Box>
-                        <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
-                        <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                    <Box sx={{ minHeight: 100 }}>
+                        <EditorView data={JSON.parse(content)} />
                     </Box>
-                )}
-                <Box sx={{ display: 'flex', gap: 1, }}>
-                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                        Created {initDiff}
-                    </Typography>
-                    <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
-                        Edited {diff}
-                    </Typography>
-                    {adminCtx
-                        && (<IconButton size="small" onClick={switchComment}>
-                            <Accessible />
-                        </IconButton>)
-                    }
+                    <Box className={classes.FooterBar}>
+                        {userCtx === author.username ? (
+                            <Box>
+                                <IconButton size="small" onClick={setEdit.bind(false)}><Build className={classes.Icon} /></IconButton>
+                                <IconButton size="small" onClick={handleDelete}><Delete className={classes.Icon} /></IconButton>
+                                {adminCtx
+                                    && (<IconButton size="small" onClick={switchComment}>
+                                        <Accessible />
+                                    </IconButton>)
+                                }
+                            </Box>
+                        ) : <Box> </Box>}
+                        <Box sx={{ display: 'flex', gap: 1, }}>
+                            <Paper sx={{ display: 'flex', justifyContent: "center", alignItems: "center", flexDirection: "column", width: "auto", p: 2 }}>
+                                <Typography variant="h11" color="text.secondary">
+                                    {initDiff ? (<>{initDiff} ago</>) : (<>{diff} (edited)</>)}
+                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
+                                    <Avatar alt={author.username} src={author.profile.url} />
+                                    <Typography variant="h5">
+                                        {author.username}
+                                    </Typography>
+                                </Box>
+                            </Paper>
+                        </Box>
+                    </Box>
                 </Box>
-                <Typography className={classes.Title} color="text.secondary" gutterBottom>
-                    {author.username}
-                </Typography>
             </Box>
+
             {user
                 ? (<ReplyFormCreate />)
                 : (
