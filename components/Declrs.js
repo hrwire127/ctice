@@ -19,9 +19,9 @@ export default function Declrs(props)
     const { declarations, onDelete, noControlls, setError } = props
     const classes = useStyles();
 
-    function createData(id, date, title, file, status, by, views)
+    function createData(id, date, title, file, status, by)
     {
-        return { id, date, title, file, status, by, views };
+        return { id, date, title, file, status, by };
     }
 
 
@@ -34,7 +34,6 @@ export default function Declrs(props)
             el.file ? el.file.name : "nothing",
             el.status,
             el.authors[0],
-            2,
         )
     })
 
@@ -66,12 +65,8 @@ export default function Declrs(props)
                         <TableCell>File</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>By</TableCell>
-                        {noControlls
-                            ? (<TableCell align="right">Views</TableCell>)
-                            : (<>
-                                <TableCell>Views</TableCell>
-                                <TableCell align="right">Controls</TableCell>
-                            </>)
+                        {!noControlls &&
+                            (<TableCell align="right">Controls</TableCell>)
                         }
                     </TableRow>
                 </TableHead>
@@ -85,7 +80,6 @@ export default function Declrs(props)
                             <TableCell>{row.by}</TableCell>
                             {noControlls ? (<TableCell align="right">{row.views}</TableCell>) :
                                 (<>
-                                    <TableCell>{row.views}</TableCell>
                                     <TableCell align="right">
                                         <Box sx={{ display: 'flex', justifyContent: "right", gap: 1 }}>
                                             <IconButton sx={{ width: 3, height: 3 }}>

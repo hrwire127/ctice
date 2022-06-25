@@ -10,8 +10,6 @@ function GalleryList(props)
 
     const classes = useStyles(props)()
 
-    console.log(image)
-    console.log(gallery)
 
     return (
         <Box className={classes.SelectionsFull}>

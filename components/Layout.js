@@ -27,6 +27,7 @@ export default function Layout(props)
 
     const [error, setError] = useState(props.children.props.error)
 
+
     useEffect(() =>
     {
         const start = () =>
@@ -105,10 +106,12 @@ export default function Layout(props)
                                         : (<main style={{
                                             position: "relative",
                                             width: "100%",
-                                            minHeight: "100vh",
+                                            // minHeight: "100vh",
+                                            height: "100vh",
                                             display: "flex",
                                             flexDirection: "column",
-                                            justifyContent: "space-between"
+                                            justifyContent: "space-between",
+                                            overflow: "hidden"
                                         }}>
                                             {error
                                                 ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
@@ -117,7 +120,13 @@ export default function Layout(props)
                                                 </Box>)
                                                 : (<>
                                                     {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                    <Box sx={{ flex: 1, backgroundColor: "background.default", display: "flex", flexDirection: "column" }}
+                                                    <Box sx={{
+                                                        flex: 1,
+                                                        backgroundColor: "background.default",
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        overflow: "auto"
+                                                    }}
                                                     >
                                                         <Box id="back-to-top-anchor" />
                                                         {childrenwprops}

@@ -10,7 +10,6 @@ function GalleryCard(props)
         ? (image.content ? URL.createObjectURL(image.content) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)
         : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
 
-    console.log(checked)
 
     return checked
         ? (<Paper

@@ -38,7 +38,10 @@ function AdminBanners(props)
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Paper sx={{
+                        p: 2, display: 'flex', flexDirection: 'column',
+                        overflow: "auto"
+                    }}>
                         {switchLoading(0, () => { if (banners.length > 0) return (<Banners setError={setError} banners={banners} onDelete={onDelete} />) })}
                     </Paper>
                 </Grid>

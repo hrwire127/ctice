@@ -38,7 +38,8 @@ function AdminDeclrs(props)
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', 
+                    overflow: "auto" }}>
                         {switchLoading(0, () => { if (declarations.length > 0) return (<Declrs setError={setError} declarations={declarations} onDelete={onDelete} />) })}
                     </Paper>
                 </Grid>

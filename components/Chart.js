@@ -38,7 +38,7 @@ function Chart(props)
 
 	return (
 		<React.Fragment>
-			<Title>Today</Title>
+			<Title>Last Month</Title>
 			<ResponsiveContainer>
 				<LineChart
 					data={chartData}

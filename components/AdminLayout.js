@@ -1,10 +1,18 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Drawer, Box, AppBar, Toolbar, List, Typography, Divider, IconButton, Badge } from '@mui/material';
+import
+{
+    CssBaseline, Drawer, Box,
+    AppBar, Toolbar, List,
+    Typography, Divider, IconButton,
+    SwipeableDrawer, Badge
+} from '@mui/material';
 import { Menu, ChevronLeft, Close } from '@mui/icons-material';
-import { mainDrawerItems, secondaryDrawerItems } from './DrawerItems';
+import { mainDrawerItems } from './DrawerItems';
 import Link from 'next/link'
 import useLocalStorage from "./hooks/useLocalStorage"
+import useWindowSize from './hooks/useWindowSize';
+import useStyles from "../assets/styles/_Layout"
 
 const drawerWidth = 240;
 
@@ -55,31 +63,48 @@ const Drawer_ = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
 
 function AdminLayout(props)
 {
-    const [open, setOpen] = useLocalStorage("admin_drawer", true, true);
+    const [windowSize] = useWindowSize();
+    const [open, setOpen] = useLocalStorage("admin_drawer", windowSize > 960 ? true : false, true);
+
+    const classes = useStyles()
 
     const toggleDrawer = () =>
     {
-        setOpen(!open);
+        if (windowSize > 960)
+        {
+            setOpen(!open);
+        }
     };
+
+    useEffect(() =>
+    {
+        if (windowSize < 960)
+        {
+            setOpen(false)
+        }
+    }, [windowSize])
+
 
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar_ position="absolute" open={open}>
                 <Toolbar>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer}
-                        sx={{
-                            mr: 36,
-                            color: "primary",
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <Menu />
-                    </IconButton>
+                    {windowSize > 960 && (
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={toggleDrawer}
+                            sx={{
+                                mr: 36,
+                                color: "primary",
+                                ...(open && { display: 'none' }),
+                            }}
+                        >
+                            <Menu />
+                        </IconButton>
+                    )}
                     <Typography
                         component="h1"
                         variant="h6"
@@ -114,10 +139,9 @@ function AdminLayout(props)
                 <Divider />
                 <List component="nav">
                     {mainDrawerItems}
-                    <Divider sx={{ my: 1 }} />
-                    {secondaryDrawerItems}
                 </List>
             </Drawer_>
+
             <Box
                 component="main"
                 sx={{

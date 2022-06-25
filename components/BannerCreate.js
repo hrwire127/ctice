@@ -16,9 +16,11 @@ import useAlertMsg from './hooks/useAlertMsg'
 import TransitionAlerts from './TransitionAlerts'
 import useLoading from './hooks/useLoading'
 import useLocalStorage from "./hooks/useLocalStorage"
+import useWindowSize from './hooks/useWindowSize';
 
 function BannerCreate()
 {
+    const [windowSize] = useWindowSize();
     const [file, setFile] = useState("")
     const [html, setHtml] = useLocalStorage("banner_create", "", true)
     const [width, setWidth] = useState(600)
@@ -100,7 +102,8 @@ function BannerCreate()
         <Container component="main" maxWidth="xs">
             <Box sx={{ mt: 12 }} />
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
-            <Box sx={{
+
+            {windowSize > 720 ? (<Box sx={{
                 marginTop: 2,
                 display: "flex",
                 flexDirection: "column",
@@ -155,7 +158,8 @@ function BannerCreate()
                 {
                     submitSwitch(0, () => <Button sx={{ mt: 2 }} color="success" variant="contained" onClick={handleSubmit}>Create</Button>)
                 }
-            </Box>
+            </Box>)
+                : (<Typography variant="h5" sx={{ mt: 10, textAlign: "center" }}>Cannot edit on that sreen width</Typography>)}
         </Container>
     )
 }

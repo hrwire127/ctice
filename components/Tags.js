@@ -8,16 +8,16 @@ import TransitionAlerts from './TransitionAlerts'
 import { getTags } from '../utilsCS/_get'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import useLocalStorage from "./hooks/useLocalStorage"
+import useWindowSize from './hooks/useWindowSize';
 
 function Tags(props)
 {
     const { tags, setTags, setError } = props
     const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid] = useFormError(false);
 
-    console.log(tags)
-
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
+    const [windowSize] = useWindowSize();
     const [tag, setTag, resetTag] = useLocalStorage("tag_create", "")
 
     const handleSubmit = (body) =>
@@ -79,21 +79,30 @@ function Tags(props)
     return (
         <Box sx={{ mt: 4, p: 12 }}>
             <Typography variant="h5">Tags</Typography>
-            <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
-                {tags.map(t => (
-                    <Grid
+            {windowSize > 860 ? (
+                <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
+                    {tags.map(t => <Grid
                         key={t._id}
                         item xs={4}
                     >
                         <Paper
-                            sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center" }}
+                            key={t._id} sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center" }}
                         >
                             <IconButton onClick={() => onDelete(t._id)}><Delete /></IconButton>
                             <Typography>{t.content}</Typography>
                         </Paper>
-                    </Grid>
-                ))}
-            </Grid>
+                    </Grid>)}
+                </Grid>
+            ) : (
+                <Box sx={{ display: 'flex', flexDirection: "column", gap: 2 }}>
+                    {tags.map(t => <Paper
+                        key={t._id} sx={{ width: 200, height: 60, display: 'flex', justifyContent: "space-evenly", alignItems: "center" }}
+                    >
+                        <IconButton onClick={() => onDelete(t._id)}><Delete /></IconButton>
+                        <Typography>{t.content}</Typography>
+                    </Paper>
+                    )}
+                </Box>)}
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box
                 component="form"

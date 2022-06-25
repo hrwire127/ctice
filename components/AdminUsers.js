@@ -10,7 +10,10 @@ function AdminUsers(props)
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Paper sx={{
+                        p: 2, display: 'flex', flexDirection: 'column',
+                        overflow: "auto"
+                    }}>
                         <Users users={users} />
                     </Paper>
                 </Grid>

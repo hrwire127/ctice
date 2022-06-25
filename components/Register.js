@@ -19,7 +19,6 @@ function Register(props)
 
     const handleSubmit = async (data) =>
     {
-        console.log(data)
         submitWhile(async () =>
         {
             await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/user/pending`, {

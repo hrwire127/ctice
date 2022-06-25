@@ -26,7 +26,6 @@ const Header = (props) =>
 
 	const [windowSize] = useWindowSize();
 
-
 	//\/setError
 	const { title = "ctice", setError } = props;
 

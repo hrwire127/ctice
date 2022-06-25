@@ -15,75 +15,62 @@ import StyleIcon from '@mui/icons-material/Style';
 
 const mainDrawerItems = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/"><ListItemText primary="Home" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/declrlist"><ListItemText primary="Declarations" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/userlist"><ListItemText primary="Users" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ViewCarouselIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/banner/create"><ListItemText primary="Create Banner" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AddAlertIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/notification"><ListItemText primary="Create Notification" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BackupTableIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/banner/list"><ListItemText primary="Banner List" /></Link>
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <StyleIcon color="tertiary" />
-      </ListItemIcon>
-      <Link href="/admin/tags"><ListItemText primary="Tags" /></Link>
-    </ListItemButton>
+    <Link href="/admin/">
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Home" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/declrlist">
+      <ListItemButton>
+        <ListItemIcon>
+          <ShoppingCartIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Declarations" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/userlist">
+      <ListItemButton>
+        <ListItemIcon>
+          <PeopleIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Users" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/banner/create">
+      <ListItemButton>
+        <ListItemIcon>
+          <ViewCarouselIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Create Banner" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/notification">
+      <ListItemButton>
+        <ListItemIcon>
+          <AddAlertIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Create Notification" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/banner/list">
+      <ListItemButton>
+        <ListItemIcon>
+          <BackupTableIcon color="tertiary" />
+        </ListItemIcon>
+        <ListItemText primary="Banner List" />
+      </ListItemButton>
+    </Link>
+    <Link href="/admin/tags">
+      <ListItemButton>
+        <ListItemIcon>
+          <StyleIcon color="tertiary" />
+        </ListItemIcon><ListItemText primary="Tags" />
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );
 
-const secondaryDrawerItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon color="tertiary" />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon color="tertiary" />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon color="tertiary" />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </React.Fragment>
-);
-
-export { secondaryDrawerItems, mainDrawerItems }
+export { mainDrawerItems }
