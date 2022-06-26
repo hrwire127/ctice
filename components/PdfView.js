@@ -7,7 +7,7 @@ import Loading from './Loading'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-function DocumentView(props)
+function PdfView(props)
 {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
@@ -62,4 +62,4 @@ function DocumentView(props)
         </Document >
     )
 }
-export default DocumentView
+export default PdfView

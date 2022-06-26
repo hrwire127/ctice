@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Typography, Button, Link as MuiLink } from '@mui/material';
 import Link from 'next/link';
 import BackLink from "./BackLink";
@@ -6,6 +6,10 @@ import BackLink from "./BackLink";
 function ErrorPage(props)
 {
     const { status, message } = props;
+
+    useEffect(() => {
+      window.localStorage.clear()
+    }, [])
     
     return (
         <Box sx={{ textAlign: "center", mt: 10 }}>

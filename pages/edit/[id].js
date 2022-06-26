@@ -5,7 +5,7 @@ import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
 import { getDeclr, } from "../../utilsCS/_declr"
 import { getTags } from '../../utilsCS/_get'
-import HomeNavigation from '../../components/HomeNavigation'
+import HomeNavigation from '../../components/layouts/HomeNavigation'
 
 
 function edit(props)

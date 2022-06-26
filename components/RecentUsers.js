@@ -1,20 +1,12 @@
-import * as React from 'react';
-import { Link, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import Title from './Title';
-import { makeStyles } from '@mui/styles';
+import React from 'react';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import useStyles from '../assets/styles/_Users';
 
-const useStyles = makeStyles((theme) => ({
-	Table: {
-		"& td": {
-			color: theme.palette.text.default
-		}
-	}
-}));
-function Users(props)
+
+function RecentUsers(props)
 {
 	const { users } = props
 	const classes = useStyles();
-
 
 	function createData(id, date, username, email, status)
 	{
@@ -35,7 +27,9 @@ function Users(props)
 
 	return (
 		<>
-			<Title>Recent Users</Title>
+			<Typography component="h2" variant="h6" color="primary" gutterBottom>
+				Recent Users
+			</Typography>
 			<Table size="small" className={classes.Table}>
 				<TableHead>
 					<TableRow>
@@ -60,4 +54,4 @@ function Users(props)
 		</>
 	);
 }
-export default Users
+export default RecentUsers

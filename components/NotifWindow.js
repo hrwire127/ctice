@@ -68,8 +68,8 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
     }
 
     return (
-        <Paper elevation={10} className={classes.Full} sx={{p: 1}}>
-            <Box sx={{width: "100%", display: 'flex', justifyContent: "space-between", mb: 1}}>
+        <Paper elevation={10} className={classes.Full} sx={{ p: 1 }}>
+            <Box className={classes.Toolbar}>
                 <Typography variant="h6">Notifications</Typography>
                 <Button onClick={onDeleteAll} color="error" variant="contained" size="small" >Clear</Button>
             </Box>
@@ -78,7 +78,7 @@ const NotifWindow = (props) => handleAsync(props, (props) =>
                 ? (<>
                     {notifications.map((n, i) => <NotifItem key={i} raw={n.raw} content={n.content} onDelete={onDelete} index={i} />)}
                 </>)
-                : (<Box sx={{ height: "20%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                : (<Box className={classes.NothingTyp}>
                     <Typography
                         color="text.secondary"
                     >

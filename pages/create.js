@@ -3,7 +3,7 @@ import CreateForm from "../components/CreateForm"
 import AdminContext from '../components/context/contextAdmin'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import useAlertMsg from '../components/hooks/useAlertMsg'
-import HomeNavigation from '../components/HomeNavigation'
+import HomeNavigation from '../components/layouts/HomeNavigation'
 
 function create (props)
 {

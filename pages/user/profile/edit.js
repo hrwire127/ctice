@@ -4,7 +4,7 @@ import Change from '../../../components/Change'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken, getFlash } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'
-import UserNavigation from '../../../components/UserNavigation'
+import UserNavigation from '../../../components/layouts/UserNavigation'
 
 function edit(props)
 {

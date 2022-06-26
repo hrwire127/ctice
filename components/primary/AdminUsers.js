@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Toolbar, IconButton, Container, Grid, Paper } from '@mui/material';
-import Users from './Users';
+import RecentUsers from './RecentUsers';
 
 function AdminUsers(props)
 {
@@ -14,7 +14,7 @@ function AdminUsers(props)
                         p: 2, display: 'flex', flexDirection: 'column',
                         overflow: "auto"
                     }}>
-                        <Users users={users} />
+                        <RecentUsers users={users} />
                     </Paper>
                 </Grid>
             </Grid>

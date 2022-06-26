@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
 
 function createData(time, amount)
 {
@@ -28,7 +27,7 @@ function getUserChartData(users)
 	return data;
 }
 
-function Chart(props)
+function AdminChart(props)
 {
 	const theme = useTheme();
 
@@ -38,7 +37,9 @@ function Chart(props)
 
 	return (
 		<React.Fragment>
-			<Title>Last Month</Title>
+			<Typography component="h2" variant="h6" color="primary" gutterBottom>
+				Last Month
+			</Typography>
 			<ResponsiveContainer>
 				<LineChart
 					data={chartData}
@@ -68,7 +69,7 @@ function Chart(props)
 								...theme.typography.body1,
 							}}
 						>
-							Users
+							RecentUsers
 						</Label>
 					</YAxis>
 					<Line
@@ -84,4 +85,4 @@ function Chart(props)
 	);
 }
 
-export default Chart;
+export default AdminChart;

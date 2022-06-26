@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Box, Container, Link, Typography } from '@mui/material';
 
 function Copyright()

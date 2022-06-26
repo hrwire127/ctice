@@ -36,7 +36,7 @@ const mainDrawerItems = (
         <ListItemIcon>
           <PeopleIcon color="tertiary" />
         </ListItemIcon>
-        <ListItemText primary="Users" />
+        <ListItemText primary="RecentUsers" />
       </ListItemButton>
     </Link>
     <Link href="/admin/banner/create">

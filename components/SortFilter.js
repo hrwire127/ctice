@@ -6,7 +6,7 @@ import
 } from '@mui/material';
 import { sortScore, sortDate } from './context/sortEnum'
 
-function Sort(props)
+function SortFilter(props)
 {
     const { sort, handleSort } = props
 
@@ -27,4 +27,4 @@ function Sort(props)
     </Box>)
 }
 
-export default Sort
+export default SortFilter

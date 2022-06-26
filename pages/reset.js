@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { timeout, determRendering } from '../utilsCS/_basic'
 import Reset from '../components/Reset'
-import HomeNavigation from '../components/HomeNavigation'
+import HomeNavigation from '../components/layouts/HomeNavigation'
 
 function reset(props)
 {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Login from '../../components/Login'
-import HomeNavigation from '../../components/HomeNavigation'
+import HomeNavigation from '../../components/layouts/HomeNavigation'
 
 function login (props) 
 {

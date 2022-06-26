@@ -4,7 +4,7 @@ import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, getTags } from '../../../utilsCS/_get'
 import BookmarkList from '../../../components/BookmarkList'
-import UserNavigation from '../../../components/UserNavigation'
+import UserNavigation from '../../../components/layouts/UserNavigation'
 
 function bookmarks(props)
 {

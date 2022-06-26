@@ -9,7 +9,7 @@ import useStyles from '../assets/styles/_ProfileWindow';
 import SelectionsList from './SelectionsList'
 import GalleryList from "./GalleryList"
 import useLoading from './hooks/useLoading'
-import UploadWindow from './UploadWindow'
+import UploadContainer from './UploadContainer'
 import TransitionAlerts from './TransitionAlerts'
 import useAlertMsg from './hooks/useAlertMsg';
 import galleryReducer from './reducers/galleryReducer';
@@ -122,15 +122,11 @@ function ProfileWindow(props)
                 {windowAlert.message}
             </TransitionAlerts>)}
 
-            <Box className={classes.Container} >
+            <Box className={classes.Container}>
                 <CssBaseline />
                 <Box
                     position="fixed"
-                    sx={{
-                        width: `100%`,
-                        display: "flex",
-                        justifyContent: "right"
-                    }}
+                    className={classes.Icons}
                 >
                     {submitSwitch(1, () => (
                         <>
@@ -144,20 +140,11 @@ function ProfileWindow(props)
                     ))}
                 </Box>
                 <Box
-                    sx={{
-                        width: theme => theme.windowDrawerWidth,
-                        '& .MuiDrawer-paper': {
-                            width: theme => theme.windowDrawerWidth,
-                            boxSizing: 'border-box',
-                        },
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
+                    className={classes.UploadContainer}
                     variant="permanent"
                     anchor="left"
                 >
-                    <UploadWindow
+                    <UploadContainer
                         setWindowAlert={setWindowAlert}
                         setImage={setImage}
                         setGalleryFiles={setGalleryFiles}

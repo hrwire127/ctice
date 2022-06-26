@@ -16,14 +16,15 @@ import useWindowSize from '../hooks/useWindowSize';
 
 function HomeNavigation(props)
 {
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    const [swipeOpen, setSwipeOpen] = useState(false);
     const [windowMinSize] = useWindowSize(830, 0);
+
+    const classes = useStyles();
 
     useEffect(() =>
     {
         const menuBtn = document.querySelector("#menu-btn")
-        menuBtn.addEventListener('click', () => setOpen(!open))
+        menuBtn.addEventListener('click', () => setSwipeOpen(!swipeOpen))
     }, []);
 
     const Item = (props) =>
@@ -79,12 +80,13 @@ function HomeNavigation(props)
         </List>
     );
 
-    return windowMinSize
-        ? (<Box className={classes.SwipeContainer}>
-            <SwipeableDrawer
-                open={open}
-                onClose={() => setOpen(false)}
-                onOpen={() => setOpen(true)}
+    return <Box className={windowMinSize ? classes.SwipeContainer : classes.Body}>
+        {!windowMinSize && (<CssBaseline />)}
+        {windowMinSize
+            ? (<SwipeableDrawer
+                open={swipeOpen}
+                onClose={() => setSwipeOpen(false)}
+                onOpen={() => setSwipeOpen(true)}
             >
                 <Box
                     component="nav"
@@ -93,26 +95,17 @@ function HomeNavigation(props)
                 >
                     {drawer}
                 </Box>
-            </SwipeableDrawer>
-
-            {props.children}
-        </Box>)
-        : (<Box className={classes.Body}>
-            <CssBaseline />
-            <Box
+            </SwipeableDrawer>)
+            : (<Box
                 component="nav"
                 className={classes.Drawer}
                 aria-label="mailbox folders"
             >
                 {drawer}
-            </Box>
-            <Box
-                component="main"
-                className={classes.Content}
-            >
-                {props.children}
-            </Box>
-        </Box >)
+            </Box>)
+        }
+        {props.children}
+    </Box >
 }
 
 export default HomeNavigation

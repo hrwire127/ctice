@@ -8,7 +8,6 @@ function useWindowSize(value, type)
     {
         function handleWindowResize()
         {
-            // console.log(window.innerWidth)
             let variant;
             switch (type)
             {
@@ -26,7 +25,7 @@ function useWindowSize(value, type)
             {
                 setWindowSize(true);
             }
-            else if (windowSize)
+            else
             {
                 setWindowSize(false)
             }

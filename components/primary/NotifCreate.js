@@ -12,12 +12,12 @@ import
 } from "@mui/material";
 import { Article } from '@mui/icons-material'
 import parse from 'html-react-parser';
-import useAlertMsg from './hooks/useAlertMsg'
-import TransitionAlerts from './TransitionAlerts'
-import useLoading from './hooks/useLoading';
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useLocalStorage from "./hooks/useLocalStorage"
-import useWindowSize from './hooks/useWindowSize';
+import useAlertMsg from '../hooks/useAlertMsg'
+import TransitionAlerts from '../TransitionAlerts'
+import useLoading from '../hooks/useLoading';
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import useLocalStorage from "../hooks/useLocalStorage"
+import useWindowSize from '../hooks/useWindowSize';
 
 function NotifCreate(props)
 {

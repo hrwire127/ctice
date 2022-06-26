@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { FileUpload } from '@mui/icons-material';
 import useStyles from '../assets/styles/_UploadProfile'
 
-function UploadProfile(props)
+function UploadIcon(props)
 {
     const { setImage, setOpen, noWindow } = props;
 
@@ -15,15 +15,22 @@ function UploadProfile(props)
     const inputFileRef = useRef(null);
     const classes = useStyles(props, preparedImg)()
 
-    return (<Box
-        onClick={() =>
+    const onUpload = (e) =>
+    {
+        if (e.target.files[0]) setImage(e.target.files[0])
+    }
+
+    const Focus = () =>
+    {
+        if (noWindow)
         {
-            if (noWindow)
-            {
-                inputFileRef.current.click()
-            }
-            else setOpen(true)
-        }}
+            inputFileRef.current.click()
+        }
+        else setOpen(true)
+    }
+
+    return (<Box
+        onClick={Focus}
         className={classes.Profile}
     >
         <div
@@ -34,11 +41,7 @@ function UploadProfile(props)
             id="profile"
             name="profile"
             ref={inputFileRef}
-            onInput={(e) => 
-            {
-                console.log(e.target.files[0])
-                if (e.target.files[0]) setImage(e.target.files[0])
-            }}
+            onInput={onUpload}
             hidden
             accept="image/png, image/jpg, image/jpeg"
         />
@@ -49,4 +52,4 @@ function UploadProfile(props)
     </Box>)
 }
 
-export default UploadProfile
+export default UploadIcon

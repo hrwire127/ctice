@@ -35,17 +35,31 @@ const useStyles = makeStyles((theme) => ({
         alignSelf: "stretch"
     },
     Container: {
-        display: "flex", 
-        gap: 20, 
+        display: "flex",
+        gap: 20,
         maxHeight: "100vh"
     },
     FooterBar: {
-        display: 'flex', 
-        justifyContent: "space-between", 
+        display: 'flex',
+        justifyContent: "space-between",
         gap: 4,
-        width: "100%", 
+        width: "100%",
         marginTop: 8,
         flexWrap: "wrap"
+    },
+    User: {
+        display: 'flex',
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        width: "auto",
+        p: 8
+    },
+    Avatar: {
+        display: 'flex', 
+        justifyContent: "center", 
+        alignItems: "center", 
+        gap: 4
     }
 }));
 

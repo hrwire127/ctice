@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import DeclrList from '../components/DeclrList';
+import DeclrList from '../components/primary/DeclrList';
 import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
 import { getTags } from '../utilsCS/_get'

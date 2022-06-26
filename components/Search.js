@@ -7,7 +7,7 @@ function Search(props)
 {
     const { query, setQuery } = props;
 
-    const classes = useStyles()
+    const classes = useStyles() 
 
     return (
         <Tooltip title="Use [tag] or [tag1, tag2] to search tags">
@@ -32,7 +32,6 @@ function Search(props)
                             </IconButton>
                         </InputAdornment>
                 }}
-
             /> 
         </Tooltip>
     )

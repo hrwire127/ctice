@@ -11,23 +11,22 @@ const TransitionAlerts = (props) => handleAsync(props, (props) =>
     const { type, setFlash, children, Mounted, floating } = props;
     const [flash, setflash] = useState(children)
 
+    const MainStyle = floating ? {
+        position: "absolute",
+        top: "-20%",
+        width: "100%",
+    } : { width: "100%", margin: "0 auto" }
+
     useEffect(() =>
     {
-        if (Mounted)
+        if (Mounted && children === flash)
         {
-            if (children === flash)
-            {
-                setflash(flash)
-            }
+            setflash(flash)
         }
     }, [children, flash, Mounted])
 
     return (
-        <Box sx={floating ? {
-            position: "absolute",
-            top: "-20%",
-            width: "100%",
-        } : { width: "100%", margin: "0 auto" }}>
+        <Box sx={MainStyle}>
             <Collapse in={flash ? true : false}>
                 <Alert
                     severity={type}
@@ -42,7 +41,7 @@ const TransitionAlerts = (props) => handleAsync(props, (props) =>
                                 setTimeout(() =>
                                 {
                                     setFlash()
-                                }, 1000);
+                                }, process.env.ALERT_FADE); //
                             }}
                         >
                             <CloseIcon fontSize="inherit" />

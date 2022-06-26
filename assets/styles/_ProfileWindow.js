@@ -31,7 +31,7 @@ const useStyles = props => makeStyles((theme) => ({
             width: 500
         },
         ["@media (max-width:560px)"]: {
-            width: 300, 
+            width: 300,
             height: 950,
         },
     },
@@ -73,6 +73,21 @@ const useStyles = props => makeStyles((theme) => ({
         },
         position: "relative"
     },
+    Icons: {
+        width: `100%`,
+        display: "flex",
+        justifyContent: "right"
+    },
+    UploadContainer: {
+        width: theme.windowDrawerWidth,
+        '& .MuiDrawer-paper': {
+            width: theme.windowDrawerWidth,
+            boxSizing: 'border-box',
+        },
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    }
 }))
 
 export default useStyles;

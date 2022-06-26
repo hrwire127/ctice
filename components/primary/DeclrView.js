@@ -294,7 +294,7 @@ function DeclrView(props)
                 declaration={declaration}
                 user={user}
             />
-            {/* {file ? (<DocumentView file={file} />) 
+            {/* {file ? (<PdfView file={file} />) 
             : (<Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>
                 No Upload...
             </Typography>)} */}

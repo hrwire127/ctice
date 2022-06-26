@@ -24,6 +24,18 @@ const useStyles = makeStyles((theme) => ({
         //     borderRadius: 12
         // }
     },
+    Toolbar: {
+        width: "100%",
+        display: 'flex',
+        justifyContent: "space-between",
+        mb: 4
+    },
+    NothingTyp: {
+        height: "20%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+    }
 }))
 
 export default useStyles;

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Toolbar, IconButton, Container, Grid, Paper, Box } from '@mui/material'
 import { Add, ExitToApp, AppRegistration, Login } from '@mui/icons-material'
-import { LogoutFetch, } from '../utilsCS/_get'
-import DeviceContext from './context/contextDevice'
-import Chart from './Chart'
-import Declrs from './Declrs'
+import { LogoutFetch, } from '../../utilsCS/_get'
+import DeviceContext from '../context/contextDevice'
+import AdminChart from '../AdminChart'
+import AdminDeclrs from '../AdminDeclrs'
 import Link from 'next/link'
-import Redirects_CS from '../utilsCS/CS_Redirects'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 function AdminIndex(props)
 {
@@ -30,7 +30,7 @@ function AdminIndex(props)
                         width: "90%"
                     }}
                 >
-                    <Chart users={users} />
+                    <AdminChart users={users} />
                 </Paper>
 
                 <Paper className="rec-declrs" sx={{
@@ -39,7 +39,7 @@ function AdminIndex(props)
                     width: "90%",
                     overflow: "auto"
                 }}>
-                    <Declrs setError={setError} declarations={declarations.slice(0, device.doclimit)} noControlls />
+                    <AdminDeclrs setError={setError} declarations={declarations.slice(0, device.doclimit)} noControlls />
                     {declarations.length > device.doclimit &&
                         (<Link color="primary" href="/admin/declrlist" sx={{ mt: 3 }}>
                             See more declarations

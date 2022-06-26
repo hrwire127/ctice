@@ -1,9 +1,11 @@
 import React, { useState, memo } from 'react'
 import { Autocomplete, TextField } from '@mui/material';
 
-function TagFilter(props)
+function TagFilter(props) 
 {
     const { setTags, fullTags, value = [] } = props
+
+    const processedValue = fullTags.filter(t => value.some(nt => nt._id === t._id))
 
     return (
         <Autocomplete
@@ -13,7 +15,7 @@ function TagFilter(props)
             options={fullTags}
             getOptionLabel={(tag) => tag.content}
             filterSelectedOptions
-            value={fullTags.filter(t => value.some(nt => nt._id === t._id))}
+            value={processedValue}
             onChange={(event, value) => setTags(value)}
             renderInput={(params) => (
                 <TextField

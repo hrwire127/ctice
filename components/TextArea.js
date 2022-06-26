@@ -12,12 +12,11 @@ import { Box, Button, TextField, IconButton, Typography, Paper, } from '@mui/mat
 import { FormatQuote, FormatListBulleted, FormatListNumbered, Code, FormatBold, FormatItalic, FormatUnderlined, HighlightAlt, Attachment, Image, AddLink } from "@mui/icons-material"
 import { withStyles } from "@mui/styles"
 import { rgbToHex } from "../utilsCS/_basic"
-import mockUpload from "./mockUpload"
+import mockUpload from "../utilsCS/mockUpload"
 
 import createLinkPlugin from "@draft-js-plugins/anchor";
 import "@draft-js-plugins/anchor/lib/plugin.css";
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
-// import '@draft-js-plugins/static-toolbar/lib/plugin.css';
 
 const linkPlugin = createLinkPlugin();
 

@@ -14,6 +14,8 @@ function DatePicker(props)
     const minDate = new Date('2020-01-01');
     const classes = useStyles();
 
+    // console.log("Date picker")
+
     const handleChange = (newValue) =>
     {
         if (newValue === "Invalid" || !newValue)

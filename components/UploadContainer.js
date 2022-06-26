@@ -2,13 +2,14 @@ import React, { useRef } from 'react'
 import { Box, Button } from '@mui/material'
 import useStyles from '../assets/styles/_UploadWindow'
 
-function UploadWindow(props)
+function UploadContainer(props)
 {
     const { setImage, image,
         setGalleryFiles, gallery, } = props
 
     const inputFileRef = useRef(null);
     const classes = useStyles(props)()
+    const isDisabled = !image || typeof image === 'string' || gallery.filter(e => e.name === image.name).length > 0
 
     const onUpload = () =>
     {
@@ -21,20 +22,21 @@ function UploadWindow(props)
         inputFileRef.current.value = ''
     }
 
+    const onAdd = () =>
+    {
+        if (typeof image !== 'string')
+        {
+            setGalleryFiles([image])
+        }
+    }
+
     return (
         <Box className={classes.Upload}>
             <Button
                 color="success"
                 variant="contained"
-                disabled={!image || typeof image === 'string' || gallery.filter(e => e.name === image.name).length > 0}
-                onClick={() => 
-                {
-                    if (typeof image !== 'string')
-                    {
-                        setGalleryFiles([image])
-                    }
-                }
-                }
+                disabled={isDisabled}
+                onClick={onAdd}
                 sx={{ mb: 2 }}
             >
                 Add
@@ -74,4 +76,4 @@ function UploadWindow(props)
     )
 }
 
-export default UploadWindow
+export default UploadContainer

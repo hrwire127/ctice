@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { Box, Paper, IconButton } from "@mui/material"
 import { Close } from "@mui/icons-material"
+import useStyles from '../assets/styles/_FullBanner'
 import DocView from './DocView'
 
 function FullBanner(props)
 {
     const { banner, setOpen } = props //
+    const classes = useStyles()
 
     useEffect(() =>
     {
@@ -32,16 +34,7 @@ function FullBanner(props)
     return (
         <Paper
             elevation={12}
-            sx={{
-                width: "80vw",
-                height: "80vh",
-                zIndex: 4,
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                marginRight: "-50%",
-                transform: "translate(-50%, -50%)"
-            }}
+            className={classes.classes}
         >
             <Box sx={{ display: "flex", justifyContent: "right" }}>
                 <IconButton onClick={() => setOpen(false)} align="right"><Close /></IconButton>

@@ -12,10 +12,8 @@ function DeclrCardFull(props)
     const { title, _id: id, description, date } = props;
     const classes = useStyles();
 
-    // const data = CropData(JSON.parse(description), 6);
     const likes = props.likes.filter(el => el.typeOf === true)
     const dislikes = props.likes.filter(el => el.typeOf === false)
-    // const editorState = EditorState.createWithContent(convertFromRaw(data))
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
 
     return ( 

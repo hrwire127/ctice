@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react'
 import { Paper, Box } from '@mui/material'
 import { Add } from "@mui/icons-material"
+import useStyles from '../assets/styles/_GalleryUpload'
 
 function GalleryUpload(props)
 {
     const { setGalleryFiles, gallery } = props
 
     const inputFileRef = useRef(null);
+    const classes = useStyles()
 
     const onUpload = () =>
     {
@@ -16,20 +18,8 @@ function GalleryUpload(props)
     return (<Paper
         variant="outlined"
         onClick={onUpload}
-        sx={{
-            width: 100,
-            height: 100,
-            "&:hover": {
-                cursor: "pointer",
-                borderWidth: 2,
-                "& svg": {
-                    fontSize: 30
-                }
-            },
-            display: 'flex',
-            justifyContent: "center",
-            alignItems: "center",
-        }}>
+        className={classes.Upload}
+    >
         <Add />
         <input
             type="file"

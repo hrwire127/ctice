@@ -3,22 +3,19 @@ import
 {
     Avatar, Button,
     TextField,
-    Grid, Box, Typography,
+    Box, Typography,
     FormHelperText
 } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import TransitionAlerts from './TransitionAlerts'
-import useStyles from "../assets/styles/_Change";
-import UploadProfile from './UploadProfile'
-import useFormError from "./hooks/useFormError"
-import LocationSearch from "./LocationSearch"
-// import useStyles from "../assets/styles/_Welcome"
-import Rules from "../utilsCS/clientRules"
-import useLoading from './hooks/useLoading'
-import TextArea from "./TextArea"
-import BackLink from "./BackLink"
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useAlertMsg from "./hooks/useAlertMsg"
+import { LockOutlined } from '@mui/icons-material'
+import useStyles from "../../assets/styles/_Change";
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import useFormError from "../hooks/useFormError"
+import useAlertMsg from "../hooks/useAlertMsg"
+import useLoading from '../hooks/useLoading'
+import TextArea from "../TextArea"
+import LocationSearch from "../LocationSearch"
+import TransitionAlerts from '../TransitionAlerts'
+import UploadIcon from '../UploadIcon'
 
 function Welcome(props)
 {
@@ -76,7 +73,7 @@ function Welcome(props)
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
             <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
+                    <LockOutlined />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Please fill out the profile
@@ -90,7 +87,7 @@ function Welcome(props)
                 noValidate
             >
                 <Box className={classes.Profile}>
-                    <UploadProfile
+                    <UploadIcon
                         setImage={setImage}
                         image={image}
                         noWindow

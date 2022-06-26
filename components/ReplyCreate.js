@@ -9,7 +9,6 @@ import TransitionAlerts from './TransitionAlerts'
 import useFormError from "./hooks/useFormError";
 import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_CreateForm";
-import Rules from "../utilsCS/clientRules"
 import useLoading from "./hooks/useLoading"
 import useAlertMsg from './hooks/useAlertMsg'
 import Redirects_CS from '../utilsCS/CS_Redirects'
@@ -35,7 +34,6 @@ function ReplyCreate(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    // Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     if (res.error) setAlertMsg(res.error.message, "error")
                     else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })

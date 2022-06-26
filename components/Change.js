@@ -8,7 +8,7 @@ import TextArea from "./TextArea";
 import useStyles from "../assets/styles/_Change";
 import useFormError from "./hooks/useFormError";
 import TransitionAlerts from './TransitionAlerts'
-import UploadProfile from './UploadProfile'
+import UploadIcon from './UploadIcon'
 import LocationSearch from "./LocationSearch"
 import useLoading from './hooks/useLoading'
 import ProfileWindow from './ProfileWindow';
@@ -129,7 +129,7 @@ function Change(props)
 					sx={{ mb: 2 }}
 				>
 					<Box className={classes.Profile}>
-						<UploadProfile
+						<UploadIcon
 							profile={profile.url}
 							image={image}
 							setImage={setImage}

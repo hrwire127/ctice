@@ -3,7 +3,7 @@ import DeclrView from '../../components/DeclrView'
 import { determRendering } from '../../utilsCS/_basic'
 import { getClientUser, } from '../../utilsCS/_get'
 import { getDeclr } from "../../utilsCS/_declr"
-import HomeNavigation from '../../components/HomeNavigation'
+import HomeNavigation from '../../components/layouts/HomeNavigation'
 
 function view (props)                                                            
 {

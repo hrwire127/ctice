@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import CS_Redirects from '../utilsCS/CS_Redirects'
 import { determRendering } from '../utilsCS/_basic'
-import Welcome from '../components/Welcome'
-import HomeNavigation from '../components/HomeNavigation'
+import Welcome from '../components/primary/Welcome'
+import HomeNavigation from '../components/layouts/HomeNavigation'
 
 function welcome (props)
 {
@@ -26,4 +26,5 @@ welcome.getInitialProps = async (props) =>
         return { confirmationCode}
     })
 }
+
 export default welcome

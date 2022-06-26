@@ -6,9 +6,9 @@ import useStyles from "../assets/styles/_ReplyCard"
 import { getDateDifference } from '../utilsCS/_basic';
 import UserContext from './context/contextUser'
 import AdminContext from './context/contextAdmin'
-import 'draft-js/dist/Draft.css';
 import Vote from "./Vote";
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import 'draft-js/dist/Draft.css';
 
 function ReplyCard(props)
 {
@@ -37,7 +37,6 @@ function ReplyCard(props)
                 .then(async res =>
                 {
                     Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                    // if (res.err) setError(res.err.message)
                 })
         })
 
@@ -86,11 +85,11 @@ function ReplyCard(props)
                             </Box>
                         ) : <Box></Box>}
                         <Box sx={{ display: 'flex', gap: 1, }}>
-                            <Paper sx={{ display: 'flex', justifyContent: "center", alignItems: "center", flexDirection: "column", width: "auto", p: 2 }}>
+                            <Paper className={classes.User}>
                                 <Typography variant="h11" color="text.secondary">
                                     {initdiff ? (<>{initdiff} ago</>) : (<>{diff} (edited)</>)}
                                 </Typography>
-                                <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
+                                <Box className={classes.Avatar}>
                                     <Avatar alt={author.username} src={author.profile.url} />
                                     <Typography variant="h5">
                                         {author.username}

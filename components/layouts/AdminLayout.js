@@ -8,7 +8,7 @@ import
     SwipeableDrawer, Badge
 } from '@mui/material';
 import { Menu, ChevronLeft, Close } from '@mui/icons-material';
-import { mainDrawerItems } from '../DrawerItems';
+import { mainDrawerItems } from '../AdminItems';
 import Link from 'next/link'
 import useLocalStorage from "../hooks/useLocalStorage"
 import useWindowSize from '../hooks/useWindowSize';

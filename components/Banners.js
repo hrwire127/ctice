@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton, Typography } from '@mui/material';
 import { RemoveRedEye, Build, Delete, Accessible, InsertLink } from '@mui/icons-material';
-import Title from './Title';
 import Link from 'next/link';
 import { makeStyles } from '@mui/styles';
 import Redirects_CS from '../utilsCS/CS_Redirects'
@@ -56,7 +55,9 @@ function Banners(props)
 
     return (
         <>
-            <Title>Recent Declarations</Title>
+            <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                Recent Declarations
+            </Typography>
             <Table size="small" className={classes.Table}>
                 <TableHead>
                     <TableRow>

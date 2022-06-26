@@ -34,30 +34,24 @@ function Vote(props)
             })
     }
 
+    const UpColor = likes.filter(el => el.user.valueOf() === user._id.valueOf() && el.typeOf === true).length ? "base" : "tertiary"
+    const DownColor = dislikes.filter(el => el.user.valueOf() === user._id.valueOf() && el.typeOf === false).length ? "base" : "tertiary"
 
     return (
         <Box className={classes.Vote}>
-            {user
-                ? (<>
-                    {likes.includes({ user: user._id, typeOf: true })
-                        ? (<KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />)
-                        : (<KeyboardArrowUp onClick={() => onLike(true)} color={likes.filter(el => el.user.valueOf() === user._id.valueOf() && el.typeOf === true).length ? "base" : "tertiary"} fontSize="large" className={classes.VoteBtn} />)
-                    }
-                    <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes.length - dislikes.length}
-                    </Typography>
-                    {likes.includes({ user: user._id, typeOf: false })
-                        ? (<KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />)
-                        : (<KeyboardArrowDown onClick={() => onLike(false)} color={dislikes.filter(el => el.user.valueOf() === user._id.valueOf() && el.typeOf === false).length ? "base" : "tertiary"} fontSize="large" className={classes.VoteBtn} />)
-                    }
-                </>)
-                : (<>
-                    <KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />
-                    <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
-                        {likes.length - dislikes.length}
-                    </Typography>
-                    <KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />
-                </>)}
+            {user ?
+                likes.includes({ user: user._id, typeOf: true })
+                    ? (<KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />)
+                    : (<KeyboardArrowUp onClick={() => onLike(true)} color={UpColor} fontSize="large" className={classes.VoteBtn} />)
+                : (<KeyboardArrowUp disabled fontSize="large" className={classes.VoteBtn} />)}
+            <Typography variant="h5" color="base" sx={{ fontWeight: 'bold' }}>
+                {likes.length - dislikes.length}
+            </Typography>
+            {user ?
+                likes.includes({ user: user._id, typeOf: false })
+                    ? (<KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />)
+                    : (<KeyboardArrowDown onClick={() => onLike(false)} color={DownColor} fontSize="large" className={classes.VoteBtn} />)
+                : (<KeyboardArrowDown disabled fontSize="large" className={classes.VoteBtn} />)}
         </Box>)
 }
 

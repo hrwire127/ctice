@@ -2,34 +2,35 @@ import React, { useState, useEffect, useContext, useReducer } from 'react';
 import
 {
     Box, Typography, ButtonGroup, Button,
-    IconButton, Collapse, Link as MuiLink
+    IconButton, Collapse,
 } from '@mui/material';
 import { Add, MoreHoriz, Close } from "@mui/icons-material"
-import useStyles from '../assets/styles/_DeclrList'
-import AdminContext from './context/contextAdmin'
+import useStyles from '../../assets/styles/_DeclrList'
 import Link from 'next/link'
-import TransitionAlerts from './TransitionAlerts'
-import { getCountDateQuery, loadLimitedDeclrs } from "../utilsCS/_declr"
-import { styleCompact, styleFull } from './context/styleEnum';
-import StyleContext from './context/contextStyle'
-import SortContext from './context/contextSort'
-import DeviceContext from './context/contextDevice'
-import useLoading from './hooks/useLoading'
-import Search from './Search'
-import Sort from './Sort'
-import TagFilter from './TagFilter';
-import DeclrCardCompact from './DeclrCardCompact';
-import DeclrCardFull from './DeclrCardFull';
-import DatePicker from './DatePicker'
-import handleAsync from './custom/handleAsync'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useLocalStorage from "./hooks/useLocalStorage"
-import declrReducer from "./reducers/declrReducer"
+import TransitionAlerts from '../TransitionAlerts'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import { getCountDateQuery, loadLimitedDeclrs } from "../../utilsCS/_declr"
+import { styleCompact, styleFull } from '../context/styleEnum';
+import StyleContext from '../context/contextStyle'
+import SortContext from '../context/contextSort'
+import DeviceContext from '../context/contextDevice'
+import AdminContext from '../context/contextAdmin'
+import useLoading from '../hooks/useLoading'
+import useLocalStorage from "../hooks/useLocalStorage"
+import declrReducer from "../reducers/declrReducer"
+import handleAsync from '../custom/handleAsync'
+import Search from '../Search'
+import SortFilter from '../SortFilter'
+import TagFilter from '../TagFilter';
+import DeclrCardCompact from '../DeclrCardCompact';
+import DeclrCardFull from '../DeclrCardFull';
+import DatePicker from '../DatePicker'
+
 
 const DeclrList = (props) => handleAsync(props, (props) =>
 {
     const { flash, setFlash, fullTags, setError, Mounted } = props;
- 
+
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
@@ -40,13 +41,11 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const [queryValue, setQuery] = useLocalStorage("declr_query", '', true);
     const [tags, setTags] = useLocalStorage("declr_tags", [], true);
     const [open, setOpen] = useLocalStorage("search_open", false, true);
-    const [{declarations, count}, dispatchDeclrs] = useReducer(declrReducer, { declarations: [], count: props.count });
-    const [sort, setSorting] = useState(sortCtx);
+    const [sort, setSorting] = useLocalStorage("sort_declrs", sortCtx, true);
+    const [{ declarations, count }, dispatchDeclrs] = useReducer(declrReducer, { declarations: [], count: props.count });
 
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
-
-    console.log("222")
 
     useEffect(async () =>
     {
@@ -54,7 +53,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
         {
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, device.doclimit, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
-            
+
             Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError)
             Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
 
@@ -130,7 +129,7 @@ const DeclrList = (props) => handleAsync(props, (props) =>
                             <Link href="/create"><IconButton variant="outlined"><Add /></IconButton></Link>
                         </ButtonGroup>)}
                 </Box>
-                <Sort handleSort={handleSort} sort={sort} />
+                <SortFilter handleSort={handleSort} sort={sort} />
             </Box>
             <Box sx={{ textAlign: "center" }}>
                 <IconButton onClick={() => setOpen(!open)}>{open ? (<Close />) : (<MoreHoriz />)}</IconButton>
@@ -154,4 +153,4 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     )
 })
 
-export default DeclrList;
+export default DeclrList

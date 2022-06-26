@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
         overflow: "auto",
         paddingRight: 0
     },
+    SwipeContainer: {
+        overflow: "auto",
+        paddingRight: 0
+    },
     ItemButton: {
         backgroundColor: theme.palette.shadow,
         paddingRight: 0
@@ -73,10 +77,6 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
     },
-    SwipeContainer: {
-        overflow: "auto",
-        paddingRight: 0
-    }
 }))
 
 export default useStyles;
