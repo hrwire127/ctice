@@ -20,7 +20,7 @@ import useWindowSize from './hooks/useWindowSize';
 
 function BannerCreate()
 {
-    const [windowSize] = useWindowSize();
+    const [windowSize] = useWindowSize(720, 2);
     const [file, setFile] = useState("")
     const [html, setHtml] = useLocalStorage("banner_create", "", true)
     const [width, setWidth] = useState(600)
@@ -103,7 +103,7 @@ function BannerCreate()
             <Box sx={{ mt: 12 }} />
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
 
-            {windowSize > 720 ? (<Box sx={{
+            {windowSize ? (<Box sx={{
                 marginTop: 2,
                 display: "flex",
                 flexDirection: "column",

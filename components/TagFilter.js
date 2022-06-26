@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { Autocomplete, TextField } from '@mui/material';
 
 function TagFilter(props)
 {
     const { setTags, fullTags, value = [] } = props
-
 
     return (
         <Autocomplete
@@ -28,4 +27,4 @@ function TagFilter(props)
     )
 }
 
-export default TagFilter
+export default memo(TagFilter)

@@ -7,8 +7,6 @@ async function validateDeclr(req, res, next)
 {
     let { title, description, file, tags } = req.body
 
-    console.log(req.body)
-    console.log(req.files)
 
     const declarationSchema = Joi.object({
         title: Joi.string().required(),
@@ -58,8 +56,6 @@ async function validateDeclr(req, res, next)
 async function validateRegUser(req, res, next) 
 {
     let { confirmationCode, password, profile, location, bio, facebook, linkedin, twitter } = req.body
-
-    console.log(req.body)
 
     const declarationSchema = Joi.object({
         confirmationCode: Joi.string().required(),
@@ -127,7 +123,6 @@ async function validateRegUser(req, res, next)
 
     req.body.password = password.trim()
     if (req.body.bio) req.body.bio = JSON.stringify(modifyDesc(JSON.parse(bio)))
-
 
     next()
 }

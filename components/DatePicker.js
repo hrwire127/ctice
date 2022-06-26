@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {memo} from 'react';
 import { Stack, TextField, IconButton, Box } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -79,4 +79,4 @@ function DatePicker(props)
     );
 }
 
-export default DatePicker;
+export default memo(DatePicker);

@@ -67,8 +67,11 @@ function inspectUser(username = undefined, email = undefined, password = undefin
 
     if (password)
     {
-        const passwordRule = new valRule(password.length, Rules.password_max_char, 0)
-        if (passwordRule.getVal()) return passwordRule.processMsg()
+        const passwordMaxRule = new valRule(password.length, Rules.password_max_char, 0)
+        if (passwordMaxRule.getVal()) return passwordMaxRule.processMsg()
+
+        const passwordMinRule = new valRule(password.length, Rules.password_min_char, 1)
+        if (passwordMinRule.getVal()) return passwordMinRule.processMsg()
     }
 
     if (email)

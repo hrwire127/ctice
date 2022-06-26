@@ -8,17 +8,17 @@ import
     SwipeableDrawer, IconButton
 } from '@mui/material';
 import Link from 'next/link'
-import useStyles from '../assets/styles/_NavLayout';
+import useStyles from '../../assets/styles/_NavLayout';
 import { useRouter } from 'next/router'
-import FixedBanner from "./FixedBanner"
-import FullBanner from './FullBanner';
-import useWindowSize from './hooks/useWindowSize';
+import FixedBanner from "../FixedBanner"
+import FullBanner from '../FullBanner';
+import useWindowSize from '../hooks/useWindowSize';
 
 function HomeNavigation(props)
 {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [windowSize] = useWindowSize();
+    const [windowMinSize] = useWindowSize(830, 0);
 
     useEffect(() =>
     {
@@ -79,7 +79,7 @@ function HomeNavigation(props)
         </List>
     );
 
-    return windowSize < 830
+    return windowMinSize
         ? (<Box className={classes.SwipeContainer}>
             <SwipeableDrawer
                 open={open}

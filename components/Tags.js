@@ -19,7 +19,7 @@ function Tags(props)
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
-    const [windowSize] = useWindowSize();
+    const [windowSize] = useWindowSize(820, 2);
     const [tag, setTag, resetTag] = useLocalStorage("tag_create", "", true)
 
     const handleSubmit = (body) =>
@@ -79,7 +79,7 @@ function Tags(props)
     return (
         <Box sx={{ mt: 4, p: 12 }}>
             <Typography variant="h5">Tags</Typography>
-            {windowSize > 860 ? (
+            {windowSize ? (
                 <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                     {tags.map(t => <Grid
                         key={t._id}

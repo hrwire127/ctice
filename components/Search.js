@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { TextField, InputAdornment, IconButton, Tooltip } from '@mui/material'
 import { Clear } from '@mui/icons-material'
 import useStyles from '../assets/styles/_Search'
@@ -38,4 +38,4 @@ function Search(props)
     )
 }
 
-export default Search
+export default memo(Search)

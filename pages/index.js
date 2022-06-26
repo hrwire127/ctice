@@ -4,7 +4,7 @@ import { determRendering, getFlash } from '../utilsCS/_basic'
 import { getAllCount, } from "../utilsCS/_declr"
 import { getTags } from '../utilsCS/_get'
 import useAlertMsg from '../components/hooks/useAlertMsg'
-import HomeNavigation from '../components/HomeNavigation'
+import HomeNavigation from '../components/layouts/HomeNavigation'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import handleAsync from '../components/custom/handleAsync'
 

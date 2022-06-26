@@ -11,7 +11,7 @@ function BookmarkCardCompact(props)
 {
     const { title, _id: id, date, setError } = props;
     const [bookmarked, setBookmark] = useState(true)
-    const [windowSize] = useWindowSize();
+    const [windowSize] = useWindowSize(500, 2);
 
     const diff = getDateDifference(new Date(), new Date(date[date.length - 1]))
     const likes = props.likes.filter(el => el.typeOf === true)
@@ -48,7 +48,7 @@ function BookmarkCardCompact(props)
             </Link>
         </Box>
         <Box>
-            {windowSize >= 500 && (
+            {windowSize && (
                 <Typography sx={{ margin: 0 }} variant="h9" color="text.secondary" gutterBottom>
                     {diff} ago
                 </Typography>)}

@@ -8,16 +8,16 @@ import
     ListItemButton, SwipeableDrawer
 } from '@mui/material'
 import Link from 'next/link'
-import useStyles from '../assets/styles/_NavLayout'
+import useStyles from '../../assets/styles/_NavLayout'
 import { useRouter } from 'next/router'
 import { Info, Palette, Edit, Bookmarks, Close, Logout as LogoutIcon, } from '@mui/icons-material'
-import { LogoutFetch, getClientUser } from '../utilsCS/_get'
-import { getLatestBanners } from '../utilsCS/_get'
-import FixedBanner from "./FixedBanner"
-import FullBanner from './FullBanner'
-import handleAsync from './custom/handleAsync'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useWindowSize from './hooks/useWindowSize'
+import { LogoutFetch, getClientUser } from '../../utilsCS/_get'
+import { getLatestBanners } from '../../utilsCS/_get'
+import FixedBanner from "../FixedBanner"
+import FullBanner from '../FullBanner'
+import handleAsync from '../custom/handleAsync'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import useWindowSize from '../hooks/useWindowSize'
 
 const UserNavigation = (props) => handleAsync(props, (props) =>
 {
@@ -26,7 +26,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
     const [open, setOpen] = useState(false)
     const [banners, setBanners] = useState([])
     const [fullBanner, setFullBanner] = useState()
-    const [windowSize] = useWindowSize();
+    const [windowSize] = useWindowSize(830, 0);
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const classes = useStyles();
@@ -157,7 +157,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         </>
     }
 
-    return (windowSize < 830
+    return (windowSize
         ? (<Box className={classes.Body}>
             <CssBaseline />
             <SwipeableDrawer

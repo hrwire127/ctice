@@ -24,7 +24,8 @@ const Header = (props) =>
 	const [notifications, setNotificaions] = useState([]);
 	const [views, setViews] = useState();
 
-	const [windowSize] = useWindowSize();
+	const [windowMenuSize] = useWindowSize(830, 0);
+	const [windowBtnSize] = useWindowSize(380, 0);
 
 	//\/setError
 	const { title = "ctice", setError } = props;
@@ -51,7 +52,7 @@ const Header = (props) =>
 				<Box
 					id="menu-btn"
 				>
-					{windowSize < 830 && (
+					{windowMenuSize && (
 						<IconButton>
 							<Menu />
 						</IconButton>)}
@@ -89,10 +90,10 @@ const Header = (props) =>
 							</>)
 							: (<>
 								<Link href="/user/register" className={classes.Auth}>
-									<Button className={classes.SignUp} disableElevation size={windowSize < 380 ? "small" : "medium"} variant="outlined">Sign Up</Button>
+									<Button className={classes.SignUp} disableElevation size={windowBtnSize ? "small" : "medium"} variant="outlined">Sign Up</Button>
 								</Link>
 								<Link href="/user/login" className={classes.Auth}>
-									<Button className={classes.SignIn} disableElevation size={windowSize < 380 ? "small" : "medium"} variant="contained">Sign In</Button>
+									<Button className={classes.SignIn} disableElevation size={windowBtnSize ? "small" : "medium"} variant="contained">Sign In</Button>
 								</Link>
 							</>)
 						}

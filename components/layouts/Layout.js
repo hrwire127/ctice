@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react'
+import { isBrowser } from 'react-device-detect'
 import { Box } from '@mui/material'
-import UserContext from './context/contextUser'
-import AdminContext from './context/contextAdmin'
-import StyleContext from './context/contextStyle'
-import SortContext from './context/contextSort'
-import DeviceContext from './context/contextDevice'
-import Router from "next/router";
-import { ThemeProvider } from '@mui/material/styles';
-import { themeLight, themeBlack } from './context/theme'
-import { styleCompact, styleFull } from './context/styleEnum';
-import Loading from "./Loading"
-import Header from './Header'
-import ErrorPage from './ErrorPage'
-import { StyledEngineProvider } from '@mui/material/styles';
-import { isBrowser } from 'react-device-detect';
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import BackToTop from './BackToTop'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import Router from "next/router"
+import UserContext from '../context/contextUser'
+import AdminContext from '../context/contextAdmin'
+import StyleContext from '../context/contextStyle'
+import SortContext from '../context/contextSort'
+import DeviceContext from '../context/contextDevice'
+import { themeLight, themeBlack } from '../context/theme'
+import { styleCompact, styleFull } from '../context/styleEnum'
+import Loading from "../Loading"
+import Header from '../Header'
+import ErrorPage from '../ErrorPage'
+import BackToTop from '../BackToTop'
 
-export default function Layout(props)
+function Layout(props)
 {
     const { globals } = props;
+
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(props.children.props.error)
+
     const [light, setThemeLight] = useState(globals.lightTheme);
     const [style, setStyle] = useState(globals.style);
     const [sort, setSorting] = useState(globals.sort);
 
-    const [error, setError] = useState(props.children.props.error)
-
+    const { isUser, isAdmin } = globals
 
     useEffect(() =>
     {
@@ -36,7 +36,8 @@ export default function Layout(props)
         };
         const end = () =>
         {
-            setError(props.children.props.error)
+            const error = props.children.props.error
+            if (error) setError(error)
             setLoading(false);
         };
         Router.events.on("routeChangeStart", start);
@@ -50,19 +51,13 @@ export default function Layout(props)
         };
     }, []);
 
-    const [userCtx, setUser] = useState(globals.isUser ? globals.isUser : false)
-    const [adminCtx, setAdmin] = useState(globals.isAdmin ? globals.isAdmin : false)
+    const [userCtx, setUser] = useState(isUser ? isUser : false)
+    const [adminCtx, setAdmin] = useState(isAdmin ? isAdmin : false)
 
     useEffect(() =>
     {
-        if (globals.isUser)
-        {
-            setUser(globals.isUser)
-        }
-        if (globals.isAdmin)
-        {
-            setAdmin(globals.isAdmin)
-        }
+        if (isUser) setUser(isUser)
+        if (isAdmin) setAdmin(isAdmin)
     }, [userCtx, adminCtx]);
 
     let childrenwprops = props.children;
@@ -93,6 +88,25 @@ export default function Layout(props)
             : (process.env.NEXT_PUBLIC_DOC_LIMIT_MOBILE * (style === styleCompact ? process.env.NEXT_PUBLIC_COMPACT_COEFICIENT : 1))
     }
 
+    const mainStyle = {
+        position: "relative",
+        width: "100%",
+        // minHeight: "100vh",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        overflow: "hidden"
+    }
+
+    const Container = {
+        flex: 1,
+        backgroundColor: "background.default",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden"
+    }
+
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
@@ -103,16 +117,7 @@ export default function Layout(props)
                                 <StyledEngineProvider injectFirst>
                                     {loading
                                         ? (<LoadingPage />)
-                                        : (<main style={{
-                                            position: "relative",
-                                            width: "100%",
-                                            // minHeight: "100vh",
-                                            height: "100vh",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "space-between",
-                                            overflow: "hidden"
-                                        }}>
+                                        : (<main style={mainStyle}>
                                             {error
                                                 ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
                                                     {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
@@ -120,13 +125,7 @@ export default function Layout(props)
                                                 </Box>)
                                                 : (<>
                                                     {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                    <Box sx={{
-                                                        flex: 1,
-                                                        backgroundColor: "background.default",
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        overflow: "hidden"
-                                                    }}
+                                                    <Box sx={Container}
                                                     >
                                                         <Box id="back-to-top-anchor" />
                                                         {childrenwprops}
@@ -143,6 +142,8 @@ export default function Layout(props)
                     </StyleContext.Provider>
                 </ThemeProvider>
             </AdminContext.Provider>
-        </UserContext.Provider >
+        </UserContext.Provider>
     )
-} 
+}
+
+export default Layout;

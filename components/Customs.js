@@ -27,11 +27,12 @@ function Customs(props)
     const [theme, setTheme] = useState(light ? 'light' : 'dark');
     const [style, setStyle] = useState(styleCtx);
     const [sort, setSorting] = useState(sortCtx);
-    const [windowSize] = useWindowSize();
+    const [windowSmSize] = useWindowSize(400, 0);
+    const [windowMdSize] = useWindowSize(600, 0);
 
     const classes = useStyles()
 
-    const imgWidth = windowSize < 400 ? "80%" : (windowSize < 600 ? "60%" : "35%")
+    const imgWidth = windowSmSize ? "80%" : (windowMdSize ? "60%" : "35%")
 
     const ImgSelected = { width: imgWidth, opacity: 0.5 }
     const ImgEmpty = { width: imgWidth, boxShadow: "0 0 10px -5px", cursor: "pointer" }

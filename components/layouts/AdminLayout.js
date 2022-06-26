@@ -8,11 +8,11 @@ import
     SwipeableDrawer, Badge
 } from '@mui/material';
 import { Menu, ChevronLeft, Close } from '@mui/icons-material';
-import { mainDrawerItems } from './DrawerItems';
+import { mainDrawerItems } from '../DrawerItems';
 import Link from 'next/link'
-import useLocalStorage from "./hooks/useLocalStorage"
-import useWindowSize from './hooks/useWindowSize';
-import useStyles from "../assets/styles/_Layout"
+import useLocalStorage from "../hooks/useLocalStorage"
+import useWindowSize from '../hooks/useWindowSize';
+import useStyles from "../../assets/styles/_Layout"
 
 const drawerWidth = 240;
 
@@ -63,14 +63,15 @@ const Drawer_ = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
 
 function AdminLayout(props)
 {
-    const [windowSize] = useWindowSize();
-    const [open, setOpen] = useLocalStorage("admin_drawer", windowSize > 960 ? true : false, true);
+    const [windowMinSize] = useWindowSize(960, 0);
+    const [windowMaxSize] = useWindowSize(960, 2);
+    const [open, setOpen] = useLocalStorage("admin_drawer", windowMaxSize ? true : false, true);
 
     const classes = useStyles()
 
     const toggleDrawer = () =>
     {
-        if (windowSize > 960)
+        if (windowMaxSize)
         {
             setOpen(!open);
         }
@@ -78,11 +79,11 @@ function AdminLayout(props)
 
     useEffect(() =>
     {
-        if (windowSize < 960)
+        if (windowMinSize)
         {
             setOpen(false)
         }
-    }, [windowSize])
+    }, [windowMinSize])
 
 
     return (
@@ -90,7 +91,7 @@ function AdminLayout(props)
             <CssBaseline />
             <AppBar_ position="absolute" open={open}>
                 <Toolbar>
-                    {windowSize > 960 && (
+                    {windowMaxize && (
                         <IconButton
                             edge="start"
                             color="inherit"

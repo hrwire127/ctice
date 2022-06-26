@@ -22,7 +22,7 @@ import useWindowSize from './hooks/useWindowSize';
 function NotifCreate(props)
 {
     const { setError } = props
-    const [windowSize] = useWindowSize();
+    const [windowSize] = useWindowSize(720, 2);
     const [fileNotif, setFileNotif] = useState("")
     const [htmlNotif, setHtmlNotif] = useLocalStorage("notification_create", "", true)
     const [fileBanner, setFileBanner] = useState("")
@@ -111,7 +111,7 @@ function NotifCreate(props)
         <Container component="main" maxWidth="xs">
             {alert && (<TransitionAlerts type={alert.type} setFlash={setAlert}>{alert.message}</TransitionAlerts>)}
 
-            {windowSize > 720 ? (
+            {windowSize ? (
                 <Box sx={{
                     marginTop: 16,
                     display: "flex",

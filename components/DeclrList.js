@@ -29,7 +29,7 @@ import declrReducer from "./reducers/declrReducer"
 const DeclrList = (props) => handleAsync(props, (props) =>
 {
     const { flash, setFlash, fullTags, setError, Mounted } = props;
-
+ 
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
@@ -43,11 +43,10 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     const [{declarations, count}, dispatchDeclrs] = useReducer(declrReducer, { declarations: [], count: props.count });
     const [sort, setSorting] = useState(sortCtx);
 
-    console.log(declarations)
-    console.log(count)
-
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
+
+    console.log("222")
 
     useEffect(async () =>
     {
