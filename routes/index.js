@@ -102,7 +102,7 @@ router.post('/tag', isAdmin_CS, validateTag, tryAsync_CS(async (req, res) =>
     const tag = new Tag(Obj)
     await tag.save();
     req.flash('success', 'Created Successfuly');
-    Redirects_SR.Api.sendApi(res, req.session.flash[0])
+    Redirects_SR.Api.sendApi(res, tag)
 }))
 
 router.delete('/tag/:id', isAdmin_CS, tryAsync_CS(async (req, res) =>

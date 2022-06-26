@@ -36,7 +36,6 @@ const CreateForm = (props) => handleAsync(props, (props) =>
     const [tags, setTags, resetTags] = useLocalStorage("tags", [], true)
     const [file, changeFile] = useState();
     const [fullTags, setFullTags] = useState([]);
-    // const [tags, setTags] = useState([]);
 
     const [loadingWhile, loadingSwitch] = useLoading(false)
 

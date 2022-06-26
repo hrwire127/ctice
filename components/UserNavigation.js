@@ -23,7 +23,7 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
 {
     const { setError, Mounted } = props
 
-    const [open, setOpen] = useState([])
+    const [open, setOpen] = useState(false)
     const [banners, setBanners] = useState([])
     const [fullBanner, setFullBanner] = useState()
     const [windowSize] = useWindowSize();

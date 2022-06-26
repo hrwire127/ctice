@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useReducer } from 'react'
+import tagReducer from './reducers/tagReducer'
 import { IconButton, Typography, Box, Paper, Card, Grid, CardContent, TextField, FormHelperText, Button } from "@mui/material"
 import { Delete } from "@mui/icons-material"
 import useLoading from './hooks/useLoading'
@@ -12,13 +13,14 @@ import useWindowSize from './hooks/useWindowSize';
 
 function Tags(props)
 {
-    const { tags, setTags, setError } = props
+    const { setError, defTags } = props
+    const [tags, dispatchTag] = useReducer(tagReducer, defTags) //
     const [TagError, , helperTagText, , checkTagKey, setTagTrue, setTagFalse, tagValid] = useFormError(false);
 
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [submitWhile, submitSwitch] = useLoading(false)
     const [windowSize] = useWindowSize();
-    const [tag, setTag, resetTag] = useLocalStorage("tag_create", "")
+    const [tag, setTag, resetTag] = useLocalStorage("tag_create", "", true)
 
     const handleSubmit = (body) =>
     {
@@ -31,13 +33,11 @@ function Tags(props)
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
-                    else setAlertMsg(res.obj.message, res.obj.type)
 
                     if (!res.error)
                     {
-                        const newTags = await getTags()
-                        Redirects_CS.handleRes(newTags, typeof window !== "undefined" && window, setError)
-                        setTags(newTags.obj)
+                        console.log(res.obj)
+                        dispatchTag({ type: "ADD", tag: res.obj })
                         resetTag()
                     }
                 })
@@ -48,12 +48,12 @@ function Tags(props)
     {
         await fetch(`${process.env.NEXT_PUBLIC_DR_HOST}/tag/${id}`, {
             method: 'DELETE',
-            body: body,
         }).then(response => response.json())
             .then(async res =>
             {
                 Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                if (res.obj === true) setTags(tags.filter(t => t._id !== id))
+                // if (res.obj === true) setTags(tags.filter(t => t._id !== id))
+                dispatchTag({ type: "REMOVE", id })
             })
     }
 
@@ -63,7 +63,7 @@ function Tags(props)
 
         const data = new FormData(e.currentTarget)
 
-        const tag = data.get('tag')
+        const tag = data.get('content')
 
         if (tagValid(tag))
         {

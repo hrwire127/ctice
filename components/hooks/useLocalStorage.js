@@ -33,6 +33,7 @@ const useLocalStorage = (keyName, initial = undefined, noNull = false) =>
     const resetValue = () =>
     {
         window.localStorage.removeItem(keyName)
+        setValue(initial)
     }
 
     return [value, setValue, resetValue];

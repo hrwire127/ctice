@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import
 {
     Paper, Typography, Box,
@@ -12,13 +12,14 @@ import useLoading from './hooks/useLoading'
 import UploadWindow from './UploadWindow'
 import TransitionAlerts from './TransitionAlerts'
 import useAlertMsg from './hooks/useAlertMsg';
+import galleryReducer from './reducers/galleryReducer';
 
 function ProfileWindow(props)
 {
     const { setOpen, image, setImage } = props
 
     const [setWindowAlertMsg, windowAlert, setWindowAlert] = useAlertMsg()
-    const [gallery, setGallery] = useState([])
+    const [gallery, dispatchGallery] = useReducer(galleryReducer, [])
 
     const [submitWhile, submitSwitch] = useLoading(false)
 
@@ -77,15 +78,12 @@ function ProfileWindow(props)
                 return
             }
         })
-        setGallery(gallery.concat(newGallery))
+        dispatchGallery({ type: "ADD", gallery: newGallery })
     }
 
     const galleryDelete = (i) =>
     {
-        const index = gallery.findIndex(f => f.name === i.name)
-        const newGallery = [...gallery]
-        newGallery.splice(index, 1)
-        setGallery(newGallery)
+        dispatchGallery({ type: "REMOVE", image: i.name })
     }
 
     const handleSubmit = async () =>

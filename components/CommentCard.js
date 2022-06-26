@@ -20,7 +20,6 @@ function CommentCard(props)
     const { setEdit, fullWhile, user, id, comment, setError } = props;
     const { _id: cid, content, date, author } = comment;
 
-    const [replies, setReplies] = useState([])
     const [status, setStatus] = useState(comment.status)
     const [likes, setLikes] = useState(comment.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(comment.likes.filter(el => el.typeOf === false));
@@ -88,7 +87,7 @@ function CommentCard(props)
                     : (<Box textAlign="center" sx={{ mt: 1 }}>
                         <Box display="flex" justifyContent="center" gap={1} alignItems="center">
                             <Box display="flex" justifyContent="center" gap={1} alignItems="center">
-                                <Comment /> {replies.length}
+                                <Comment /> {comment.replies.length}
                             </Box>
                             <Button onClick={() => setReply(!isReplying)} size="small" variant="text">Add Reply</Button>
                         </Box>
@@ -150,8 +149,6 @@ function CommentCard(props)
 
             <ReplyList
                 setError={setError}
-                replies={replies}
-                setReplies={setReplies}
                 cid={cid}
                 user={user}
                 comment={comment}

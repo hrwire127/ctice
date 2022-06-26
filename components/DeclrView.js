@@ -37,7 +37,6 @@ function DeclrView(props)
     const userCtx = useContext(UserContext);
 
     const [setDelAlertMsg, delalert, setDelAlert] = useAlertMsg()
-    const [comments, setComments] = useState([])
     const [likes, setLikes] = useState(declaration.likes.filter(el => el.typeOf === true));
     const [dislikes, setDislikes] = useState(declaration.likes.filter(el => el.typeOf === false));
     const [hasBookmark, setBookmark] = useState(user ? user.bookmarks.includes(id) : false);
@@ -292,10 +291,8 @@ function DeclrView(props)
 
             <CommentList
                 setError={setError}
-                comments={comments}
                 declaration={declaration}
                 user={user}
-                setComments={setComments}
             />
             {/* {file ? (<DocumentView file={file} />) 
             : (<Typography variant="h4" component="h5" color="text.secondary" sx={{ marginTop: 10 }}>

@@ -14,11 +14,13 @@ import { getLimitedComments } from '../utilsCS/_get'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import { timeout } from "../utilsCS/_basic"
+import concatReducer from './reducers/concatReducer'
 
 const CommentList = (props) => handleAsync(props, (props) =>
 {
     const sortCtx = React.useContext(SortContext);
 
+    const [comments, dispatchComments] = useReducer(concatReducer, [])
     const [sort, setSorting] = useState(sortCtx);
     const [isSortBtn, setSortBtn] = useState(true);
 
@@ -26,8 +28,8 @@ const CommentList = (props) => handleAsync(props, (props) =>
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [commentWhile, commentSwitch] = useLoading(false)
 
-    const { comments, user, declaration,
-        setComments, setError, Mounted,} = props;
+    const { user, declaration,
+        setError, Mounted, } = props;
     const { _id: id } = declaration;
 
     const classes = useStyles();
@@ -39,7 +41,7 @@ const CommentList = (props) => handleAsync(props, (props) =>
         {
             const newComments = await getLimitedComments([], id, sort, device.doclimit);
             Redirects_CS.handleRes(newComments, typeof window !== "undefined" && window, setError)
-            if (Mounted) setComments(newComments.obj)
+            if (Mounted) dispatchComments({ type: "SET", docs: newComments.obj })
         })
     }, [sort, Mounted])
 
@@ -55,7 +57,7 @@ const CommentList = (props) => handleAsync(props, (props) =>
         {
             const newComments = await getLimitedComments(comments, id, type, device.doclimit);
             Redirects_CS.handleRes(newComments, typeof window !== "undefined" && window, setError)
-            setComments(comments.concat(newComments.obj));
+            dispatchComments({ type: "ADD", docs: newComments.obj })
         })
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { Box, Button, } from '@mui/material'
 import Reply from './Reply'
 import useStyles from '../assets/styles/_ReplyList'
@@ -7,6 +7,7 @@ import { getLimitedReplies, } from '../utilsCS/_get'
 import DeviceContext from './context/contextDevice'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
+import concatReducer from './reducers/concatReducer'
 
 const ReplyList = (props) => handleAsync(props, (props) =>
 {
@@ -15,11 +16,11 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         id,
         user,
         comment,
-        replies,
-        setReplies,
         setError,
         Mounted,
     } = props;
+
+    const [replies, dispatchReplies] = useReducer(concatReducer, [])
 
     const [fullWhile, fullSwitch] = useLoading(false)
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
@@ -33,7 +34,7 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         {
             const newReplies = await getLimitedReplies([], cid, id, device.doclimit);
             Redirects_CS.handleRes(newReplies, typeof window !== "undefined" && window, setError)
-            if (Mounted) setReplies(newReplies.obj)
+            if (Mounted) dispatchReplies({ type: "SET", docs: newReplies.obj })
         })
     }, [Mounted])
 
@@ -44,7 +45,7 @@ const ReplyList = (props) => handleAsync(props, (props) =>
         {
             const newReplies = await getLimitedReplies(replies, cid, id, device.doclimit); //<=
             Redirects_CS.handleRes(newReplies, typeof window !== "undefined" && window, setError)
-            setReplies(replies.concat(newReplies.obj));
+            setReplies({ type: "ADD", docs: newReplies.obj });
         })
     }
 

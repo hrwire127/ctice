@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useReducer } from 'react';
 import
 {
     Box, Typography, ButtonGroup, Button,
@@ -24,23 +24,27 @@ import DatePicker from './DatePicker'
 import handleAsync from './custom/handleAsync'
 import Redirects_CS from '../utilsCS/CS_Redirects'
 import useLocalStorage from "./hooks/useLocalStorage"
+import declrReducer from "./reducers/declrReducer"
 
 const DeclrList = (props) => handleAsync(props, (props) =>
 {
     const { flash, setFlash, fullTags, setError, Mounted } = props;
+
     const classes = useStyles();
     const adminCtx = useContext(AdminContext);
     const sortCtx = useContext(SortContext);
     const styleCtx = useContext(StyleContext);
     const device = useContext(DeviceContext)
 
-    const [dateValue, setDate, resetDate] = useLocalStorage("declr_date", 'Invalid', true);
-    const [queryValue, setQuery, resetQuery] = useLocalStorage("declr_query", '', true);
-    const [tags, setTags, resetTags] = useLocalStorage("declr_tags", [], true);
-    const [open, setOpen, resetOpen] = useLocalStorage("search_open", false, true);
-    const [declarations, setDeclarations] = useState([]);
-    const [count, setCount] = useState(props.count);
+    const [dateValue, setDate] = useLocalStorage("declr_date", 'Invalid', true);
+    const [queryValue, setQuery] = useLocalStorage("declr_query", '', true);
+    const [tags, setTags] = useLocalStorage("declr_tags", [], true);
+    const [open, setOpen] = useLocalStorage("search_open", false, true);
+    const [{declarations, count}, dispatchDeclrs] = useReducer(declrReducer, { declarations: [], count: props.count });
     const [sort, setSorting] = useState(sortCtx);
+
+    console.log(declarations)
+    console.log(count)
 
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(true)
@@ -49,18 +53,15 @@ const DeclrList = (props) => handleAsync(props, (props) =>
     {
         fullWhile(async () =>
         {
-            //doclimit ---!!!
-
             const newDeclrs = await loadLimitedDeclrs([], dateValue, queryValue, device.doclimit, sort, tags)
             const newCount = await getCountDateQuery(queryValue, dateValue, sort, tags);
-
+            
             Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError)
             Redirects_CS.handleRes(newCount, typeof window !== "undefined" && window, setError)
 
             if (Mounted) 
             {
-                setDeclarations(newDeclrs.obj)
-                setCount(newCount.obj)
+                dispatchDeclrs({ type: "SET", declarations: newDeclrs.obj, count: newCount.obj })
             }
         })
     }, [dateValue, queryValue, sort, tags, Mounted])
@@ -74,7 +75,8 @@ const DeclrList = (props) => handleAsync(props, (props) =>
             //doclimit --!!!!
             const newDeclrs = await loadLimitedDeclrs(declarations, date, query, device.doclimit, sort, tags);
             Redirects_CS.handleRes(newDeclrs, typeof window !== "undefined" && window, setError)
-            setDeclarations(declarations.concat(newDeclrs.obj));
+
+            dispatchDeclrs({ type: "ADD", declarations: newDeclrs.obj })
         })
     }
 

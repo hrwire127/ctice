@@ -291,7 +291,8 @@ DeclarationSchema.methods.processNotifLike = async function (req, res)
     const declr = await this.populate({ path: 'authors' })
     const userdata = await getUserdata(req, res)
 
-    const raw = `<h5>${userdata.username} liked your comment</h5>`
+    const raw = `<div style="padding: 4px; borderBottom: 1px solid">
+    <h5>${userdata.username} liked your comment</h5></div>`
 
     const Obj = {
         // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,

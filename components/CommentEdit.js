@@ -46,6 +46,7 @@ function CommentEdit(props)
                     fullWhile(() =>
                     {
                         if (res.error) setAlertMsg(res.error.message, "error")
+                        else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                     })
                 })
         })

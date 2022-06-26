@@ -33,6 +33,7 @@ function ReplyEdit(props)
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
+                    else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
                 })
         })
 

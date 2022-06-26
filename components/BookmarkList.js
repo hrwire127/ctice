@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { Box, Button, Typography } from '@mui/material';
 import { getLimitedBookmarks, loadLimitedBookmarks, countLimitedBookmarks } from '../utilsCS/_get'
 import { styleFull, styleCompact } from "./context/styleEnum"
@@ -13,14 +13,15 @@ import Redirects_CS from '../utilsCS/CS_Redirects'
 import TagFilter from './TagFilter';
 import Search from './Search'
 import useLocalStorage from "./hooks/useLocalStorage"
+import declrReducer from "./reducers/declrReducer"
 
 const BookmarkList = (props) => handleAsync(props, (props) =>
 {
     const { user, fullTags, setError, Mounted } = props;
     const [queryValue, setQuery] = useLocalStorage("query_bookmarks", "", true);
     const [tags, setTags] = useLocalStorage("bookmarks_tags", [], true);
-    const [count, setCount] = useState(user.bookmarks.length);
-    const [bookmarks, setBookmarks] = useState([])
+
+    const [{ declarations: bookmarks, count }, dispatchBookmarks] = useReducer(declrReducer, { declarations: [], count: user.bookmarks.length });
 
     const [loadMoreWhile, loadMoreSwitch] = useLoading(false)
     const [fullWhile, fullSwitch] = useLoading(false)
@@ -41,8 +42,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
 
             if (Mounted)
             {
-                setBookmarks(newBookmarks.obj)
-                setCount(newCount.obj)
+                dispatchBookmarks({ type: "SET", declarations: newBookmarks.obj, count: newCount.obj })
             }
         })
     }, [queryValue, tags, Mounted])
@@ -55,7 +55,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
             //doclimit --!!!!
             const newBookmarks = await getLimitedBookmarks(bookmarks, device.doclimit, user._id);
             Redirects_CS.handleRes(newBookmarks, typeof window !== "undefined" && window, setError)
-            setBookmarks(bookmarks.concat(newBookmarks.obj));
+            dispatchBookmarks({ type: "ADD", declarations: newBookmarks.obj })
         })
     }
 
@@ -71,7 +71,6 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
                 paddingRight: "50px",
                 paddingLeft: "50px",
             },
-            maxWidth: theme.containerMaxWidth
         }}>
             <Box className={classes.Bar}>
                 <Typography sx={{ textAlign: "center" }} variant="h4">
@@ -87,7 +86,7 @@ const BookmarkList = (props) => handleAsync(props, (props) =>
                 mb: 4
             }}>
                 <Search query={queryValue} setQuery={setQuery} />
-                <TagFilter fullTags={fullTags} setTags={setTags} />
+                <TagFilter fullTags={fullTags} setTags={setTags} value={tags} />
             </Box>
             {count > 0
                 ? (<>

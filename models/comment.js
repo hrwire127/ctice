@@ -127,11 +127,11 @@ CommentSchema.methods.processNotifComment = async function (req, res)
 
 
     const Mention = {
-        raw: `<h5>${userdata.username} @ mentioned you</h5>`, date: new Date(), banner: null
+        raw: `<div style="padding: 4px; borderBottom: 1px solid"><h5>${userdata.username} @ mentioned you</h5></div>`, date: new Date(), banner: null
     }
 
     const Comment = {
-        raw: `<h5>${userdata.username} commented on your post</h5>`, date: new Date(), banner: null
+        raw: `<div style="padding: 4px; borderBottom: 1px solid"><h5>${userdata.username} commented on your post</h5></div>`, date: new Date(), banner: null
     }
     // const Comment = { content: process.env.NEXT_PUBLIC_NOTIF_COMMENT, date: new Date(), banner: null }
     // const Mention = { content: process.env.NEXT_PUBLIC_NOTIF_MENTION, date: new Date(), banner: null }
@@ -145,7 +145,8 @@ CommentSchema.methods.processNotifLike = async function (req, res)
     const comment = await this.populate({ path: 'author' })
     const userdata = await getUserdata(req, res)
 
-    const raw = `<h5>${userdata.username} liked your comment</h5>`
+    const raw = `<div style="padding: 4px; borderBottom: 1px solid">
+    <h5>${userdata.username} liked your comment</h5></div>`
 
     const Obj = {
         // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,

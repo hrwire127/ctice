@@ -10,12 +10,9 @@ import handleAsync from '../../components/custom/handleAsync'
 
 const tags = (props) => handleAsync(props, (props) => 
 {
-    const { setError, Mounted } = props
+    const { setError, Mounted, tags } = props
 
-    const [tags, setTags] = useState(props.tags)
     let adminCtx = useContext(AdminContext);
-
-    console.log(tags)
 
     useEffect(async () =>
     {
@@ -32,7 +29,7 @@ const tags = (props) => handleAsync(props, (props) =>
 
 
     return adminCtx ? (<AdminLayout>
-        <Tags setError={setError} tags={tags} setTags={setTags} />
+        <Tags setError={setError} defTags={tags}/>
     </AdminLayout>) : (<></>)
 })
 

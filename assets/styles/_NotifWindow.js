@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
         height: 300,
         position: "absolute",
         top: 40,
-        right: 160,
+        right: 100,
         overflow: "auto",
         overflowY: "auto",
         direction: "ltr",

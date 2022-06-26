@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Avatar, Button, CssBaseline, Autocomplete, TextField, Box, Typography, Container, FormHelperText, IconButton } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
 function TagFilter(props)
 {
     const { setTags, fullTags, value = [] } = props
+
 
     return (
         <Autocomplete
