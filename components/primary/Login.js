@@ -31,12 +31,8 @@ function Login(props)
             }).then(response => response.json())
                 .then(async res =>
                 {
-                    console.log(window.location.href)
-                    console.log(document.referrer)
-
-                    console.log(window.location.href === document.referrer)
-
-                    if(window.location.href === document.referrer)
+                    if (res.error) setAlertMsg(res.error.message, "error")
+                    else if(window.location.href === document.referrer)
                     {
                         window.location = process.env.NEXT_PUBLIC_DR_HOST
                     }

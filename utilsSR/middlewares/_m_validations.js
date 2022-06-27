@@ -1,30 +1,14 @@
-const Joi = require("joi").extend(require('@joi/date'));
 const UserError = require('../general/UserError');
+const {
+    declarationSchema, reguserSchema, pendingSchema, loguserSchema, changeSchema,
+    commentSchema, gallerySchema, bannerSchema, notificationSchema, tagSchema
+} = require("../joi/schemas")
 const { inspectDecrl, inspectUser, inspectComment, inspectChange, inspectGallery, inspectTag } = require('../primary/_p_inspect')
 const { modifyDesc } = require('../primary/_p_basic')
 
 async function validateDeclr(req, res, next) 
 {
     let { title, description, file, tags } = req.body
-
-
-    const declarationSchema = Joi.object({
-        title: Joi.string().required(),
-        description: Joi.object({
-            blocks: Joi.array().items(Joi.object().keys({
-                key: Joi.string().required(),
-                text: Joi.string().required().allow(''),
-                type: Joi.string().required(),
-                depth: Joi.number().required(),
-                inlineStyleRanges: Joi.array().required(),
-                entityRanges: Joi.array().required(),
-                data: Joi.object().required()
-            })),
-            entityMap: Joi.object().required()
-        }).required(),
-        file: Joi.string(),
-        tags: Joi.array().items(Joi.any().required())
-    })
 
     const preparedBody =
     {
@@ -56,35 +40,6 @@ async function validateDeclr(req, res, next)
 async function validateRegUser(req, res, next) 
 {
     let { confirmationCode, password, profile, location, bio, facebook, linkedin, twitter } = req.body
-
-    const declarationSchema = Joi.object({
-        confirmationCode: Joi.string().required(),
-        password: Joi.string().required(),
-        profile: Joi.string(),
-        location: Joi.object({
-            name: Joi.string().required(),
-            lat: Joi.number().required(),
-            long: Joi.number().required()
-        }),
-        bio: Joi.object({
-            blocks: Joi.array().items(Joi.object().keys({
-                key: Joi.string().required(),
-                text: Joi.string().required().allow(''),
-                type: Joi.string().required(),
-                depth: Joi.number().required(),
-                inlineStyleRanges: Joi.array().required(),
-                entityRanges: Joi.array().required(),
-                data: Joi.object().required()
-            })),
-            entityMap: Joi.object().required()
-        }),
-        connections: Joi.object({
-            facebook: Joi.string().allow(''),
-            linkedin: Joi.string().allow(''),
-            twitter: Joi.string().allow('')
-        })
-    })
-
     const preparedBody =
     {
         confirmationCode,
@@ -95,7 +50,7 @@ async function validateRegUser(req, res, next)
         connections: { facebook, linkedin, twitter }
     }
 
-    const { error } = declarationSchema.validate(preparedBody)
+    const { error } = reguserSchema.validate(preparedBody)
 
     if (error) 
     {
@@ -131,12 +86,7 @@ async function validatePendingUser(req, res, next)
 {
     const { username, email } = req.body;
 
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        email: Joi.string().required()
-    })
-
-    const { error } = userSchema.validate({ username, email })
+    const { error } = pendingSchema.validate({ username, email })
 
     if (error) 
     {
@@ -162,13 +112,9 @@ async function validateLogUser(req, res, next)
 {
     const { username, password, remember } = req.body;
 
-    const userSchema = Joi.object({
-        username: Joi.string().required(),
-        password: Joi.string().required(),
-        remember: Joi.boolean().required()
-    })
+    const { error } = loguserSchema.validate({ username, password, remember })
 
-    const { error } = userSchema.validate({ username, password, remember })
+    console.log(error)
 
     if (error) 
     {
@@ -188,42 +134,11 @@ async function validateLogUser(req, res, next)
     req.body.password = password.trim()
 
     next()
-
 }
 
 async function validateChange(req, res, next)
 {
     let { username, profile, location, bio, facebook, linkedin, twitter } = req.body
-
-    console.log(req.body)
-    console.log(req.files)
-
-    const declarationSchema = Joi.object({
-        username: Joi.string(),
-        profile: Joi.string(),
-        location: Joi.object({
-            name: Joi.string().required(),
-            lat: Joi.number().required(),
-            long: Joi.number().required()
-        }),
-        bio: Joi.object({
-            blocks: Joi.array().items(Joi.object().keys({
-                key: Joi.string().required(),
-                text: Joi.string().required().allow(''),
-                type: Joi.string().required(),
-                depth: Joi.number().required(),
-                inlineStyleRanges: Joi.array().required(),
-                entityRanges: Joi.array().required(),
-                data: Joi.object().required()
-            })),
-            entityMap: Joi.object().required()
-        }),
-        connections: Joi.object({
-            facebook: Joi.string().allow(''),
-            linkedin: Joi.string().allow(''),
-            twitter: Joi.string().allow('')
-        })
-    })
 
     const preparedBody =
     {
@@ -234,7 +149,7 @@ async function validateChange(req, res, next)
         connections: { facebook, linkedin, twitter }
     }
 
-    const { error } = declarationSchema.validate(preparedBody)
+    const { error } = changeSchema.validate(preparedBody)
 
     if (error) 
     {
@@ -263,22 +178,6 @@ async function validateChange(req, res, next)
 async function validateComment(req, res, next)
 {
     let { content } = req.body
-
-    const commentSchema = Joi.object({
-        content: Joi.object({
-            blocks: Joi.array().items(Joi.object().keys({
-                key: Joi.string().required(),
-                text: Joi.string().required().allow(''),
-                type: Joi.string().required(),
-                depth: Joi.number().required(),
-                inlineStyleRanges: Joi.array().required(),
-                entityRanges: Joi.array().required(),
-                data: Joi.object().required()
-            })),
-            entityMap: Joi.object().required()
-        }).required(),
-        date: Joi.date().iso()
-    })
 
     const preparedBody =
     {
@@ -309,20 +208,7 @@ async function validateComment(req, res, next)
 
 async function validateGallery(req, res, next)
 {
-    const declarationSchema = Joi.array().items(
-        Joi.object().keys({
-            name: Joi.string().required(),
-            data: Joi.any().required(),
-            size: Joi.number().required(),
-            encoding: Joi.string().required(),
-            tempFilePath: Joi.string().required(),
-            truncated: Joi.boolean().required(),
-            mimetype: Joi.string().required(),
-            md5: Joi.string().required(),
-            mv: Joi.function().required()
-        }))
-
-    const { error } = declarationSchema.validate(req.files ? Array.from(req.files) : undefined)
+    const { error } = gallerySchema.validate(req.files ? Array.from(req.files) : undefined)
 
     if (error) 
     {
@@ -335,12 +221,7 @@ async function validateGallery(req, res, next)
 
 async function validateBanner(req, res, next)
 {
-    const declarationSchema = Joi.object({
-        content: Joi.string().required(),
-        date: Joi.date().iso()
-    })
-
-    const { error } = declarationSchema.validate(req.body)
+    const { error } = bannerSchema.validate(req.body)
 
     if (error) 
     {
@@ -354,12 +235,6 @@ async function validateBanner(req, res, next)
 
 async function validateNotification(req, res, next)
 {
-    const notificationSchema = Joi.object({
-        content: Joi.string().required(),
-        banner: Joi.string(),
-        date: Joi.date().iso()
-    })
-
     const { error } = notificationSchema.validate(req.body)
 
     if (error) 
@@ -374,12 +249,6 @@ async function validateNotification(req, res, next)
 
 async function validateTag(req, res, next)
 {
-    console.log(req.body)
-
-    const tagSchema = Joi.object({
-        content: Joi.string().required(),
-    })
-
     const { error } = tagSchema.validate(req.body)
 
     if (error) 

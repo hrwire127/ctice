@@ -157,7 +157,8 @@ UserSchema.statics.processLogin = async function (req, res, next)
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
                 {
-                    if (error) res.json({ error });
+                    console.log(error)
+                    if (error) throw new UserError(null, error.status)
                 });
                 if (remember)
                 {

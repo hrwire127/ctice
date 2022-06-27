@@ -84,8 +84,8 @@ router.post('/pending', validatePendingUser, tryAsync_CS(async (req, res) =>
 router.post('/login', validateLogUser, tryAsync_CS(async (req, res, next) =>
 {
     await User.processLogin(req, res, next);
-    req.flash('success', 'Welcome Back');
     Redirects_SR.Home.CS(res)
+    req.flash('success', 'Welcome Back');
 }))
 
 router.post('/logout', isLogged_CS, tryAsync_CS(async (req, res) =>

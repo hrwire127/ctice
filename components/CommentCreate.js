@@ -26,8 +26,6 @@ function CommentCreate(props)
 
     const { id, setError } = props;
 
-    // console.log(`comment ${id}`)
-
     const [setAlertMsg, alert, setAlert] = useAlertMsg()
     const [editorState, setEditorState, resetEditorState] = useLocalStorage(`comment_${id}`)
 
@@ -47,7 +45,7 @@ function CommentCreate(props)
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
                     else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                    resetEditorState()
+                    if (!res.error) resetEditorState()
                 })
         })
     }

@@ -63,9 +63,12 @@ const CreateForm = (props) => handleAsync(props, (props) =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
                     else Redirects_CS.handleRes(res, typeof window !== "undefined" && window, setError)
-                    resetEditorState()
-                    resetTitle()
-                    resetTags()
+                    if (!res.error) 
+                    {
+                        resetEditorState()
+                        resetTitle()
+                        resetTags()
+                    }
                 })
         })
     };
