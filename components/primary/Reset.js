@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Avatar, Button, TextField, Grid, Box, Typography, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useFormError from "./hooks/useFormError";
-import TransitionAlerts from './TransitionAlerts'
-import BackLink from "./BackLink";
-import useStyles from "../assets/styles/_Reset"
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useAlertMsg from './hooks/useAlertMsg'
-import useLoading from './hooks/useLoading'
+import useFormError from "../hooks/useFormError";
+import TransitionAlerts from '../TransitionAlerts'
+import BackLink from "../BackLink";
+import useStyles from "../../assets/styles/_Reset"
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import useAlertMsg from '../hooks/useAlertMsg'
+import useLoading from '../hooks/useLoading'
 
 function Reset(props)
 {

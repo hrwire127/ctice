@@ -12,18 +12,18 @@ import
     Autocomplete
 } from "@mui/material"
 import { Article, Clear } from "@mui/icons-material"
-import TransitionAlerts from './TransitionAlerts'
-import useFormError from "./hooks/useFormError"
-import { handleDeclrData } from "../utilsCS/_basic"
-import { getTags } from '../utilsCS/_get'
-import TextArea from "./TextArea"
-import useStyles from "../assets/styles/_CreateForm"
-import UploadPdf from "./UploadPdf"
-import BackLink from "./BackLink"
-import useLoading from './hooks/useLoading'
-import handleAsync from './custom/handleAsync'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import useLocalStorage from "./hooks/useLocalStorage"
+import TransitionAlerts from '../TransitionAlerts'
+import useFormError from "../hooks/useFormError"
+import { handleDeclrData } from "../../utilsCS/_basic"
+import { getTags } from '../../utilsCS/_get'
+import TextArea from "../TextArea"
+import useStyles from "../../assets/styles/_CreateForm"
+import UploadPdf from "../UploadPdf"
+import BackLink from "../BackLink"
+import useLoading from '../hooks/useLoading'
+import handleAsync from '../custom/handleAsync'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import useLocalStorage from "../hooks/useLocalStorage"
 
 const CreateForm = (props) => handleAsync(props, (props) =>
 {

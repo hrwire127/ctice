@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Alert, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Grid, Box, Typography, Container, FormHelperText } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import useFormError from "./hooks/useFormError";
-import BackLink from "./BackLink";
-import useStyles from '../assets/styles/_Login'
-import useLoading from './hooks/useLoading'
-import Rules from "../utilsCS/clientRules"
-import useAlertMsg from './hooks/useAlertMsg'
-import Redirects_CS from '../utilsCS/CS_Redirects'
+import useFormError from "../hooks/useFormError";
+import BackLink from "../BackLink";
+import useStyles from '../../assets/styles/_Login'
+import useLoading from '../hooks/useLoading'
+import Rules from "../../utilsCS/clientRules"
+import useAlertMsg from '../hooks/useAlertMsg'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 function Login(props)
 {

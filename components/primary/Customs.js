@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import { LightMode, DarkMode, TableRows, Lens, Score, DateRange } from '@mui/icons-material';
 import { ToggleButton, ToggleButtonGroup, Typography, Box } from '@mui/material';
-import { sortScore, sortDate } from './context/sortEnum'
-import StyleContext from './context/contextStyle'
-import SortContext from './context/contextSort'
-import useStyles from '../assets/styles/_Customs'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import theme_black from "../assets/images/theme-2.png"
-import theme_white from "../assets/images/theme-1.png"
-import compact_black from "../assets/images/compact-black.png"
-import compact_white from "../assets/images/compact-white.png"
-import full_black from "../assets/images/full-black.png"
-import full_white from "../assets/images/full-white.png"
-import score_black from "../assets/images/score-black.png"
-import score_white from "../assets/images/score-white.png"
-import date_black from "../assets/images/date-black.png"
-import date_white from "../assets/images/date-white.png"
-import useWindowSize from './hooks/useWindowSize'
+import StyleContext from '../context/contextStyle'
+import SortContext from '../context/contextSort'
+import useStyles from '../../assets/styles/_Customs'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import theme_black from "../../assets/images/theme-2.png"
+import theme_white from "../../assets/images/theme-1.png"
+import compact_black from "../../assets/images/compact-black.png"
+import compact_white from "../../assets/images/compact-white.png"
+import full_black from "../../assets/images/full-black.png"
+import full_white from "../../assets/images/full-white.png"
+import score_black from "../../assets/images/score-black.png"
+import score_white from "../../assets/images/score-white.png"
+import date_black from "../../assets/images/date-black.png"
+import date_white from "../../assets/images/date-white.png"
+import useWindowSize from '../hooks/useWindowSize'
 
 function Customs(props)
 {

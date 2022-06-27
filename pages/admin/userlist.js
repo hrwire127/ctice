@@ -1,10 +1,10 @@
 import React, { useEffect, useContext } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
-import AdminUsers from '../../components/AdminUsers';
+import AdminUsers from '../../components/primary/AdminUsers';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'
 import { getUsers } from '../../utilsCS/_get'
-import AdminLayout from "../../components/AdminLayout"
+import AdminLayout from "../../components/layouts/AdminLayout"
 
 function userlist(props)
 {

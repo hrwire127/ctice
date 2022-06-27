@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
-import AdminIndex from '../../components/AdminIndex';
+import AdminIndex from '../../components/primary/AdminIndex';
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getUsers, } from '../../utilsCS/_get'
 import { determRendering } from '../../utilsCS/_basic'
 import { getDeclrs, } from "../../utilsCS/_declr"
-import AdminLayout from "../../components/AdminLayout"
+import AdminLayout from "../../components/layouts/AdminLayout"
 
 function admin(props)
 {

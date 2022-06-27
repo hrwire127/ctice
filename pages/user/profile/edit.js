@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import UserContext from '../../../components/context/contextUser'
-import Change from '../../../components/Change'
+import Change from '../../../components/primary/Change'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken, getFlash } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'

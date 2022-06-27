@@ -2,8 +2,8 @@ import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../../components/context/contextAdmin'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { getBanners } from "../../../utilsCS/_get"
-import AdminLayout from "../../../components/AdminLayout"
-import AdminBanners from "../../../components/AdminBanners"
+import AdminLayout from "../../../components/layouts/AdminLayout"
+import AdminBanners from "../../../components/primary/AdminBanners"
 import Redirects_CS from '../../../utilsCS/CS_Redirects'
 
 function bannerlist(props)

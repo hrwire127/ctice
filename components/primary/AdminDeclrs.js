@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
-import AdminDeclrs from './AdminDeclrs';
-import useLoading from './hooks/useLoading'
-import handleAsync from './custom/handleAsync'
-import Redirects_CS from '../utilsCS/CS_Redirects'
+import AdminDeclrs from '../AdminDeclrs';
+import useLoading from '../hooks/useLoading'
+import handleAsync from '../custom/handleAsync'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 function AdminDeclrs(props)
 {

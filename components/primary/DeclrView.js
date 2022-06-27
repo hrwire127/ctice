@@ -13,20 +13,20 @@ import
     KeyboardArrowDown, Comment,
     IosShare, Accessible, Bookmark
 } from '@mui/icons-material';
-import useStyles from '../assets/styles/_DeclrView';
-import AdminContext from './context/contextAdmin'
-import UserContext from './context/contextUser'
+import useStyles from '../../assets/styles/_DeclrView';
+import AdminContext from '../context/contextAdmin'
+import UserContext from '../context/contextUser'
 import Link from 'next/link'
-import useLoading from './hooks/useLoading'
-import TransitionAlerts from './TransitionAlerts'
-import CommentCreate from "./CommentCreate";
-import CommentList from "./CommentList";
-import Vote from "./Vote";
+import useLoading from '../hooks/useLoading'
+import TransitionAlerts from '../TransitionAlerts'
+import CommentCreate from "../CommentCreate";
+import CommentList from "../CommentList";
+import Vote from "../Vote";
 import { LinkedinShareButton, FacebookShareButton, TwitterShareButton } from 'react-share';
 import { LinkedIn, Facebook, Twitter } from '@mui/icons-material';
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import EditorView from './EditorView';
-import useAlertMsg from './hooks/useAlertMsg';
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import EditorView from '../EditorView';
+import useAlertMsg from '../hooks/useAlertMsg';
 
 function DeclrView(props)
 {

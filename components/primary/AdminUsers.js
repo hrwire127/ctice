@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Toolbar, IconButton, Container, Grid, Paper } from '@mui/material';
-import RecentUsers from './RecentUsers';
+import RecentUsers from '../RecentUsers';
 
 function AdminUsers(props)
 {

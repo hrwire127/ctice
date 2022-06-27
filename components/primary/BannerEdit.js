@@ -10,10 +10,10 @@ import
 } from "@mui/material";
 import { Article } from '@mui/icons-material'
 import parse from 'html-react-parser';
-import useAlertMsg from './hooks/useAlertMsg'
-import TransitionAlerts from './TransitionAlerts'
-import useLoading from './hooks/useLoading';
-import handleAsync from './custom/handleAsync'
+import useAlertMsg from '../hooks/useAlertMsg'
+import TransitionAlerts from '../TransitionAlerts'
+import useLoading from '../hooks/useLoading';
+import handleAsync from '../custom/handleAsync'
 
 const BannerEdit = (props) => handleAsync(props, (props) =>
 {

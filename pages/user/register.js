@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Register from '../../components/Register'
+import Register from '../../components/primary/Register'
 import HomeNavigation from '../../components/layouts/HomeNavigation'
 
 function register (props)

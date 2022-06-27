@@ -157,10 +157,11 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         </>
     }
 
-    return (windowSize
-        ? (<Box className={classes.Body}>
-            <CssBaseline />
-            <SwipeableDrawer
+
+    return (<Box className={classes.Body}>
+        <CssBaseline />
+        {windowSize
+            ? (<SwipeableDrawer
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
                 onOpen={() => setDrawerOpen(true)}
@@ -184,13 +185,8 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                         </Link>
                     </Box>
                 </Box>
-            </SwipeableDrawer>
-            {props.children}
-            <Main />
-        </Box>)
-        : (<Box className={classes.Body}>
-            <CssBaseline />
-            <Box
+            </SwipeableDrawer>)
+            : (<Box
                 component="nav"
                 className={classes.Drawer}
                 aria-label="mailbox folders"
@@ -208,16 +204,73 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
                         <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
                     </Link>
                 </Box>
-            </Box>
-            <Box
-                component="main"
-                className={classes.Content}
-            >
-                {props.children}
-            </Box>
-            <Main />
-        </Box>)
-    )
-})
+            </Box>)}
 
+        <Box
+            component="main"
+            className={classes.Content}
+        >
+            {props.children}
+        </Box>
+        <Main />
+
+    </Box >)
+
+
+    //     return (windowSize
+    //         ? (<Box className={classes.Body}>
+    //             <CssBaseline />
+    //             <SwipeableDrawer
+    //                 open={drawerOpen}
+    //                 onClose={() => setDrawerOpen(false)}
+    //                 onOpen={() => setDrawerOpen(true)}
+    //             >
+    //                 <Box
+    //                     component="nav"
+    //                     className={classes.Drawer}
+    //                     aria-label="mailbox folders"
+    //                 >
+    //                     <Box display="flex" justifyContent="center">
+    //                         <Link href="/">
+    //                             <IconButton>
+    //                                 <Close color="tertiary" />
+    //                             </IconButton>
+    //                         </Link>
+    //                     </Box>
+    //                     {drawer}
+    //                     <Box display="flex" justifyContent="center">
+    //                         <Link href="/">
+    //                             <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
+    //                         </Link>
+    //                     </Box>
+    //                 </Box>
+    //             </SwipeableDrawer>
+    //             {props.children}
+    //             <Main />
+    //         </Box>)
+    //         : (<Box className={classes.Body}>
+    //             <CssBaseline />
+    //             <Box
+    //                 component="nav"
+    //                 className={classes.Drawer}
+    //                 aria-label="mailbox folders"
+    //             >
+    //                 <Box display="flex" justifyContent="center">
+    //                     <Link href="/">
+    //                         <IconButton>
+    //                             <Close color="tertiary" />
+    //                         </IconButton>
+    //                     </Link>
+    //                 </Box>
+    //                 {drawer}
+    //                 <Box display="flex" justifyContent="center">
+    //                     <Link href="/">
+    //                         <IconButton onClick={Logout}><LogoutIcon color="tertiary" /></IconButton>
+    //                     </Link>
+    //                 </Box>
+    //             </Box>
+    //         </Box>)
+    //     )
+    // 
+})
 export default UserNavigation

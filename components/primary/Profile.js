@@ -5,11 +5,11 @@ import
     Box, Typography, Paper,
     Link as MuiLink
 } from '@mui/material';
-import { getDateDifference } from '../utilsCS/_basic';
+import { getDateDifference } from '../../utilsCS/_basic';
 import { Check, Close, Cake, LocationOn, Twitter, LinkedIn, Facebook, Email } from '@mui/icons-material';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
-import useStyles from '../assets/styles/_Profile';
-import EditorView from './EditorView';
+import useStyles from '../../assets/styles/_Profile';
+import EditorView from '../EditorView';
 
 function Profile(props)
 {

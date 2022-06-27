@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import EditForm from '../../components/EditForm';
+import EditForm from '../../components/primary/EditForm';
 import AdminContext from '../../components/context/contextAdmin'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { determRendering } from '../../utilsCS/_basic'

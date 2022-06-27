@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import Banners from "./Banners"
+import Banners from "../Banners"
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
-import { getBanners } from "../utilsCS/_get"
-import useLoading from './hooks/useLoading'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import handleAsync from './custom/handleAsync'
+import { getBanners } from "../../utilsCS/_get"
+import useLoading from '../hooks/useLoading'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import handleAsync from '../custom/handleAsync'
 
 function AdminBanners(props) 
 {

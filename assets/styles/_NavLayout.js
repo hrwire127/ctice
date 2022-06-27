@@ -36,8 +36,10 @@ const useStyles = makeStyles((theme) => ({
         },
         height: "100%",
         flex: 1,
+    },
+    Main: {
+        width: "100%",
         overflow: "auto",
-        paddingRight: 0
     },
     SwipeContainer: {
         overflow: "auto",
@@ -62,16 +64,8 @@ const useStyles = makeStyles((theme) => ({
     },
     Content: {
         flexGrow: 1,
-        paddingLeft: 24,
-        // width: theme.drawerWidth,
-        // ["@media (max-width:960px)"]: {
-        //     paddingRight: 60,
-        // },
-        ["@media (max-width:830px)"]: {
-            paddingLeft: 60,
-        },
         overflow: "auto",
-        paddingRight: 0
+        padding: 0
     },
     Banners: {
         display: "flex",

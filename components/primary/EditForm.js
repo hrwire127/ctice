@@ -5,17 +5,17 @@ import
     Autocomplete, TextField, Box,
     Typography, Container, FormHelperText, IconButton
 } from '@mui/material';
-import TransitionAlerts from './TransitionAlerts'
+import TransitionAlerts from '../TransitionAlerts'
 import { Article, Clear } from '@mui/icons-material';
-import { handleDeclrData } from "../utilsCS/_basic";
-import useFormError from './hooks/useFormError';
-import useStyles from "../assets/styles/_EditForm"
-import TextArea from './TextArea'
-import UploadPdf from "./UploadPdf";
-import BackLink from "./BackLink";
-import useAlertMsg from './hooks/useAlertMsg'
-import useLoading from './hooks/useLoading'
-import Redirects_CS from '../utilsCS/CS_Redirects'
+import { handleDeclrData } from "../../utilsCS/_basic";
+import useFormError from '../hooks/useFormError';
+import useStyles from "../../assets/styles/_EditForm"
+import TextArea from '../TextArea'
+import UploadPdf from "../UploadPdf";
+import BackLink from "../BackLink";
+import useAlertMsg from '../hooks/useAlertMsg'
+import useLoading from '../hooks/useLoading'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 
 function EditForm(props)

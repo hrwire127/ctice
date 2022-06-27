@@ -104,7 +104,9 @@ function HomeNavigation(props)
                 {drawer}
             </Box>)
         }
-        {props.children}
+        <Box className={classes.Main}>
+            {props.children}
+        </Box>
     </Box >
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import DeclrView from '../../components/DeclrView'
+import DeclrView from '../../components/primary/DeclrView'
 import { determRendering } from '../../utilsCS/_basic'
 import { getClientUser, } from '../../utilsCS/_get'
 import { getDeclr } from "../../utilsCS/_declr"

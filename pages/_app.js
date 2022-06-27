@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Layout from "../components/layout"
+import Layout from "../components/layouts/layout"
 import "../assets/styles/body.css"
 import "../assets/styles/TextArea.css"
 import Head from 'next/head'

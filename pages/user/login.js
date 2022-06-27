@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Login from '../../components/Login'
+import Login from '../../components/primary/Login'
 import HomeNavigation from '../../components/layouts/HomeNavigation'
 
 function login (props) 

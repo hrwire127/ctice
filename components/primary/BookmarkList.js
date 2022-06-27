@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { Box, Button, Typography } from '@mui/material';
-import { getLimitedBookmarks, loadLimitedBookmarks, countLimitedBookmarks } from '../utilsCS/_get'
-import { styleFull, styleCompact } from "./context/styleEnum"
-import useLoading from '../components/hooks/useLoading'
-import BookmarkCardCompact from "./BookmarkCardCompact"
-import BookmarkCardFull from "./BookmarkCardFull"
-import useStyles from "../assets/styles/_DeclrList"
-import StyleContext from './context/contextStyle'
-import DeviceContext from './context/contextDevice'
-import handleAsync from './custom/handleAsync'
-import Redirects_CS from '../utilsCS/CS_Redirects'
-import TagFilter from './TagFilter';
-import Search from './Search'
-import useLocalStorage from "./hooks/useLocalStorage"
-import declrReducer from "./reducers/declrReducer"
+import { getLimitedBookmarks, loadLimitedBookmarks, countLimitedBookmarks } from '../../utilsCS/_get'
+import { styleFull, styleCompact } from "../context/styleEnum"
+import useLoading from '../../components/hooks/useLoading'
+import BookmarkCardCompact from "../BookmarkCardCompact"
+import BookmarkCardFull from "../BookmarkCardFull"
+import useStyles from "../../assets/styles/_DeclrList"
+import StyleContext from '../context/contextStyle'
+import DeviceContext from '../context/contextDevice'
+import handleAsync from '../custom/handleAsync'
+import Redirects_CS from '../../utilsCS/CS_Redirects'
+import TagFilter from '../TagFilter';
+import Search from '../Search'
+import useLocalStorage from "../hooks/useLocalStorage"
+import declrReducer from "../reducers/declrReducer"
 
 const BookmarkList = (props) => handleAsync(props, (props) =>
 {

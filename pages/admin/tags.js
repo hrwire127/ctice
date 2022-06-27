@@ -1,8 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
-import AdminLayout from "../../components/AdminLayout"
-import Tags from '../../components/Tags'
+import AdminLayout from "../../components/layouts/AdminLayout"
+import Tags from '../../components/primary/Tags'
 import { getTags } from '../../utilsCS/_get'
 import { determRendering } from '../../utilsCS/_basic'
 import Redirects_CS from '../../utilsCS/CS_Redirects'

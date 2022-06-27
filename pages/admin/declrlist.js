@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react'
 import AdminContext from '../../components/context/contextAdmin'
-import AdminDeclrs from '../../components/AdminDeclrs'
+import AdminDeclrs from '../../components/primary/AdminDeclrs'
 import CS_Redirects from '../../utilsCS/CS_Redirects'
 import { getDeclrs } from "../../utilsCS/_declr"
-import AdminLayout from "../../components/AdminLayout"
+import AdminLayout from "../../components/layout/AdminLayout"
 import Redirects_CS from '../../utilsCS/CS_Redirects'
 
 function declrlist(props)

@@ -3,7 +3,7 @@ import UserContext from '../../../components/context/contextUser'
 import CS_Redirects from '../../../utilsCS/CS_Redirects'
 import { determRendering, checkToken } from "../../../utilsCS/_basic"
 import { getClientUser, } from '../../../utilsCS/_get'
-import Customs from '../../../components/Customs'
+import Customs from '../../../components/primary/Customs'
 import UserNavigation from '../../../components/layouts/UserNavigation'
 
 function customs(props)

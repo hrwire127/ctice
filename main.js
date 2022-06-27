@@ -45,6 +45,7 @@ const session = require('express-session');
 const passport = require("passport")
 const flash = require("flash")
 const LocalStrategy = require("passport-local");
+const mongoSanitize = require('express-mongo-sanitize')
 
 
 
@@ -52,13 +53,14 @@ app.prepare().then(() =>
 {
     const server = express();
 
-    server.use(express.urlencoded({ extended: true }));
-    server.use(express.static(path.join(__dirname, 'assets')));
-    server.use(session(sessionConfig));
+    server.use(express.urlencoded({ extended: true }))
+    server.use(express.static(path.join(__dirname, 'assets')))
+    server.use(session(sessionConfig))
     server.use(flash())
     server.use(fileupload())
-    server.use(express.json());
-    server.use(cors());
+    server.use(express.json())
+    server.use(cors())
+    server.use(mongoSanitize())
 
     server.use(passport.initialize())
     server.use(passport.session())
@@ -90,18 +92,18 @@ app.prepare().then(() =>
         // const error = new UserError(err.message, err.status)
         const error = new UserError(undefined, err.status).generateMessage()
 
-        
+
         console.log(error)
 
         if (req.type === 0) app.render(req, res, "/", { error })
-        else  Redirects_SR.Api.sendError(res, error)
+        else Redirects_SR.Api.sendError(res, error)
     })
 
     server.get("*", (req, res, next) =>
     {
         return handle(req, res)
     })
- 
+
     server.listen(NEXT_PUBLIC_DR_PORT, e =>
     {
         if (e) throw e;
