@@ -16,7 +16,7 @@ const { getUserdata } = require('../utilsSR/primary/_p_user')
 
 router.get('/register', (req, res) =>
 {
-    app.render(req, res, "/user/register", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/user/register")
 })
 
 router.get('/login', (req, res) =>
@@ -29,37 +29,37 @@ router.get('/login', (req, res) =>
 router.get('/profile', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile", { user, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/user/profile", { user })
 }))
 
 router.get('/profile/edit', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/edit", { user, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/user/profile/edit", { user})
 }))
 
 router.get('/profile/customs', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/customs", { user, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/user/profile/customs", { user})
 }))
 
 router.get('/profile/bookmarks', isLogged_SR, tryAsync_SR(async (req, res) =>
 {
     const user = await getUserdata(req, res)
-    app.render(req, res, "/user/profile/bookmarks", { user, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/user/profile/bookmarks", { user })
 }))
 
 router.get("/pending/:confirmationCode", verifyPendingCode_SR, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/welcome", { confirmationCode, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/welcome", { confirmationCode })
 }))
 
 router.get('/reset/:confirmationCode', verifyResetToken_SR, tryAsync_SR(async (req, res) =>
 {
     const confirmationCode = req.params.confirmationCode
-    app.render(req, res, "/reset", { confirmationCode, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/reset", { confirmationCode })
 }))
 
 router.post('/all/api', apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>

@@ -19,7 +19,6 @@ class CustomDocument extends Document<CustomDocumentProps> {
     static async getInitialProps(ctx: DocumentContext)
     {
         const nonce = (ctx.res as ResponseWithNonce).locals.nonce
-        console.log(nonce)
 
         const sheets = new ServerStyleSheets();
         const originalRenderPage = ctx.renderPage;

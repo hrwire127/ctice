@@ -10,43 +10,43 @@ const User = require('../models/user')
 router.get("/", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
     const users = User.getSecured(await User.find({}))
-    app.render(req, res, "/admin", { users, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin", { users})
 }))
 
 router.get("/declrlist", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/declrlist", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/declrlist")
 })
 
 router.get("/userlist", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
     const users = User.getSecured(await User.find({}))
-    app.render(req, res, "/admin/userlist", { users, styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/userlist", { users })
 }))
 
 router.get("/banner/create", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/banner/create", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/banner/create")
 })
 
 router.get("/tags", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/tags", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/tags")
 })
 
 router.get("/banner/:id", isAdmin_SR, tryAsync_SR(async (req, res) =>
 {
-    app.render(req, res, `/admin/banner/${req.params.id}`, { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, `/admin/banner/${req.params.id}`)
 }))
 
 router.get("/notification", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/notification", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/notification")
 })
 
 router.get("/banner/list", isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/admin/banner/list", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/admin/banner/list")
 })
 
 router.post("/banner", isAdmin_CS, validateBanner, tryAsync_CS(async (req, res) =>

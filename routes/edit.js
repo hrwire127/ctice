@@ -16,7 +16,7 @@ router.get("/:id", isAdmin_SR, tryAsync_SR(async (req, res) =>
     if (declaration) app.render(req, res, `/edit/${id}`)
     else throw new UserError(...Object.values(errorMessages.PageNotFound))
 
-    app.render(req, res, `/edit/${id}`, { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, `/edit/${id}`)
 }))
 
 router.post("/:id/api", apiSecret, isAdmin_CS, tryAsync_CS(async (req, res) =>

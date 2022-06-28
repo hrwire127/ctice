@@ -17,7 +17,7 @@ router.get('/', tryAsync_SR(async (req, res) =>
 
 router.get("/create", isLogged_SR, isAdmin_SR, (req, res) =>
 {
-    app.render(req, res, "/create", { styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
+    app.render(req, res, "/create")
 })
 
 router.post('/', isLogged_CS, isAdmin_CS, validateDeclr, tryAsync_CS(async (req, res) =>

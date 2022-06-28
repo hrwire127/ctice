@@ -53,6 +53,14 @@ const LocalStrategy = require("passport-local");
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require("helmet")
 
+const cspoption = {
+    directives: {
+        'default-src': ["'self'"],
+        'script-src': [(req, res) => `'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
+        "style-src": ["'self' https://fonts.googleapis.com 'unsafe-inline'"]
+    },
+}
+
 app.prepare().then(() =>
 {
     const server = express();
@@ -75,18 +83,10 @@ app.prepare().then(() =>
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
-    const options = {
-        directives: {
-            'default-src': ["'self'"],
-            'script-src': [(req, res) => `'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
-        },
-    }
-
     server.use((req, res, next) =>
     {
         res.locals.nonce = uuidv4()
-        console.log("created")
-        helmet.contentSecurityPolicy(options)(req, res, next)
+        helmet.contentSecurityPolicy(cspoption)(req, res, next)
     })
 
     server.use('/', index)
