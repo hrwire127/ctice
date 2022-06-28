@@ -14,6 +14,6 @@ module.exports = {
         buildActivity: false
     },
     images: {
-        domains: ['res.cloudinary.com'],
+        domains: [`https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/v1654542329/ctice`],
     },
 }
