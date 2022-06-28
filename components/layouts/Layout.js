@@ -107,6 +107,12 @@ function Layout(props)
         overflow: "hidden"
     }
 
+    // const cache = createCache({
+    //     key: 'my-prefix-key',
+    //     nonce: nonce,
+    //     prepend: true,
+    //   });
+ 
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>

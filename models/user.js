@@ -157,7 +157,6 @@ UserSchema.statics.processLogin = async function (req, res, next)
                 const remember = JSON.parse(req.body.remember)
                 req.login(user, function (error)
                 {
-                    console.log(error)
                     if (error) throw new UserError(null, error.status)
                 });
                 if (remember)
@@ -267,7 +266,6 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
-            console.log("had, got deleted and reuploaded another") //
             let file = await upload_profiles(req.files.profile, res)
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
@@ -281,17 +279,14 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([req.files], [profile, user.profile.location], async () =>
         {
-            console.log("hadn't but uploaded one ")//
             let file = await upload_profiles(req.files.profile, res)
 
             user.profile.url = file.url
             user.profile.location = file.location
         }).Try()) return user;
 
-        console.log(user.profile)
         if (await new excRule([profile, user.profile.location], [req.files], async () =>
         {
-            console.log("had a file and now has a selection") //
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(user.profile.location)
@@ -303,21 +298,18 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([profile], [req.files, user.profile.location], async () =>
         {
-            console.log("did not have a file but has now a selection") //
             user.profile.url = profile
             user.profile.location = null
         }).Try()) return user;
 
         if (await new excRule([], [req.files, profile, user.profile.location], async () =>
         {
-            console.log("did not have, and haven't changed") //
             user.profile.url = null
             user.profile.location = null
         }).Try()) return user;
 
         if (await new excRule([user.profile.location], [profile, req.files], async () =>
         {
-            console.log("delete profile") //
             if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
             {
                 await cloud.destroy(user.profile.location)
@@ -397,8 +389,6 @@ UserSchema.statics.attachNotification = async function (Obj, user, sendmail)
 {
     const User = mongoose.model('User', UserSchema)
     const users = user ? [user] : await User.find({})
-
-    console.log(Obj)
 
     users.forEach(async u => 
     {

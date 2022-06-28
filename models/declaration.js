@@ -111,7 +111,6 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
         const descriptionObj = JSON.parse(Obj.description)
         const descriptionDeclr = JSON.parse(declaration.description)
 
-        console.log(descriptionObj.entityMap)
 
         if (files)
         {
@@ -141,9 +140,6 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
         const oldFiles = Object.keys({ ...descriptionDeclr.entityMap }).map((key) => descriptionDeclr.entityMap[key].data.src)
         const newFiles = Object.keys({ ...descriptionObj.entityMap }).map((key) => descriptionObj.entityMap[key].data.src)
 
-        console.log(oldFiles)
-        console.log(newFiles)
-
         await new Promise((resolve, reject) =>
         {
             oldFiles.every(async (f) => 
@@ -160,7 +156,6 @@ DeclarationSchema.statics.processObj = async function (req, res, declaration = u
                         if (char === ".") break
                         url.push(char)
                     }
-                    console.log(url)
                     await cloud.destroy(
                         url.join('')
                     )

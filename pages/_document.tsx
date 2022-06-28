@@ -5,6 +5,7 @@ import Document, {
     NextScript,
     DocumentContext,
 } from 'next/document'
+import { ServerStyleSheets } from '@mui/styles';
 
 import { ServerResponse } from 'http'
 
@@ -17,9 +18,20 @@ type CustomDocumentProps = {
 class CustomDocument extends Document<CustomDocumentProps> {
     static async getInitialProps(ctx: DocumentContext)
     {
-        // get the nonce from res.locals.nonce
         const nonce = (ctx.res as ResponseWithNonce).locals.nonce
+        console.log(nonce)
+
+        const sheets = new ServerStyleSheets();
+        const originalRenderPage = ctx.renderPage;
+
+        ctx.renderPage = () =>
+            originalRenderPage({
+                enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+            });
+
         const initialProps = await Document.getInitialProps(ctx)
+
+
         return { ...initialProps, nonce }
     }
 

@@ -14,7 +14,8 @@
     "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "resolveJsonModule": true,
+    "resolveJsonModule": true, 
+    "moduleResolution": "node",
     "isolatedModules": true,
     "jsx": "preserve"
   },

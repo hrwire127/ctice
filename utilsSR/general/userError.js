@@ -35,7 +35,6 @@ class UserError extends Error
     }
     throw_SR(req, res) 
     {
-        console.log(this)
         app.render(req, res, "/", { error: this })
     }
 }

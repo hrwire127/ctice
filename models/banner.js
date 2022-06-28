@@ -39,8 +39,7 @@ BannerSchema.statics.processObj = async function (obj, req, res)
             type: 'upload'
         }, (res, err) => 
         {
-            console.log(res)
-            console.log(err)
+            //console.log(res)
         })
     }
     if (content)

@@ -30,7 +30,7 @@ module.exports.sendRegisterEmail = function (name, email, confirmationCode)
 			resolve(res)
 		}).catch(err => 
 		{
-			console.log(err)
+			//console.log(err)
 			reject(err)
 		});
 	})

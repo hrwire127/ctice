@@ -283,8 +283,6 @@ const upload_desc = async (file, Res) =>
 
     const invalid = await inspectUploadedDescImg(res);
 
-    console.log(invalid)
-
     if (invalid)
     {
         await cloud.destroy(
@@ -293,8 +291,6 @@ const upload_desc = async (file, Res) =>
         throw new UserError(invalid, 400).throw_CS(Res)
     }
 
-    console.log(res.url)
-    console.log(res.public_id)
     return { url: res.url, location: res.public_id }
 }
 
@@ -325,7 +321,6 @@ function cutMention(parent)
                 substring.push(b.text[i]);
                 c = b.text[i + 1]
             }
-            console.log(substring)
             substring = substring.join("")
         }
     })

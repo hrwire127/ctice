@@ -373,13 +373,11 @@ const StyleNum = (props) =>
             if (num === 5)
             {
                 props.onToggle(types[5].style)
-                console.log("none")
                 setNum(num + 1)
             }
             else
             {
                 setNum(num + 1)
-                console.log(num + 1)
                 props.onToggle(types[num + 1].style)
             }
         }
@@ -391,7 +389,6 @@ const StyleNum = (props) =>
         if (num > 1)
         {
             setNum(num - 1)
-            console.log(num - 1)
             props.onToggle(types[num - 1].style);
         }
     };

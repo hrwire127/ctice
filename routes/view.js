@@ -18,7 +18,7 @@ router.get("/:id", tryAsync_SR(async (req, res, next) =>
 {
     const { id } = req.params;
     const user = await getUserdata(req, res)
-    app.render(req, res, `/view/${id}`, { user })
+    app.render(req, res, `/view/${id}`, { user,  styleNonce: res.locals.styleNonce, scriptNonce: res.locals.scriptNonce })
 }))
 
 router.post("/:id/api", apiSecret, tryAsync_CS(async (req, res) =>

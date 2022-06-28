@@ -34,7 +34,7 @@ const BannerEdit = (props) => handleAsync(props, (props) =>
             {
                 if (Mounted) setHtml(res)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(""))
     }, [Mounted])
 
 

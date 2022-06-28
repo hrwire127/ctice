@@ -5,7 +5,7 @@ if (dev)
 }
 
 
-const { NEXT_PUBLIC_DB_HOST, NEXT_PUBLIC_DR_PORT, NEXT_PUBLIC_DB_PORT } = process.env;
+const { DB_DEV_URL, NEXT_PUBLIC_DR_PORT, NEXT_PUBLIC_DB_PORT, DB_PRODUCTION_URL } = process.env;
 
 const next = require('next')
 const express = require('express')
@@ -13,10 +13,12 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const mongoose = require('mongoose');
 
+const dburl = DB_PRODUCTION_URL //|| DB_DEV_URL
+
 const path = require('path');
 const cors = require('cors');
 
-mongoose.connect(NEXT_PUBLIC_DB_HOST, {
+mongoose.connect(dburl, {
     useNewUrlParser: true
 })
 const db = mongoose.connection;
@@ -65,41 +67,6 @@ app.prepare().then(() =>
     server.use(mongoSanitize())
     server.use(helmet({ contentSecurityPolicy: false }))
 
-    // const scriptUrls = [
-    // ]
-    // const styleUrls = [
-    //     "https://api.mapbox.com/",
-    //     "https://api.tiles.mapbox.com/",
-    //     "https://font.googleapis.com/"
-    // ]
-    // const connectUrls = [
-    //     "https://api.mapbox.com/",
-    //     "https://a.tiles.mapbox.com/",
-    //     "https://b.tiles.mapbox.com/",
-    //     "https://events.mapbox.com/",
-    // ]
-
-    // const fontUrls = []
-
-    // server.use(helmet.contentSecurityPolicy({
-    //     directives: {
-    //         defaultSrc: [],
-    //         connectSrc: ["'self'", ...connectUrls],
-    //         scriptSrc: ["'unsafe-inline'", "'self'",
-    //             ...scriptUrls],
-    //         styleSrc: ["'self'", "'unsafe-inline'", ...styleUrls],
-    //         workerSrc: ["'self'", "blob:"],
-    //         objectSrc: [],
-    //         imgSrc: [
-    //             "'self'",
-    //             "blob:",
-    //             "data:",
-    //             `https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/v1654542329/ctice`
-    //         ],
-    //         fontSrc: ["'self'", ...fontUrls]
-    //     }
-    // }))
-
     server.use(passport.initialize())
     server.use(passport.session())
 
@@ -108,24 +75,25 @@ app.prepare().then(() =>
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
-    server.use('/', index)
-    server.use('/view', view)
-    server.use('/edit', edit)
-    server.use('/user', user)
-    server.use('/admin', admin)
-
     const options = {
         directives: {
             'default-src': ["'self'"],
-            'script-src': [(req, res) => `'nonce-${res.locals.nonce}' 'strict-dynamic'`],
+            'script-src': [(req, res) => `'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
         },
     }
 
     server.use((req, res, next) =>
     {
         res.locals.nonce = uuidv4()
+        console.log("created")
         helmet.contentSecurityPolicy(options)(req, res, next)
     })
+
+    server.use('/', index)
+    server.use('/view', view)
+    server.use('/edit', edit)
+    server.use('/user', user)
+    server.use('/admin', admin)
 
     server.get('/*', function (req, res, next)
     {
