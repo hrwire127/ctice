@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Toolbar, Container, Grid, Paper } from '@mui/material';
-import AdminDeclrs from '../AdminDeclrs';
+import AdminDeclrsList from '../AdminDeclrsList';
 import useLoading from '../hooks/useLoading'
 import handleAsync from '../custom/handleAsync'
 import Redirects_CS from '../../utilsCS/CS_Redirects'
@@ -40,7 +40,7 @@ function AdminDeclrs(props)
                 <Grid item xs={12}>
                     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', 
                     overflow: "auto" }}>
-                        {switchLoading(0, () => { if (declarations.length > 0) return (<AdminDeclrs setError={setError} declarations={declarations} onDelete={onDelete} />) })}
+                        {switchLoading(0, () => { if (declarations.length > 0) return (<AdminDeclrsList setError={setError} declarations={declarations} onDelete={onDelete} />) })}
                     </Paper>
                 </Grid>
             </Grid>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
 import { RemoveRedEye, Build, Delete, Accessible } from '@mui/icons-material';
-import Title from './Title';
 import Link from 'next/link';
 import { makeStyles } from '@mui/styles';
 import Redirects_CS from '../utilsCS/CS_Redirects'
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function AdminDeclrs(props)
+export default function AdminDeclrsList(props)
 {
     const { declarations, onDelete, noControlls, setError } = props
     const classes = useStyles();
