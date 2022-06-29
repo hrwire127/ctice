@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps, globals })
 
     return (
         <Layout globals={globals}>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <ErrorBoundary>
                 <Component {...pageProps} />
             </ErrorBoundary>
         </Layout>

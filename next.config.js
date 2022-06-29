@@ -16,4 +16,8 @@ module.exports = {
     images: {
         domains: [`https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/v1654542329/ctice`],
     },
+    reactStrictMode: true,
+    compiler: {
+      emotion: true,
+    },
 }
