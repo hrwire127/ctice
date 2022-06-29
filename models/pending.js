@@ -63,9 +63,11 @@ PendingSchema.methods.processPending = async function (req, res)
                 this.confirmationCode
             ).then(async (res) =>
             {
+                console.log(res)
                 resolve();
             }).catch((err) =>
             {
+                throw new UserError(err.message, err.status)
                 reject()
             })
         }

@@ -32,7 +32,7 @@ function Login(props)
                 .then(async res =>
                 {
                     if (res.error) setAlertMsg(res.error.message, "error")
-                    else if(window.location.href === document.referrer)
+                    else if (window.location.href === document.referrer && document.referrer)
                     {
                         window.location = process.env.NEXT_PUBLIC_DR_HOST
                     }

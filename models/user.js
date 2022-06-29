@@ -146,10 +146,12 @@ UserSchema.statics.processLogin = async function (req, res, next)
             }
             else if (!user) 
             {
+                console.log(info)
                 throw new UserError(info.message, 404).throw_CS(res)
             }
             else
             {
+                //artiom nem rw password for dev db
                 if (user.status !== "Active")
                 {
                     throw new UserError(...Object.values(errorMessages.disabledUser)).throw_CS(res)

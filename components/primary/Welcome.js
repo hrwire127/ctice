@@ -65,7 +65,7 @@ function Welcome(props)
     }
 
 
-    return loadingSwitch(0, () => (
+    return (
         <Box
             component="main"
             className={classes.Container}
@@ -80,93 +80,97 @@ function Welcome(props)
                 </Typography>
             </Box>
             <Box
-                className={classes.FrontInfo}
-                sx={{ mb: 2, mt: 3 }}
                 onSubmit={errCheck}
                 component="form"
                 noValidate
             >
-                <Box className={classes.Profile}>
-                    <UploadIcon
-                        setImage={setImage}
-                        image={image}
-                        noWindow
-                    />
-                </Box>
-                <Box className={classes.SecInfo}>
-                    <TextField
-                        margin="normal"
-                        inputProps={{ maxLength: 10 }}
-                        required
-                        error={PasswordError}
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="new-password"
-                        onKeyPress={checkPasswordKey}
-                    />
-                    <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
-                    <LocationSearch
-                        setLocation={setLocation}
-                        error={LocationError}
-                        onKeyPress={checkLocationKey}
-                        limit={5}
-                    />
-                </Box>
-            </Box>
 
-            <TextArea
-                styles={classes.Editor}
-                placeholder="About you"
-                setData={setEditorState}
-                error={alert && alert.type === "error"}
-                checkDescKey={checkDescKey}
-            />
-
-            <Box className={classes.Connections}>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    name="twitter"
-                    label="Twitter Link"
-                    type="twitter"
-                    id="twitter"
-                />
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    name="facebook"
-                    label="Facebook Link"
-                    type="facebook"
-                    id="facebook"
-                />
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    name="linkedin"
-                    label="Linkedin Link"
-                    type="linkedin"
-                    id="linkedin"
-                />
-            </Box>
-
-            {loadingSwitch(0, () =>
-            (<Box sx={{ textAlign: "center" }}>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
+                <Box
+                    className={classes.FrontInfo}
+                    sx={{ mb: 2, mt: 3 }}
                 >
-                    Register
-                </Button>
-            </Box>))}
+                    <Box className={classes.Profile}>
+                        <UploadIcon
+                            setImage={setImage}
+                            image={image}
+                            noWindow
+                        />
+                    </Box>
+                    <Box className={classes.SecInfo}>
+                        <TextField
+                            margin="normal"
+                            inputProps={{ maxLength: 10 }}
+                            required
+                            error={PasswordError}
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="new-password"
+                            onKeyPress={checkPasswordKey}
+                        />
+                        <FormHelperText error={PasswordError}>{helperPasswordText}</FormHelperText>
+                        <LocationSearch
+                            setLocation={setLocation}
+                            error={LocationError}
+                            onKeyPress={checkLocationKey}
+                            limit={5}
+                        />
+                    </Box>
+                </Box>
+
+                <TextArea
+                    styles={classes.Editor}
+                    placeholder="About you"
+                    setData={setEditorState}
+                    error={alert && alert.type === "error"}
+                    checkDescKey={checkDescKey}
+                />
+
+                <Box className={classes.Connections}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="twitter"
+                        label="Twitter Link"
+                        type="twitter"
+                        id="twitter"
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="facebook"
+                        label="Facebook Link"
+                        type="facebook"
+                        id="facebook"
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                        name="linkedin"
+                        label="Linkedin Link"
+                        type="linkedin"
+                        id="linkedin"
+                    />
+                </Box>
+
+                {loadingSwitch(0, () =>
+                (<Box sx={{ textAlign: "center" }}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Register
+                    </Button>
+                </Box>))}
+            </Box>
         </Box>
-    ))
+    )
 }
 
 export default Welcome

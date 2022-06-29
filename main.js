@@ -13,7 +13,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const mongoose = require('mongoose');
 
-const dburl = DB_PRODUCTION_URL //|| DB_DEV_URL
+const dburl = DB_DEV_URL//DB_PRODUCTION_URL 
 
 const path = require('path');
 const cors = require('cors');
@@ -41,12 +41,12 @@ const admin = require("./routes/admin")
 const User = require('./models/user');
 const UserError = require("./utilsSR/general/UserError");
 const Redirects_SR = require('./utilsSR/general/SR_Redirects');
-const sessionConfig = require('./config/session.config')
 const errorMessages = require('./utilsSR/rules/errorMessages')
 const { v4: uuidv4 } = require('uuid');
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require("passport")
 const flash = require("flash")
 const LocalStrategy = require("passport-local");
@@ -57,8 +57,35 @@ const cspoption = {
     directives: {
         'default-src': ["'self'"],
         'script-src': [(req, res) => `'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
-        "style-src": ["'self' https://fonts.googleapis.com 'unsafe-inline'"]
+        "style-src": ["'self' https://fonts.googleapis.com 'unsafe-inline'"],
+        "img-src": ["'self' https://res.cloudinary.com"]
     },
+}
+
+
+const store = MongoStore.create({
+    mongoUrl: dburl,
+    secret: process.env.NEXT_PUBLIC_SECRET,
+    touchAfter: 24 * 3600
+})
+
+store.on("error", function (err) 
+{
+    console.log(err)
+})
+
+const sessionConfig = {
+    name: "_s",
+    secret: process.env.NEXT_PUBLIC_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        // secure: true, https
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+    store
 }
 
 app.prepare().then(() =>

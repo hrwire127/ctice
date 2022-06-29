@@ -47,6 +47,7 @@ TokenSchema.methods.processReset = async function (req, res)
                 resolve();
             }).catch((err) =>
             {
+                throw new UserError(err.message, err.status)
                 reject()
             })
         }
