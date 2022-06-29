@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { app } = require("../main")
 const Declaration = require("../models/declaration")
-const UserError = require('../utilsSR/general/userError')
+const UserError = require('../utilsSR/general/UserError')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const errorMessages = require("../utilsSR/rules/errorMessages")
 const { tryAsync_CS, apiSecret, tryAsync_SR } = require('../utilsSR/middlewares/_m_basic')
