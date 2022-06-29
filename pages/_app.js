@@ -8,6 +8,14 @@ import { determRendering, getGlobals } from '../utilsCS/_basic'
 
 function MyApp({ Component, pageProps, globals })
 {
+
+    useEffect(() =>
+    {
+        const jssStyles = document.querySelector('#jss-server-side')
+        if (jssStyles && jssStyles.parentNode)
+            jssStyles.parentNode.removeChild(jssStyles)
+    }, [])
+
     return (
         <>
             <Head>
