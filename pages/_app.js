@@ -7,6 +7,7 @@ import App from 'next/app';
 import ErrorBoundary from '../components/ErrorBoundary'
 import { determRendering, getGlobals } from '../utilsCS/_basic'
 import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
 
 function createEmotionCache()
 {
