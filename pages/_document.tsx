@@ -54,6 +54,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
 
         return {
             ...initialProps,
+            nonce,
             styles: [
                 <React.Fragment key="styles">
                     {initialProps.styles}

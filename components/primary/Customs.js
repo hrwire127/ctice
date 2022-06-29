@@ -119,12 +119,12 @@ function Customs(props)
                     aria-label="Theme"
                 >
                     <Box className={classes.Container}>
-                        <img src={theme_white.src}
+                        <img crossOrigin="anonymous" src={theme_white.src}
                             style={theme === "light"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleTheme(e, "light")} />
-                        <img src={theme_black.src}
+                        <img crossOrigin="anonymous" src={theme_black.src}
                             style={theme === "dark"
                                 ? ImgSelected
                                 : ImgEmpty}
@@ -142,12 +142,12 @@ function Customs(props)
                     aria-label="Style"
                 >
                     <Box className={classes.Container}>
-                        <img src={theme === "light" ? full_white.src : full_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? full_white.src : full_black.src}
                             style={style === "full"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleStyle(e, "full")} />
-                        <img src={theme === "light" ? compact_white.src : compact_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? compact_white.src : compact_black.src}
                             style={style === "compact"
                                 ? ImgSelected
                                 : ImgEmpty}
@@ -165,12 +165,12 @@ function Customs(props)
                     aria-label="Sort"
                 >
                     <Box className={classes.Container}>
-                        <img src={theme === "light" ? date_white.src : date_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? date_white.src : date_black.src}
                             style={sort === "date"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleSort(e, "date")} />
-                        <img src={theme === "light" ? score_white.src : score_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? score_white.src : score_black.src}
                             style={sort === "score"
                                 ? ImgSelected
                                 : ImgEmpty}
