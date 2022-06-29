@@ -5,17 +5,10 @@ import Document, {
     Main,
     NextScript,
     DocumentContext,
-} from 'next/document';
-import { ServerStyleSheet } from 'styled-components';
+} from 'next/document'
+import { ServerStyleSheet } from 'styled-components'
 import { ServerStyleSheets } from '@mui/styles';
-import { ServerResponse } from 'http';
-import createEmotionServer from '@emotion/server/create-instance';
-import createCache from '@emotion/cache';
-
-function createEmotionCache()
-{
-    return createCache({ key: 'css', prepend: true });
-}
+import { ServerResponse } from 'http'
 
 type ResponseWithNonce = ServerResponse & { locals: { nonce?: string } }
 
@@ -32,41 +25,20 @@ class CustomDocument extends Document<CustomDocumentProps> {
         const sheets = new ServerStyleSheets();
 
         const originalRenderPage = ctx.renderPage;
-
-
-        const cache = createEmotionCache();
-        const { extractCriticalToChunks } = createEmotionServer(cache);
-
         try
         {
             ctx.renderPage = () =>
                 originalRenderPage({
-                    enhanceApp: (App) => props =>
-                        function EnhanceApp(props)
-                        {
-                            return sheet.collectStyles(
-                                sheets.collect(<App emotionCache={cache} {...props} />),
-                            )
-                        },
-
+                    enhanceApp: App => props =>
+                        sheet.collectStyles(
+                            sheets.collect(<App {...props} />),
+                        ),
                 })
 
             const initialProps = await Document.getInitialProps(ctx)
 
-
-            const emotionStyles = extractCriticalToChunks(initialProps.html);
-            const emotionStyleTags = emotionStyles.styles.map((style) => (
-                <style
-                    data-emotion={`${style.key} ${style.ids.join(' ')}`}
-                    key={style.key}
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: style.css }}
-                />
-            ));
-
             return {
                 ...initialProps,
-                emotionStyleTags,
                 nonce,
                 styles: [
                     <React.Fragment key="styles">
@@ -87,10 +59,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
         return (
             <Html>
                 {/* pass it to Next Head */}
-                <Head nonce={this.props.nonce} >
-                    {this.props.emotionStyleTags}
-                </Head>
-
+                <Head nonce={this.props.nonce} />
                 {/* <Head>
                     <title>Ctice</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
