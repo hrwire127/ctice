@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main")
-const UserError = require('../utilsSR/general/UserError')
+const UserError = require('../utilsSR/general/userError')
 const Declaration = require("../models/declaration")
 const Comment = require("../models/comment")
 const Reply = require("../models/reply")

@@ -1,4 +1,4 @@
-const UserError = require('../general/UserError');
+const UserError = require('../general/userError');
 const errorMessages = require('../rules/errorMessages');
 const Pending = require("../../models/pending")
 const Token = require("../../models/token")

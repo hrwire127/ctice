@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const { genToken } = require('../utilsSR/primary/_p_basic')
 const nodemailer = require('../config/nodemailer')
 const errorMessages = require("../utilsSR/rules/errorMessages")
-const UserError = require('../utilsSR/general/UserError');
+const UserError = require('../utilsSR/general/userError');
 const User = require("./user");
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 

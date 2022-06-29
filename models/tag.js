@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const UserError = require('../utilsSR/general/UserError');
+const UserError = require('../utilsSR/general/userError');
 const errorMessages = require("../utilsSR/rules/errorMessages")
 
 const TagSchema = new Schema({

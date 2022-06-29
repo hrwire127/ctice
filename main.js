@@ -39,7 +39,7 @@ const user = require("./routes/user")
 const admin = require("./routes/admin")
 
 const User = require('./models/user');
-const UserError = require("./utilsSR/general/UserError");
+const UserError = require("./utilsSR/general/userError");
 const Redirects_SR = require('./utilsSR/general/SR_Redirects');
 const errorMessages = require('./utilsSR/rules/errorMessages')
 const { v4: uuidv4 } = require('uuid');

@@ -1,5 +1,5 @@
 let streamifier = require('streamifier');
-const UserError = require('../general/UserError');
+const UserError = require('../general/userError');
 const { cloud } = require('../../cloud/storage');
 const { inspectPdf, inspectProfile, inspectGallery, inspectBanner, inspectNotification, inspectUploadedDescImg } = require('../../utilsSR/primary/_p_inspect')
 

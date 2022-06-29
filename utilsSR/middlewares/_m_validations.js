@@ -1,4 +1,4 @@
-const UserError = require('../general/UserError');
+const UserError = require('../general/userError');
 const {
     declarationSchema, reguserSchema, pendingSchema, loguserSchema, changeSchema,
     commentSchema, gallerySchema, bannerSchema, notificationSchema, tagSchema

@@ -1,5 +1,5 @@
 const Redirects_SR = require('../general/SR_Redirects');
-const UserError = require('../general/UserError');
+const UserError = require('../general/userError');
 const errorMessages = require('../rules/errorMessages');
 const User = require("../../models/user")
 

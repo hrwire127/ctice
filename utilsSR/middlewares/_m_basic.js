@@ -1,4 +1,4 @@
-const UserError = require('../general/UserError');
+const UserError = require('../general/userError');
 
 function tryAsync_SR(func)
 {
