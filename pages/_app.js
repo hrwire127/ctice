@@ -27,6 +27,9 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, gl
 
     return (
         <CacheProvider value={emotionCache}>
+            <Head>
+                <meta name="viewport" content="initial-scale=1, width=device-width" />
+            </Head>
             <Layout globals={globals}>
                 <ErrorBoundary>
                     <Component {...pageProps} />
