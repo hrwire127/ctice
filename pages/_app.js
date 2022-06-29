@@ -8,7 +8,6 @@ import { determRendering, getGlobals } from '../utilsCS/_basic'
 
 function MyApp({ Component, pageProps, globals })
 {
-
     useEffect(() =>
     {
         const jssStyles = document.querySelector('#jss-server-side')
@@ -17,15 +16,9 @@ function MyApp({ Component, pageProps, globals })
     }, [])
 
     return (
-        <>
-            <Head>
-                <title>Ctice</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
-            <Layout globals={globals}>
-                <Component {...pageProps} />
-            </Layout>
-        </>
+        <Layout globals={globals}>
+            <Component {...pageProps} />
+        </Layout>
     )
 }
 MyApp.getInitialProps = async (appContext) =>

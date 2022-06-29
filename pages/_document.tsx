@@ -6,8 +6,8 @@ import Document, {
     NextScript,
     DocumentContext,
 } from 'next/document'
-import { ServerStyleSheets } from '@mui/styles';
 import { ServerStyleSheet } from 'styled-components'
+import { ServerStyleSheets } from '@mui/styles';
 import { ServerResponse } from 'http'
 
 type ResponseWithNonce = ServerResponse & { locals: { nonce?: string } }
@@ -21,15 +21,15 @@ class CustomDocument extends Document<CustomDocumentProps> {
     {
         const nonce = (ctx.res as ResponseWithNonce).locals.nonce
 
-        const sheets = new ServerStyleSheets();
         const sheet = new ServerStyleSheet();
+        const sheets = new ServerStyleSheets();
 
         const originalRenderPage = ctx.renderPage;
         try
         {
             ctx.renderPage = () =>
                 originalRenderPage({
-                    enhanceApp: (App) => (props) =>
+                    enhanceApp: App => props =>
                         sheet.collectStyles(
                             sheets.collect(<App {...props} />),
                         ),
@@ -60,6 +60,10 @@ class CustomDocument extends Document<CustomDocumentProps> {
             <Html>
                 {/* pass it to Next Head */}
                 <Head nonce={this.props.nonce} />
+                {/* <Head>
+                    <title>Ctice</title>
+                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                </Head> */}
                 <body>
                     <Main />
                     {/* pass it to Next scripts */}

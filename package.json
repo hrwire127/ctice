@@ -76,7 +76,7 @@
     "recharts": "^2.1.9",
     "sanitize-html": "^2.7.0",
     "streamifier": "^0.1.1",
-    "styled-components": "^5.3.3",
+    "styled-components": "^5.3.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
