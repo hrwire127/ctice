@@ -25,43 +25,32 @@ class CustomDocument extends Document<CustomDocumentProps> {
         const sheet = new ServerStyleSheet();
 
         const originalRenderPage = ctx.renderPage;
+        try
+        {
+            ctx.renderPage = () =>
+                originalRenderPage({
+                    enhanceApp: (App) => (props) =>
+                        sheet.collectStyles(
+                            sheets.collect(<App {...props} />),
+                        ),
+                })
 
-        // ctx.renderPage = () =>
-        //     originalRenderPage({
-        //         enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
-        //     });
+            const initialProps = await Document.getInitialProps(ctx)
 
-        // // ctx.renderPage = () =>
-        // //     originalRenderPage({
-        // //         enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
-        // //     });
-
-        // const initialProps = await Document.getInitialProps(ctx)
-
-        // return {
-        //     ...initialProps, nonce
-        // }
-
-        ctx.renderPage = () =>
-            originalRenderPage({
-                enhanceApp: (App) => (props) =>
-                    sheet.collectStyles(
-                        sheets.collect(<App {...props} />),
-                    ),
-            })
-
-        const initialProps = await Document.getInitialProps(ctx)
-
-        return {
-            ...initialProps,
-            nonce,
-            styles: [
-                <React.Fragment key="styles">
-                    {initialProps.styles}
-                    {sheets.getStyleElement()}
-                    {sheet.getStyleElement()}
-                </React.Fragment>,
-            ],
+            return {
+                ...initialProps,
+                nonce,
+                styles: [
+                    <React.Fragment key="styles">
+                        {initialProps.styles}
+                        {sheets.getStyleElement()}
+                        {sheet.getStyleElement()}
+                    </React.Fragment>,
+                ],
+            }
+        } finally
+        {
+            sheet.seal()
         }
     }
 
