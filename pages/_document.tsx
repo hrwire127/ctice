@@ -47,7 +47,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                         return function EnhanceApp(props)
                         {
                             return sheet.collectStyles(
-                                sheets.collect(<App {...(Object.assign({ emotionCache: cache }, props))} />),
+                                sheets.collect(<App {...props} emotionCache={cache} />),
                             )
                         }
                     }
@@ -100,7 +100,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 <Head nonce={this.props.nonce} >
                     <title>Ctice</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                    {this.props.emotionStyleTags}
+                    {(this.props as any).emotionStyleTags}
                 </Head>
                 <body>
                     <Main />
