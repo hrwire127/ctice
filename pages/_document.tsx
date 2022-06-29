@@ -47,7 +47,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                         return function EnhanceApp(props)
                         {
                             return sheet.collectStyles(
-                                sheets.collect(<App {...props} emotionCache={cache} />),
+                                sheets.collect(<App {...(Object.assign({ emotionCache: cache }, props))} />),
                             )
                         }
                     }
