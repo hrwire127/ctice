@@ -86,6 +86,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 <Head nonce={this.props.nonce} >
                     <title>Ctice</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                    {this.props.emotionStyleTags}
                 </Head>
                 <body>
                     <Main />
