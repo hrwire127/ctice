@@ -41,10 +41,14 @@ class CustomDocument extends Document<CustomDocumentProps> {
         {
             ctx.renderPage = () =>
                 originalRenderPage({
-                    enhanceApp: App => props =>
-                        sheet.collectStyles(
-                            sheets.collect(<App emotionCache={cache} {...props} />),
-                        ),
+                    enhanceApp: (App) => props =>
+                        function EnhanceApp(props)
+                        {
+                            return sheet.collectStyles(
+                                sheets.collect(<App emotionCache={cache} {...props} />),
+                            )
+                        },
+
                 })
 
             const initialProps = await Document.getInitialProps(ctx)
@@ -83,7 +87,10 @@ class CustomDocument extends Document<CustomDocumentProps> {
         return (
             <Html>
                 {/* pass it to Next Head */}
-                <Head nonce={this.props.nonce} />
+                <Head nonce={this.props.nonce} >
+                    {this.props.emotionStyleTags}
+                </Head>
+
                 {/* <Head>
                     <title>Ctice</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
