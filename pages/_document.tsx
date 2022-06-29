@@ -60,7 +60,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
             //                 ),
             //<App emotionCache={cache} {...props} />;
 
-            
+
             const initialProps = await Document.getInitialProps(ctx)
 
             const emotionStyles = extractCriticalToChunks(initialProps.html);
@@ -79,7 +79,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 nonce,
                 styles: [
                     <React.Fragment key="styles">
-                        {initialProps.styles}
+                        {...React.Children.toArray(initialProps.styles)}
                         {sheets.getStyleElement()}
                         {sheet.getStyleElement()}
                     </React.Fragment>,
