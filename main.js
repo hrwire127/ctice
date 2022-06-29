@@ -4,7 +4,6 @@ if (dev)
     require('dotenv').config()
 }
 
-
 const { DB_DEV_URL, NEXT_PUBLIC_DR_PORT, NEXT_PUBLIC_DB_PORT, DB_PRODUCTION_URL, NEXT_PUBLIC_SECRET } = process.env;
 
 const next = require('next')
@@ -13,7 +12,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const mongoose = require('mongoose');
 
-const dburl = DB_PRODUCTION_URL || DB_DEV_URL
+const dburl = process.env.DB_PRODUCTION_URL || DB_DEV_URL
 
 const path = require('path');
 const cors = require('cors');
@@ -46,7 +45,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const fileupload = require("express-fileupload");
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const passport = require("passport")
 const flash = require("flash")
 const LocalStrategy = require("passport-local");
@@ -62,12 +61,12 @@ const cspoption = {
     },
 }
 
-
-const store = MongoStore.create({
-    mongoUrl: dburl,
+var store = new MongoDBStore({
+    uri: dburl,
+    collection: 'mySessions',
     secret: NEXT_PUBLIC_SECRET,
     touchAfter: 24 * 3600
-})
+});
 
 store.on("error", function (err) 
 {
