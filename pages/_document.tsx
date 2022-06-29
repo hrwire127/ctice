@@ -41,13 +41,10 @@ class CustomDocument extends Document<CustomDocumentProps> {
         {
             ctx.renderPage = () =>
                 originalRenderPage({
-                    enhanceApp: (App) => props =>
-                    {
-                        Object.assign(props, { emotionCache: cache });
-                        return sheet.collectStyles(
-                            sheets.collect(<App {...props} />),
+                    enhanceApp: (App) => (props) =>
+                        sheet.collectStyles(
+                            sheets.collect(<App {...(Object.assign({ emotionCache: cache }, props))} />),
                         ),
-                    }
                 })
 
             const initialProps = await Document.getInitialProps(ctx)
