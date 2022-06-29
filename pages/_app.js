@@ -6,8 +6,16 @@ import Head from 'next/head'
 import App from 'next/app';
 import ErrorBoundary from '../components/ErrorBoundary'
 import { determRendering, getGlobals } from '../utilsCS/_basic'
+import { CacheProvider } from '@emotion/react';
 
-function MyApp({ Component, pageProps, globals })
+function createEmotionCache()
+{
+    return createCache({ key: 'css', prepend: true });
+}
+
+const clientSideEmotionCache = createEmotionCache();
+
+function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, globals })
 {
     useEffect(() =>
     {
@@ -17,11 +25,13 @@ function MyApp({ Component, pageProps, globals })
     }, [])
 
     return (
-        <Layout globals={globals}>
-            <ErrorBoundary>
-                <Component {...pageProps} />
-            </ErrorBoundary>
-        </Layout>
+        <CacheProvider value={emotionCache}>
+            <Layout globals={globals}>
+                <ErrorBoundary>
+                    <Component {...pageProps} />
+                </ErrorBoundary>
+            </Layout>
+        </CacheProvider>
     )
 }
 MyApp.getInitialProps = async (appContext) =>
