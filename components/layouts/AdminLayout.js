@@ -91,7 +91,7 @@ function AdminLayout(props)
             <CssBaseline />
             <AppBar_ position="absolute" open={open}>
                 <Toolbar>
-                    {windowMaxize && (
+                    {windowMaxSize && (
                         <IconButton
                             edge="start"
                             color="inherit"

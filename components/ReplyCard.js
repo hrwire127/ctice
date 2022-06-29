@@ -90,7 +90,7 @@ function ReplyCard(props)
                                     {initdiff ? (<>{initdiff} ago</>) : (<>{diff} (edited)</>)}
                                 </Typography>
                                 <Box className={classes.Avatar}>
-                                    <Avatar alt={author.username} src={author.profile.url} />
+                                    <Avatar alt={author.username} src={author.profile && author.profile.url ? author.profile.url : ""} />
                                     <Typography variant="h5">
                                         {author.username}
                                     </Typography>

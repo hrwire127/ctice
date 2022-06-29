@@ -125,7 +125,7 @@ function CommentCard(props)
                                     {initDiff ? (<>{initDiff} ago</>) : (<>{diff} (edited)</>)}
                                 </Typography>
                                 <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
-                                    <Avatar alt={author.username} src={author.profile.url} />
+                                    <Avatar alt={author.username} src={author.profile && author.profile.url ? author.profile.url : ""} />
                                     <Typography variant="h5">
                                         {author.username}
                                     </Typography>

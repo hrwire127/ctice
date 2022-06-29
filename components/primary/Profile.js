@@ -29,7 +29,7 @@ function Profile(props)
             <Box className={classes.Content}>
                 <Box className={classes.FrontInfo}>
                     <Box className={classes.Profile}>
-                        <img crossOrigin="anonymous" src={profile.url ? profile.url : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                        <img crossOrigin="anonymous" src={profile ? profile.url ? profile.url : process.env.NEXT_PUBLIC_DEF_PROFILE_URL : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
                             className={classes.Img} />
                     </Box>
                     <Box className={classes.SecInfo}>
