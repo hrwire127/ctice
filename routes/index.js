@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const UserError = require('../utilsSR/general/UserError')
 const Declaration = require("../models/declaration");
 const Tag = require("../models/tag");
 const mongoose = require('mongoose')
