@@ -20,7 +20,8 @@ function createEmotionCache()
 type ResponseWithNonce = ServerResponse & { locals: { nonce?: string } }
 
 type CustomDocumentProps = {
-    nonce?: string
+    nonce?: string,
+    emotionStyleTags?: any
 }
 
 class CustomDocument extends Document<CustomDocumentProps> {
