@@ -79,7 +79,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 nonce,
                 styles: [
                     <React.Fragment key="styles">
-                        {...React.Children.toArray(initialProps.styles)}
+                        {initialProps.styles}
                         {sheets.getStyleElement()}
                         {sheet.getStyleElement()}
                     </React.Fragment>,
