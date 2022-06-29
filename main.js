@@ -12,7 +12,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const mongoose = require('mongoose');
 
-const dburl = process.env.DB_PRODUCTION_URL || DB_DEV_URL
+const dburl = !dev ? process.env.DB_PRODUCTION_URL : DB_DEV_URL
 
 const path = require('path');
 const cors = require('cors');
@@ -149,7 +149,7 @@ app.prepare().then(() =>
         return handle(req, res)
     })
 
-    const port = process.env.PORT || NEXT_PUBLIC_DR_PORT
+    const port = !dev ? process.env.PORT : NEXT_PUBLIC_DR_PORT
 
     server.listen(port, e =>
     {

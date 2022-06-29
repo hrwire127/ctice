@@ -1,3 +1,4 @@
+import * as React from "react"
 import Document, {
     Head,
     Html,
@@ -6,7 +7,7 @@ import Document, {
     DocumentContext,
 } from 'next/document'
 import { ServerStyleSheets } from '@mui/styles';
-
+import { ServerStyleSheet } from 'styled-components'
 import { ServerResponse } from 'http'
 
 type ResponseWithNonce = ServerResponse & { locals: { nonce?: string } }
@@ -21,17 +22,46 @@ class CustomDocument extends Document<CustomDocumentProps> {
         const nonce = (ctx.res as ResponseWithNonce).locals.nonce
 
         const sheets = new ServerStyleSheets();
+        const sheet = new ServerStyleSheet();
+
         const originalRenderPage = ctx.renderPage;
+
+        // ctx.renderPage = () =>
+        //     originalRenderPage({
+        //         enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+        //     });
+
+        // // ctx.renderPage = () =>
+        // //     originalRenderPage({
+        // //         enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+        // //     });
+
+        // const initialProps = await Document.getInitialProps(ctx)
+
+        // return {
+        //     ...initialProps, nonce
+        // }
 
         ctx.renderPage = () =>
             originalRenderPage({
-                enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
-            });
+                enhanceApp: (App) => (props) =>
+                    sheet.collectStyles(
+                        sheets.collect(<App {...props} />),
+                    ),
+            })
 
         const initialProps = await Document.getInitialProps(ctx)
 
-
-        return { ...initialProps, nonce }
+        return {
+            ...initialProps,
+            styles: [
+                <React.Fragment key="styles">
+                    {initialProps.styles}
+                    {sheets.getStyleElement()}
+                    {sheet.getStyleElement()}
+                </React.Fragment>,
+            ],
+        }
     }
 
     render()
