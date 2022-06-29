@@ -9,17 +9,17 @@ const useStyles = (props, preparedImg) => makeStyles((theme) => ({
         alignItems: "center",
         "&:hover": {
             cursor: "pointer",
-            "& div": {
-                background: `linear-gradient(to top, rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${preparedImg}) no-repeat center`,
+            "& img": {
+                // background: `linear-gradient(to top, rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${preparedImg}) no-repeat center`,
             },
             "& svg": {
                 top: "30%",
             }
         },
-        "& div": {
+        "& img": {
             width: "200%",
             height: "100%",
-            background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${preparedImg}) no-repeat center`,
+            // background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${preparedImg}) no-repeat center`,
             backgroundSize: "cover",
             borderRadius: 4,
             borderColor: "primary.main",

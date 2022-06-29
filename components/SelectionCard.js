@@ -10,7 +10,9 @@ function SelectionCard(props)
 
     return checked
         ? (<Paper className={classes.ContainerNormal}>
-            <div
+            <img
+                src={image ? image : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                crossOrigin="anonymous"
                 alt="Picture"
             />
             <Check
@@ -22,7 +24,9 @@ function SelectionCard(props)
             onClick={() => setImage(image)}
             className={classes.ContainerChecked}
         >
-            <div
+            <img
+                src={image ? image : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                crossOrigin="anonymous"
                 alt="Picture"
             />
         </Paper>)

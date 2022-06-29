@@ -1,11 +1,5 @@
 import React from 'react'
-import
-{
-    Paper, Typography, Box, ButtonTypeMap,
-    Drawer, CssBaseline, AppBar, Toolbar, List, Divider,
-    ListItem, ListItemButton, ListItemIcon, ListItemText,
-    InboxIcon, MailIcon, Button, IconButton
-} from '@mui/material'
+import { Box } from '@mui/material'
 import useStyles from '../assets/styles/_SelectionsList'
 import SelectionCard from './SelectionCard'
 

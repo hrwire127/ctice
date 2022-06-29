@@ -130,7 +130,7 @@ function Change(props)
 				>
 					<Box className={classes.Profile}>
 						<UploadIcon
-							profile={profile.url}
+							profile={profile ? profile.url : null}
 							image={image}
 							setImage={setImage}
 							setOpen={setOpen}

@@ -42,7 +42,9 @@ function UploadContainer(props)
                 Add
             </Button>
             <Box className={classes.Profile}>
-                <div
+                <img
+                    src={image ? image : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                    crossOrigin="anonymous"
                     alt="Picture"
                 />
                 <input

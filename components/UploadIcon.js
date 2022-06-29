@@ -33,7 +33,9 @@ function UploadIcon(props)
         onClick={Focus}
         className={classes.Profile}
     >
-        <div
+        <img
+            src={preparedImg ? preparedImg : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+            crossOrigin="anonymous"
             alt="Picture"
         />
         <input

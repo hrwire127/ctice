@@ -5,10 +5,10 @@ const useStyles = makeStyles(theme => ({
         width: 100,
         height: 100,
         position: "relative",
-        "& div": {
+        "& img": {
             width: "100%",
             height: "100%",
-            background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${image}) no-repeat center`,
+            // background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${image}) no-repeat center`,
             backgroundSize: "cover",
             borderRadius: 1,
             borderColor: "primary.main",
@@ -26,15 +26,15 @@ const useStyles = makeStyles(theme => ({
         height: 100,
         "&:hover": {
             cursor: "pointer",
-            "& div": {
-                background: `linear-gradient(rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${image}) no-repeat center`,
+            "& img": {
+                // background: `linear-gradient(rgb(0 0 0 / 71%), rgb(0 0 0 / 71%)), url(${image}) no-repeat center`,
                 backgroundSize: "cover",
             }
         },
-        "& div": {
+        "& img": {
             width: "100%",
             height: "100%",
-            background: `url(${image}) no-repeat center`,
+            // background: `url(${image}) no-repeat center`,
             backgroundSize: "cover",
             borderRadius: 1,
             borderColor: "primary.main",
