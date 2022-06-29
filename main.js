@@ -149,9 +149,11 @@ app.prepare().then(() =>
         return handle(req, res)
     })
 
-    server.listen(NEXT_PUBLIC_DR_PORT, e =>
+    const port = process.env.PORT || NEXT_PUBLIC_DR_PORT
+
+    server.listen(port, e =>
     {
         if (e) throw e;
-        console.log(`server started ${NEXT_PUBLIC_DR_PORT}`)
+        console.log(`server started ${port}`)
     })
 })
