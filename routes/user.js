@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { app } = require("../main");
-const UserError = require('../utilsSR/general/userError')
+const UserError = require('../utilsSR/general/UserError')
 const Redirects_SR = require('../utilsSR/general/SR_Redirects');
 const Pending = require("../models/pending")
 const Declaration = require("../models/declaration")
