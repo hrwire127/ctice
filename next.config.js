@@ -9,15 +9,15 @@ module.exports = {
         //     test: /plugin\.css$/,
         //     use:['style-loader','css-loader']
         // })
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            '@mui/styled-engine': '@mui/styled-engine-sc',
+        };
         return config
     }, devIndicators: {
         buildActivity: false
     },
     images: {
         domains: [`https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/v1654542329/ctice`],
-    },
-    reactStrictMode: true,
-    compiler: {
-      emotion: true,
     },
 }

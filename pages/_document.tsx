@@ -59,11 +59,11 @@ class CustomDocument extends Document<CustomDocumentProps> {
         return (
             <Html>
                 {/* pass it to Next Head */}
-                <Head nonce={this.props.nonce} />
-                {/* <Head>
+                {/* <Head nonce={this.props.nonce} /> */}
+                <Head nonce={this.props.nonce} >
                     <title>Ctice</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                </Head> */}
+                </Head>
                 <body>
                     <Main />
                     {/* pass it to Next scripts */}
