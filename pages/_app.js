@@ -4,6 +4,7 @@ import "../assets/styles/body.css"
 import "../assets/styles/TextArea.css"
 import Head from 'next/head'
 import App from 'next/app';
+import ErrorBoundary from '../components/ErrorBoundary'
 import { determRendering, getGlobals } from '../utilsCS/_basic'
 
 function MyApp({ Component, pageProps, globals })
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps, globals })
 
     return (
         <Layout globals={globals}>
-            <Component {...pageProps} />
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <Component {...pageProps} />
+            </ErrorBoundary>
         </Layout>
     )
 }
