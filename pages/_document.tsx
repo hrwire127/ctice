@@ -43,7 +43,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 originalRenderPage({
                     enhanceApp: (App) => props =>
                     {
-                        props.emotionCache = cache
+                        Object.assign(props, { emotionCache: cache });
                         return sheet.collectStyles(
                             sheets.collect(<App {...props} />),
                         ),
