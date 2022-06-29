@@ -16,7 +16,7 @@ import score_white from "../../assets/images/score-white.png"
 import date_black from "../../assets/images/date-black.png"
 import date_white from "../../assets/images/date-white.png"
 import useWindowSize from '../hooks/useWindowSize'
-
+ 
 function Customs(props)
 {
     const { user, setThemeLight, light, setSortCtx, setStyleCtx, setError } = props;

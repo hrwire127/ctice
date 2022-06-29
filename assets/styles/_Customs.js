@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     Body: {
         flexGrow: 1,
         padding: "24px",
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
             fontSize: 40
         },
     }
-});
+}));
 
 
 export default useStyles;
