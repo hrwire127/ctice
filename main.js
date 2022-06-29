@@ -5,7 +5,7 @@ if (dev)
 }
 
 
-const { DB_DEV_URL, NEXT_PUBLIC_DR_PORT, NEXT_PUBLIC_DB_PORT, DB_PRODUCTION_URL } = process.env;
+const { DB_DEV_URL, NEXT_PUBLIC_DR_PORT, NEXT_PUBLIC_DB_PORT, DB_PRODUCTION_URL, NEXT_PUBLIC_SECRET } = process.env;
 
 const next = require('next')
 const express = require('express')
@@ -13,7 +13,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const mongoose = require('mongoose');
 
-const dburl = DB_DEV_URL//DB_PRODUCTION_URL 
+const dburl = DB_PRODUCTION_URL || DB_DEV_URL
 
 const path = require('path');
 const cors = require('cors');
@@ -65,7 +65,7 @@ const cspoption = {
 
 const store = MongoStore.create({
     mongoUrl: dburl,
-    secret: process.env.NEXT_PUBLIC_SECRET,
+    secret: NEXT_PUBLIC_SECRET,
     touchAfter: 24 * 3600
 })
 
@@ -76,7 +76,7 @@ store.on("error", function (err)
 
 const sessionConfig = {
     name: "_s",
-    secret: process.env.NEXT_PUBLIC_SECRET,
+    secret: NEXT_PUBLIC_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
