@@ -1,3 +1,4 @@
+import * as React from 'react'; //<M+
 import ErrorPage from './ErrorPage'
 
 class ErrorBoundary extends React.Component
@@ -26,7 +27,7 @@ class ErrorBoundary extends React.Component
         if (this.state.hasError)
         {
             // You can render any custom fallback UI
-            return (<ErrorPage message="Client Error" status={500}/>
+            return (<ErrorPage message="Client Error" status={500} />
             )
         }
 
