@@ -13,6 +13,7 @@ import Link from 'next/link'
 import useLocalStorage from "../hooks/useLocalStorage"
 import useWindowSize from '../hooks/useWindowSize';
 import useStyles from "../../assets/styles/_Layout"
+import BackToTop from '../BackToTop'
 
 const drawerWidth = 240;
 
@@ -145,16 +146,19 @@ function AdminLayout(props)
 
             <Box
                 component="main"
+                id="container"
                 sx={{
                     backgroundColor: (theme) =>
                         theme.palette.background.default,
                     flexGrow: 1,
                     height: '100vh',
                     overflow: 'auto',
-                    paddingRight: 0 
+                    paddingRight: 0
                 }}
             >
+                <Box id="back-to-top-anchor" />
                 {props.children}
+                <BackToTop />
             </Box>
         </Box>
     );

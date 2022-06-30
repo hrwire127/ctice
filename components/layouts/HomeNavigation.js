@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react'
 import
 {
     Button, Box,
@@ -6,13 +6,12 @@ import
     List, ListItem,
     ListItemText, ListItemButton,
     SwipeableDrawer, IconButton
-} from '@mui/material';
+} from '@mui/material'
 import Link from 'next/link'
-import useStyles from '../../assets/styles/_NavLayout';
+import useStyles from '../../assets/styles/_NavLayout'
 import { useRouter } from 'next/router'
-import FixedBanner from "../FixedBanner"
-import FullBanner from '../FullBanner';
-import useWindowSize from '../hooks/useWindowSize';
+import useWindowSize from '../hooks/useWindowSize'
+import BackToTop from '../BackToTop'
 
 function HomeNavigation(props)
 {
@@ -76,7 +75,7 @@ function HomeNavigation(props)
             <Item text="Home" url="/" />
             <Item text="Login" url="/user/login" />
             <Item text="Register" url="/user/register" />
-            <Item text="Profile" url="/user/profile" />
+            {/* <Item text="Profile" url="/user/profile" /> */}
         </List>
     );
 
@@ -104,8 +103,13 @@ function HomeNavigation(props)
                 {drawer}
             </Box>)
         }
-        <Box className={classes.Main}>
+        <Box
+            className={classes.Main}
+            id="container"
+        >
+            <Box id="back-to-top-anchor" />
             {props.children}
+            <BackToTop />
         </Box>
     </Box >
 }

@@ -13,7 +13,6 @@ import { styleCompact, styleFull } from '../context/styleEnum'
 import Loading from "../Loading"
 import Header from '../Header'
 import ErrorPage from '../ErrorPage'
-import BackToTop from '../BackToTop'
 
 function Layout(props)
 {
@@ -132,9 +131,7 @@ function Layout(props)
                                                 {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
                                                 <Box sx={Container}
                                                 >
-                                                    <Box id="back-to-top-anchor" />
                                                     {childrenwprops}
-                                                    <BackToTop />
                                                 </Box>
                                                 <div className="cover"></div>
                                             </>)

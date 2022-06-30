@@ -18,6 +18,7 @@ import FullBanner from '../FullBanner'
 import handleAsync from '../custom/handleAsync'
 import Redirects_CS from '../../utilsCS/CS_Redirects'
 import useWindowSize from '../hooks/useWindowSize'
+import BackToTop from '../BackToTop'
 
 const UserNavigation = (props) => handleAsync(props, (props) =>
 {
@@ -209,8 +210,11 @@ const UserNavigation = (props) => handleAsync(props, (props) =>
         <Box
             component="main"
             className={classes.Content}
+            id="container"
         >
+            <Box id="back-to-top-anchor" />
             {props.children}
+            <BackToTop />
         </Box>
         <Main />
 

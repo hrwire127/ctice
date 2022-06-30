@@ -1,13 +1,39 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Fab, Zoom, useScrollTrigger } from '@mui/material';
 import { KeyboardArrowUp, } from '@mui/icons-material';
 
 function BackToTop(props)
 {
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 100
-    });
+    const [trigger, setTrigger] = useState(false)
+    const triggerValue = 600; 
+
+    // const trigger = useScrollTrigger({
+    //     disableHysteresis: true,
+    //     threshold: 0.00
+    // });
+
+
+    useEffect(() =>
+    {
+        const container = document.querySelector('#container')
+        if (container)
+        {
+            container.addEventListener('scroll', () =>
+            {
+                if (container)
+                {
+                    if(container.scrollTop > triggerValue)
+                    {
+                        setTrigger(true)
+                    }
+                    else
+                    {
+                        setTrigger(false)
+                    }
+                }
+            });
+        }
+    }, []);
 
     const handleClick = event =>
     {

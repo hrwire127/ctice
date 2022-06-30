@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         flexDirection: "column",
         width: "auto",
-        p: 8
+        padding: 8
     },
     Avatar: {
         display: 'flex', 

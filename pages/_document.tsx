@@ -98,8 +98,6 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 {/* pass it to Next Head */}
                 {/* <Head nonce={this.props.nonce} /> */}
                 <Head nonce={this.props.nonce} >
-                    <title>Ctice</title>
-                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                     {(this.props as any).emotionStyleTags}
                 </Head>
                 <body>
