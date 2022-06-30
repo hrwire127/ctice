@@ -77,7 +77,7 @@ class CustomDocument extends Document<CustomDocumentProps> {
                 ...initialProps,
                 emotionStyleTags,
                 nonce,
-                styles: [
+                styles: [ //fix admin + the scroll up btn
                     <React.Fragment key="styles">
                         {initialProps.styles}
                         {sheets.getStyleElement()}
