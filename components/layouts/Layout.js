@@ -112,7 +112,7 @@ function Layout(props)
     //     nonce: nonce,
     //     prepend: true,
     //   });
- 
+
     return (
         <UserContext.Provider value={userCtx}>
             <AdminContext.Provider value={adminCtx}>
@@ -120,29 +120,27 @@ function Layout(props)
                     <StyleContext.Provider value={style}>
                         <SortContext.Provider value={sort}>
                             <DeviceContext.Provider value={DeviceCtxValue}>
-                                {/* <StyledEngineProvider injectFirst> */}
-                                    {loading
-                                        ? (<LoadingPage />)
-                                        : (<main style={mainStyle}>
-                                            {error
-                                                ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
-                                                    {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                    <ErrorPage message={error.message} status={error.status} />
-                                                </Box>)
-                                                : (<>
-                                                    {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
-                                                    <Box sx={Container}
-                                                    >
-                                                        <Box id="back-to-top-anchor" />
-                                                        {childrenwprops}
-                                                        <BackToTop />
-                                                    </Box>
-                                                    <div className="cover"></div>
-                                                </>)
-                                            }
-                                        </main>)
-                                    }
-                                {/* </StyledEngineProvider> */}
+                                {loading
+                                    ? (<LoadingPage />)
+                                    : (<main style={mainStyle}>
+                                        {error
+                                            ? (<Box sx={{ flex: 1, backgroundColor: "background.default" }}>
+                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                <ErrorPage message={error.message} status={error.status} />
+                                            </Box>)
+                                            : (<>
+                                                {childrenwprops.props.noHeader && adminCtx ? (<></>) : (<Header title="Ctice" />)}
+                                                <Box sx={Container}
+                                                >
+                                                    <Box id="back-to-top-anchor" />
+                                                    {childrenwprops}
+                                                    <BackToTop />
+                                                </Box>
+                                                <div className="cover"></div>
+                                            </>)
+                                        }
+                                    </main>)
+                                }
                             </DeviceContext.Provider>
                         </SortContext.Provider>
                     </StyleContext.Provider>
