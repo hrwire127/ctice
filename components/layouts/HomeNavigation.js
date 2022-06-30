@@ -79,7 +79,7 @@ function HomeNavigation(props)
         </List>
     );
 
-    return <Box className={windowMinSize ? classes.SwipeContainer : classes.Body}>
+    return <Box className={classes.Body}>
         {!windowMinSize && (<CssBaseline />)}
         {windowMinSize
             ? (<SwipeableDrawer

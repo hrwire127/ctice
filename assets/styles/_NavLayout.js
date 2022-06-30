@@ -41,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         overflow: "auto",
     },
-    SwipeContainer: {
-        overflow: "auto",
-        paddingRight: 0
-    },
     ItemButton: {
         backgroundColor: theme.palette.shadow,
         paddingRight: 0
