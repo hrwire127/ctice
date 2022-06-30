@@ -18,10 +18,9 @@ function BackToTop(props)
         const container = document.querySelector('#container')
         if (container)
         {
-            console.log(container)
             container.addEventListener('scroll', () =>
             {
-                console.log("!")
+                
                 if (container)
                 {
                     if(container.scrollTop > triggerValue)
