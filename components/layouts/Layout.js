@@ -120,7 +120,7 @@ function Layout(props)
                     <StyleContext.Provider value={style}>
                         <SortContext.Provider value={sort}>
                             <DeviceContext.Provider value={DeviceCtxValue}>
-                                <StyledEngineProvider injectFirst>
+                                {/* <StyledEngineProvider injectFirst> */}
                                     {loading
                                         ? (<LoadingPage />)
                                         : (<main style={mainStyle}>
@@ -142,7 +142,7 @@ function Layout(props)
                                             }
                                         </main>)
                                     }
-                                </StyledEngineProvider>
+                                {/* </StyledEngineProvider> */}
                             </DeviceContext.Provider>
                         </SortContext.Provider>
                     </StyleContext.Provider>
