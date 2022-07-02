@@ -24,7 +24,7 @@ const createDeclaration = async () =>
     await Comment.deleteMany({});
     await Reply.deleteMany({});
     const user = await User.findById("628688e92387173d390bd76e");
-    for (let i = 0; i < 6; i++)
+    for (let i = 0; i < 50; i++)
     {
         const randnum = Math.floor(Math.random() * titles.length);
         const declaration = new Declaration({

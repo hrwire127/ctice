@@ -54,17 +54,18 @@ const helmet = require("helmet")
 
 const cspoption = {
     directives: {
-        'default-src': ["'self'"],
-        'script-src': [(req, res) => `data: gap:  https://ssl.gstatic.com https://res.cloudinary.com 'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
-        "style-src": ["'self' https://fonts.googleapis.com https://res.cloudinary.com 'unsafe-inline'"],
-        "img-src": ["'self' https://res.cloudinary.com"],
-        "media-src": ["*"]
+        'default-src': ["'self' https://res.cloudinary.com"],
+        'script-src': [(req, res) => `data: gap: https://ssl.gstatic.com https://res.cloudinary.com 'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
+        "style-src": ["'self' https://fonts.googleapis.com https://res.cloudinary.com 'unsafe-inline' blob:"],
+        "img-src": ["'self' http://res.cloudinary.com blob:"],
+        "media-src": ["*"],
+        "connect-src": ["'self' http://res.cloudinary.com api.mapbox.com blob:"]
     },
 }
 //data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"
 var store = new MongoDBStore({
     uri: dburl,
-    collection: 'mySessions',
+    collection: 'sessions',
     secret: NEXT_PUBLIC_SECRET,
     touchAfter: 24 * 3600
 });

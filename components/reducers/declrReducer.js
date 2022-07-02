@@ -1,13 +1,13 @@
 const declrReducer = (oldDeclrs, action) =>
 {
-    const {count, type, declarations} = action
+    const { count, type, declarations } = action
 
     switch (type)
     {
         case "ADD":
-            return [...oldDeclrs].concat(declarations)
+            return { declarations: [...oldDeclrs.declarations].concat(declarations), count: oldDeclrs.count }
         case "SET":
-            return {declarations, count}
+            return { declarations, count }
         default:
             return oldDeclrs
     }

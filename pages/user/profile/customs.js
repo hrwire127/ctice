@@ -10,6 +10,7 @@ function customs(props)
 {
     const { isResetToken, user, light,
         setThemeLight, setSorting: setSortCtx, setStyle: setStyleCtx, setError } = props;
+
     const userCtx = useContext(UserContext);
 
     useEffect(() =>

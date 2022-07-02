@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Box, IconButton, Typography } from '@mui/material';
 import { RemoveRedEye, Build, Delete, Accessible } from '@mui/icons-material';
 import Link from 'next/link';
 import { makeStyles } from '@mui/styles';

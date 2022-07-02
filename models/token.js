@@ -16,7 +16,7 @@ const TokenSchema = new Schema({
     },
     token: {
         type: String,
-        default: genToken(),
+        // default: genToken(),
         required: true,
     },
     createdAt: {

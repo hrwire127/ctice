@@ -30,7 +30,7 @@ function Customs(props)
     const [windowMdSize] = useWindowSize(600, 0);
 
     const classes = useStyles()
-
+ 
     const imgWidth = windowSmSize ? "80%" : (windowMdSize ? "60%" : "35%")
 
     const ImgSelected = { width: imgWidth, opacity: 0.5 }

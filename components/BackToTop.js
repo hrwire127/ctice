@@ -20,7 +20,6 @@ function BackToTop(props)
         {
             container.addEventListener('scroll', () =>
             {
-                
                 if (container)
                 {
                     if(container.scrollTop > triggerValue)
