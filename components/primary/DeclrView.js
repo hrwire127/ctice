@@ -251,7 +251,7 @@ function DeclrView(props)
                                         Last Edited
                                     </Typography>
                                     <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
-                                        <Avatar alt={authors[authors.length - 1].username} src={authors[authors.length - 1].profile.url} />
+                                        <Avatar alt={authors[authors.length - 1].username} src={authors[authors.length - 1].profile ? authors[authors.length - 1].profile.url : null} />
                                         <Typography variant="h5">
                                             {authors[authors.length - 1].username}
                                         </Typography>
@@ -262,7 +262,7 @@ function DeclrView(props)
                                     Created
                                 </Typography>
                                 <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", gap: 1 }}>
-                                    <Avatar alt={authors[0].username} src={authors[0].profile.url} />
+                                    <Avatar alt={authors[0].username} src={authors[0].profile ? authors[0].profile.url : null} />
                                     <Typography variant="h5">
                                         {authors[0].username}
                                     </Typography>

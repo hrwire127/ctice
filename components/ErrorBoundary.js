@@ -32,8 +32,6 @@ class ErrorBoundary extends React.Component
 
         delete childrenwprops.children
 
-        console.log(childrenwprops)
-
         if (this.state.hasError)
         {
             return (<ErrorPage message="Client Error" status={500} />
