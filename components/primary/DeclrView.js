@@ -136,19 +136,19 @@ function DeclrView(props)
         return (
             <Box>
                 <LinkedinShareButton
-                    url={typeof window !== "undefined" && window.location.url}
+                    url={typeof window !== "undefined" && window.location ? window.location.url : null}
                     title="Share"
                 >
                     <LinkedIn />
                 </LinkedinShareButton>
                 <FacebookShareButton
-                    url={typeof window !== "undefined" && window.location.url}
+                    url={typeof window !== "undefined" && window.location ? window.location.url : null}
                     title="Share"
                 >
                     <Facebook />
                 </FacebookShareButton>
                 <TwitterShareButton
-                    url={typeof window !== "undefined" && window.location.url}
+                    url={typeof window !== "undefined" && window.location ? window.location.url : null}
                     title="Share"
                 >
                     <Twitter />

@@ -31,11 +31,11 @@ function MyApp({ Component, emotionCache = clientSideEmotionCache, pageProps, gl
                 <title>Ctice</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <ErrorBoundary>
-                <Layout globals={globals}>
+            <Layout globals={globals}>
+                <ErrorBoundary>
                     <Component {...pageProps} />
-                </Layout>
-            </ErrorBoundary>
+                </ErrorBoundary>
+            </Layout>
         </CacheProvider>
     )
 }
