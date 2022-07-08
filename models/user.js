@@ -269,12 +269,12 @@ UserSchema.statics.updateChanges = async function (req, res, user)
         if (await new excRule([req.files, user.profile.location], [profile], async () =>
         {
             let file = await upload_profiles(req.files.profile, res)
-            if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
-            {
-                await cloud.destroy(
-                    user.profile.location
-                )
-            }
+            // if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
+            // {
+            await cloud.destroy(
+                user.profile.location
+            )
+            // }
             user.profile.url = file.url
             user.profile.location = file.location
         }).Try()) return user;
@@ -289,10 +289,10 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([profile, user.profile.location], [req.files], async () =>
         {
-            if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
-            {
-                await cloud.destroy(user.profile.location)
-            }
+            // if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
+            // {
+            await cloud.destroy(user.profile.location)
+            // }
             if (user.profile.url === profile) return user
             user.profile.url = profile
             user.profile.location = null
@@ -312,10 +312,10 @@ UserSchema.statics.updateChanges = async function (req, res, user)
 
         if (await new excRule([user.profile.location], [profile, req.files], async () =>
         {
-            if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
-            {
-                await cloud.destroy(user.profile.location)
-            }
+            // if (user.profile.location !== process.env.NEXT_PUBLIC_DEF_PROFILE_LOCATION)
+            // {
+            await cloud.destroy(user.profile.location)
+            // }
             user.profile.url = null
             user.profile.location = null
         }).Try()) return user;

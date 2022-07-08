@@ -43,7 +43,7 @@ function UploadContainer(props)
             </Button>
             <Box className={classes.Profile}>
                 <img
-                    src={image ? image : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+                    src={image ? image : "/images/def-profile.jpg"}
                     crossOrigin="anonymous"
                     alt="Picture"
                 />

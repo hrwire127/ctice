@@ -5,18 +5,8 @@ import StyleContext from '../context/contextStyle'
 import SortContext from '../context/contextSort'
 import useStyles from '../../assets/styles/_Customs'
 import Redirects_CS from '../../utilsCS/CS_Redirects'
-import theme_black from "../../assets/images/theme-2.png"
-import theme_white from "../../assets/images/theme-1.png"
-import compact_black from "../../assets/images/compact-black.png"
-import compact_white from "../../assets/images/compact-white.png"
-import full_black from "../../assets/images/full-black.png"
-import full_white from "../../assets/images/full-white.png"
-import score_black from "../../assets/images/score-black.png"
-import score_white from "../../assets/images/score-white.png"
-import date_black from "../../assets/images/date-black.png"
-import date_white from "../../assets/images/date-white.png"
 import useWindowSize from '../hooks/useWindowSize'
- 
+
 function Customs(props)
 {
     const { user, setThemeLight, light, setSortCtx, setStyleCtx, setError } = props;
@@ -30,7 +20,7 @@ function Customs(props)
     const [windowMdSize] = useWindowSize(600, 0);
 
     const classes = useStyles()
- 
+
     const imgWidth = windowSmSize ? "80%" : (windowMdSize ? "60%" : "35%")
 
     const ImgSelected = { width: imgWidth, opacity: 0.5 }
@@ -119,12 +109,12 @@ function Customs(props)
                     aria-label="Theme"
                 >
                     <Box className={classes.Container}>
-                        <img crossOrigin="anonymous" src={theme_white.src}
+                        <img crossOrigin="anonymous" src="/images/theme-1.png"
                             style={theme === "light"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleTheme(e, "light")} />
-                        <img crossOrigin="anonymous" src={theme_black.src}
+                        <img crossOrigin="anonymous" src="/images/theme-2.png"
                             style={theme === "dark"
                                 ? ImgSelected
                                 : ImgEmpty}
@@ -142,12 +132,12 @@ function Customs(props)
                     aria-label="Style"
                 >
                     <Box className={classes.Container}>
-                        <img crossOrigin="anonymous" src={theme === "light" ? full_white.src : full_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? "/images/full-white.png" : "/images/full-black.png"}
                             style={style === "full"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleStyle(e, "full")} />
-                        <img crossOrigin="anonymous" src={theme === "light" ? compact_white.src : compact_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? "/images/compact-white.png" : "/images/compact-black.png"}
                             style={style === "compact"
                                 ? ImgSelected
                                 : ImgEmpty}
@@ -165,12 +155,12 @@ function Customs(props)
                     aria-label="Sort"
                 >
                     <Box className={classes.Container}>
-                        <img crossOrigin="anonymous" src={theme === "light" ? date_white.src : date_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? "/images/date-white.png" : "/images/date-black.png"}
                             style={sort === "date"
                                 ? ImgSelected
                                 : ImgEmpty}
                             onClick={(e) => handleSort(e, "date")} />
-                        <img crossOrigin="anonymous" src={theme === "light" ? score_white.src : score_black.src}
+                        <img crossOrigin="anonymous" src={theme === "light" ? "/images/score-white.png" : "/images/score-black.png"}
                             style={sort === "score"
                                 ? ImgSelected
                                 : ImgEmpty}

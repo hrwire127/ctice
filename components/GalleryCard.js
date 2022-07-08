@@ -7,8 +7,8 @@ function GalleryCard(props)
     const { checked, image, setImage, galleryDelete } = props
 
     const preparedImg = image
-        ? (image.content ? URL.createObjectURL(image.content) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL)
-        : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+        ? (image.content ? URL.createObjectURL(image.content) : "/images/def-profile.jpg")
+        : "/images/def-profile.jpg"
 
 
     return checked

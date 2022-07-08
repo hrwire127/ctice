@@ -9,7 +9,7 @@ function UploadIcon(props)
 
     const preparedImg = props.image
         ? (props.image.content ? URL.createObjectURL(props.image.content) : (props.image.type ? URL.createObjectURL(props.image) : props.image))
-        : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+        : "/images/def-profile.jpg"
 
 
     const inputFileRef = useRef(null);
@@ -34,7 +34,7 @@ function UploadIcon(props)
         className={classes.Profile}
     >
         <img
-            src={preparedImg ? preparedImg : process.env.NEXT_PUBLIC_DEF_PROFILE_URL}
+            src={preparedImg ? preparedImg : "/images/def-profile.jpg"}
             crossOrigin="anonymous"
             alt="Picture"
         />

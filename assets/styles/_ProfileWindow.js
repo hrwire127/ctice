@@ -62,7 +62,7 @@ const useStyles = props => makeStyles((theme) => ({
         "& div": {
             width: "200%",
             height: "100%",
-            background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${props.image ? (typeof props.image === 'string' ? props.image : URL.createObjectURL(props.image)) : process.env.NEXT_PUBLIC_DEF_PROFILE_URL
+            background: `linear-gradient(to top, rgb(0 0 0 / 54%), rgb(0 0 0 / 54%)), url(${props.image ? (typeof props.image === 'string' ? props.image : URL.createObjectURL(props.image)) : "/images/def-profile.jpg"
                 }
     }) no - repeat center`,
             backgroundSize: "cover",

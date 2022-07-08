@@ -290,11 +290,8 @@ DeclarationSchema.methods.processNotifLike = async function (req, res)
     <h5>${userdata.username} liked your comment</h5></div>`
 
     const Obj = {
-        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
         raw, date: new Date(), banner: null
     }
-
-    // const Obj = { content: process.env.NEXT_PUBLIC_NOTIF_LIKE, date: new Date(), banner: null }
 
     await User.attachNotification(Obj, declr.authors[declr.authors.length - 1], false)
 }

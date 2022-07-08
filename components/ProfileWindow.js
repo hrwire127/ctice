@@ -26,10 +26,10 @@ function ProfileWindow(props)
     const classes = useStyles(props)()
 
     const selections = [
-        process.env.NEXT_PUBLIC_DEF_PROFILE_URL_1,
-        process.env.NEXT_PUBLIC_DEF_PROFILE_URL_2,
-        process.env.NEXT_PUBLIC_DEF_PROFILE_URL_3,
-        process.env.NEXT_PUBLIC_DEF_PROFILE_URL_4,
+        "/images/profile-1.png",
+        "/images/profile-2.png",
+        "/images/profile-3.png",
+        "/images/profile-4.png",
     ]
 
     useEffect(() =>

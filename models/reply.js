@@ -121,17 +121,12 @@ ReplySchema.methods.processNotifReply = async function (req, res)
     let reply = await this.populate({ path: 'author' })
     const userdata = await getUserdata(req, res)
 
-    // const Comment = { content: process.env.NEXT_PUBLIC_NOTIF_COMMENT, date: new Date(), banner: null }
-    // const Mention = { content: process.env.NEXT_PUBLIC_NOTIF_MENTION, date: new Date(), banner: null }
-
     const Mention = {
-        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
         raw: `<div style="padding: 4px; borderBottom: 1px solid">
         <h5>${userdata.username} @ mentioned you</h5></div>`, date: new Date(), banner: null
     }
 
     const Reply = {
-        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
         raw: `<div style="padding: 4px; borderBottom: 1px solid">
         <h5>${userdata.username} replied on your post</h5></div>`, date: new Date(), banner: null
     }
@@ -149,12 +144,8 @@ ReplySchema.methods.processNotifLike = async function (req, res)
     <h5>${userdata.username} liked your reply</h5></div>`
 
     const Obj = {
-        // content : process.env.NEXT_PUBLIC_NOTIF_LIKE,
         raw, date: new Date(), banner: null
     }
-
-
-    // const Obj = { content: process.env.NEXT_PUBLIC_NOTIF_LIKE, date: new Date(), banner: null }
 
     await User.attachNotification(Obj, reply.author, false)
 }
