@@ -114,10 +114,10 @@ function getGlobals(context)
     let lightTheme = true;
     let style = styleCompact;
     let sort = sortDate;
-    if (context.req.session.passport) isUser = context.req.session.passport.user
-    if (context.req.session.light) lightTheme = context.req.session.light
-    if (context.req.session.style) style = context.req.session.style
-    if (context.req.session.sort) sort = context.req.session.sort
+    if (context.req.session.passport !== undefined) isUser = context.req.session.passport.user
+    if (context.req.session.light !== undefined) lightTheme = context.req.session.light
+    if (context.req.session.style !== undefined) style = context.req.session.style
+    if (context.req.session.sort !== undefined) sort = context.req.session.sort
     isAdmin = getField(context.req.session.passport, "user", false) === process.env.NEXT_PUBLIC_ADMIN_USERNAME
     return { isUser, isAdmin, lightTheme, style, sort }
 }

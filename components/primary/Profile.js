@@ -21,8 +21,6 @@ function Profile(props)
 
     const classes = useStyles()
 
-    console.log(connections)
-
     return (
         <Box
             component="main"
