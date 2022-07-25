@@ -56,8 +56,8 @@ const cspoption = {
     directives: {
         'default-src': ["'self' https://res.cloudinary.com"],
         'script-src': [(req, res) => `data: gap: https://ssl.gstatic.com https://res.cloudinary.com 'nonce-${res.locals.nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ''}`],
-        "style-src": ["'self' https://fonts.googleapis.com https://res.cloudinary.com 'unsafe-inline' blob:"],
-        "img-src": ["'self' http://res.cloudinary.com blob:"],
+        "style-src": ["'self' https://fonts.googleapis.com https://res.cloudinary.com 'unsafe-inline' blob: data:"],
+        "img-src": ["'self' http://res.cloudinary.com blob: data:"],
         "media-src": ["*"],
         "connect-src": ["'self' http://res.cloudinary.com api.mapbox.com blob:"]
     },
