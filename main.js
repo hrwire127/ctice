@@ -59,7 +59,7 @@ const cspoption = {
         "style-src": ["'self' https://fonts.googleapis.com https://res.cloudinary.com 'unsafe-inline' blob: data:"],
         "img-src": ["'self' http://res.cloudinary.com blob: data:"],
         "media-src": ["*"],
-        "connect-src": ["'self' http://res.cloudinary.com api.mapbox.com blob:"]
+        "connect-src": ["'self' http://res.cloudinary.com api.mapbox.com blob: data:"]
     },
 }
 //data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"

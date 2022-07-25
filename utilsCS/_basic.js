@@ -55,7 +55,7 @@ async function handleDeclrData(evtTarget, file = undefined, description)
                     if (e.type !== "LINK")
                     {
                         const name = uuidv4()
-                        const blob = e.data.src.includes('blob:') ? await fetch(e.data.src).then(r => r.blob()) : null
+                        const blob = e.data.src.includes('blob:') || e.data.src.includes('data:') ? await fetch(e.data.src).then(r => r.blob()) : null
 
                         if (blob)
                         {
